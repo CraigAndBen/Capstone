@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,38 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('welcome');
 });
 
-Auth::routes();
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
+Route::middleware('auth','role:nurse')->group(function(){
+    Route::get('/nurse/dashboard', [UsersController::class, 'NurseDashboard'])->name('nurse.dashboard');
+});
+
+Route::middleware('auth','role:doctor')->group(function(){
+    Route::get('/doctor/dashboard', [UsersController::class, 'DoctorDashboard'])->name('doctor.dashboard');
+});
+
+Route::middleware('auth','role:admin')->group(function(){
+    Route::get('/admin/dashboard', [UsersController::class, 'AdminDashboard'])->name('admin.dashboard');
+});
+
+Route::middleware('auth','role:super_admin')->group(function(){
+    Route::get('/super_admin/dashboard', [UsersController::class, 'SuperAdminDashboard'])->name('superadmin.dashboard');
+});
+
+
+
+
+
