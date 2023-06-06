@@ -76,7 +76,7 @@
                   <li><a href="#">Deep Drop Down 5</a></li>
                 </ul> --}}
               </li>
-              <li><a href="{{route('user.logout')}}">>Logout</a></li>
+              <li><a href="{{route('user.logout')}}">Logout</a></li>
             </ul>
           </li>
           <li><a class="nav-link scrollto" href="#contact">Appointments</a></li>
@@ -85,7 +85,7 @@
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
-      <a href="{{route('dashboard')}}" class="appointment-btn scrollto"><span class="d-none d-md-inline">Make</span> An Appointment</a>
+      <a href="{{route('user.appointment')}}" class="appointment-btn scrollto"><span class="d-none d-md-inline">Make</span> An Appointment</a>
 
     </div>
   </header><!-- End Header -->

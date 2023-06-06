@@ -25,6 +25,8 @@ Route::get('/user/dashboard', function () {
 
 Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
 
+Route::get('/user/appointment', [UsersController::class, 'userAppointment'])->name('user.appointment');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

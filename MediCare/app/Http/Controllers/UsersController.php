@@ -29,6 +29,11 @@ class UsersController extends Controller
         return view('superadmin.index');
     }
 
+    public function userAppointment(){
+        
+        return view('user.appointment');
+    }
+
     public function userLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
