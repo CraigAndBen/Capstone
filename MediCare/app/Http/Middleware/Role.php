@@ -15,9 +15,20 @@ class Role
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if($request->user()->role !== $role){
-            return redirect('/dashboard');
+        $role1 = $request->user()->role;
+
+        if($request->user()->role === 'nurse' && $request->user()->role === $role){
+            return redirect('/nurse/dashboard');
+        } elseif ($request->user()->role === 'doctor' && $request->user()->role === $role){
+            return redirect('/doctor/dashboard');
+        } elseif ($request->user()->role === 'admin' && $request->user()->role === $role){
+            return redirect('/admin/dashboard');
+        } elseif ($request->user()->role === 'super_admin' && $request->user()->role === $role){
+            return redirect('/super_admin/dashboard');
+        } else {
+            return redirect('/user/dashboard');
         }
+
         return $next($request);
     }
 }

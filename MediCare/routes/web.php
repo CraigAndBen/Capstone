@@ -19,9 +19,11 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/user/dashboard', function () {
+    return view('user_dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
