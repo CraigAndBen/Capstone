@@ -86,13 +86,13 @@
         <div class="auth-form">
           <div class="card my-5">
             <div class="card-body">
-              <a href="#" class="d-flex justify-content-center">
-                <h1>Medi<span class="text-light rounded-pill bg-success p-2">Care</span></h1>
+              <a href="#" class="d-flex justify-content-center mt-3">
+                <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px">
               </a>
               <div class="row">
                 <div class="d-flex justify-content-center">
                   <div class="auth-header">
-                    <h2 class="text-primary mt-5"><b>Hi, Welcome Back</b></h2>
+                    <h2 class="text-primary mt-5"><b>Hi, Welcome to MediCare</b></h2>
                     <p class="f-16 mt-2">Enter your credentials to continue</p>
                   </div>
                 </div>

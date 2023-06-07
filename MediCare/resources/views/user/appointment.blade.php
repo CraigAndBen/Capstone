@@ -60,6 +60,15 @@
                           </div>
                           <div class="mb-3">
                             <select class="form-control  p-3" id="doctor" name="doctor">
+                              <option>Select a Type of Appointment</option>
+                              <option value="General Check-up">General Check-up</option>
+                              <option value="Specialist Consultation">Specialist Consultation</option>
+                              <option value="Follow-up Visit">Follow-up Visit</option>
+                              <option value="Diagnostic Tests">Diagnostic Tests</option>
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <select class="form-control  p-3" id="doctor" name="doctor">
                               <option>Select a Doctor</option>
                               @foreach ($doctors as $doctor)
                                 <option value="Dr. Jhon Smith">{{$doctor->name}}</option>
