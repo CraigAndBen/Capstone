@@ -25,7 +25,7 @@ class Role
             return redirect('/admin/dashboard');
         } elseif ($request->user()->role === 'super_admin' && $request->user()->role === $role){
             return redirect('/super_admin/dashboard');
-        } else {
+        } elseif ($request->user()->role === 'user' && $request->user()->role === $role){
             return redirect('/user/dashboard');
         }
 

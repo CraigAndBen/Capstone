@@ -24,7 +24,7 @@ Route::get('/user/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
-
+    
 Route::get('/user/appointment', [UsersController::class, 'userAppointment'])->name('user.appointment');
 
 Route::middleware('auth')->group(function () {
