@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
@@ -25,7 +26,7 @@ Route::get('/user/dashboard', function () {
 
 Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
     
-Route::get('/user/appointment', [UsersController::class, 'userAppointment'])->name('user.appointment');
+Route::get('/user/appointment', [AppointmentController::class, 'show'])->name('user.appointment');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

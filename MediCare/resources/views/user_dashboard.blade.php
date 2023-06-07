@@ -53,13 +53,13 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-      <a href="/" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px"></a>
+      <a href="/user/dashboard" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px"></a>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav id="navbar" class="navbar order-last order-lg-0">
         <ul>
-          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <li><a class="nav-link scrollto active" href="/user/home">Home</a></li>
           <li><a class="nav-link scrollto" href="#about">About</a></li>
           <li><a class="nav-link scrollto" href="#services">Services</a></li>
           <li><a class="nav-link scrollto" href="#departments">Departments</a></li>

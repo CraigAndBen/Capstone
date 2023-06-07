@@ -21,7 +21,7 @@
               <div class="auth-main">
                 <div class="auth-wrapper v3">
                   <div class="auth-form">
-                    <div class="card my-3">
+                    <div class="card my-3 shadow">
                       <div class="card-body">
                         <a href="#" class="d-flex justify-content-center mt-3">
                           <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px">
@@ -61,9 +61,10 @@
                           <div class="mb-3">
                             <select class="form-control  p-3" id="doctor" name="doctor">
                               <option>Select a Doctor</option>
-                              <option value="Dr. Jhon Smith">Dr. John Smith</option>
-                              <option value="Dr. Jane Doe">Dr. Jane Doe</option>
-                              <option value="Dr. Michael Johnson">Dr. Michael Johnson</option>
+                              @foreach ($doctors as $doctor)
+                                <option value="Dr. Jhon Smith">{{$doctor->name}}</option>
+                              @endforeach
+
                             </select>
                           </div>
                           <div class="form-floating mb-3">
@@ -80,7 +81,7 @@
                               <label class="form-check-label text-muted" for="customCheckc1">I agree to the terms and conditions</label>
                             </div>
                           </div>
-                          <div class="text-center mt-4">
+                          <div class="text-center mt-4 mb-3">
                             <button type="submit" class="btn btn-primary">Submit</button>
                           </div>
                         </form>
