@@ -17,7 +17,7 @@ class UsersController extends Controller
 
     public function DoctorDashboard(){
         
-        return view('doctor.index');
+        return view('admin_dashboard');
     }
 
     public function AdminDashboard(){

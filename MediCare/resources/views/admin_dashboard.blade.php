@@ -43,40 +43,18 @@
         </div>
         <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
         <div class="me-auto pc-mob-drp">
-        <ul class="list-unstyled">
-            <li class="pc-h-item header-mobile-collapse">
-            <a href="#" class="pc-head-link head-link-secondary ms-0" id="mobile-collapse">
-                <i class="ti ti-menu-2"></i>
-            </a>
-            </li>
-            <li class="dropdown pc-h-item d-inline-flex d-md-none">
-            <a class="pc-head-link head-link-secondary dropdown-toggle arrow-none m-0" data-bs-toggle="dropdown" href="#"
-                role="button" aria-haspopup="false" aria-expanded="false">
-                <i class="ti ti-search"></i>
-            </a>
-            <div class="dropdown-menu pc-h-dropdown drp-search">
-                <form class="px-3">
-                <div class="form-group mb-0 d-flex align-items-center">
-                    <i class="ti ti-search"></i>
-                    <input type="search" class="form-control border-0 shadow-none" placeholder="Search here..." />
-                </div>
-                </form>
-            </div>
-            </li>
-            <li class="pc-h-item d-none d-md-inline-flex">
-            <form class="header-search">
-                <i class="ti ti-search icon-search"></i>
-                <input type="search" class="form-control" placeholder="Search here..." />
-                <button class="btn btn-light-secondary btn-search"><i class="ti ti-adjustments-horizontal"></i></button>
-            </form>
-            </li>
-        </ul>
+          <ul class="list-unstyled">
+              <li class="pc-h-item header-mobile-collapse">
+              <a href="#" class="pc-head-link head-link-primary ms-0" id="mobile-collapse">
+                  <i class="ti ti-menu-2"></i>
+              </a>
+          </ul>
         </div>
         <!-- [Mobile Media Block end] -->
         <div class="ms-auto">
         <ul class="list-unstyled">
             <li class="dropdown pc-h-item">
-            <a class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+            <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
                 role="button" aria-haspopup="false" aria-expanded="false">
                 <i class="ti ti-bell"></i>
             </a>
@@ -111,17 +89,17 @@
                     </div>
                     </a>
                     <a class="list-group-item list-group-item-action">
-                    <div class="d-flex">
-                        <div class="flex-shrink-0">
-                        <div class="user-avtar bg-light-success"><i class="ti ti-building-store"></i></div>
-                        </div>
-                        <div class="flex-grow-1 ms-1">
-                        <span class="float-end text-muted">3 min ago</span>
-                        <h5>Store Verification Done</h5>
-                        <p class="text-body fs-6">We have successfully received your request.</p>
-                        <div class="badge rounded-pill bg-light-danger">Unread</div>
-                        </div>
-                    </div>
+                      <div class="d-flex">
+                          <div class="flex-shrink-0">
+                          <div class="user-avtar bg-light-success"><i class="ti ti-building-store"></i></div>
+                          </div>
+                          <div class="flex-grow-1 ms-1">
+                          <span class="float-end text-muted">3 min ago</span>
+                          <h5>Store Verification Done</h5>
+                          <p class="text-body fs-6">We have successfully received your request.</p>
+                          <div class="badge rounded-pill bg-light-danger">Unread</div>
+                          </div>
+                      </div>
                     </a>
                     <a class="list-group-item list-group-item-action">
                     <div class="d-flex">
@@ -183,32 +161,9 @@
             </a>
             <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                 <div class="dropdown-header">
-                <h4>Good Morning, <span class="small text-muted"> John Doe</span></h4>
-                <p class="text-muted">Project Admin</p>
-                <form class="header-search">
-                    <i class="ti ti-search icon-search"></i>
-                    <input type="search" class="form-control" placeholder="Search profile options" />
-                </form>
-                <hr />
+                <h4>Good Morning, <span class="small text-muted">{{$user->name}}</span></h4>
+                <p class="text-muted">{{$user->role}}</p>
                 <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-                    <div class="upgradeplan-block bg-light-warning rounded">
-                    <h4>Explore full code</h4>
-                    <p class="text-muted">Buy now to get full access of code files</p>
-                    <a href="https://codedthemes.com/item/berry-bootstrap-5-admin-template/" target="_blank"
-                        class="btn btn-warning">Buy Now</a>
-                    </div>
-                    <hr />
-                    <div class="settings-block bg-light-primary rounded">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Start DND Mode</label>
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked />
-                        <label class="form-check-label" for="flexSwitchCheckChecked">Allow Notifications</label>
-                    </div>
-                    </div>
-                    <hr />
                     <a href="#" class="dropdown-item">
                     <i class="ti ti-settings"></i>
                     <span>Account Settings</span>
@@ -246,7 +201,7 @@
         </li>
         <li class="pc-item">
           <a href="/admin/dashboard" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
-              class="pc-mtext">Dashboard</span></a>
+              class="pc-mtext">Home</span></a>
         </li>
         <li class="pc-item pc-caption">
           <label>Pages</label>
@@ -287,11 +242,6 @@
         <li class="pc-item"><a href="https://codedthemes.gitbook.io/berry-bootstrap/" target="_blank" class="pc-link"><span
               class="pc-micon"><i class="ti ti-vocabulary"></i></span><span class="pc-mtext">Document</span></a></li>
       </ul>
-      <div class="pc-navbar-card bg-primary rounded">
-        <h4 class="text-white">Berry Pro</h4>
-        <p class="text-white opacity-75">Checkout Berry pro features</p>
-        <a href="https://codedthemes.com/item/berry-bootstrap-5-admin-template/" target="_blank" class="btn btn-light text-primary">Pro</a>
-      </div>
     </div>
   </div>
 </nav>

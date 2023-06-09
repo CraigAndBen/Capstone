@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\DoctorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
@@ -41,7 +42,7 @@ Route::middleware('auth','role:nurse')->group(function(){
 });
 
 Route::middleware('auth','role:doctor')->group(function(){
-    Route::get('/doctor/dashboard', [UsersController::class, 'DoctorDashboard'])->name('doctor.dashboard');
+    Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
 });
 
 Route::middleware('auth','role:admin')->group(function(){
