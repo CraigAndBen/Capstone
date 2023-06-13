@@ -26,38 +26,38 @@
     <!-- [Body] Start -->
     <body>
 
-        <!-- [ Pre-loader ] start -->
-        <div class="loader-bg">
+      <!-- [ Pre-loader ] start -->
+      <div class="loader-bg">
         <div class="loader-track">
             <div class="loader-fill"></div>
         </div>
-        </div>
+      </div>
 
-        <!-- [ Pre-loader ] End -->
-        <!-- [ Header Topbar ] start -->
-        <header class="pc-header">
+      <!-- [ Pre-loader ] End -->
+      <!-- [ Header Topbar ] start -->
+      <header class="pc-header">
         <div class="m-header mt-3">
 
             <a href="/admin/dashboard" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
             <!-- ======= Menu collapse Icon ===== -->
         </div>
         <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
-        <div class="me-auto pc-mob-drp">
-          <ul class="list-unstyled">
+          <div class="me-auto pc-mob-drp">
+            <ul class="list-unstyled">
               <li class="pc-h-item header-mobile-collapse">
               <a href="#" class="pc-head-link head-link-primary ms-0" id="mobile-collapse">
                   <i class="ti ti-menu-2"></i>
               </a>
-          </ul>
+            </ul>
         </div>
         <!-- [Mobile Media Block end] -->
         <div class="ms-auto">
-        <ul class="list-unstyled">
+          <ul class="list-unstyled">
             <li class="dropdown pc-h-item">
-            <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                role="button" aria-haspopup="false" aria-expanded="false">
+              <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+                  role="button" aria-haspopup="false" aria-expanded="false">
                 <i class="ti ti-bell"></i>
-            </a>
+              </a>
             <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                 <div class="dropdown-header">
                 <a href="#!" class="link-primary float-end text-decoration-underline">Mark as all read</a>
@@ -164,7 +164,7 @@
                 <h4>Good Morning, <span class="small text-muted">{{$user->name}}</span></h4>
                 <p class="text-muted">{{$user->role}}</p>
                 <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-                    <a href="#" class="dropdown-item">
+                    <a href="{{route('doctor.profile.edit')}}" class="dropdown-item">
                     <i class="ti ti-settings"></i>
                     <span>Account Settings</span>
                     </a>
@@ -172,7 +172,7 @@
                     <i class="ti ti-user"></i>
                     <span>Social Profile</span>
                     </a>
-                    <a href="{{route('user.logout')}}" class="dropdown-item">
+                    <a href="{{route('doctor.logout')}}" class="dropdown-item">
                     <i class="ti ti-logout"></i>
                     <span>Logout</span>
                     </a>
@@ -189,7 +189,7 @@
   <div class="navbar-wrapper">
     <div class="m-header">
       <div class="mt-3">
-        <a href="/admin/dashboard" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+        <a href="/doctor/dashboard" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
       </div>
 
     </div>

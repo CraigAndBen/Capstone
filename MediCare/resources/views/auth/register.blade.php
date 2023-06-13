@@ -90,9 +90,9 @@
         <div class="auth-form">
           <div class="card mt-5">
             <div class="card-body">
-              <a href="#" class="d-flex justify-content-center mt-3">
-                <h1>Medi<span class="text-light rounded-pill bg-success p-2">Care</span></h1>
-              </a>
+              {{-- <a href="/" class="d-flex justify-content-center align-items-center" mt-3 ">
+                <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px">
+              </a> --}}
               <div class="row">
                 <div class="d-flex justify-content-center">
                   <div class="auth-header">
@@ -101,13 +101,13 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted" style="width: 100%">
+              {{-- <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted" style="width: 100%">
                 <img src="{{asset('admin_assets/images/authentication/google-icon.svg')}}" />Sign Up With Google
               </button>
               <div class="saprator mt-3">
                 <span>or</span>
               </div>
-              <h5 class="my-4 d-flex justify-content-center">Sign Up with Email address</h5>
+              <h5 class="my-4 d-flex justify-content-center">Sign Up with Email address</h5> --}}
 
               <form method="POST" action="{{route('register')}}">
                 @csrf

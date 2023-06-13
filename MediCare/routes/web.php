@@ -42,7 +42,14 @@ Route::middleware('auth','role:nurse')->group(function(){
 });
 
 Route::middleware('auth','role:doctor')->group(function(){
+
     Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
+
+    Route::get('/doctor/profile', [DoctorController::class, 'edit'])->name('doctor.profile.edit');
+
+    Route::patch('/doctor/profile', [DoctorController::class, 'update'])->name('doctor.profile.update');
+
+    Route::get('/admin/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');
 });
 
 Route::middleware('auth','role:admin')->group(function(){

@@ -86,7 +86,7 @@
         <div class="auth-form">
           <div class="card my-5">
             <div class="card-body">
-              <a href="#" class="d-flex justify-content-center mt-3">
+              <a href="/" class="d-flex justify-content-center mt-3">
                 <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px">
               </a>
               <div class="row">
@@ -97,7 +97,7 @@
                   </div>
                 </div>
               </div>
-              <div class="d-grid">
+              {{-- <div class="d-grid">
                 <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                   <img src="{{asset('admin_assets/images/authentication/google-icon.svg')}}" />Sign In With Google
                 </button>
@@ -105,7 +105,7 @@
               <div class="saprator mt-3">
                 <span>or</span>
               </div>
-              <h5 class="my-4 d-flex justify-content-center">Sign in with Email address</h5>
+              <h5 class="my-4 d-flex justify-content-center">Sign in with Email address</h5> --}}
 
               <form method="POST" action="{{ route('login') }}">
                 @csrf
@@ -125,7 +125,7 @@
                     <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
                     <label class="form-check-label text-muted" for="customCheckc1">Remember me</label>
                   </div>
-                  <h5 class="text-secondary">Forgot Password?</h5>
+                  <h5 class="text-primary">Forgot Password?</h5>
                 </div>
                 <div class="d-grid mt-4">
                   <button type="submit" class="btn btn-primary">Sign In</button>

@@ -8,5 +8,6 @@
 </head>
 <body>
     <h1>Admin Dashboard</h1>
+    <a href="{{route('user.logout')}}">Logout</a>
 </body>
 </html>
