@@ -112,14 +112,15 @@
               <form method="POST" action="{{route('register')}}">
                 @csrf
                 {{-- <x-input-error :messages="$errors->get('name')" class="mt-2" /> --}}
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-floating mb-3">
-                      <input type="text" name="name" class="form-control" id="floatingInput name" placeholder="Name" />
-                      <label for="floatingInput">Name</label>
-                      <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
-                  </div>
+                <div class="form-floating mb-3">
+                  <input type="text" name="first_name" class="form-control" id="floatingInput first_name" placeholder="First Name" />
+                  <label for="floatingInput">First Name</label>
+                  <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="text" name="last_name" class="form-control" id="floatingInput last_name" placeholder="Last Name" />
+                  <label for="floatingInput">Last Name</label>
+                  <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
                 </div>
                 <div class="form-floating mb-3">
                   <input type="email" name="email" class="form-control" id="floatingInput email" placeholder="Email Address" />

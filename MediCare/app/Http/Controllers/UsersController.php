@@ -27,7 +27,7 @@ class UsersController extends Controller
 
     public function SuperAdminDashboard(){
         
-        return view('superadmin.index');
+        return view('super_admin_dashboard');
     }
 
     public function userLogout(Request $request): RedirectResponse

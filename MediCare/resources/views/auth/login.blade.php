@@ -109,6 +109,13 @@
 
               <form method="POST" action="{{ route('login') }}">
                 @csrf
+                @if (session('status'))
+                <div class="row mt-4">
+                  <div class="col-md-6 bg-primary text-light text-center offset-md-3 p-2 rounded-pill">
+                    <h3>{{session('status')}}</h3>
+                  </div>
+                </div>
+                @endif
             
                 <div class="form-floating mb-3">
                   <input type="email" class="form-control" id="floatingInput email" placeholder="Email address" name="email" />

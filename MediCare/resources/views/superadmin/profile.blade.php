@@ -11,12 +11,12 @@
             <div class="row align-items-center">
               <div class="col-md-12">
                 <div class="page-header-title">
-                  <h5 class="m-b-10">Doctor Account</h5>
+                  <h5 class="m-b-10">Super Admin Account</h5>
                 </div>
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="{{route('doctor.dashboard')}}">Home</a></li>
-                  <li class="breadcrumb-item"><a href="{{route('doctor.dashboard')}}">Dashboard</a></li>
-                  <li class="breadcrumb-item" aria-current="page">Doctor Account</li>
+                  <li class="breadcrumb-item"><a href="{{route('superadmin.dashboard')}}">Home</a></li>
+                  <li class="breadcrumb-item"><a href="{{route('superadmin.dashboard')}}">Dashboard</a></li>
+                  <li class="breadcrumb-item" aria-current="page">Super Admin Account</li>
                 </ul>
               </div>
             </div>
@@ -27,6 +27,7 @@
 
         <!-- [ Main Content ] start -->
         {{-- <div class="row">
+
           <!-- [ sample-page ] start -->
           <div class="col-sm-12">
             <div class="card">
@@ -102,7 +103,7 @@
                           <p class="f-16 mt-2">Update your account's profile information and email address.</p>
                         </div>
                       </div>
-                    <form method="POST" action="{{ route('doctor.profile.update') }}">
+                    <form method="POST" action="{{ route('profile.update') }}">
                       @csrf
                       @method('patch')
 
@@ -117,24 +118,16 @@
                       <div class="row mt-2">
                         <div class="col-md-6 offset-md-3">
                           <div class="form-floating mb-3 ">
-                            <input type="text" class="form-control ml-2" id="floatingInput first_name" placeholder="{{$user->first_name}}" name="first_name" value="{{$user->first_name}}" required/>
-                            <label for="floatingInput">First Name</label> 
-                            <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
+                            <input type="text" class="form-control ml-2" id="floatingInput name" placeholder="{{$user->name}}" name="name" value="{{$user->name}}"/>
+                            <label for="floatingInput">Name</label> 
+                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
                           </div>
                         </div>
                       </div>
                       <div class="row mt-1">
                         <div class="col-md-6 offset-md-3">
                           <div class="form-floating mb-3 ">
-                            <input type="text" class="form-control" id="floatingInput last_name" placeholder="{{$user->last_name}}" value="{{$user->last_name}}" name="last_name" required/>
-                            <label for="floatingInput">Last Name</label> 
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row mt-1">
-                        <div class="col-md-6 offset-md-3">
-                          <div class="form-floating mb-3 ">
-                            <input type="email" class="form-control" id="floatingInput lname" placeholder="{{$user->email}}" value="{{$user->email}}" name="email" required/>
+                            <input type="email" class="form-control" id="floatingInput lname" placeholder="{{$user->email}}" value="{{$user->email}}" name="email"/>
                             <label for="floatingInput">Email</label> 
                           </div>
                         </div>

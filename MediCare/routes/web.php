@@ -41,15 +41,19 @@ Route::middleware('auth','role:nurse')->group(function(){
     Route::get('/nurse/dashboard', [UsersController::class, 'NurseDashboard'])->name('nurse.dashboard');
 });
 
+// Doctor
+
 Route::middleware('auth','role:doctor')->group(function(){
 
     Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
 
     Route::get('/doctor/profile', [DoctorController::class, 'edit'])->name('doctor.profile.edit');
 
-    Route::patch('/doctor/profile', [DoctorController::class, 'update'])->name('doctor.profile.update');
+    Route::patch('/doctor/profile/update', [DoctorController::class, 'update'])->name('doctor.profile.update');
 
-    Route::get('/admin/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');
+    Route::put('/doctor/profile/update', [DoctorController::class, 'updatePassword'])->name('doctor.password.update');
+
+    Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');
 });
 
 Route::middleware('auth','role:admin')->group(function(){
@@ -57,7 +61,14 @@ Route::middleware('auth','role:admin')->group(function(){
 });
 
 Route::middleware('auth','role:super_admin')->group(function(){
+
     Route::get('/super_admin/dashboard', [UsersController::class, 'SuperAdminDashboard'])->name('superadmin.dashboard');
+
+    Route::get('/super_admin/profile', [DoctorController::class, 'edit'])->name('superadmin.profile.edit');
+
+    Route::patch('/super_admin/profile', [DoctorController::class, 'update'])->name('superadmin.profile.update');
+
+    Route::get('/super_admin/logout', [DoctorController::class, 'doctorLogout'])->name('superadmin.logout');
 });
 
 

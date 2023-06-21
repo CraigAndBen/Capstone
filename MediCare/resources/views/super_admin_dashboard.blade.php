@@ -38,8 +38,7 @@
       <header class="pc-header">
         <div class="m-header mt-3">
 
-          <a href="{{route('doctor.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
-
+            <a href="{{route('superadmin.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
             <!-- ======= Menu collapse Icon ===== -->
         </div>
         <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
@@ -186,11 +185,11 @@
         </header>
 <!-- [ Header ] end -->
  <!-- [ Sidebar Menu ] start -->
-<nav class="pc-sidebar">
+<nav class="pc-sidebar"> 
   <div class="navbar-wrapper">
     <div class="m-header">
       <div class="mt-3">
-        <a href="/doctor/dashboard" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+        <a href="{{route('superadmin.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
       </div>
 
     </div>
@@ -201,7 +200,7 @@
           <i class="ti ti-dashboard"></i>
         </li>
         <li class="pc-item">
-          <a href="/admin/dashboard" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
+          <a href="{{route('superadmin.dashboard')}}" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
               class="pc-mtext">Home</span></a>
         </li>
         <li class="pc-item pc-caption">
