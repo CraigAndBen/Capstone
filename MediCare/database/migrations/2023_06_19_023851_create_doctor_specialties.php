@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('doctor_specialties', function (Blueprint $table) {
             $table->id();
-            $table->smallInteger('doctor_id');
-            $table->string('name');
+            $table->smallInteger('doctor_id')->nullable();
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps(); 
         });
     }

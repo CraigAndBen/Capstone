@@ -107,10 +107,10 @@
                       @csrf
                       @method('patch')
 
-                          @if (session('status'))
-                          <div class="row mt-4">
+                          @if (session('status1'))
+                          <div class="row mt-4 mb-3">
                             <div class="col-md-6 bg-primary text-light text-center offset-md-3 p-2 rounded-pill">
-                              <h3>{{session('status')}}</h3>
+                              <h3 class="text-light">{{session('status1')}}</h3>
                             </div>
                           </div>
                           @endif
@@ -165,14 +165,14 @@
                           <p class="f-16 mt-2">Ensure your account is using a long, random password to stay secure.</p>
                         </div>
                       </div>
-                    <form method="POST" action="{{ route('doctor.password.update') }}">
+                    <form method="POST" action="{{ route('superadmin.password.update') }}">
                       @csrf
                       @method('put')
 
-                          @if (session('status'))
-                          <div class="row mt-4">
+                          @if (session('status2'))
+                          <div class="row mt-4 mb-3">
                             <div class="col-md-6 bg-primary text-light text-center offset-md-3 p-2 rounded-pill">
-                              <h3>{{session('status')}}</h3>
+                              <h3 class="text-light">{{session('status2')}}</h3>
                             </div>
                           </div>
                           @endif

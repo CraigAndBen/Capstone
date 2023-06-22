@@ -71,6 +71,10 @@ Route::middleware('auth','role:super_admin')->group(function(){
 
     Route::patch('/super_admin/profile', [SuperAdminController::class, 'update'])->name('superadmin.profile.update');
 
+    Route::put('/super_adminn/profile/update', [SuperAdminController::class, 'updatePassword'])->name('superadmin.password.update');
+
+    Route::post('/super_admin/adding/doctor', [SuperAdminController::class, 'createDoctor'])->name('superadmin.store.doctor');
+
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });
 

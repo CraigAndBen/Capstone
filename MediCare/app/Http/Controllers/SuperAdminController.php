@@ -41,21 +41,53 @@ class SuperAdminController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
+
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
+
+    //     $saved = $request->user()->save();
+
+    //     if($saved){
+    //         return Redirect::route('superadmin.profile.edit')->with('status', 'Profile Updated');
+    //     }else{
+    //         return Redirect::route('superadmin.profile.edit')->with('status', 'Profile not Updated');
+    //     }
+    // }
+        public function update(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $user = Auth::user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,',
+        ]);
+
+        $updatedData = [
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+        ];
+
+        // Check if any changes were made to the form data
+        if ($this->hasChanges($user, $updatedData)) {
+
+            $user->first_name = $request->input('first_name');
+            $user->last_name = $request->input('last_name');
+            $user->email = $request->input('email');
+    
+            $user->save();
+
+            return redirect()->back()->with('status1', 'Profile updated successfully.');
+        } else {
+            return redirect()->back()->with('status1', 'No changes were made.');
+        
         }
 
-        $saved = $request->user()->save();
-
-        if($saved){
-            return Redirect::route('superadmin.profile.edit')->with('status', 'Profile Updated');
-        }else{
-            return Redirect::route('superadmin.profile.edit')->with('status', 'Profile not Updated');
-        }
     }
 
     public function updatePassword(Request $request): RedirectResponse
@@ -65,15 +97,36 @@ class SuperAdminController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        $saved = $request->user()->update([
+        $request->user()->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        if($saved){
-            return back()->with('status', 'Password Updated');
-        }else{
-            return back()->with('status', 'Password not Updated');
-        }
+        return back()->with('status2', 'Password Updated');
+
+    }
+
+    public function createDoctor(Request $request) {
+        
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'specialties' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            'date' => 'required|date',
+            'phone' => 'required|regex:/^\+[1-9]\d{1,14}$/',
+        ]);
+        
+        // $user = User::create([
+        //     'name' => $request->input('name'),
+        //     'email' => $request->input('email'),
+        //     'password' => bcrypt($request->input('password')),
+        // ]);
+
+        // Perform any additional actions if needed
+
+
     }
     
     public function superAdminLogout(Request $request): RedirectResponse
@@ -85,5 +138,16 @@ class SuperAdminController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    private function hasChanges($user, $updatedData)
+    {
+        foreach ($updatedData as $key => $value) {
+            if ($user->{$key} !== $value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
