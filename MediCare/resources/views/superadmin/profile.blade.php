@@ -1,4 +1,4 @@
-@extends('layouts.inner_doctor')
+@extends('layouts.inner_superadmin')
 
 @section('content')
 
@@ -103,7 +103,7 @@
                           <p class="f-16 mt-2">Update your account's profile information and email address.</p>
                         </div>
                       </div>
-                    <form method="POST" action="{{ route('profile.update') }}">
+                    <form method="POST" action="{{ route('superadmin.profile.update') }}">
                       @csrf
                       @method('patch')
 
@@ -115,15 +115,23 @@
                           </div>
                           @endif
 
-                      <div class="row mt-2">
-                        <div class="col-md-6 offset-md-3">
-                          <div class="form-floating mb-3 ">
-                            <input type="text" class="form-control ml-2" id="floatingInput name" placeholder="{{$user->name}}" name="name" value="{{$user->name}}"/>
-                            <label for="floatingInput">Name</label> 
-                            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                          <div class="row mt-2">
+                            <div class="col-md-6 offset-md-3">
+                              <div class="form-floating mb-3 ">
+                                <input type="text" class="form-control ml-2" id="floatingInput first_name" placeholder="{{$user->first_name}}" name="first_name" value="{{$user->first_name}}" required/>
+                                <label for="floatingInput">First Name</label> 
+                                <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
+                          <div class="row mt-1">
+                            <div class="col-md-6 offset-md-3">
+                              <div class="form-floating mb-3 ">
+                                <input type="text" class="form-control" id="floatingInput last_name" placeholder="{{$user->last_name}}" value="{{$user->last_name}}" name="last_name" required/>
+                                <label for="floatingInput">Last Name</label> 
+                              </div>
+                            </div>
+                          </div>
                       <div class="row mt-1">
                         <div class="col-md-6 offset-md-3">
                           <div class="form-floating mb-3 ">

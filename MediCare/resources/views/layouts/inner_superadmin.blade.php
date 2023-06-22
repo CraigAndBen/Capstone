@@ -158,10 +158,10 @@
       </a>
       <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
         <div class="dropdown-header">
-          <h4>Good Morning, <span class="small text-muted">{{$user->name}}</span></h4>
+          <h4>Good Morning, <span class="small text-muted">{{$user->first_name}}</span></h4>
           <p class="text-muted">{{$user->role}}</p>
           <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-            <a href="{{route('superamdin.profile.edit')}}" class="dropdown-item">
+            <a href="{{route('superadmin.profile.edit')}}" class="dropdown-item">
               <i class="ti ti-settings"></i>
               <span>Account Settings</span>
             </a>
@@ -199,8 +199,8 @@
           <a href="../dashboard/index.html" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
               class="pc-mtext">Dashboard</span></a>
         </li>
-        <li class="pc-item pc-caption">
-          <label>Pages</label>
+        {{-- <li class="pc-item pc-caption">
+          <label>Accounts</label>
           <i class="ti ti-news"></i>
         </li>
         <li class="pc-item pc-hasmenu">
@@ -210,6 +210,14 @@
             <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/login-v3.html">Login</a></li>
             <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/register-v3.html">register</a></li>
           </ul>
+        </li> --}}
+        <li class="pc-item pc-caption">
+          <label>Accounts</label>
+          <i class="ti ti-dashboard"></i>
+        </li>
+        <li class="pc-item">
+          <a href="../dashboard/index.html" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
+              class="pc-mtext">Doctor</span></a>
         </li>
 
         <li class="pc-item pc-caption">

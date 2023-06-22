@@ -5,6 +5,7 @@ use App\Http\Controllers\DoctorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SuperAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,13 +63,15 @@ Route::middleware('auth','role:admin')->group(function(){
 
 Route::middleware('auth','role:super_admin')->group(function(){
 
-    Route::get('/super_admin/dashboard', [UsersController::class, 'SuperAdminDashboard'])->name('superadmin.dashboard');
+    Route::get('/super_admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
 
-    Route::get('/super_admin/profile', [DoctorController::class, 'edit'])->name('superadmin.profile.edit');
+    Route::get('/super_admin/doctor', [SuperAdminController::class, 'doctor'])->name('superadmin.doctor');
 
-    Route::patch('/super_admin/profile', [DoctorController::class, 'update'])->name('superadmin.profile.update');
+    Route::get('/super_admin/profile', [SuperAdminController::class, 'edit'])->name('superadmin.profile.edit');
 
-    Route::get('/super_admin/logout', [DoctorController::class, 'doctorLogout'])->name('superadmin.logout');
+    Route::patch('/super_admin/profile', [SuperAdminController::class, 'update'])->name('superadmin.profile.update');
+
+    Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });
 
 

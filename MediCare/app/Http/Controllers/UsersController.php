@@ -15,19 +15,10 @@ class UsersController extends Controller
         return view('nurse.index');
     }
 
-    public function DoctorDashboard(){
-        
-        return view('admin_dashboard');
-    }
 
     public function AdminDashboard(){
         
         return view('admin.index');
-    }
-
-    public function SuperAdminDashboard(){
-        
-        return view('super_admin_dashboard');
     }
 
     public function userLogout(Request $request): RedirectResponse
