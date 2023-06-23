@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->smallInteger('account_id')->nullable();
             $table->date('birthdate')->nullable();
-            $table->integer('phone')->nullable();
-            $table->integer('photo')->nullable();
-            $table->integer('address')->nullable();
+            $table->string('specialties')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }

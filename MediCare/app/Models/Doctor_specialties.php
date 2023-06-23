@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Doctor_specialties extends Model
 {
+    protected $table = 'doctor_specialties';
+
     protected $guarded = [];
     
     use HasFactory;

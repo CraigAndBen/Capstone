@@ -45,16 +45,16 @@
                     </div>
                   @endif
 
-                  @if (session('status2'))
+                  @if (session('status'))
                   <div class="row mt-4 mb-3">
                     <div class="col-md-6 bg-primary text-light text-center offset-md-3 p-2 rounded-pill">
-                      <h3 class="text-light">{{session('status2')}}</h3>
+                      <h3 class="text-light">{{session('status')}}</h3>
                     </div>
                   </div>
                   @endif
 
                     <div class=" d-flex mb-3 justify-content-end">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Account</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Account</button>
                     </div>
                     <table class="table table-bordered">
                       <thead class="bg-primary text-light text-center">
@@ -68,23 +68,39 @@
                       </thead>
                       <tbody>
                         @foreach ($users as $user)
+
                             <tr>
-                                <td>{{$user->first_name}}</td>
-                                <td>{{$user->last_name}}</td>
-                                <td>{{$user->email}}</td>
-                                <td>{{$user->status}}</td>
-                                <td class="text-center">
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                                          Actions
-                                        </button>
-                                        <div class="dropdown-menu">
-                                          <a class="dropdown-item" href="#">Edit</a>
-                                          <a class="dropdown-item" href="#">Deactivate</a>
-                                          <a class="dropdown-item" href="#">View</a>
-                                        </div>
-                                    </div>
-                                </td>
+                              <td>{{$user->first_name}}</td>
+                              <td>{{$user->last_name}}</td>
+                              <td>{{$user->email}}</td>
+                              <td>{{$user->status}}</td>
+                              <td class="text-center">
+                                  <div class="dropdown">
+                                      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                        Actions
+                                      </button>
+                                      <div class="dropdown-menu">
+                                        @foreach ($doctors as $doctor)
+
+                                        @if ($user->id === $doctor->account_id)
+                                          <a class="dropdown-item btn btn-primary" data-toggle="modal" data-target="#editModal"
+                                          {{-- data-toggle="modal" 
+                                          data-target="#editModal" 
+                                          data-first-name="{{ $user->first_name }}"
+                                          data-last-name="{{ $user->last_name }}"
+                                          data-specialties="{{ $doctor->specialties }}"
+                                          data-address="{{ $doctor->address }}"
+                                          data-date="{{ $doctor->birthdate }}"
+                                          data-phone="{{ $doctor->phone }}" --}}
+                    
+                                          >Edit</a>
+                                        @endif
+                                        @endforeach
+                                        <a class="dropdown-item">Deactivate</a>
+                                        <a class="dropdown-item" href="#">View</a>
+                                      </div>
+                                  </div>
+                              </td>
                             </tr>
                         @endforeach
 
@@ -94,7 +110,7 @@
               </div>
             </div>
 
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                   <div class="modal-content">
                     <div class="modal-header bg-primary">
@@ -170,10 +186,29 @@
                       <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                       <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
-                    </form>
-                  </div>
+                  </form>
                 </div>
               </div>
+            </div>
+
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h4 class="modal-title" id="myModalLabel">User Details</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <h5>User ID: <span id="info"></span></h5>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
             
           <!-- [ sample-page ] end -->
         </div> 
@@ -181,7 +216,19 @@
       </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 @endsection
+
+{{-- @section('scripts')
+  <script>
+    $(document).ready(function() {
+      $('#editModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var info =  JSON.parse(button.data('info'));  // Extract data attributes
+        var modal = $(this);
+        modal.find('#info').text(info); // Set data in modal
+      });
+    });
+  </script>
+@endsection --}}

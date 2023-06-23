@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('user_info', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('account_id')->nullable();
-            $table->integer('phone')->nullable();
+            $table->string('phone')->nullable();
             $table->date('birthdate')->nullable();
-            $table->integer('photo')->nullable();
-            $table->integer('address')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('user_info');
     }
 };

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Doctor;
+use App\Models\User_info;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +36,9 @@ class SuperAdminController extends Controller
 
         $users = User::where('role', 'doctor')->get();
 
-        return view('superadmin.doctor', compact('users','user'));
+        $doctors = Doctor::all();
+
+        return view('superadmin.doctor', compact('users','user','doctors'));
         
     }
 
@@ -115,18 +119,28 @@ class SuperAdminController extends Controller
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|confirmed',
             'date' => 'required|date',
-            'phone' => 'required|regex:/^\+[1-9]\d{1,14}$/',
+            'phone' => 'required',
         ]);
-        
-        // $user = User::create([
-        //     'name' => $request->input('name'),
-        //     'email' => $request->input('email'),
-        //     'password' => bcrypt($request->input('password')),
-        // ]);
 
-        // Perform any additional actions if needed
+        $user = User::create([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->password),
+            'role' => 'doctor',
+        ]);
 
+        $latestUser = User::latest()->first();
 
+        $doctor = doctor::create([
+            'account_id' => $latestUser->id,
+            'specialties' => $request->input('specialties'),
+            'phone' => $request->input('phone'),
+            'birthdate' => $request->input('date'),
+            'address' => $request->input('address'),
+        ]);
+
+        return back()->with('status', 'User Added');
     }
     
     public function superAdminLogout(Request $request): RedirectResponse
