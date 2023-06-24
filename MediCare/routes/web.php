@@ -75,6 +75,8 @@ Route::middleware('auth','role:super_admin')->group(function(){
 
     Route::post('/super_admin/adding/doctor', [SuperAdminController::class, 'createDoctor'])->name('superadmin.store.doctor');
 
+    Route::post('/super_admin/updating/doctor', [SuperAdminController::class, 'updateDoctorInfo'])->name('superadmin.update.doctor');
+
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });
 

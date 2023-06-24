@@ -109,6 +109,45 @@ class SuperAdminController extends Controller
 
     }
 
+    public function updateDoctorInfo (Request $request) {
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'specialties' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'date' => 'required|date',
+            'phone' => 'required',
+            'email' => 'required|string|email|max:255',
+
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+        $doctor = Doctor::where('account_id', $request->user_id)->first();
+
+        if($user->first_name !== $request->input('first_name') || $user->last_name !== $request->input('last_name')
+            || $doctor->specialties !== $request->input('specialties') || $doctor->address !== $request->input('address')
+            || $user->email !== $request->input('email') || $doctor->birthdate !== $request->input('date') || $doctor->phone !== $request->input('phone')
+        ){
+            $user->first_name = $request->input('first_name');
+            $user->last_name = $request->input('last_name');
+            $user->email = $request->input('email');
+            $doctor->specialties = $request->input('specialties');
+            $doctor->address = $request->input('address');
+            $doctor->birthdate = $request->input('date');
+            $doctor->phone = $request->input('phone');
+
+            $user->save();
+            $doctor->save();
+
+            return redirect()->route('superadmin.doctor')->with('status', 'User updated successfully.');
+        } else {
+            return redirect()->route('superadmin.doctor')->with('status', 'No changes were made to the user.');
+        }
+
+
+    }
+
     public function createDoctor(Request $request) {
         
         $request->validate([
