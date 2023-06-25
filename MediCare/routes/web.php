@@ -71,11 +71,15 @@ Route::middleware('auth','role:super_admin')->group(function(){
 
     Route::patch('/super_admin/profile', [SuperAdminController::class, 'update'])->name('superadmin.profile.update');
 
-    Route::put('/super_adminn/profile/update', [SuperAdminController::class, 'updatePassword'])->name('superadmin.password.update');
+    Route::put('/super_admin/profile/update', [SuperAdminController::class, 'updatePassword'])->name('superadmin.password.update');
 
-    Route::post('/super_admin/adding/doctor', [SuperAdminController::class, 'createDoctor'])->name('superadmin.store.doctor');
+    Route::post('/super_admin/doctor/create', [SuperAdminController::class, 'createDoctor'])->name('superadmin.store.doctor');
 
-    Route::post('/super_admin/updating/doctor', [SuperAdminController::class, 'updateDoctorInfo'])->name('superadmin.update.doctor');
+    Route::post('/super_admin/doctor/update', [SuperAdminController::class, 'updateDoctorInfo'])->name('superadmin.update.doctor');
+
+    Route::post('/super_admin/doctor/update/status', [SuperAdminController::class, 'updateDoctorStatus'])->name('superadmin.doctor.update.status');
+
+    Route::post('/super_admin/doctor/update/password', [SuperAdminController::class, 'updateDoctorPassword'])->name('superadmin.doctor.password.update');
 
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });

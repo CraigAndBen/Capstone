@@ -106,7 +106,51 @@ class SuperAdminController extends Controller
         ]);
 
         return back()->with('status2', 'Password Updated');
+    }
 
+    public function updateDoctorPassword (Request $request) {
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+
+        if (Hash::check($request->input('password'), $user->password)) {
+            return redirect()->route('superadmin.doctor')->with('status', "Password doesn't change.");
+        }
+
+        if (Hash::check($request->input('current_password'), $user->password)) {
+
+            $user->password = Hash::make($request->input('password'));
+
+            $user->save();
+
+            return redirect()->route('superadmin.doctor')->with('status', 'Password updated successfull.');
+        }
+
+        return redirect()->route('superadmin.doctor')->with('status', 'Current password is incorrect.');
+
+    }
+
+    public function updateDoctorStatus (Request $request) {
+        
+        $user = User::findOrFail($request->input('user_id'));
+
+        if ($request->input('status') === 'active') {
+
+            $user->status = 'inactive';
+            $user->save();
+            
+            return redirect()->route('superadmin.doctor')->with('status', 'User status updated to inactive.');
+        } else {
+
+            $user->status = 'active';
+            $user->save();
+            
+            return redirect()->route('superadmin.doctor')->with('status', 'User status updated to active.');
+        }
     }
 
     public function updateDoctorInfo (Request $request) {
