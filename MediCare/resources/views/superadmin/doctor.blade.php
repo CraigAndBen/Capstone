@@ -32,7 +32,7 @@
           <div class="col-sm-12">
             <div class="card">
               <div class="card-header">
-                <h1>Doctor</h1>
+                <h1>Doctor Accounts</h1>
               </div>
               <div class="card-body">
                 <div class="container">
@@ -88,6 +88,11 @@
                                             data-user-id="{{ json_encode($user->id) }}"
                                             data-first-name="{{ json_encode($user->first_name) }}"
                                             data-last-name="{{ json_encode($user->last_name) }}"
+                                            data-middle-name="{{ json_encode($user->middle_name) }}"
+                                            data-age="{{ json_encode($doctor->age) }}"
+                                            data-gender="{{ json_encode($doctor->gender) }}"
+                                            data-qualification="{{ json_encode($doctor->qualification) }}"
+                                            data-years-of-experience="{{ json_encode($doctor->years_of_experience) }}"
                                             data-specialties="{{ json_encode($doctor->specialties)  }}"
                                             data-address="{{ json_encode($doctor->address)  }}"
                                             data-date="{{ json_encode($doctor->birthdate)  }}"
@@ -144,7 +149,7 @@
                         <form method="POST" action="{{route('superadmin.update.doctor')}}">
                             @csrf
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-floating mb-3 ">
                                         <input type="hidden" id="user_id" name="user_id"/>
                                         <input type="text" class="form-control ml-2 first_name" id="first_name" placeholder="First Name" name="first_name" required/>
@@ -152,7 +157,15 @@
                                         <x-input-error :messages="$errors->get('first_name')" class="mt-2" />     
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                  <div class="form-floating mb-3 ">
+                                      <input type="hidden" id="user_id" name="user_id"/>
+                                      <input type="text" class="form-control ml-2 middle_name" id="middle_name" placeholder="Middle Name" name="first_name" required/>
+                                      <label for="floatingInput">First Name</label>    
+                                      <x-input-error :messages="$errors->get('first_name')" class="mt-2" />     
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="form-floating mb-3 ">
                                         <input type="phone" class="form-control" id="last_name" placeholder="Last Name" name="last_name" required/>
                                         <label for="floatingInput">Last Name</label> 
@@ -162,9 +175,36 @@
                                 </div>
                               </div>
                             <div class="form-floating mb-3">
-                              <input type="specialties" name="specialties" class="form-control" id="specialties" placeholder="Email Address" required/>
+                              <input type="text" name="specialties" class="form-control" id="specialties" placeholder="Email Address" required/>
                               <label for="floatingInput">Specialties</label>
                               <x-input-error :messages="$errors->get('specialties')" class="mt-2" />
+                            </div>
+                            <div class="form-floating mb-3">
+                              <input type="text" name="qualification" class="form-control" id="qualification" placeholder="Qualifications" required/>
+                              <label for="floatingInput">Qualifications</label>
+                              <x-input-error :messages="$errors->get('qualification')" class="mt-2" />
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                  <div class="form-floating mb-3 ">
+                                      <input type="number" class="form-control ml-2" id="age" placeholder="Age" name="age" required/>
+                                      <label for="floatingInput">Age</label>    
+                                      <x-input-error :messages="$errors->get('age')" class="mt-2" />     
+                                  </div>
+                              </div>
+                              <div class="col-md-6">
+                                <select class="form-control p-3" id="gender" name="gender">
+                                  <option>Select a Gender</option>
+                                  <option value="female">Female</option>
+                                  <option value="male">Male</option>
+                                  <option value="other">Other</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                              <input type="number" name="years_of_experience" class="form-control" id="years_of_experience" placeholder="Years of Experience" required/>
+                              <label for="floatingInput">Years of Experience</label>
+                              <x-input-error :messages="$errors->get('years_of_experience')" class="mt-2" />
                             </div>
                             <div class="form-floating mb-3">
                               <input type="text" name="address" class="form-control" id="address" placeholder="Address" required/>
@@ -208,7 +248,7 @@
               <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                   <div class="modal-header bg-primary">
-                    <h2 class="modal-title text-light" id="myModalLabel">View Doctor Account</h2>
+                    <h2 class="modal-title text-light" id="myModalLabel">View Account</h2>
                     {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button> --}}
@@ -277,7 +317,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header bg-primary">
-                  <h2 class="modal-title text-light" id="myModalLabel">Create Doctor Account</h2>
+                  <h2 class="modal-title text-light" id="myModalLabel">Create Account</h2>
                   {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button> --}}
@@ -286,14 +326,21 @@
                     <form method="POST" action="{{route('superadmin.store.doctor')}}">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating mb-3 ">
                                     <input type="text" class="form-control ml-2" id="floatingInput first_name" placeholder="First Name" name="first_name" required/>
                                     <label for="floatingInput">First Name</label>    
                                     <x-input-error :messages="$errors->get('first_name')" class="mt-2" />     
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                              <div class="form-floating mb-3 ">
+                                  <input type="text" class="form-control ml-2" id="floatingInput middle_name" placeholder="Middle Name" name="middle_name" required/>
+                                  <label for="floatingInput">Middle Name</label>    
+                                  <x-input-error :messages="$errors->get('middle_name')" class="mt-2" />     
+                              </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-floating mb-3 ">
                                     <input type="phone" class="form-control" id="floatingInput last_name" placeholder="Last Name" name="last_name" required/>
                                     <label for="floatingInput">Last Name</label> 
@@ -301,11 +348,38 @@
 
                                 </div>
                             </div>
-                          </div>
+                        </div>
                         <div class="form-floating mb-3">
-                          <input type="specialties" name="specialties" class="form-control" id="floatingInput specialties" placeholder="Email Address" required/>
+                          <input type="text" name="specialties" class="form-control" id="floatingInput specialties" placeholder="Email Address" required/>
                           <label for="floatingInput">Specialties</label>
                           <x-input-error :messages="$errors->get('specialties')" class="mt-2" />
+                        </div>
+                        <div class="form-floating mb-3">
+                          <input type="text" name="qualification" class="form-control" id="floatingInput qualification" placeholder="Qualifications" required/>
+                          <label for="floatingInput">Qualifications</label>
+                          <x-input-error :messages="$errors->get('qualification')" class="mt-2" />
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                              <div class="form-floating mb-3 ">
+                                  <input type="number" class="form-control ml-2" id="floatingInput age" placeholder="Age" name="age" required/>
+                                  <label for="floatingInput">Age</label>    
+                                  <x-input-error :messages="$errors->get('age')" class="mt-2" />     
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                            <select class="form-control p-3" id="gender" name="gender">
+                              <option>Select a Gender</option>
+                              <option value="female">Female</option>
+                              <option value="male">Male</option>
+                              <option value="other">Other</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                          <input type="number" name="years_of_experience" class="form-control" id="floatingInput years_of_experience" placeholder="Years of Experience" required/>
+                          <label for="floatingInput">Years of Experience</label>
+                          <x-input-error :messages="$errors->get('years_of_experience')" class="mt-2" />
                         </div>
                         <div class="form-floating mb-3">
                           <input type="text" name="address" class="form-control" id="floatingInput address" placeholder="Address" required/>
@@ -412,15 +486,26 @@
         var user_id =  JSON.parse(button.data('user-id'));  
         var first_name =  JSON.parse(button.data('first-name'));  
         var last_name =  JSON.parse(button.data('last-name'));  
+        var middle_name =  JSON.parse(button.data('middle-name'));  
         var specialties =  JSON.parse(button.data('specialties'));  
+        var qualification =  JSON.parse(button.data('qualification'));  
+        var years_of_experience =  JSON.parse(button.data('years_of_experience'));  
+        var age =  JSON.parse(button.data('age'));  
+        var gender =  JSON.parse(button.data('gender'));  
         var address =  JSON.parse(button.data('address'));  
         var date =  JSON.parse(button.data('date'));  
         var phone =  JSON.parse(button.data('phone'));  
         var email =  JSON.parse(button.data('email'));  
         var modal = $(this);
+        alert(gender);
         modal.find('#first_name').val(first_name);
         modal.find('#last_name').val(last_name);
+        modal.find('#middle_name').val(middle_name);
         modal.find('#specialties').val(specialties);
+        modal.find('#qualification').val(qualification);
+        modal.find('#years_of_experience').val(years_of_experience);
+        modal.find('#age').val(age);
+        modal.find('#gender').val(gender);
         modal.find('#address').val(address);
         modal.find('#date').val(date);
         modal.find('#phone').val(phone);

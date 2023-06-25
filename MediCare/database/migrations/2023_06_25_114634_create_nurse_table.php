@@ -11,18 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_info', function (Blueprint $table) {
+        Schema::create('nurse', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('account_id')->nullable();
-            $table->string('gender');
-            $table->smallInteger('age');
+            $table->smallInteger('age')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('qualifications')->nullable();
+            $table->smallInteger('years_of_experience')->nullable();
             $table->string('phone')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('photo')->nullable();
             $table->string('address')->nullable();
-            $table->string('occupation')->nullable();
             $table->timestamps();
-        }); 
+        });
     }
 
     /**
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_info');
+        Schema::dropIfExists('nurse');
     }
 };

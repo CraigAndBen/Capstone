@@ -65,7 +65,15 @@ Route::middleware('auth','role:super_admin')->group(function(){
 
     Route::get('/super_admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
 
+    Route::get('/super_admin/superadmin', [SuperAdminController::class, 'superadmin'])->name('superadmin.superadmin');
+
     Route::get('/super_admin/doctor', [SuperAdminController::class, 'doctor'])->name('superadmin.doctor');
+
+    Route::get('/super_admin/admin', [SuperAdminController::class, 'admin'])->name('superadmin.admin');
+
+    Route::get('/super_admin/nurse', [SuperAdminController::class, 'nurse'])->name('superadmin.nurse');
+
+    Route::get('/super_admin/user', [SuperAdminController::class, 'user'])->name('superadmin.user');
 
     Route::get('/super_admin/profile', [SuperAdminController::class, 'edit'])->name('superadmin.profile.edit');
 

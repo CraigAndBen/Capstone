@@ -42,6 +42,41 @@ class SuperAdminController extends Controller
         
     }
 
+    public function admin(){
+
+        $user = auth()->user();
+
+        $users = User::where('role', 'admin')->get();
+
+        $admins = Admin::all();
+
+        return view('superadmin.doctor', compact('users','user','admins'));
+        
+    }
+
+    public function nurse(){
+
+        $user = auth()->user();
+
+        $users = User::where('role', 'nurse')->get();
+
+        $nurse = Nurse::all();
+
+        return view('superadmin.doctor', compact('users','user','admins'));
+    }
+
+    public function user(){
+
+        $user = auth()->user();
+
+        $users = User::where('role', 'admin')->get();
+
+        $users_info = User_info::all();
+
+        return view('superadmin.doctor', compact('users','user','users_info'));
+        
+    }
+
     /**
      * Update the user's profile information.
      */
@@ -196,8 +231,13 @@ class SuperAdminController extends Controller
         
         $request->validate([
             'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'age' => 'required|numeric|gt:0',
+            'gender' => 'required|string|max:255',
             'specialties' => 'required|string|max:255',
+            'qualification' => 'required|string|max:255',
+            'years_of_experience' => 'required|numeric|gt:0',
             'address' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|confirmed',
@@ -207,6 +247,7 @@ class SuperAdminController extends Controller
 
         $user = User::create([
             'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->password),
@@ -217,13 +258,17 @@ class SuperAdminController extends Controller
 
         $doctor = doctor::create([
             'account_id' => $latestUser->id,
+            'age' => $request->input('age'),
+            'gender' => $request->input('gender'),
             'specialties' => $request->input('specialties'),
+            'qualification' => $request->input('qualification'),
+            'years_of_experience' => $request->input('years_of_experience'),
             'phone' => $request->input('phone'),
             'birthdate' => $request->input('date'),
             'address' => $request->input('address'),
         ]);
 
-        return back()->with('status', 'User Added');
+        return back()->with('status', 'User added sucessfully.');
     }
     
     public function superAdminLogout(Request $request): RedirectResponse

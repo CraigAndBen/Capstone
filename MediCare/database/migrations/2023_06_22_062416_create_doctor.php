@@ -14,8 +14,12 @@ return new class extends Migration
         Schema::create('doctor', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('account_id')->nullable();
+            $table->smallInteger('age')->nullable();
+            $table->string('gender')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('specialties')->nullable();
+            $table->string('qualification')->nullable();
+            $table->string('years_of_experience')->nullable();
             $table->string('phone')->nullable();
             $table->string('photo')->nullable();
             $table->string('address')->nullable();

@@ -200,16 +200,26 @@
           <i class="ti ti-dashboard"></i>
         </li>
         <li class="pc-item">
-          <a href="{{route('superadmin.dashboard')}}" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
-              class="pc-mtext">Home</span></a>
+          <a href="{{route('superadmin.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Home</span></a>
         </li>
         <li class="pc-item pc-caption">
           <label>Account</label>
           <i class="ti ti-apps"></i>
         </li>
         <li class="pc-item">
-          <a href="{{route('superadmin.doctor')}}" class="pc-link"><span class="pc-micon"><i
-                class="ti ti-typography"></i></span><span class="pc-mtext">Doctor</span></a>
+          <a href="{{route('superadmin.superadmin')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Super Admin</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('superadmin.admin')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Admin</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('superadmin.doctor')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Doctor</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('superadmin.nurse')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Nurse</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('superadmin.user')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">User</span></a>
         </li>
         {{-- <li class="pc-item pc-caption">
           <label>Pages</label>

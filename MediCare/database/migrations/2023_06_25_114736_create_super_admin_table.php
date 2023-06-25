@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctor_specialties', function (Blueprint $table) {
+        Schema::create('super_admin', function (Blueprint $table) {
             $table->id();
-            $table->smallInteger('doctor_id')->nullable();
-            $table->string('name')->nullable();
-            $table->string('description')->nullable();
-            $table->timestamps(); 
+            $table->smallInteger('account_id')->nullable();
+            $table->enum('access_level', ['half_access','full_access'])->default('full_access');
+            $table->timestamps();
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctor_specialties');
+        Schema::dropIfExists('super_admin');
     }
 };

@@ -11,18 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_info', function (Blueprint $table) {
+        Schema::create('admin', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('account_id')->nullable();
-            $table->string('gender');
-            $table->smallInteger('age');
-            $table->string('phone')->nullable();
-            $table->date('birthdate')->nullable();
-            $table->string('photo')->nullable();
-            $table->string('address')->nullable();
-            $table->string('occupation')->nullable();
+            $table->enum('access_level', ['half_access','full_access'])->default('half_access');
             $table->timestamps();
-        }); 
+        });
     }
 
     /**
@@ -30,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_info');
+        Schema::dropIfExists('admin');
     }
 };
