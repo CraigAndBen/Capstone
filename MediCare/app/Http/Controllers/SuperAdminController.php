@@ -192,26 +192,37 @@ class SuperAdminController extends Controller
 
         $request->validate([
             'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'age' => 'required|numeric|gt:0',
+            'gender' => 'required|string|max:255',
             'specialties' => 'required|string|max:255',
+            'qualification' => 'required|string|max:255',
+            'years_of_experience' => 'required|numeric|gt:0',
             'address' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
             'date' => 'required|date',
             'phone' => 'required',
-            'email' => 'required|string|email|max:255',
-
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
         $doctor = Doctor::where('account_id', $request->user_id)->first();
 
-        if($user->first_name !== $request->input('first_name') || $user->last_name !== $request->input('last_name')
-            || $doctor->specialties !== $request->input('specialties') || $doctor->address !== $request->input('address')
-            || $user->email !== $request->input('email') || $doctor->birthdate !== $request->input('date') || $doctor->phone !== $request->input('phone')
+        if($user->first_name !== $request->input('first_name') || $user->last_name !== $request->input('last_name') || $user->middle_name !== $request->input('middle_name')
+            || $doctor->gender !== $request->input('gender') || $doctor->age !== $request->input('age') || $doctor->qualification !== $request->input('qualification')
+            || $doctor->years_of_experience !== $request->input('years_of_experience') || $doctor->specialties !== $request->input('specialties') 
+            || $doctor->address !== $request->input('address') || $user->email !== $request->input('email') || $doctor->birthdate !== $request->input('date') 
+            || $doctor->phone !== $request->input('phone')
         ){
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
+            $user->middle_name = $request->input('middle_name');
             $user->email = $request->input('email');
+            $doctor->age = $request->input('age');
+            $doctor->gender = $request->input('gender');
+            $doctor->qualification = $request->input('qualification');
             $doctor->specialties = $request->input('specialties');
+            $doctor->years_of_experience = $request->input('years_of_experience');
             $doctor->address = $request->input('address');
             $doctor->birthdate = $request->input('date');
             $doctor->phone = $request->input('phone');

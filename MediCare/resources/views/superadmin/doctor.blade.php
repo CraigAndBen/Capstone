@@ -159,10 +159,9 @@
                                 </div>
                                 <div class="col-md-4">
                                   <div class="form-floating mb-3 ">
-                                      <input type="hidden" id="user_id" name="user_id"/>
-                                      <input type="text" class="form-control ml-2 middle_name" id="middle_name" placeholder="Middle Name" name="first_name" required/>
-                                      <label for="floatingInput">First Name</label>    
-                                      <x-input-error :messages="$errors->get('first_name')" class="mt-2" />     
+                                      <input type="text" class="form-control ml-2 middle_name" id="middle_name" placeholder="Middle Name" name="middle_name" required/>
+                                      <label for="floatingInput">Middle Name</label>    
+                                      <x-input-error :messages="$errors->get('Middle_name')" class="mt-2" />     
                                   </div>
                                 </div>
                                 <div class="col-md-4">
@@ -489,7 +488,7 @@
         var middle_name =  JSON.parse(button.data('middle-name'));  
         var specialties =  JSON.parse(button.data('specialties'));  
         var qualification =  JSON.parse(button.data('qualification'));  
-        var years_of_experience =  JSON.parse(button.data('years_of_experience'));  
+        var years_of_experience =  JSON.parse(button.data('years-of-experience'));  
         var age =  JSON.parse(button.data('age'));  
         var gender =  JSON.parse(button.data('gender'));  
         var address =  JSON.parse(button.data('address'));  
@@ -497,7 +496,7 @@
         var phone =  JSON.parse(button.data('phone'));  
         var email =  JSON.parse(button.data('email'));  
         var modal = $(this);
-        alert(gender);
+
         modal.find('#first_name').val(first_name);
         modal.find('#last_name').val(last_name);
         modal.find('#middle_name').val(middle_name);
