@@ -113,7 +113,7 @@ class SuperAdminController extends Controller
         ];
 
         // Check if any changes were made to the form data
-        if ($this->hasChanges($user, $updatedData)) {
+        if ($this->userHasChanges($user, $updatedData)) {
 
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
@@ -201,42 +201,87 @@ class SuperAdminController extends Controller
             'years_of_experience' => 'required|numeric|gt:0',
             'address' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'date' => 'required|date',
+            'birthdate' => 'required|date',
             'phone' => 'required',
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
-        $doctor = Doctor::where('account_id', $request->user_id)->first();
+        $info = Doctor::where('account_id', $request->user_id)->first();
 
-        if($user->first_name !== $request->input('first_name') || $user->last_name !== $request->input('last_name') || $user->middle_name !== $request->input('middle_name')
-            || $doctor->gender !== $request->input('gender') || $doctor->age !== $request->input('age') || $doctor->qualification !== $request->input('qualification')
-            || $doctor->years_of_experience !== $request->input('years_of_experience') || $doctor->specialties !== $request->input('specialties') 
-            || $doctor->address !== $request->input('address') || $user->email !== $request->input('email') || $doctor->birthdate !== $request->input('date') 
-            || $doctor->phone !== $request->input('phone')
-        ){
-            $user->first_name = $request->input('first_name');
-            $user->last_name = $request->input('last_name');
-            $user->middle_name = $request->input('middle_name');
-            $user->email = $request->input('email');
-            $doctor->age = $request->input('age');
-            $doctor->gender = $request->input('gender');
-            $doctor->qualification = $request->input('qualification');
-            $doctor->specialties = $request->input('specialties');
-            $doctor->years_of_experience = $request->input('years_of_experience');
-            $doctor->address = $request->input('address');
-            $doctor->birthdate = $request->input('date');
-            $doctor->phone = $request->input('phone');
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+        ];
 
-            $user->save();
-            $doctor->save();
+        $infoUpdatedData = [
+            'age' => $request->input('age'),
+            'gender' => $request->input('gender'),
+            'birthdate' => $request->input('birthdate'),
+            'specialties' => $request->input('specialties'),
+            'qualification' => $request->input('qualification'),
+            'years_of_experience' => $request->input('years_of_experience'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+        ];
 
-            return redirect()->route('superadmin.doctor')->with('status', 'User updated successfully.');
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+        $infoChange = $this->hasChanges($info, $infoUpdatedData);
+
+
+        // Check if any changes were made to the form data
+        if ($userChange == true || $infoChange == true)  {
+
+            if ($request->input('email') !== $user->email){
+
+                $request->validate([
+                    'email' => 'required|string|email|max:255|unique:users,email,',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $info->age = $request->input('age');
+                $info->gender = $request->input('gender');
+                $info->qualification = $request->input('qualification');
+                $info->specialties = $request->input('specialties');
+                $info->years_of_experience = $request->input('years_of_experience');
+                $info->address = $request->input('address');
+                $info->birthdate = $request->input('birthdate');
+                $info->phone = $request->input('phone');
+    
+                $user->save();
+                $info->save();
+    
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $info->age = $request->input('age');
+                $info->gender = $request->input('gender');
+                $info->qualification = $request->input('qualification');
+                $info->specialties = $request->input('specialties');
+                $info->years_of_experience = $request->input('years_of_experience');
+                $info->address = $request->input('address');
+                $info->birthdate = $request->input('birthdate');
+                $info->phone = $request->input('phone');
+    
+                $user->save();
+                $info->save();
+    
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+            }
+
         } else {
-            return redirect()->route('superadmin.doctor')->with('status', 'No changes were made to the user.');
+            return redirect()->back()->with('info', 'No changes were made.');
+        
         }
-
-
-    }
+   }
 
     public function createDoctor(Request $request) {
         
@@ -293,14 +338,20 @@ class SuperAdminController extends Controller
         return redirect('/');
     }
 
-    private function hasChanges($user, $updatedData)
+    private function hasChanges($info, $updatedData)
     {
         foreach ($updatedData as $key => $value) {
-            if ($user->{$key} !== $value) {
-                return true;
+
+            if ($info->{$key} != $value) {
+
+                $sample = $value;
+
+                return $sample;
+
             }
         }
 
         return false;
+
     }
 }

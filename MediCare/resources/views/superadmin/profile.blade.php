@@ -111,7 +111,7 @@
                           <div class="row mt-4 mb-3">
                             <div class="col-md-6 bg-primary text-light text-center offset-md-3 p-2 rounded-pill">
                               <h3 class="text-light">{{session('status1')}}</h3>
-                            </div>
+                            </div> 
                           </div>
                           @endif
 
