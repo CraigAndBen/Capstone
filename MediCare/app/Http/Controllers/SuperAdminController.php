@@ -30,7 +30,7 @@ class SuperAdminController extends Controller
         ]);
     }
 
-    public function doctor(){
+    public function doctor() {
 
         $user = auth()->user();
 
@@ -42,7 +42,7 @@ class SuperAdminController extends Controller
         
     }
 
-    public function admin(){
+    public function admin() {
 
         $user = auth()->user();
 
@@ -54,7 +54,7 @@ class SuperAdminController extends Controller
         
     }
 
-    public function nurse(){
+    public function nurse() {
 
         $user = auth()->user();
 
@@ -65,7 +65,7 @@ class SuperAdminController extends Controller
         return view('superadmin.doctor', compact('users','user','admins'));
     }
 
-    public function user(){
+    public function user() {
 
         $user = auth()->user();
 
@@ -76,28 +76,8 @@ class SuperAdminController extends Controller
         return view('superadmin.doctor', compact('users','user','users_info'));
         
     }
-
-    /**
-     * Update the user's profile information.
-     */
-    // public function update(ProfileUpdateRequest $request): RedirectResponse
-    // {
-    //     $request->user()->fill($request->validated());
-
-    //     if ($request->user()->isDirty('email')) {
-    //         $request->user()->email_verified_at = null;
-    //     }
-
-    //     $saved = $request->user()->save();
-
-    //     if($saved){
-    //         return Redirect::route('superadmin.profile.edit')->with('status', 'Profile Updated');
-    //     }else{
-    //         return Redirect::route('superadmin.profile.edit')->with('status', 'Profile not Updated');
-    //     }
-    // }
-        public function update(Request $request)
-    {
+    
+    public function update(Request $request) { 
         $user = Auth::user();
 
         $request->validate([
@@ -121,9 +101,9 @@ class SuperAdminController extends Controller
     
             $user->save();
 
-            return redirect()->back()->with('status1', 'Profile updated successfully.');
+            return redirect()->back()->with('success', 'Profile updated successfully.');
         } else {
-            return redirect()->back()->with('status1', 'No changes were made.');
+            return redirect()->back()->with('info', 'No changes were made.');
         
         }
 
@@ -140,7 +120,7 @@ class SuperAdminController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back()->with('status2', 'Password Updated');
+        return back()->with('success', 'Password Updated');
     }
 
     public function updateDoctorPassword (Request $request) {
@@ -152,20 +132,23 @@ class SuperAdminController extends Controller
 
         $user = User::findOrFail($request->input('user_id'));
 
-        if (Hash::check($request->input('password'), $user->password)) {
-            return redirect()->route('superadmin.doctor')->with('status', "Password doesn't change.");
-        }
+        if (!Hash::check($request->input('current_password'), $user->password)) {
 
-        if (Hash::check($request->input('current_password'), $user->password)) {
+            return redirect()->route('superadmin.doctor')->with('info', 'Current password is incorrect.');
+
+        } else {
+
+            if (Hash::check($request->input('password'), $user->password)) {
+            
+                return redirect()->route('superadmin.doctor')->with('info', "Password doesn't change.");
+            }
 
             $user->password = Hash::make($request->input('password'));
 
             $user->save();
 
-            return redirect()->route('superadmin.doctor')->with('status', 'Password updated successfull.');
+            return redirect()->route('superadmin.doctor')->with('success', 'Password updated successfull.');
         }
-
-        return redirect()->route('superadmin.doctor')->with('status', 'Current password is incorrect.');
 
     }
 
@@ -347,7 +330,6 @@ class SuperAdminController extends Controller
                 $sample = $value;
 
                 return $sample;
-
             }
         }
 

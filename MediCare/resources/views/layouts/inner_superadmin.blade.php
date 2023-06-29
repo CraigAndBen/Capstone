@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="{{asset('admin_assets/css/style.css')}}" id="main-style-link" />
 <link rel="stylesheet" href="{{asset('admin_assets/css/style-preset.css')}}" id="preset-style-link" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 
   </head>

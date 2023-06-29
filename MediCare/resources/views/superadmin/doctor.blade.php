@@ -416,14 +416,36 @@
                         <input type="email" name="email" class="form-control" id="floatingInput email" placeholder="Email Address" required/>
                         <label for="floatingInput">Email Address</label>
                       </div>
-                        <div class="form-floating mb-3">
-                          <input type="password" name="password" class="form-control" id="floatingInput password" placeholder="Password" required/>
-                          <label for="floatingInput">Password</label>
+                      <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-floating mb-3 ">
+                              <input type="password" name="password" class="form-control" id="password" placeholder="New Password"/>
+                              <label for="floatingInput">Current Password</label>
+                            </div>
                         </div>
-                        <div class="form-floating mb-3">
-                          <input type="password" name="password_confirmation" class="form-control" id="floatingInput password_confirmation" placeholder="password confirmation" required />
-                          <label for="floatingInput">Password Confirmation</label>
+                        <div class="col-md-2">
+                          <div class="form-floating mt-2 input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="passwordTogglePassword">
+                              <i class="bi bi-eye"></i>
+                            </button>   
+                          </div>
                         </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-floating mb-3 ">
+                              <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Password Confirmation"/>
+                              <label for="floatingInput">Current Password</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="form-floating mt-2 input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="confirmationPassword">
+                              <i class="bi bi-eye"></i>
+                            </button>   
+                          </div>
+                        </div>
+                      </div>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -449,20 +471,50 @@
                     <form method="POST" action="{{route('superadmin.doctor.password.update')}}">
                         @csrf
                         <input type="hidden" name="user_id" class="form-control" id="user_id" />
-                        <div class="form-floating mb-3 mt-3">
-                          <input type="password" name="current_password" class="form-control" id="floatingInput current_password" placeholder="Current Password" required/>
-                          <label for="floatingInput">Current Password</label>
-                          <x-input-error :messages="$errors->get('current_password')" class="mt-2" />
+                        <div class="row">
+                          <div class="col-md-10">
+                              <div class="form-floating mb-3 ">
+                                <input type="password" name="current_password" class="form-control" id="current_password" placeholder="Current Password"/>
+                                <label for="floatingInput">Current Password</label>
+                              </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-floating mt-2 input-group-append">
+                              <button class="btn btn-outline-primary toggle-password" type="button" id="currentPassTogglePassword">
+                                <i class="bi bi-eye"></i>
+                              </button>   
+                            </div>
+                          </div>
                         </div>
-                        <div class="form-floating mb-3">
-                          <input type="password" name="password" class="form-control" id="floatingInput password" placeholder="Password" required/>
-                          <label for="floatingInput">New Password</label>
-                          <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        <div class="row">
+                          <div class="col-md-10">
+                              <div class="form-floating mb-3 ">
+                                <input type="password" name="password" class="form-control" id="password" placeholder="New Password"/>
+                                <label for="floatingInput">New Password</label>
+                              </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-floating mt-2 input-group-append">
+                              <button class="btn btn-outline-primary toggle-password" type="button" id="passwordTogglePassword">
+                                <i class="bi bi-eye"></i>
+                              </button>   
+                            </div>
+                          </div>
                         </div>
-                        <div class="form-floating mb-3">
-                          <input type="password" name="password_confirmation" class="form-control" id="floatingInput password_confirmation" placeholder="password confirmation" required />
-                          <label for="floatingInput">Password Confirmation</label>
-                          <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                        <div class="row">
+                          <div class="col-md-10">
+                              <div class="form-floating mb-3 ">
+                                <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Password Confirmation"/>
+                                <label for="floatingInput">Password Confirmation</label>
+                              </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-floating mt-2 input-group-append">
+                              <button class="btn btn-outline-primary toggle-password" type="button" id="confirmationPassword">
+                                <i class="bi bi-eye"></i>
+                              </button>   
+                            </div>
+                          </div>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -482,10 +534,24 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 @endsection
 
 @section('scripts')
   <script>
+
+        const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+        const passwordFields = document.querySelectorAll('input[type="password"]');
+
+        togglePasswordButtons.forEach(button => {
+        button.addEventListener('click', function () {
+        const passwordField = this.parentNode.parentNode.querySelector('input[type="password"]');
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('btn-primary');
+          });
+        })
+
     $(document).ready(function() {
 
       $('#editModal').on('show.bs.modal', function(event) {
@@ -557,5 +623,6 @@
         modal.find('#user_id').val(user_id);
       });
     });
+
   </script>
 @endsection
