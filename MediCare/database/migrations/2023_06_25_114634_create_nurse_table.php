@@ -16,7 +16,9 @@ return new class extends Migration
             $table->smallInteger('account_id')->nullable();
             $table->smallInteger('age')->nullable();
             $table->string('gender')->nullable();
-            $table->string('qualifications')->nullable();
+            $table->string('qualification')->nullable();
+            $table->enum('shift', ['day','night','rotating shifts'])->default('day');
+            $table->date('employment_date')->nullable();
             $table->smallInteger('years_of_experience')->nullable();
             $table->string('phone')->nullable();
             $table->date('birthdate')->nullable();

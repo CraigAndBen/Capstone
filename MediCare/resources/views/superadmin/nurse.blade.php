@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Doctor Account</h5>
+                                <h5 class="m-b-10">Nurse Account</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Doctor Account</li>
+                                <li class="breadcrumb-item" aria-current="page">Nurse Account</li>
                             </ul>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Doctor Accounts</h1>
+                            <h1>Nurse Accounts</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -92,8 +92,8 @@
                                                         </button>
                                                         <div class="dropdown-menu">
 
-                                                            @foreach ($doctors as $doctor)
-                                                                @if ($user->id === $doctor->account_id)
+                                                            @foreach ($nurses as $nurse)
+                                                                @if ($user->id === $nurse->account_id)
                                                                     <a class="dropdown-item btn btn-primary"
                                                                         data-toggle="modal" data-target="#updateModal"
                                                                         data-user-id="{{ json_encode($user->id) }}"
@@ -386,7 +386,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Create Account</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('superadmin.store.doctor') }}">
+                                    <form method="POST" action="{{ route('superadmin.store.nurse') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">
@@ -413,11 +413,6 @@
                                                     <label for="floatingInput">Last Name</label>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="specialties" class="form-control"
-                                                id="floatingInput specialties" placeholder="Email Address" required />
-                                            <label for="floatingInput">Specialties</label>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -465,7 +460,7 @@
                                             <label for="floatingInput">Address</label>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="date" class="form-control ml-2"
                                                         id="floatingInput birthdate" placeholder="Birthdate" name="birthdate"
@@ -473,12 +468,20 @@
                                                     <label for="floatingInput">Birthdate</label>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="number" class="form-control" id="floatingInput phone"
                                                         placeholder="Last Name" name="phone" required />
                                                     <label for="floatingInput">Phone</label>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control p-3" id="shift" name="shift">
+                                                        <option>Select a Shift</option>
+                                                        <option value="day">Day</option>
+                                                        <option value="night">Night</option>
+                                                        <option value="rotating shifts">Rotating Shifts</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-floating mb-3">

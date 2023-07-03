@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('specialties')->nullable();
+            $table->date('employment_date')->nullable();
             $table->string('qualification')->nullable();
             $table->string('years_of_experience')->nullable();
             $table->string('phone')->nullable();
