@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('admin', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('account_id')->nullable();
-            $table->enum('access_level', ['half_access','full_access'])->default('half_access');
+            $table->enum('access_level', ['limited access','full access'])->default('limited access');
             $table->timestamps();
         });
     }

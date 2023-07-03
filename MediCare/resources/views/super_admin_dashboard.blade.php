@@ -161,8 +161,8 @@
             </a>
             <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                 <div class="dropdown-header">
-                <h4>Good Morning, <span class="small text-muted">{{$user->first_name}}</span></h4>
-                <p class="text-muted">{{$user->role}}</p>
+                <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
+                <p class="text-muted">{{$profile->role}}</p>
                 <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
                     <a href="{{route('superadmin.profile.edit')}}" class="dropdown-item">
                     <i class="ti ti-settings"></i>
@@ -205,9 +205,6 @@
         <li class="pc-item pc-caption">
           <label>Account</label>
           <i class="ti ti-apps"></i>
-        </li>
-        <li class="pc-item">
-          <a href="{{route('superadmin.superadmin')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Super Admin</span></a>
         </li>
         <li class="pc-item">
           <a href="{{route('superadmin.admin')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Admin</span></a>
