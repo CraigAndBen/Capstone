@@ -154,7 +154,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Update Doctor Account</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('superadmin.update.user') }}">
+                                    <form method="POST" action="{{ route('superadmin.update.admin') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">
@@ -239,48 +239,11 @@
                                         </div>
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <input type="text" name="occupation" class="form-control" id="occupation"
-                                            placeholder="Occupation" readonly />
-                                        <label for="floatingInput">Occupation</label>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3 ">
-                                                <input type="number" class="form-control ml-2" id="age"
-                                                    placeholder="Age" name="age" readonly />
-                                                <label for="floatingInput">Age</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select class="form-control p-3" id="gender" name="gender" disabled>
-                                                <option>Select a Gender</option>
-                                                <option value="female">Female</option>
-                                                <option value="male">Male</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" name="address" class="form-control" id="address"
-                                            placeholder="Address" readonly />
-                                        <label for="floatingInput">Address</label>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3 ">
-                                                <input type="date" class="form-control ml-2" id="birthdate"
-                                                    placeholder="Date" name="birthdate" readonly />
-                                                <label for="floatingInput">Date</label>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3 ">
-                                                <input type="number" class="form-control" id="phone"
-                                                    placeholder="Phone" name="phone" readonly />
-                                                <label for="floatingInput">Phone</label>
-                                            </div>
-                                        </div>
+                                        <select class="form-control p-3" id="access_level" name="access_level" disabled>
+                                            <option>Select a Access Level</option>
+                                            <option value="limited access">Limited Access</option>
+                                            <option value="full access">Full Access</option>
+                                        </select>
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input type="email" name="email" class="form-control" id="email"
@@ -490,7 +453,6 @@
                     modal.find('#first_name').val(first_name);
                     modal.find('#last_name').val(last_name);
                     modal.find('#middle_name').val(middle_name);
-                    modal.find('#occupation').val(occupation);
                     modal.find('#access_level').val(access_level);
                     modal.find('#user_id').val(user_id);
                     modal.find('#email').val(email);
@@ -501,24 +463,14 @@
                     var first_name = JSON.parse(button.data('first-name'));
                     var last_name = JSON.parse(button.data('last-name'));
                     var middle_name = JSON.parse(button.data('middle-name'));
-                    var occupation = JSON.parse(button.data('occupation'));
-                    var age = JSON.parse(button.data('age'));
-                    var gender = JSON.parse(button.data('gender'));
-                    var address = JSON.parse(button.data('address'));
-                    var birthdate = JSON.parse(button.data('birthdate'));
-                    var phone = JSON.parse(button.data('phone'));
+                    var access_level = JSON.parse(button.data('access-level'));
                     var email = JSON.parse(button.data('email'));
                     var modal = $(this);
 
                     modal.find('#first_name').val(first_name);
                     modal.find('#last_name').val(last_name);
                     modal.find('#middle_name').val(middle_name);
-                    modal.find('#occupation').val(occupation);
-                    modal.find('#age').val(age);
-                    modal.find('#gender').val(gender);
-                    modal.find('#address').val(address);
-                    modal.find('#birthdate').val(birthdate);
-                    modal.find('#phone').val(phone);
+                    modal.find('#access_level').val(access_level);
                     modal.find('#email').val(email);
                 });
 

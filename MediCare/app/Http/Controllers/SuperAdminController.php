@@ -737,7 +737,6 @@ class SuperAdminController extends Controller
 
     public function updateAdminInfo(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
@@ -747,7 +746,7 @@ class SuperAdminController extends Controller
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
-        $info = User_info::where('account_id', $request->user_id)->first();
+        $info = admin::where('account_id', $request->user_id)->first();
 
         $userUpdatedData = [
             'first_name' => $request->input('first_name'),
@@ -756,7 +755,7 @@ class SuperAdminController extends Controller
         ];
 
         $infoUpdatedData = [
-            'access_level' => $request->input('access_level'),
+            'access_level' => $request->input('access_level')
         ];
 
         $userChange = $this->hasChanges($user, $userUpdatedData);
@@ -858,9 +857,7 @@ class SuperAdminController extends Controller
 
             if ($info->{$key} != $value) {
 
-                $sample = $value;
-
-                return $sample;
+                return true;
             }
         }
 
