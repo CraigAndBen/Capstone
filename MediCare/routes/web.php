@@ -28,8 +28,9 @@ Route::get('/user/dashboard', function () {
 
 Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
     
-Route::get('/user/appointment', [AppointmentController::class, 'showAppointment'])->name('user.appointment');
-Route::get('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');Route::get('user/doctors/{specialtyId}', [AppointmentController::class, 'getUpdatedDoctor'])->name('user.get.getUpdatedDoctor');
+Route::get('/user/show/appointment', [AppointmentController::class, 'showAppointment'])->name('user.show.appointment');
+Route::get('/user/appointment', [AppointmentController::class, 'appointment'])->name('user.appointment');
+Route::post('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');Route::get('user/doctors/{specialtyId}', [AppointmentController::class, 'getUpdatedDoctor'])->name('user.get.getUpdatedDoctor');
 
 
 Route::middleware('auth')->group(function () {

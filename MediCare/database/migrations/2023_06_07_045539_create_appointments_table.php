@@ -11,14 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('appointment', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
-            $table->string('phone');
-            $table->smallInteger('doctor_id');
-            $table->date('appointment_date');
+            $table->string('first_name')->nullable();
+            $table->string('middle_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->smallInteger('account_id')->nullable();
+            $table->string('street')->nullable();
+            $table->string('brgy')->nullable();
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
+            $table->string('birthdate')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('specialties')->nullable();
+            $table->string('appointment_type')->nullable();
+            $table->string('appointment_date')->nullable();
+            $table->string('appointment_time')->nullable();
+            $table->string('reason')->nullable();
+            $table->smallInteger('doctor_id')->nullable();
             $table->enum('status', ['pending','confirmed','cancelled'])->default('pending');
             $table->timestamps();
         });
@@ -29,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('appointment');
     }
 };
