@@ -28,7 +28,7 @@ Route::get('/user/dashboard', function () {
 
 Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
     
-Route::get('/user/appointment', [AppointmentController::class, 'show'])->name('user.appointment');
+Route::get('/user/appointment', [AppointmentController::class, 'showAppointment'])->name('user.appointment');
 Route::get('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');Route::get('user/doctors/{specialtyId}', [AppointmentController::class, 'getUpdatedDoctor'])->name('user.get.getUpdatedDoctor');
 
 

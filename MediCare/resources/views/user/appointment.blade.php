@@ -36,7 +36,7 @@
                         </div>     
                         <form method="POST" action="{{ route('login') }}">
                           @csrf
-                          <div class="row mt-4">
+                          <div class="row mt-4 text-start">
                             <div class="col-md-4">
                               <div class="form-floating mb-3 ">
                                 <input type="text" class="form-control ml-2" id="floatingInput first_name" placeholder="First Name" name="first_name" />
@@ -56,51 +56,113 @@
                               </div>
                             </div>
                           </div>
-                          <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="floatingInput email" name="email" placeholder="Email Address"  />
-                            <label for="floatingInput">Email Address</label> 
+                          <hr>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class=" form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput street" name="street" placeholder="Street"  />
+                                <label for="floatingInput">Street</label> 
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class=" form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput brgy" name="brgy" placeholder="Brgy"  />
+                                <label for="floatingInput">State/Barangay</label> 
+                              </div>
+                            </div>
                           </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class=" form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput city" name="city" placeholder="City"  />
+                                <label for="floatingInput">City</label> 
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class=" form-floating mb-3">
+                                <input type="text" class="form-control" id="floatingInput brgy" name="province" placeholder="Province"  />
+                                <label for="floatingInput">Province</label> 
+                              </div>
+                            </div>
+                          </div>
+                          <hr>
                           <div class="row" form-floating mb-3>
                             <div class="col-md-6">
                               <div class=" form-floating mb-3">
-                                <input type="number" class="form-control" id="floatingInput phone" name="phone" placeholder="Phone"  />
-                                <label for="floatingInput">Phone</label> 
+                                <input type="date" class="form-control" id="floatingInput birthdate" name="birthdate" placeholder="Date of Birth"  />
+                                <label for="floatingInput">Date of Birth</label> 
                               </div>
                             </div>
                             <div class="mb-3 col-md-6">
                               <select class="form-control  p-3" id="doctor" name="doctor">
-                                <option>Select a Type of Appointment</option>
-                                <option value="General Check-up">General Check-up</option>
-                                <option value="Specialist Consultation">Specialist Consultation</option>
-                                <option value="Follow-up Visit">Follow-up Visit</option>
-                                <option value="Diagnostic Tests">Diagnostic Tests</option>
+                                <option>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="diagnostic appointment">Others</option>
                               </select>
                             </div>
                           </div>
-                          <div class="row" form-floating mb-3>
+                          <hr>
+                          <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="floatingInput phone" name="phone" placeholder="Phone"  />
+                            <label for="floatingInput">Phone</label> 
+                          </div>
+                          <hr>
+                          <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="floatingInput email" name="email" placeholder="Email Address"  />
+                            <label for="floatingInput">Email Address</label> 
+                          </div>
+                          <hr>
+                          <div class="row mt-4">
+                            <h5>Which specialist do you want to appoint of?</h5>
+                            <div class="form-floating mb-3">
+                              <select class="form-control p-3" id="specialties" name="specialties">
+                                <option>Select Specialist</option>
+                                @foreach ($infos as $info)
+                                  <option value="{{$info->id}}">{{$info->specialties}}</option>
+                                @endforeach
+                              </select>
+                            </div>
+                          </div>
+                          <div class="row mt-4">
+                            <div class="form-floating mb-3">
+                              <h5>Which procedure do you want to make an appointment for?</h5>
+                              <select class="form-control  p-3" id="doctor" name="doctor">
+                                <option>Select a Type of Appointment</option>
+                                <option value="regular check-up">Regular Check-up</option>
+                                <option value="Follow-up appointment">Follow-up Appointment</option>
+                                <option value="diagnostic appointment">Diagnostic Appointment</option>
+                                <option value="specialist consultation">Specialist Consultation</option>
+                              </select>
+                            </div>
+                          </div>
+                          <hr>
+                          <div class="row mt-4">
+                            <h5>Preffered Appointment Date and Time <i>(Monday - Friday)</i></h5>
                             <div class="col-md-6">
-                              <div class=" form-floating mb-3">
-                                <select class="form-control p-3" id="specialties" name="specialties" onchange="updateDoctor()">
-                                  <option>Select Specialist</option>
-                                  @foreach ($infos as $info)
-                                    <option value="{{$info->id}}">{{$info->specialties}}</option>
+                              <div class="form-floating mb-3">
+                                <input type="date" class="form-control" id="date" name="date" placeholder="Date" min="<?= date('Y-m-d') ?>" />
+                                <label for="floatingInput">Appointment Date</label> 
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-floating mb-3">
+                                <select class="form-control  p-3" id="doctor" name="doctor">
+                                  <option>Select Time of Appointment</option>
+                                  @foreach ($amTime as $time)
+                                    <option value="{{$time}}">{{$time}} AM</option>
                                   @endforeach
+                                  @foreach ($pmTime as $time)
+                                  <option value="{{$time}}">{{$time}} PM</option>
+                                @endforeach
                                 </select>
                               </div>
                             </div>
-                            <div class="mb-3 col-md-6">
-                              <select class="form-control p-3" id="doctor" name="doctor">
-                                <option>Select a Doctor</option>
-                                  <option value="">Select a Doctor</option>
-                              </select>
-                            </div>
                           </div>
+                          <hr class="mb-3">
+                          <h5>Reason for appointment</h5>
                           <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="floatingInput date" name="date" placeholder="Date" min="" />
-                            <label for="floatingInput">Appointment Date</label> 
-                          </div>
-                          <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput reason" name="reason" placeholder="Reason for Appointment"  />
+                            <input type="text" class="form-control" id="floatingInput reason" name="reason" placeholder="Reason For Appointment"  />
                             <label for="floatingInput">Reason for Appointment</label> 
                           </div>
                           <div class="d-flex mt-1 justify-content-between">
@@ -109,7 +171,9 @@
                               <label class="form-check-label text-muted" for="customCheckc1">I agree to the terms and conditions</label>
                             </div>
                           </div>
-                          <div class="text-center mt-4 mb-3">
+                          <hr>
+                          <div class="text-end mt-4 mb-3">
+                            <button type="submit" class="btn btn-danger">Cancel</button>
                             <button type="submit" class="btn btn-primary">Submit</button>
                           </div>
                         </form>
@@ -123,34 +187,36 @@
 @endsection
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 @section('scripts')
-  <script>
-    function updateDoctors() {
-    var specialtyId = document.getElementById('specialties').value;
-    var doctorSelect = document.getElementById('doctor');
+<script>
+  $(document).ready(function() {
 
-    // Clear previous options
-    doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
+      // Get the date input element
+      var dateInput = document.getElementById('date');
 
-    if (specialtyId !== '') {
-        // Make an AJAX request to get doctors by specialty ID
-        axios.get('/user/doctors/' + specialtyId)
-            .then(function (response) {
-                var doctors = response.data;
+      // Set the min and max dates for weekdays (Monday to Friday)
+      var today = moment();
+      var minDate = moment(today);
+      var maxDate = moment(today);
 
-                // Add doctors as options to the doctors dropdown
-                doctors.forEach(function (doctor) {
-                    var option = document.createElement('option');
-                    option.value = doctor.id;
-                    option.text = doctor.first_name;
-                    doctorSelect.appendChild(option);
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-      }
-    }
-  </script>
+      // Set the min date to the nearest upcoming Monday
+      minDate = minDate.add((1 + 7 - minDate.day()) % 7, 'days');
+
+      // Set the max date to the nearest upcoming Friday
+      maxDate = maxDate.add((5 + 7 - maxDate.day()) % 7, 'days');
+
+      // Format the min and max dates as strings in the 'yyyy-mm-dd' format
+      var minDateString = minDate.format('YYYY-MM-DD');
+      var maxDateString = maxDate.format('YYYY-MM-DD');
+
+      // Set the min and max attributes of the date input
+      dateInput.setAttribute('min', minDateString);
+      dateInput.setAttribute('max', maxDateString);
+  });
+</script>
+
+
 @endsection
