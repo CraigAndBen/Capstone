@@ -109,4 +109,101 @@ class AppointmentController extends Controller
 
         return view('user.appointment', compact('appointments','infos','amTime','pmTime'));
     }
+
+    public function updateAppointment(Request $request){
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'brgy' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'birthdate' => 'required|date',
+            'gender' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'phone' => 'required',
+            'specialties' => 'required|string|max:255',
+            'appointment_type' => 'required|string|max:255',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required|string|max:255',
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $appointment = Appointment::where('id', $request->appointment_id)->first();
+
+        $appointmentUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'birthdate' => $request->input('birthdate'),
+            'gender' => $request->input('gender'),
+            'phone' => $request->input('phone'),
+            'specialties' => $request->input('specialties'),
+            'email' => $request->input('email'),
+            'appointment_type' => $request->input('appointment_type'),
+            'appointment_date' => $request->input('appointment_date'),
+            'appointment_time' => $request->input('appointment_time'),
+            'reason' => $request->input('reason'),
+        ];
+
+        $appointmentChange = $this->hasChanges($appointment, $appointmentUpdatedData);
+
+        if($appointmentChange) {
+
+            $appointment->first_name = $request->input('first_name');
+            $appointment->middle_name = $request->input('middle_name');
+            $appointment->last_name = $request->input('last_name');
+            $appointment->street = $request->input('street');
+            $appointment->brgy = $request->input('brgy');
+            $appointment->city = $request->input('city');
+            $appointment->province = $request->input('province');
+            $appointment->birthdate = $request->input('birthdate');
+            $appointment->gender = $request->input('gender');
+            $appointment->phone = $request->input('phone');
+            $appointment->email = $request->input('email');
+            $appointment->appointment_type = $request->input('appointment_type');
+            $appointment->appointment_date = $request->input('appointment_date');
+            $appointment->appointment_time = $request->input('appointment_time');
+            $appointment->reason = $request->input('reason');
+
+            $appointment->save();
+
+            return redirect()->back()->with('success', 'Profile updated successfully.');
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+        }
+    }
+
+    public function cancelAppointment(Request $request){
+
+        $appointment = Appointment::findOrFail($request->input('appointment_id'));
+
+        if ($request->input('status') === 'pending') {
+
+            $appointment->status = 'cancelled';
+            $appointment->save();
+
+            return redirect()->route('user.appointment')->with('status', 'Appoinment cancelled successfully.');
+        }
+    }
+
+    private function hasChanges($info, $updatedData)
+    {
+        foreach ($updatedData as $key => $value) {
+
+            if ($info->{$key} != $value) {
+
+                return $value;
+            }
+        }
+
+        return false;
+
+    }
 }

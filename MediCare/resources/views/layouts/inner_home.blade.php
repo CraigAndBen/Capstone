@@ -77,7 +77,15 @@
               <li><a href="{{route('user.logout')}}">Logout</a></li>
             </ul>
           </li>
-          <li><a class="nav-link scrollto" href="{{route('user.appointment')}}">Appointments</a></li>
+          <li class="dropdown"><a href="#"><span>Appointment</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="{{route('user.appointment')}}">My Appointments</a></li>
+              </li>
+              <li><a href="{{route('user.done.appointment')}}">Done Appointments</a></li>
+              <li><a href="{{route('user.cancelled.appointment')}}">Cancelled Appointments</a></li>
+            </li>
+            </ul>
+          </li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->

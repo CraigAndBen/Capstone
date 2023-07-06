@@ -27,10 +27,16 @@ Route::get('/user/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
-    
+
+// User Appointment
 Route::get('/user/show/appointment', [AppointmentController::class, 'showAppointment'])->name('user.show.appointment');
 Route::get('/user/appointment', [AppointmentController::class, 'appointment'])->name('user.appointment');
-Route::post('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');Route::get('user/doctors/{specialtyId}', [AppointmentController::class, 'getUpdatedDoctor'])->name('user.get.getUpdatedDoctor');
+Route::post('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');
+Route::post('/user/update/appointment', [AppointmentController::class, 'updateAppointment'])->name('user.update.appointment');
+Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAppointment'])->name('user.cancel.appointment');
+Route::post('/user/cancelled/appointment', [AppointmentController::class, 'cancelledAppointment'])->name('user.cancelled.appointment');
+Route::post('/user/done/appointment', [AppointmentController::class, 'doneAppointment'])->name('user.done.appointment');
+Route::get('user/doctors/{specialtyId}', [AppointmentController::class, 'getUpdatedDoctor'])->name('user.get.getUpdatedDoctor');
 
 
 Route::middleware('auth')->group(function () {
