@@ -55,14 +55,23 @@ Route::middleware('auth','role:nurse')->group(function(){
 
 Route::middleware('auth','role:doctor')->group(function(){
 
+    // Dashboard
     Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
 
+    // Profile
     Route::get('/doctor/profile', [DoctorController::class, 'edit'])->name('doctor.profile.edit');
-
     Route::patch('/doctor/profile/update', [DoctorController::class, 'update'])->name('doctor.profile.update');
-
     Route::put('/doctor/profile/update', [DoctorController::class, 'updatePassword'])->name('doctor.password.update');
 
+    // Appointment
+    Route::get('/doctor/appointment', [DoctorController::class, 'appointment'])->name('doctor.appointment');
+    Route::get('/doctor/appointment/confirmed', [DoctorController::class, 'confirmedAppointmentList'])->name('doctor.appointment.confirmed');
+    Route::get('/doctor/appointment/done', [DoctorController::class, 'doneAppointmentList'])->name('doctor.appointment.done');
+    Route::post('/doctor/appointment/confirm', [DoctorController::class, 'confirmedAppointment'])->name('doctor.confirm.appointment');
+    Route::post('/doctor/appointment/finish', [DoctorController::class, 'doneAppointment'])->name('doctor.finish.appointment');
+    Route::post('/doctor/appointment/cancel', [DoctorController::class, 'doneAppointment'])->name('doctor.cancel.appointment');
+
+    // Logout
     Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');
 });
 
@@ -74,10 +83,9 @@ Route::middleware('auth','role:super_admin')->group(function(){
 
     Route::get('/super_admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
 
+    // Profile
     Route::get('/super_admin/profile', [SuperAdminController::class, 'edit'])->name('superadmin.profile.edit');
-
     Route::patch('/super_admin/profile', [SuperAdminController::class, 'update'])->name('superadmin.profile.update');
-
     Route::put('/super_admin/profile/update', [SuperAdminController::class, 'updatePassword'])->name('superadmin.password.update');
 
     // Doctor

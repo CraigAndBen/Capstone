@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor;
 use Illuminate\View\View;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,9 +17,9 @@ class DoctorController extends Controller
 {
     public function dashboard(){
         
-        $user = auth()->user();
+        $profile = auth()->user();
 
-        return view('doctor_dashboard', compact('user'));
+        return view('doctor_dashboard', compact('profile'));
     }
 
     public function edit(Request $request): View
@@ -65,6 +67,48 @@ class DoctorController extends Controller
         }
     }
 
+    public function appointment(){
+
+        $amTime = [
+            '8:30',
+            '9:00',
+            '9:30',
+            '10:30',
+            '11:00',
+            '11:30',
+        ];
+
+        $pmTime = [
+            '1:30',
+            '2:00',
+            '2:30',
+            '3:00',
+            '3:30',
+            '4:00',
+        ];
+
+        $profile = auth()->user();
+        $infos = Doctor::all();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+        $appointments = Appointment::where('specialties', $doctor->specialties)->get();
+
+        return view('doctor.appointment.appointment', compact('appointments','profile','infos','amTime','pmTime'));
+    }
+    public function confirmedAppointmentList(){
+
+    }
+
+    public function doneAppointmentList(){
+
+    }
+
+    public function confirmedAppointment(){
+
+    }
+
+    public function doneAppointment(){
+
+    }
     public function doctorLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

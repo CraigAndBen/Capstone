@@ -162,8 +162,8 @@
             </a>
             <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                 <div class="dropdown-header">
-                <h4>Good Morning, <span class="small text-muted">{{$user->name}}</span></h4>
-                <p class="text-muted">{{$user->role}}</p>
+                <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
+                <p class="text-muted">{{$profile->role}}</p>
                 <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
                     <a href="{{route('doctor.profile.edit')}}" class="dropdown-item">
                     <i class="ti ti-settings"></i>
@@ -210,10 +210,11 @@
         </li>
         <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-key"></i></span><span
-              class="pc-mtext">Authentication</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+              class="pc-mtext">Appointment</span></a>
           <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/login-v3.html">Login</a></li>
-            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/register-v3.html">register</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('doctor.appointment')}}">Appointment List</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('doctor.appointment.confirmed')}}">Confirmed Appointment</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('doctor.appointment.done')}}">Done Appointment</a></li>
           </ul>
         </li>
 
