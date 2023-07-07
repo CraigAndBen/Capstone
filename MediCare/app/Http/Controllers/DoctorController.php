@@ -90,24 +90,66 @@ class DoctorController extends Controller
         $profile = auth()->user();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
-        $appointments = Appointment::where('specialties', $doctor->specialties)->get();
+        $appointments = Appointment::where('specialties', $doctor->specialties,'status')->where('status','pending')->get();
 
         return view('doctor.appointment.appointment', compact('appointments','profile','infos','amTime','pmTime'));
     }
     public function confirmedAppointmentList(){
+        $amTime = [
+            '8:30',
+            '9:00',
+            '9:30',
+            '10:30',
+            '11:00',
+            '11:30',
+        ];
 
+        $pmTime = [
+            '1:30',
+            '2:00',
+            '2:30',
+            '3:00',
+            '3:30',
+            '4:00',
+        ];
+
+        $profile = auth()->user();
+        $infos = Doctor::all();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+        $appointments = Appointment::where('specialties', $doctor->specialties,'status')->where('status','confirmed')->get();
+
+        return view('doctor.appointment.confirmed_appointment', compact('appointments','profile','infos','amTime','pmTime'));
     }
 
     public function doneAppointmentList(){
 
     }
 
-    public function confirmedAppointment(){
+    public function confirmedAppointment(Request $request){
 
+        $profile = auth()->user();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+        $appointment = Appointment::findOrFail($request->input('appointment_id'));
+
+            $appointment->status = 'confirmed';
+            $appointment->doctor_id = $doctor->id;
+            $appointment->save();
+
+            return redirect()->back()->with('success', 'Appointment Confirmed successfully.');
     }
 
     public function doneAppointment(){
 
+    }
+
+    public function cancelAppointment(Request $request){
+
+        $appointment = Appointment::findOrFail($request->input('appointment_id'));
+
+            $appointment->status = 'cancelled';
+            $appointment->save();
+
+            return redirect()->back()->with('success', 'Appointment Cancelled successfully.');
     }
     public function doctorLogout(Request $request): RedirectResponse
     {

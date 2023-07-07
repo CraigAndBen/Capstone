@@ -67,9 +67,10 @@ Route::middleware('auth','role:doctor')->group(function(){
     Route::get('/doctor/appointment', [DoctorController::class, 'appointment'])->name('doctor.appointment');
     Route::get('/doctor/appointment/confirmed', [DoctorController::class, 'confirmedAppointmentList'])->name('doctor.appointment.confirmed');
     Route::get('/doctor/appointment/done', [DoctorController::class, 'doneAppointmentList'])->name('doctor.appointment.done');
+    Route::get('/doctor/appointment/cancelled', [DoctorController::class, 'cancelledAppointmentList'])->name('doctor.appointment.cancelled');
     Route::post('/doctor/appointment/confirm', [DoctorController::class, 'confirmedAppointment'])->name('doctor.confirm.appointment');
     Route::post('/doctor/appointment/finish', [DoctorController::class, 'doneAppointment'])->name('doctor.finish.appointment');
-    Route::post('/doctor/appointment/cancel', [DoctorController::class, 'doneAppointment'])->name('doctor.cancel.appointment');
+    Route::post('/doctor/appointment/cancel', [DoctorController::class, 'cancelAppointment'])->name('doctor.cancel.appointment');
 
     // Logout
     Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');

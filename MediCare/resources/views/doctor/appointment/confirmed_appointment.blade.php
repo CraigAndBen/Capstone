@@ -112,18 +112,7 @@
                                                                     data-reason="{{ json_encode($appointment->reason) }}"
                                                                     >View</a>
                                                                     <form
-                                                                        action="{{ route('doctor.confirm.appointment') }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <input type="hidden" name="appointment_id"
-                                                                            value="{{ $appointment->id }}">
-                                                                        <input type="hidden" name="status"
-                                                                            value="{{ $appointment->status }}">
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Confirm</button>
-                                                                    </form>
-                                                                    <form
-                                                                    action="{{ route('doctor.cancel.appointment') }}"
+                                                                    action="{{ route('doctor.appointment.done') }}"
                                                                     method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="appointment_id"
@@ -131,7 +120,7 @@
                                                                     <input type="hidden" name="status"
                                                                         value="{{ $appointment->status }}">
                                                                         <button type="submit"
-                                                                            class="dropdown-item btn btn-primary">Cancel</button>
+                                                                            class="dropdown-item btn btn-primary">Done</button>
                                                                     </form>
                                                         </div>
                                                     </div>

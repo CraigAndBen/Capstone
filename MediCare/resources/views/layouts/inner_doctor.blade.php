@@ -1,192 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
+  <!-- [Head] start -->
+  <head>
+    <title>MediCare | Super Admin Dashboard</title>
+    <!-- [Meta] -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- [Favicon] icon -->
+    <link rel="icon" href="{{asset('admin_assets/images/favicon.svg')}}" type="image/x-icon" />
+ <!-- [Google Font] Family -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" id="main-font-link" />
+<!-- [Tabler Icons] https://tablericons.com -->
+<link rel="stylesheet" href="{{asset('admin_assets/fonts/tabler-icons.min.css')}}" />
+<!-- [Material Icons] https://fonts.google.com/icons -->
+<link rel="stylesheet" href="{{asset('admin_assets/fonts/material.css')}}" />
+<!-- [Template CSS Files] -->
+<link rel="stylesheet" href="{{asset('admin_assets/css/style.css')}}" id="main-style-link" />
+<link rel="stylesheet" href="{{asset('admin_assets/css/style-preset.css')}}" id="preset-style-link" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-  <title>MediCare - Appointment</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
 
-  <!-- Favicons -->
-  <link href="{{asset('home_assets/img/favicon.png')}}" rel="icon">
-  <link href="{{asset('home_assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="{{asset('home_assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
-  <link href="{{asset('home_assets/vendor/animate.css/animate.min.css')}}" rel="stylesheet">
-  <link href="{{asset('home_assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-  <link href="{{asset('home_assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
-  <link href="{{asset('home_assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
-  <link href="{{asset('home_assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
-  <link href="{{asset('home_assets/vendor/remixicon/remixicon.css')}}" rel="stylesheet">
-  <link href="{{asset('home_assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{{asset('home_assets/css/style.css')}}" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-</head>
-
-<body>
-
-  <!-- ======= Top Bar ======= -->
-  <div id="topbar" class="d-flex align-items-center fixed-top">
-    <div class="container d-flex justify-content-between">
-      <div class="contact-info d-flex align-items-center">
-        <i class="bi bi-envelope"></i> <a href="mailto:contact@example.com">contact@example.com</a>
-        <i class="bi bi-phone"></i> +1 5589 55488 55
+  </head>
+  <!-- [Head] end -->
+  <!-- [Body] Start -->
+  <body>
+    <!-- [ Pre-loader ] start -->
+<div class="loader-bg">
+  <div class="loader-track">
+    <div class="loader-fill"></div>
+  </div>
+</div>
+<!-- [ Pre-loader ] End -->
+ <!-- [ Header Topbar ] start -->
+<header class="pc-header">
+  <div class="m-header mt-3">
+    <a href="{{route('superadmin.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+    <!-- ======= Menu collapse Icon ===== -->
+  </div>
+  <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
+<div class="me-auto pc-mob-drp">
+  <ul class="list-unstyled">
+    <li class="pc-h-item header-mobile-collapse">
+      <a href="#" class="pc-head-link head-link-primary ms-0" id="mobile-collapse">
+        <i class="ti ti-menu-2"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+<!-- [Mobile Media Block end] -->
+<div class="ms-auto">
+  <ul class="list-unstyled">
+    <li class="dropdown pc-h-item">
+      <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+        role="button" aria-haspopup="false" aria-expanded="false">
+        <i class="ti ti-bell"></i>
+      </a>
+      <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+        <div class="dropdown-header">
+          <a href="#!" class="link-primary float-end text-decoration-underline">Mark as all read</a>
+          <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">01</span></h5>
+        </div>
+        <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+          style="max-height: calc(100vh - 215px)">
+          <div class="list-group list-group-flush w-100">
+            <div class="list-group-item">
+              <select class="form-select">
+                <option value="all">All Notification</option>
+                <option value="new">New</option>
+                <option value="unread">Unread</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <a class="list-group-item list-group-item-action">
+              <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <img src="../assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar" />
+                </div>
+                <div class="flex-grow-1 ms-1">
+                  <span class="float-end text-muted">2 min ago</span>
+                  <h5>John Doe</h5>
+                  <p class="text-body fs-6">It is a long established fact that a reader will be distracted </p>
+                  <div class="badge rounded-pill bg-light-danger">Unread</div>
+                  <div class="badge rounded-pill bg-light-warning">New</div>
+                </div>
+              </div>
+            </a>
+            <a class="list-group-item list-group-item-action">
+              <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <div class="user-avtar bg-light-success"><i class="ti ti-building-store"></i></div>
+                </div>
+                <div class="flex-grow-1 ms-1">
+                  <span class="float-end text-muted">3 min ago</span>
+                  <h5>Store Verification Done</h5>
+                  <p class="text-body fs-6">We have successfully received your request.</p>
+                  <div class="badge rounded-pill bg-light-danger">Unread</div>
+                </div>
+              </div>
+            </a>
+            <a class="list-group-item list-group-item-action">
+              <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <div class="user-avtar bg-light-primary"><i class="ti ti-mailbox"></i></div>
+                </div>
+                <div class="flex-grow-1 ms-1">
+                  <span class="float-end text-muted">5 min ago</span>
+                  <h5>Check Your Mail.</h5>
+                  <p class="text-body fs-6">All done! Now check your inbox as you're in for a sweet treat! </p>
+                  <button class="btn btn-sm btn-primary">Mail <i class="ti ti-brand-telegram"></i></button>
+                </div>
+              </div>
+            </a>
+            <a class="list-group-item list-group-item-action">
+              <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <img src="../assets/images/user/avatar-1.jpg" alt="user-image" class="user-avtar" />
+                </div>
+                <div class="flex-grow-1 ms-1">
+                  <span class="float-end text-muted">8 min ago</span>
+                  <h5>John Doe</h5>
+                  <p class="text-body fs-6">Uploaded two file on &nbsp;<strong>21 Jan 2020</strong></p>
+                  <div class="notification-file d-flex p-3 bg-light-secondary rounded">
+                    <i class="ti ti-arrow-bar-to-down"></i>
+                    <h5 class="m-0">demo.jpg</h5>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a class="list-group-item list-group-item-action">
+              <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <img src="../assets/images/user/avatar-3.jpg" alt="user-image" class="user-avtar" />
+                </div>
+                <div class="flex-grow-1 ms-1">
+                  <span class="float-end text-muted">10 min ago</span>
+                  <h5>Joseph William</h5>
+                  <p class="text-body fs-6">It is a long established fact that a reader will be distracted </p>
+                  <div class="badge rounded-pill bg-light-success">Confirmation of Account</div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="text-center py-2">
+          <a href="#!" class="link-primary">Mark as all read</a>
+        </div>
       </div>
-      <div class="d-none d-lg-flex social-links align-items-center">
-        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+    </li>
+    <li class="dropdown pc-h-item header-user-profile">
+      <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+        role="button" aria-haspopup="false" aria-expanded="false">
+        <img src="{{asset('admin_assets/images/user/avatar-2.jpg')}}" alt="user-image" class="user-avtar" />
+        <span>
+          <i class="ti ti-settings"></i>
+        </span>
+      </a>
+      <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
+        <div class="dropdown-header">
+          <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
+          <p class="text-muted">{{$profile->role}}</p>
+          <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
+            <a href="{{route('superadmin.profile.edit')}}" class="dropdown-item">
+              <i class="ti ti-settings"></i>
+              <span>Account Settings</span>
+            </a>
+            <a href="#" class="dropdown-item">
+              <i class="ti ti-user"></i>
+              <span>Social Profile</span>
+            </a>
+            <a href="{{route('superadmin.logout')}}" class="dropdown-item">
+              <i class="ti ti-logout"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
       </div>
+    </li>
+  </ul>
+</div> </div>
+</header>
+<!-- [ Header ] end -->
+ <!-- [ Sidebar Menu ] start -->
+<nav class="pc-sidebar">
+  <div class="navbar-wrapper">
+    <div class="m-header">
+      <div class="mt-3">
+        <a href="/doctor/dashboard" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+      </div>
+    </div>
+    <div class="navbar-content">
+      <ul class="pc-navbar">
+        <li class="pc-item pc-caption">
+          <label>Dashboard</label>
+          <i class="ti ti-dashboard"></i>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('superadmin.dashboard')}}" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
+              class="pc-mtext">Dashboard</span></a>
+        </li>
+        {{-- <li class="pc-item pc-caption">
+          <label>Accounts</label>
+          <i class="ti ti-news"></i>
+        </li>
+        <li class="pc-item pc-hasmenu">
+          <a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-key"></i></span><span
+              class="pc-mtext">Authentication</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+          <ul class="pc-submenu">
+            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/login-v3.html">Login</a></li>
+            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/register-v3.html">register</a></li>
+          </ul>
+        </li> --}}
+        <li class="pc-item pc-caption">
+          <label>Appointment</label>
+          <i class="ti ti-dashboard"></i>
+        </li>
+        {{-- <li class="pc-item">
+          <a href="{{route('superadmin.doctor')}}" class="pc-link"><span class="pc-micon"></span><span
+              class="pc-mtext">Doctor</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('superadmin.doctor')}}" class="pc-link"><span class="pc-micon"></span><span
+              class="pc-mtext">User</span></a>
+        </li> --}}
+        <li class="pc-item">
+          <a href="{{route('doctor.appointment')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Appointments</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('doctor.appointment.confirmed')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Confirmed Appointment </span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('doctor.appointment.done')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Done Appointment</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('doctor.appointment.cancelled')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Cancelled Appointment</span></a>
+        </li>
+      </ul>
     </div>
   </div>
+</nav>
+<!-- [ Sidebar Menu ] end -->
 
-  <!-- ======= Header ======= -->
-  <header id="header" class="fixed-top">
-    <div class="container d-flex align-items-center">
-
-      <a href="/user/dashboard" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px"></a>
-      <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-      <nav id="navbar" class="navbar order-last order-lg-0">
-        <ul>
-          <li><a class="nav-link scrollto " href="/user/dashboard">Home</a></li>
-          <li class="dropdown"><a href="#"><span>Profile</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="{{route('profile.edit')}}">My Profile</a></li>
-              {{-- <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a> --}}
-                {{-- <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul> --}}
-              </li>
-              <li><a href="{{route('user.logout')}}">Logout</a></li>
-            </ul>
-          </li>
-          <li class="dropdown"><a href="#"><span>Appointment</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="{{route('user.appointment')}}">My Appointments</a></li>
-              </li>
-              <li><a href="{{route('user.done.appointment')}}">Done Appointments</a></li>
-              <li><a href="{{route('user.cancelled.appointment')}}">Cancelled Appointments</a></li>
-            </li>
-            </ul>
-          </li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
-
-  <main id="main">
     @yield('content')
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-
-    {{-- <div class="footer-top">
-      <div class="container">
+    <!-- [ Main Content ] end -->
+    {{-- <footer class="pc-footer">
+      <div class="footer-wrapper container-fluid">
         <div class="row">
-
-          <div class="col-lg-3 col-md-6 footer-contact">
-            <h3>Medilab</h3>
-            <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
-            </p>
+          <div class="col my-1">
+            <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/" target="_blank">Codedthemes</a></p>
           </div>
-
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+          <div class="col-auto my-1">
+            <ul class="list-inline footer-link mb-0">
+              <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
+              <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+              <li class="list-inline-item"><a href="https://codedthemes.com/contact/" target="_blank">Contact us</a></li>
             </ul>
           </div>
-
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-
         </div>
       </div>
-    </div> --}}
+    </footer> --}}
+ <!-- Required Js -->
+<script src="{{asset('admin_assets/js/plugins/popper.min.js')}}"></script>
+<script src="{{asset('admin_assets/js/plugins/simplebar.min.js')}}"></script>
+<script src="{{asset('admin_assets/js/plugins/bootstrap.min.js')}}"></script>
+<script src="{{asset('admin_assets/js/config.js')}}"></script>
+<script src="{{asset('admin_assets/js/pcoded.js')}}"></script>
 
-    <div class="container d-md-flex py-4">
-
-      <div class="me-md-auto text-center text-md-start">
-        <div class="copyright">
-          &copy; Copyright <strong><span>Medilab</span></strong>. All Rights Reserved
-        </div>
-        <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/medilab-free-medical-bootstrap-theme/ -->
-          Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
-      </div>
-      <div class="social-links text-center text-md-right pt-3 pt-md-0">
-        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
-
-  <div id="preloader"></div>
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="{{asset('home_assets/vendor/purecounter/purecounter_vanilla.js')}}"></script>
-  <script src="{{asset('home_assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('home_assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
-  <script src="{{asset('home_assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
-  <script src="{{asset('home_assets/vendor/php-email-form/validate.js')}}"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{{asset('home_assets/js/main.js')}}"></script>
-
-</body>
+  </body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
