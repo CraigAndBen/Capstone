@@ -83,7 +83,15 @@
                     <li><a href="{{ route('user.logout') }}">Logout</a></li>
                 </ul>
                 </li>
-                <li><a class="nav-link scrollto" href="#contact">Appointments</a></li>
+                <li class="dropdown"><a href="#"><span>Appointment</span> <i class="bi bi-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="{{ route('user.appointment') }}">My Appointment</a></li>
+                        <li><a href="{{ route('user.confirmed.appointment') }}">Confrimed Appointment</a></li>
+                        <li><a href="{{ route('user.done.appointment') }}">Done Appointment</a></li>
+                        <li><a href="{{ route('user.cancelled.appointment') }}">Cancelled Appointment</a></li>
+                </li>
+            </ul>
+            </li>
                 <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
@@ -1049,7 +1057,6 @@
     <!-- Template Main JS File -->
     <script src="{{ asset('home_assets/js/main.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

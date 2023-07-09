@@ -31,12 +31,14 @@ Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.l
 // User Appointment
 Route::get('/user/show/appointment', [AppointmentController::class, 'showAppointment'])->name('user.show.appointment');
 Route::get('/user/appointment', [AppointmentController::class, 'appointment'])->name('user.appointment');
+Route::get('/user/appointment/confirmed', [AppointmentController::class, 'confirmedAppointmentList'])->name('user.confirmed.appointment');
+
+Route::get('/user/appointment/done', [AppointmentController::class, 'doneAppointmentList'])->name('user.done.appointment');
+Route::get('/user/appointment/cancelled', [AppointmentController::class, 'cancelledAppointmentList'])->name('user.cancelled.appointment');
 Route::post('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');
 Route::post('/user/update/appointment', [AppointmentController::class, 'updateAppointment'])->name('user.update.appointment');
 Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAppointment'])->name('user.cancel.appointment');
-Route::post('/user/cancelled/appointment', [AppointmentController::class, 'cancelledAppointment'])->name('user.cancelled.appointment');
-Route::post('/user/done/appointment', [AppointmentController::class, 'doneAppointment'])->name('user.done.appointment');
-Route::get('user/doctors/{specialtyId}', [AppointmentController::class, 'getUpdatedDoctor'])->name('user.get.getUpdatedDoctor');
+
 
 
 Route::middleware('auth')->group(function () {
@@ -67,10 +69,8 @@ Route::middleware('auth','role:doctor')->group(function(){
     Route::get('/doctor/appointment', [DoctorController::class, 'appointment'])->name('doctor.appointment');
     Route::get('/doctor/appointment/confirmed', [DoctorController::class, 'confirmedAppointmentList'])->name('doctor.appointment.confirmed');
     Route::get('/doctor/appointment/done', [DoctorController::class, 'doneAppointmentList'])->name('doctor.appointment.done');
-    Route::get('/doctor/appointment/cancelled', [DoctorController::class, 'cancelledAppointmentList'])->name('doctor.appointment.cancelled');
     Route::post('/doctor/appointment/confirm', [DoctorController::class, 'confirmedAppointment'])->name('doctor.confirm.appointment');
     Route::post('/doctor/appointment/finish', [DoctorController::class, 'doneAppointment'])->name('doctor.finish.appointment');
-    Route::post('/doctor/appointment/cancel', [DoctorController::class, 'cancelAppointment'])->name('doctor.cancel.appointment');
 
     // Logout
     Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');

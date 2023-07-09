@@ -79,10 +79,11 @@
           </li>
           <li class="dropdown"><a href="#"><span>Appointment</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
-              <li><a href="{{route('user.appointment')}}">My Appointments</a></li>
+              <li><a href="{{route('user.appointment')}}">My Appointment</a></li>
               </li>
-              <li><a href="{{route('user.done.appointment')}}">Done Appointments</a></li>
-              <li><a href="{{route('user.cancelled.appointment')}}">Cancelled Appointments</a></li>
+              <li><a href="{{route('user.confirmed.appointment')}}">Confirmed Appointment</a></li>
+              <li><a href="{{route('user.done.appointment')}}">Done Appointment</a></li>
+              <li><a href="{{route('user.cancelled.appointment')}}">Cancelled Appointment</a></li>
             </li>
             </ul>
           </li>

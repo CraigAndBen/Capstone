@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Appointment List</h1>
+                            <h1>Done Appointment List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -67,6 +67,7 @@
                                     <span class="fa fa-check-circle"></span> No Appointment.
                                 </div>
                                 @else
+
                                 <table class="table table-bordered">
                                     <thead class="bg-primary text-light text-center">
                                         <tr>
@@ -82,56 +83,44 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($appointments as $appointment)
-                                        <tr>
-                                            <td>{{ ucwords($appointment->first_name) }}</td>
-                                            <td>{{ ucwords($appointment->last_name) }}</td>
-                                            <td>{{ ucwords($appointment->specialties) }}</td>
-                                            <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                            <td>{{ ucwords($appointment->appointment_date) }}</td>
-                                            <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                            <td>{{ ucwords($appointment->status) }}</td>
-                                            <td class="text-center">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                                        data-toggle="dropdown">
-                                                        Actions
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                            <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                data-target="#viewModal"
-                                                                data-first-name="{{ json_encode($appointment->first_name) }}"
-                                                                data-middle-name="{{ json_encode($appointment->middle_name) }}"
-                                                                data-last-name="{{ json_encode($appointment->last_name) }}"
-                                                                data-street="{{ json_encode($appointment->street) }}"
-                                                                data-brgy="{{ json_encode($appointment->brgy) }}"
-                                                                data-city="{{ json_encode($appointment->city) }}"
-                                                                data-province="{{ json_encode($appointment->province) }}"
-                                                                data-email="{{ json_encode($appointment->email) }}"
-                                                                data-birthdate="{{ json_encode($appointment->birthdate) }}"
-                                                                data-gender="{{ json_encode($appointment->gender) }}"
-                                                                data-phone="{{ json_encode($appointment->phone) }}"
-                                                                data-specialties="{{ json_encode($appointment->specialties) }}"
-                                                                data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
-                                                                data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
-                                                                data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
-                                                                data-reason="{{ json_encode($appointment->reason) }}"
-                                                                >View</a>
-                                                                <form
-                                                                    action="{{ route('doctor.confirm.appointment') }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    <input type="hidden" name="appointment_id"
-                                                                        value="{{ $appointment->id }}">
-                                                                    <input type="hidden" name="status"
-                                                                        value="{{ $appointment->status }}">
-                                                                        <button type="submit"
-                                                                            class="dropdown-item btn btn-primary">Confirm</button>
-                                                                </form>
+                                            <tr>
+                                                <td>{{ ucwords($appointment->first_name) }}</td>
+                                                <td>{{ ucwords($appointment->last_name) }}</td>
+                                                <td>{{ ucwords($appointment->specialties) }}</td>
+                                                <td>{{ ucwords($appointment->appointment_type) }}</td>
+                                                <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                <td>{{ ucwords($appointment->appointment_time) }}</td>
+                                                <td>{{ ucwords($appointment->status) }}</td>
+                                                <td class="text-center">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-primary dropdown-toggle" type="button"
+                                                            data-toggle="dropdown">
+                                                            Actions
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                                <a class="dropdown-item btn btn-primary" data-toggle="modal"
+                                                                    data-target="#viewModal"
+                                                                    data-first-name="{{ json_encode($appointment->first_name) }}"
+                                                                    data-middle-name="{{ json_encode($appointment->middle_name) }}"
+                                                                    data-last-name="{{ json_encode($appointment->last_name) }}"
+                                                                    data-street="{{ json_encode($appointment->street) }}"
+                                                                    data-brgy="{{ json_encode($appointment->brgy) }}"
+                                                                    data-city="{{ json_encode($appointment->city) }}"
+                                                                    data-province="{{ json_encode($appointment->province) }}"
+                                                                    data-email="{{ json_encode($appointment->email) }}"
+                                                                    data-birthdate="{{ json_encode($appointment->birthdate) }}"
+                                                                    data-gender="{{ json_encode($appointment->gender) }}"
+                                                                    data-phone="{{ json_encode($appointment->phone) }}"
+                                                                    data-specialties="{{ json_encode($appointment->specialties) }}"
+                                                                    data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
+                                                                    data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
+                                                                    data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
+                                                                    data-reason="{{ json_encode($appointment->reason) }}"
+                                                                    >View</a>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>     
-                                
+                                                </td>
+                                            </tr>                                     
                                         @endforeach
 
                                     </tbody>

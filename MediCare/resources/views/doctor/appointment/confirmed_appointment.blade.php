@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Appointment List</h1>
+                            <h1>Confirmed Appointment List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -61,6 +61,12 @@
                                         <span class="fa fa-check-circle"></span> {{ session('info') }}
                                     </div>
                                 @endif
+
+                                @if ($appointments->isEmpty())
+                                <div class="alert alert-info">
+                                    <span class="fa fa-check-circle"></span> No Appointment.
+                                </div>
+                                @else
 
                                 <table class="table table-bordered">
                                     <thead class="bg-primary text-light text-center">
@@ -112,7 +118,7 @@
                                                                     data-reason="{{ json_encode($appointment->reason) }}"
                                                                     >View</a>
                                                                     <form
-                                                                    action="{{ route('doctor.appointment.done') }}"
+                                                                    action="{{ route('doctor.finish.appointment') }}"
                                                                     method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="appointment_id"
@@ -130,6 +136,7 @@
 
                                     </tbody>
                                 </table>
+                                @endif
                             </div>
                         </div>
                     </div>

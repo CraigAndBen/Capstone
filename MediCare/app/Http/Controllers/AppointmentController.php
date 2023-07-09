@@ -12,28 +12,29 @@ class AppointmentController extends Controller
 {
     public function showAppointment(){
         
-        $amTime = [
-            '8:30',
-            '9:00',
-            '9:30',
-            '10:30',
-            '11:00',
-            '11:30',
+        $time = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
         ];
+        
+        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
 
-        $pmTime = [
-            '1:30',
-            '2:00',
-            '2:30',
-            '3:00',
-            '3:30',
-            '4:00',
-        ];
+        $updatedTime = array_diff($time, $records);
 
         $users = User::where('role', 'doctor')->get();
         $infos = Doctor::all();
 
-        return view('user.appointment_create', compact('users', 'infos','amTime','pmTime'));
+        return view('user.appointment_create', compact('users', 'infos','updatedTime'));
     }
 
     public function createAppointment(Request $request){
@@ -85,31 +86,115 @@ class AppointmentController extends Controller
 
     public function appointment(){
 
-        $amTime = [
-            '8:30',
-            '9:00',
-            '9:30',
-            '10:30',
-            '11:00',
-            '11:30',
+        $time = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
         ];
+        
+        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
 
-        $pmTime = [
-            '1:30',
-            '2:00',
-            '2:30',
-            '3:00',
-            '3:30',
-            '4:00',
-        ];
+        $updatedTime = array_diff($time, $records);
 
         $user = Auth::user();
         $infos = Doctor::all();
-        $appointments = Appointment::where('account_id', $user->id)->get();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'pending')->get();
 
-        return view('user.appointment', compact('appointments','infos','amTime','pmTime'));
+        return view('user.appointment', compact('appointments','infos','updatedTime'));
     }
 
+    public function confirmedAppointmentList(){
+
+        $time = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
+        ];
+        
+        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
+
+        $updatedTime = array_diff($time, $records);
+
+        $user = Auth::user();
+        $infos = Doctor::all();
+        $doctors = User::all();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'confirmed')->get();
+        return view('user.confirmed_appointment', compact('appointments','infos','updatedTime','doctors'));
+    }
+
+    public function doneAppointmentList(){
+
+        $time = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
+        ];
+        
+        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
+
+        $updatedTime = array_diff($time, $records);
+
+        $user = Auth::user();
+        $infos = Doctor::all();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->get();
+
+        return view('user.done_appointment', compact('appointments','infos','updatedTime'));
+    }
+
+    public function cancelledAppointmentList(){
+
+        $time = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
+        ];
+        
+        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
+
+        $updatedTime = array_diff($time, $records);
+
+        $user = Auth::user();
+        $infos = Doctor::all();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->get();
+
+        return view('user.cancelled_appointment', compact('appointments','infos','updatedTime'));
+    }
     public function updateAppointment(Request $request){
 
         $request->validate([
@@ -191,6 +276,22 @@ class AppointmentController extends Controller
 
             return redirect()->route('user.appointment')->with('status', 'Appoinment cancelled successfully.');
         }
+    }
+
+    private function removeTimeIfExists($appointments, $time)
+    {
+        foreach($appointments as $appointment){
+
+            if (in_array('$appointment->appointment_time', $time)) {
+                // Value exists in the array
+                // Perform your logic here
+                // ...
+                $time = $appointment->appointment_time;
+            }
+        }
+
+        return $time;
+        
     }
 
     private function hasChanges($info, $updatedData)

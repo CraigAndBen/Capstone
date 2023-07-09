@@ -235,9 +235,6 @@
         <li class="pc-item">
           <a href="{{route('doctor.appointment.done')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Done Appointment</span></a>
         </li>
-        <li class="pc-item">
-          <a href="{{route('doctor.appointment.cancelled')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Cancelled Appointment</span></a>
-        </li>
       </ul>
     </div>
   </div>
