@@ -174,7 +174,7 @@
                               <div class="form-floating mb-3">
                                 <select class="form-control  p-3" id="appointment_time" name="appointment_time">
                                   <option>Select Time of Appointment</option>
-                                  @foreach ($updatedTime as $time)
+                                  @foreach ($timeList as $time)
                                     <option value="{{$time}}">{{$time}} </option>
                                   @endforeach
                                 </select>

@@ -12,7 +12,7 @@ class AppointmentController extends Controller
 {
     public function showAppointment(){
         
-        $time = [
+        $timeList = [
             '8:30 AM',
             '9:00 AM',
             '9:30 AM',
@@ -26,15 +26,11 @@ class AppointmentController extends Controller
             '3:30 PM',
             '4:00 PM',
         ];
-        
-        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
-
-        $updatedTime = array_diff($time, $records);
 
         $users = User::where('role', 'doctor')->get();
         $infos = Doctor::all();
 
-        return view('user.appointment_create', compact('users', 'infos','updatedTime'));
+        return view('user.appointment_create', compact('users', 'infos','timeList'));
     }
 
     public function createAppointment(Request $request){
@@ -58,35 +54,46 @@ class AppointmentController extends Controller
             'check' => 'accepted',
         ]);
 
-        $user = Auth::user();
+        $appointments = Appointment::all();    
 
-        Appointment::create([
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'account_id' => $user->id,
-            'street' => $request->input('street'),
-            'gender' => $request->input('gender'),
-            'brgy' => $request->input('brgy'),
-            'city' => $request->input('city'),
-            'province' => $request->input('province'),
-            'specialties' => $request->input('specialties'),
-            'birthdate' => $request->input('birthdate'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'appointment_type' => $request->input('appointment_type'),
-            'appointment_date' => $request->input('appointment_date'),
-            'appointment_time' => $request->input('appointment_time'),
-            'reason' => $request->input('reason'),
-            'status' => 'pending',
-        ]);
-        
-        return back()->with('success', 'Appointment Created Successfully.');
+        foreach ($appointments as $appointment) {
+            if($appointment->appointment_date != $request->input('appointment_date') || $appointment->appointment_time != $request->input('appointment_time')){
+
+                $user = Auth::user();
+
+                Appointment::create([
+                    'first_name' => $request->input('first_name'),
+                    'middle_name' => $request->input('middle_name'),
+                    'last_name' => $request->input('last_name'),
+                    'account_id' => $user->id,
+                    'street' => $request->input('street'),
+                    'gender' => $request->input('gender'),
+                    'brgy' => $request->input('brgy'),
+                    'city' => $request->input('city'),
+                    'province' => $request->input('province'),
+                    'specialties' => $request->input('specialties'),
+                    'birthdate' => $request->input('birthdate'),
+                    'email' => $request->input('email'),
+                    'phone' => $request->input('phone'),
+                    'appointment_type' => $request->input('appointment_type'),
+                    'appointment_date' => $request->input('appointment_date'),
+                    'appointment_time' => $request->input('appointment_time'),
+                    'reason' => $request->input('reason'),
+                    'status' => 'pending',
+                ]);
+                
+                return back()->with('success', 'Appointment Created Successfully.');
+            }
+
+            return back()->with('info', 'The current date and time are unavailable, please select another date and time.');
+        }
+
+
     }
 
     public function appointment(){
 
-        $time = [
+        $timeList = [
             '8:30 AM',
             '9:00 AM',
             '9:30 AM',
@@ -100,21 +107,17 @@ class AppointmentController extends Controller
             '3:30 PM',
             '4:00 PM',
         ];
-        
-        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
-
-        $updatedTime = array_diff($time, $records);
 
         $user = Auth::user();
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'pending')->get();
 
-        return view('user.appointment', compact('appointments','infos','updatedTime'));
+        return view('user.appointment', compact('appointments','infos','timeList'));
     }
 
     public function confirmedAppointmentList(){
 
-        $time = [
+        $timeList = [
             '8:30 AM',
             '9:00 AM',
             '9:30 AM',
@@ -129,20 +132,17 @@ class AppointmentController extends Controller
             '4:00 PM',
         ];
         
-        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
-
-        $updatedTime = array_diff($time, $records);
 
         $user = Auth::user();
         $infos = Doctor::all();
         $doctors = User::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'confirmed')->get();
-        return view('user.confirmed_appointment', compact('appointments','infos','updatedTime','doctors'));
+        return view('user.confirmed_appointment', compact('appointments','infos','timeList','doctors'));
     }
 
     public function doneAppointmentList(){
 
-        $time = [
+        $timeList = [
             '8:30 AM',
             '9:00 AM',
             '9:30 AM',
@@ -157,20 +157,17 @@ class AppointmentController extends Controller
             '4:00 PM',
         ];
         
-        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
-
-        $updatedTime = array_diff($time, $records);
 
         $user = Auth::user();
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->get();
 
-        return view('user.done_appointment', compact('appointments','infos','updatedTime'));
+        return view('user.done_appointment', compact('appointments','infos','timeList'));
     }
 
     public function cancelledAppointmentList(){
 
-        $time = [
+        $timeList = [
             '8:30 AM',
             '9:00 AM',
             '9:30 AM',
@@ -184,16 +181,12 @@ class AppointmentController extends Controller
             '3:30 PM',
             '4:00 PM',
         ];
-        
-        $records = Appointment::select('appointment_time')->get()->pluck('appointment_time')->toArray();
-
-        $updatedTime = array_diff($time, $records);
 
         $user = Auth::user();
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->get();
 
-        return view('user.cancelled_appointment', compact('appointments','infos','updatedTime'));
+        return view('user.cancelled_appointment', compact('appointments','infos','timeList'));
     }
     public function updateAppointment(Request $request){
 
@@ -218,53 +211,57 @@ class AppointmentController extends Controller
 
         $appointment = Appointment::where('id', $request->appointment_id)->first();
 
-        $appointmentUpdatedData = [
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'street' => $request->input('street'),
-            'brgy' => $request->input('brgy'),
-            'city' => $request->input('city'),
-            'province' => $request->input('province'),
-            'birthdate' => $request->input('birthdate'),
-            'gender' => $request->input('gender'),
-            'phone' => $request->input('phone'),
-            'specialties' => $request->input('specialties'),
-            'email' => $request->input('email'),
-            'appointment_type' => $request->input('appointment_type'),
-            'appointment_date' => $request->input('appointment_date'),
-            'appointment_time' => $request->input('appointment_time'),
-            'reason' => $request->input('reason'),
-        ];
+            $appointmentUpdatedData = [
+                'first_name' => $request->input('first_name'),
+                'middle_name' => $request->input('middle_name'),
+                'last_name' => $request->input('last_name'),
+                'street' => $request->input('street'),
+                'brgy' => $request->input('brgy'),
+                'city' => $request->input('city'),
+                'province' => $request->input('province'),
+                'birthdate' => $request->input('birthdate'),
+                'gender' => $request->input('gender'),
+                'phone' => $request->input('phone'),
+                'specialties' => $request->input('specialties'),
+                'email' => $request->input('email'),
+                'appointment_type' => $request->input('appointment_type'),
+                'appointment_date' => $request->input('appointment_date'),
+                'appointment_time' => $request->input('appointment_time'),
+                'reason' => $request->input('reason'),
+            ];
+    
+            $appointmentChange = $this->hasChanges($appointment, $appointmentUpdatedData);
+    
+            if($appointmentChange) {
 
-        $appointmentChange = $this->hasChanges($appointment, $appointmentUpdatedData);
-
-        if($appointmentChange) {
-
-            $appointment->first_name = $request->input('first_name');
-            $appointment->middle_name = $request->input('middle_name');
-            $appointment->last_name = $request->input('last_name');
-            $appointment->street = $request->input('street');
-            $appointment->brgy = $request->input('brgy');
-            $appointment->city = $request->input('city');
-            $appointment->province = $request->input('province');
-            $appointment->birthdate = $request->input('birthdate');
-            $appointment->gender = $request->input('gender');
-            $appointment->phone = $request->input('phone');
-            $appointment->email = $request->input('email');
-            $appointment->appointment_type = $request->input('appointment_type');
-            $appointment->appointment_date = $request->input('appointment_date');
-            $appointment->appointment_time = $request->input('appointment_time');
-            $appointment->reason = $request->input('reason');
-
-            $appointment->save();
-
-            return redirect()->back()->with('success', 'Profile updated successfully.');
-        } else {
-            return redirect()->back()->with('info', 'No changes were made.');
+                if($appointment->appointment_date != $request->input('appointment_date') || $appointment->appointment_time != $request->input('appointment_time')){
+    
+                $appointment->first_name = $request->input('first_name');
+                $appointment->middle_name = $request->input('middle_name');
+                $appointment->last_name = $request->input('last_name');
+                $appointment->street = $request->input('street');
+                $appointment->brgy = $request->input('brgy');
+                $appointment->city = $request->input('city');
+                $appointment->province = $request->input('province');
+                $appointment->birthdate = $request->input('birthdate');
+                $appointment->gender = $request->input('gender');
+                $appointment->phone = $request->input('phone');
+                $appointment->email = $request->input('email');
+                $appointment->appointment_type = $request->input('appointment_type');
+                $appointment->appointment_date = $request->input('appointment_date');
+                $appointment->appointment_time = $request->input('appointment_time');
+                $appointment->reason = $request->input('reason');
+    
+                $appointment->save();
+    
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+                } else {
+                    return back()->with('info', 'The current date and time are unavailable, please select another date and time.');
+                }
+            } else {
+                return redirect()->back()->with('info', 'No changes were made.');
+            }
         }
-    }
-
     public function cancelAppointment(Request $request){
 
         $appointment = Appointment::findOrFail($request->input('appointment_id'));
@@ -276,22 +273,6 @@ class AppointmentController extends Controller
 
             return redirect()->route('user.appointment')->with('status', 'Appoinment cancelled successfully.');
         }
-    }
-
-    private function removeTimeIfExists($appointments, $time)
-    {
-        foreach($appointments as $appointment){
-
-            if (in_array('$appointment->appointment_time', $time)) {
-                // Value exists in the array
-                // Perform your logic here
-                // ...
-                $time = $appointment->appointment_time;
-            }
-        }
-
-        return $time;
-        
     }
 
     private function hasChanges($info, $updatedData)

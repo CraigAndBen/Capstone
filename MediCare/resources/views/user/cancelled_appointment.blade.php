@@ -125,6 +125,26 @@
                                                                         data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                         data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                         data-reason="{{ json_encode($appointment->reason) }}">View</a>
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                        data-toggle="modal" data-target="#updateModal"
+                                                                        data-appointment-id="{{ json_encode($appointment->id) }}"
+                                                                        data-first-name="{{ json_encode($appointment->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($appointment->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($appointment->last_name) }}"
+                                                                        data-street="{{ json_encode($appointment->street) }}"
+                                                                        data-brgy="{{ json_encode($appointment->brgy) }}"
+                                                                        data-city="{{ json_encode($appointment->city) }}"
+                                                                        data-province="{{ json_encode($appointment->province) }}"
+                                                                        data-email="{{ json_encode($appointment->email) }}"
+                                                                        data-birthdate="{{ json_encode($appointment->birthdate) }}"
+                                                                        data-gender="{{ json_encode($appointment->gender) }}"
+                                                                        data-phone="{{ json_encode($appointment->phone) }}"
+                                                                        data-specialties="{{ json_encode($appointment->specialties) }}"
+                                                                        data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
+                                                                        data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
+                                                                        data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
+                                                                        data-reason="{{ json_encode($appointment->reason) }}">Re-cancel
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -275,7 +295,7 @@
                             <div class="form-floating mb-3">
                                 <select class="form-control  p-3" id="appointment_time" name="appointment_time" disabled>
                                     <option>Select Time of Appointment</option>
-                                    @foreach ($updatedTime as $time)
+                                    @foreach ($timeList as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach
                                 </select>

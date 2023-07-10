@@ -19,6 +19,24 @@ class DoctorController extends Controller
     {
 
         $profile = auth()->user();
+        $appointments = Appointment::all();
+        $currentDate = date('Y-m-d'); 
+
+        foreach ($appointments as $appointment) {
+            
+            if (strtotime($appointment->appointment_date) < strtotime($currentDate)) {
+
+                $appoint = Appointment::findOrFail($appointment->id);
+
+                $appoint->status = 'unavailable';
+                $appoint->save();
+            } 
+            
+            return view('doctor_dashboard', compact('profile'));
+            
+        }
+
+
 
         return view('doctor_dashboard', compact('profile'));
     }

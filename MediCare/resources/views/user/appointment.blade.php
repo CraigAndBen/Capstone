@@ -291,7 +291,7 @@
                                 <div class="form-floating mb-3">
                                     <select class="form-control  p-3" id="appointment_time" name="appointment_time">
                                         <option>Select Time of Appointment</option>
-                                        @foreach ($updatedTime as $time)
+                                        @foreach ($timeList as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
                                         @endforeach
                                     </select>
@@ -330,7 +330,6 @@
         <div class="modal-content">
             <div class="modal-header bg-primary text-light">
                 <h3 class="modal-title" id="staticBackdropLabel">Appointment Update</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                     <div class="row mt-4 text-start">
@@ -457,7 +456,7 @@
                             <div class="form-floating mb-3">
                                 <select class="form-control  p-3" id="appointment_time" name="appointment_time" disabled>
                                     <option>Select Time of Appointment</option>
-                                    @foreach ($updatedTime as $time)
+                                    @foreach ($timeList as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach
                                 </select>

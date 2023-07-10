@@ -2,7 +2,7 @@
 <html lang="en">
   <!-- [Head] start -->
   <head>
-    <title>MediCare | Super Admin Dashboard</title>
+    <title>MediCare | Doctor Dashboard</title>
     <!-- [Meta] -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -164,7 +164,7 @@
           <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
           <p class="text-muted">{{$profile->role}}</p>
           <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-            <a href="{{route('superadmin.profile.edit')}}" class="dropdown-item">
+            <a href="{{route('doctor.profile.edit')}}" class="dropdown-item">
               <i class="ti ti-settings"></i>
               <span>Account Settings</span>
             </a>
@@ -172,7 +172,7 @@
               <i class="ti ti-user"></i>
               <span>Social Profile</span>
             </a>
-            <a href="{{route('superadmin.logout')}}" class="dropdown-item">
+            <a href="{{route('doctor.logout')}}" class="dropdown-item">
               <i class="ti ti-logout"></i>
               <span>Logout</span>
             </a>
@@ -227,13 +227,13 @@
               class="pc-mtext">User</span></a>
         </li> --}}
         <li class="pc-item">
-          <a href="{{route('doctor.appointment')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Appointments</span></a>
+          <a href="{{route('doctor.appointment')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Appointment List</span></a>
         </li>
         <li class="pc-item">
-          <a href="{{route('doctor.appointment.confirmed')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Confirmed Appointment </span></a>
+          <a href="{{route('doctor.appointment.confirmed')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Confirmed List</span></a>
         </li>
         <li class="pc-item">
-          <a href="{{route('doctor.appointment.done')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Done Appointment</span></a>
+          <a href="{{route('doctor.appointment.done')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Done List</span></a>
         </li>
       </ul>
     </div>

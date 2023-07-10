@@ -198,51 +198,23 @@
       <ul class="pc-navbar">
         <li class="pc-item pc-caption">
           <label>Dashboard</label>
-          <i class="ti ti-dashboard"></i>
         </li>
         <li class="pc-item">
           <a href="/admin/dashboard" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
               class="pc-mtext">Home</span></a>
         </li>
         <li class="pc-item pc-caption">
-          <label>Pages</label>
-          <i class="ti ti-news"></i>
-        </li>
-        <li class="pc-item pc-hasmenu">
-          <a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-key"></i></span><span
-              class="pc-mtext">Appointment</span></a>
-          <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" href="{{route('doctor.appointment')}}">Appointment List</a></li>
-            <li class="pc-item"><a class="pc-link" href="{{route('doctor.appointment.confirmed')}}">Confirmed Appointment</a></li>
-            <li class="pc-item"><a class="pc-link" href="{{route('doctor.appointment.done')}}">Done Appointment</a></li>
-          </ul>
-        </li>
-
-        <li class="pc-item pc-caption">
-          <label>Elements</label>
-          <i class="ti ti-apps"></i>
+          <label>Dashboard</label>
         </li>
         <li class="pc-item">
-          <a href="../elements/bc_typography.html" class="pc-link"><span class="pc-micon"><i
-                class="ti ti-typography"></i></span><span class="pc-mtext">Typography</span></a>
+          <a href="{{route('doctor.appointment')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Appointment List</span></a>
         </li>
         <li class="pc-item">
-          <a href="../elements/bc_color.html" class="pc-link"><span class="pc-micon"><i class="ti ti-brush"></i></span><span
-              class="pc-mtext">Color</span></a>
+          <a href="{{route('doctor.appointment.confirmed')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Confirmed List</span></a>
         </li>
         <li class="pc-item">
-          <a href="https://tablericons.com" class="pc-link" target="_blank"><span class="pc-micon"><i
-                class="ti ti-plant-2"></i></span><span class="pc-mtext">Tabler</span><span class="pc-arrow"></a>
+          <a href="{{route('doctor.appointment.done')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Done List</span></a>
         </li>
-
-        <li class="pc-item pc-caption">
-          <label>Other</label>
-          <i class="ti ti-brand-chrome"></i>
-        </li>
-        <li class="pc-item"><a href="../other/sample-page.html" class="pc-link"><span class="pc-micon"><i
-                class="ti ti-brand-chrome"></i></span><span class="pc-mtext">Sample page</span></a></li>
-        <li class="pc-item"><a href="https://codedthemes.gitbook.io/berry-bootstrap/" target="_blank" class="pc-link"><span
-              class="pc-micon"><i class="ti ti-vocabulary"></i></span><span class="pc-mtext">Document</span></a></li>
       </ul>
     </div>
   </div>

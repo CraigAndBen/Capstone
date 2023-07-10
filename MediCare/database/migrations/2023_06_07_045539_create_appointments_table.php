@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('appointment_time')->nullable();
             $table->string('reason')->nullable();
             $table->smallInteger('doctor_id')->nullable();
-            $table->enum('status', ['pending','confirmed','cancelled','done'])->default('pending');
+            $table->enum('status', ['pending','confirmed','cancelled','done','unavailable'])->default('pending');
             $table->timestamps();
         });
     }
