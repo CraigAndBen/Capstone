@@ -80,6 +80,7 @@
                   <li><a href="#">Deep Drop Down 5</a></li>
                 </ul> --}}
                     </li>
+                    <li><a href="{{ route('user.notification') }}">Notifcation</a></li>
                     <li><a href="{{ route('user.logout') }}">Logout</a></li>
                 </ul>
                 </li>

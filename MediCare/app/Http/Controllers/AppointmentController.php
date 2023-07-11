@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Appointment;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,39 +55,68 @@ class AppointmentController extends Controller
             'check' => 'accepted',
         ]);
 
-        $appointments = Appointment::all();    
+        $appointments = Appointment::all();
+        $count = Appointment::count();    
 
-        foreach ($appointments as $appointment) {
-            if($appointment->appointment_date != $request->input('appointment_date') || $appointment->appointment_time != $request->input('appointment_time')){
-
-                $user = Auth::user();
-
-                Appointment::create([
-                    'first_name' => $request->input('first_name'),
-                    'middle_name' => $request->input('middle_name'),
-                    'last_name' => $request->input('last_name'),
-                    'account_id' => $user->id,
-                    'street' => $request->input('street'),
-                    'gender' => $request->input('gender'),
-                    'brgy' => $request->input('brgy'),
-                    'city' => $request->input('city'),
-                    'province' => $request->input('province'),
-                    'specialties' => $request->input('specialties'),
-                    'birthdate' => $request->input('birthdate'),
-                    'email' => $request->input('email'),
-                    'phone' => $request->input('phone'),
-                    'appointment_type' => $request->input('appointment_type'),
-                    'appointment_date' => $request->input('appointment_date'),
-                    'appointment_time' => $request->input('appointment_time'),
-                    'reason' => $request->input('reason'),
-                    'status' => 'pending',
-                ]);
-                
-                return back()->with('success', 'Appointment Created Successfully.');
+        if($count != 0){
+            foreach ($appointments as $appointment) {
+                if($appointment->appointment_date != $request->input('appointment_date') || $appointment->appointment_time != $request->input('appointment_time')){
+    
+                    $user = Auth::user();
+    
+                    Appointment::create([
+                        'first_name' => $request->input('first_name'),
+                        'middle_name' => $request->input('middle_name'),
+                        'last_name' => $request->input('last_name'),
+                        'account_id' => $user->id,
+                        'street' => $request->input('street'),
+                        'gender' => $request->input('gender'),
+                        'brgy' => $request->input('brgy'),
+                        'city' => $request->input('city'),
+                        'province' => $request->input('province'),
+                        'specialties' => $request->input('specialties'),
+                        'birthdate' => $request->input('birthdate'),
+                        'email' => $request->input('email'),
+                        'phone' => $request->input('phone'),
+                        'appointment_type' => $request->input('appointment_type'),
+                        'appointment_date' => $request->input('appointment_date'),
+                        'appointment_time' => $request->input('appointment_time'),
+                        'reason' => $request->input('reason'),
+                        'status' => 'pending',
+                    ]);
+                    
+                    return back()->with('success', 'Appointment Created Successfully.'); 
+                }
+    
+                return back()->with('info', 'The current date and time are unavailable, please select another date and time.');
             }
-
-            return back()->with('info', 'The current date and time are unavailable, please select another date and time.');
+        } else {
+            $user = Auth::user();
+    
+            Appointment::create([
+                'first_name' => $request->input('first_name'),
+                'middle_name' => $request->input('middle_name'),
+                'last_name' => $request->input('last_name'),
+                'account_id' => $user->id,
+                'street' => $request->input('street'),
+                'gender' => $request->input('gender'),
+                'brgy' => $request->input('brgy'),
+                'city' => $request->input('city'),
+                'province' => $request->input('province'),
+                'specialties' => $request->input('specialties'),
+                'birthdate' => $request->input('birthdate'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'appointment_type' => $request->input('appointment_type'),
+                'appointment_date' => $request->input('appointment_date'),
+                'appointment_time' => $request->input('appointment_time'),
+                'reason' => $request->input('reason'),
+                'status' => 'pending',
+            ]);
+            
+            return back()->with('success', 'Appointment Created Successfully.'); 
         }
+
 
 
     }
@@ -275,8 +305,31 @@ class AppointmentController extends Controller
         }
     }
 
-    private function hasChanges($info, $updatedData)
-    {
+    public function notification(){
+        
+        $user = Auth::user();
+        $notifications = Notification::where('account_id', $user->id)->get();
+
+        return view('user.notification', compact('notifications'));
+
+    }
+
+    public function notificationRead(Request $request){
+
+        $notification = Notification::findOrFail($request->input('id'));
+
+        if($notification->is_read == 0){
+            $notification->is_read = 1;
+            $notification->save();
+    
+            return redirect()->route('user.notification');
+        } else {
+            return redirect()->route('user.notification');
+        }
+
+    }
+
+    private function hasChanges($info, $updatedData){
         foreach ($updatedData as $key => $value) {
 
             if ($info->{$key} != $value) {
@@ -288,4 +341,6 @@ class AppointmentController extends Controller
         return false;
 
     }
+
+
 }

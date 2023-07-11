@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Doctor;
 use Illuminate\View\View;
 use App\Models\Appointment;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +32,20 @@ class DoctorController extends Controller
 
                 $appoint->status = 'unavailable';
                 $appoint->save();
+
+                $currentDate = Carbon::now()->toTimeString();
+                $currentTime = Carbon::now()->toDateString();
+                $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable.';
+        
+                Notification::create([
+                    'account_id' => $appointment->account_id,
+                    'title' => 'appointment confirmation',
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                ]);
+
+                return view('doctor_dashboard', compact('profile'));
             } 
             
             return view('doctor_dashboard', compact('profile'));
@@ -182,6 +198,18 @@ class DoctorController extends Controller
         $appointment->status = 'confirmed';
         $appointment->doctor_id = $doctor->account_id;
         $appointment->save();
+
+        $currentDate = Carbon::now()->toTimeString();
+        $currentTime = Carbon::now()->toDateString();
+        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is confirmed.';
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'appointment confirmation',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+        ]);
 
         return redirect()->back()->with('success', 'Appointment Confirmed successfully.');
     }

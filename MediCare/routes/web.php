@@ -39,6 +39,10 @@ Route::post('/user/create/appointment', [AppointmentController::class, 'createAp
 Route::post('/user/update/appointment', [AppointmentController::class, 'updateAppointment'])->name('user.update.appointment');
 Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAppointment'])->name('user.cancel.appointment');
 
+// User Notification
+Route::get('/user/notification', [AppointmentController::class, 'notification'])->name('user.notification');
+Route::post('/user/notification/read', [AppointmentController::class, 'notificationRead'])->name('user.notification.read');
+
 
 
 Route::middleware('auth')->group(function () {
