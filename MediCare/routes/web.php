@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
 use Illuminate\Support\Facades\Route;
@@ -80,8 +81,24 @@ Route::middleware('auth','role:doctor')->group(function(){
     Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');
 });
 
+// Admin
+
 Route::middleware('auth','role:admin')->group(function(){
-    Route::get('/admin/dashboard', [UsersController::class, 'AdminDashboard'])->name('admin.dashboard');
+
+    // Dashboard
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // Profile
+    Route::get('/admin/profile', [AdminController::class, 'edit'])->name('admin.profile.edit');
+    Route::patch('/admin/profile/update', [AdminController::class, 'update'])->name('admin.profile.update');
+    Route::put('/admin/profile/update', [AdminController::class, 'updatePassword'])->name('admin.password.update');
+
+    // Patient
+    Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
+    Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
+
+    // Logout
+    Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
 });
 
 Route::middleware('auth','role:super_admin')->group(function(){
