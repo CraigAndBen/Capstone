@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\NurseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
@@ -55,7 +56,22 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::middleware('auth','role:nurse')->group(function(){
-    Route::get('/nurse/dashboard', [UsersController::class, 'NurseDashboard'])->name('nurse.dashboard');
+
+    // Dashboard
+    Route::get('/nurse/dashboard', [NurseController::class, 'dashboard'])->name('nurse.dashboard');
+
+    // Profile
+    Route::get('/nurse/profile', [NurseController::class, 'edit'])->name('nurse.profile.edit');
+    Route::patch('/nurse/profile/update', [NurseController::class, 'update'])->name('nurse.profile.update');
+    Route::put('/nurse/profile/update', [NurseController::class, 'updatePassword'])->name('nurse.password.update');
+
+
+    // Patient
+    Route::get('/nurse/patient', [NurseController::class, 'patientList'])->name('nurse.patient');
+
+    // Logout
+    Route::get('/nurse/logout', [NurseController::class, 'nurseLogout'])->name('nurse.logout');
+
 });
 
 // Doctor
@@ -77,6 +93,10 @@ Route::middleware('auth','role:doctor')->group(function(){
     Route::post('/doctor/appointment/confirm', [DoctorController::class, 'confirmedAppointment'])->name('doctor.confirm.appointment');
     Route::post('/doctor/appointment/finish', [DoctorController::class, 'doneAppointment'])->name('doctor.finish.appointment');
 
+    // Patient
+    Route::get('/doctor/patient', [DoctorController::class, 'patientList'])->name('doctor.patient');
+    Route::post('/doctor/patient/update', [DoctorController::class, 'patientUpdate'])->name('doctor.patient.update');
+
     // Logout
     Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');
 });
@@ -96,6 +116,7 @@ Route::middleware('auth','role:admin')->group(function(){
     // Patient
     Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
+    Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
 
     // Logout
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');

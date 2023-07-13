@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Doctor;
+use App\Models\Patient;
 use Illuminate\View\View;
 use App\Models\Appointment;
 use App\Models\Notification;
@@ -235,6 +237,54 @@ class DoctorController extends Controller
 
         return redirect()->back()->with('success', 'Appointment Cancelled successfully.');
     }
+
+    public function patientList ()
+    {
+        $profile = auth()->user();
+        $doctors = User::where('role', 'doctor')->get();
+        $patients = Patient::where('physician', $profile->id)->get();
+
+        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors'));
+    }
+
+    public function patientUpdate(Request $request) 
+    {
+
+        $patient = Patient::where('id', $request->id)->first();
+
+            $patientUpdatedData = [
+                'medical_condition' => $request->input('medical_condition'),
+                'diagnosis' => $request->input('diagnosis'),
+                'medication' => $request->input('medication'),
+            ];
+    
+            $patientChange = $this->hasChanges($patient, $patientUpdatedData);
+    
+            if($patientChange) {
+                $patient->medical_condition = $request->input('medical_condition');
+                $patient->diagnosis = $request->input('diagnosis');
+                $patient->medication = $request->input('medication');
+    
+                $patient->save();
+    
+                return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
+            } else {
+                return redirect()->back()->with('info', 'No changes were made.');
+            }
+    }
+
+    private function hasChanges($info, $updatedData){
+        foreach ($updatedData as $key => $value) {
+
+            if ($info->{$key} != $value) {
+
+                return $value;
+            }
+        }
+
+        return false;
+    }
+
     public function doctorLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

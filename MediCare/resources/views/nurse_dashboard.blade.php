@@ -2,7 +2,7 @@
 <html lang="en">
   <!-- [Head] start -->
   <head>
-    <title> MediCare | Doctor Dashboard </title>
+    <title> MediCare | Nurse Dashboard </title>
     <!-- [Meta] -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -38,8 +38,7 @@
       <header class="pc-header">
         <div class="m-header mt-3">
 
-          <a href="{{route('doctor.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
-
+            <a href="{{route('nurse.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
             <!-- ======= Menu collapse Icon ===== -->
         </div>
         <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
@@ -165,7 +164,7 @@
                 <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
                 <p class="text-muted">{{$profile->role}}</p>
                 <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-                    <a href="{{route('doctor.profile.edit')}}" class="dropdown-item">
+                    <a href="{{route('nurse.profile.edit')}}" class="dropdown-item">
                     <i class="ti ti-settings"></i>
                     <span>Account Settings</span>
                     </a>
@@ -173,7 +172,7 @@
                     <i class="ti ti-user"></i>
                     <span>Social Profile</span>
                     </a>
-                    <a href="{{route('doctor.logout')}}" class="dropdown-item">
+                    <a href="{{route('nurse.logout')}}" class="dropdown-item">
                     <i class="ti ti-logout"></i>
                     <span>Logout</span>
                     </a>
@@ -186,11 +185,11 @@
         </header>
 <!-- [ Header ] end -->
  <!-- [ Sidebar Menu ] start -->
-<nav class="pc-sidebar">
+<nav class="pc-sidebar"> 
   <div class="navbar-wrapper">
     <div class="m-header">
       <div class="mt-3">
-        <a href="{{route('doctor.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+        <a href="{{route('nurse.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
       </div>
 
     </div>
@@ -198,29 +197,17 @@
       <ul class="pc-navbar">
         <li class="pc-item pc-caption">
           <label>Dashboard</label>
+          <i class="ti ti-dashboard"></i>
         </li>
         <li class="pc-item">
-          <a href="/admin/dashboard" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
-              class="pc-mtext">Home</span></a>
+          <a href="{{route('nurse.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Home</span></a>
         </li>
-        <li class="pc-item pc-caption">
-          <label>Appointment</label>
-        </li>
-        <li class="pc-item">
-          <a href="{{route('doctor.appointment')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Appointment List</span></a>
-        </li>
-        <li class="pc-item">
-          <a href="{{route('doctor.appointment.confirmed')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Confirmed List</span></a>
-        </li>
-        <li class="pc-item">
-          <a href="{{route('doctor.appointment.done')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Done List</span></a>
-        </li>
-
         <li class="pc-item pc-caption">
           <label>Patient</label>
+          <i class="ti ti-apps"></i>
         </li>
         <li class="pc-item">
-          <a href="{{route('doctor.patient')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span></a>
+          <a href="{{route('nurse.patient')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span></a>
         </li>
       </ul>
     </div>

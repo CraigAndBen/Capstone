@@ -218,14 +218,6 @@
           <label>Appointment</label>
           <i class="ti ti-dashboard"></i>
         </li>
-        {{-- <li class="pc-item">
-          <a href="{{route('superadmin.doctor')}}" class="pc-link"><span class="pc-micon"></span><span
-              class="pc-mtext">Doctor</span></a>
-        </li>
-        <li class="pc-item">
-          <a href="{{route('superadmin.doctor')}}" class="pc-link"><span class="pc-micon"></span><span
-              class="pc-mtext">User</span></a>
-        </li> --}}
         <li class="pc-item">
           <a href="{{route('doctor.appointment')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Appointment List</span></a>
         </li>
@@ -234,6 +226,13 @@
         </li>
         <li class="pc-item">
           <a href="{{route('doctor.appointment.done')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Done List</span></a>
+        </li>
+        <li class="pc-item pc-caption">
+          <label>Patient</label>
+          <i class="ti ti-dashboard"></i>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('doctor.patient')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span></a>
         </li>
       </ul>
     </div>

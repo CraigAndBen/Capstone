@@ -2,7 +2,7 @@
 <html lang="en">
   <!-- [Head] start -->
   <head>
-    <title>MediCare | Admin Dashboard</title>
+    <title>MediCare | Nurse Dashboard</title>
     <!-- [Meta] -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -37,7 +37,7 @@
  <!-- [ Header Topbar ] start -->
 <header class="pc-header">
   <div class="m-header mt-3">
-    <a href="{{route('admin.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+    <a href="{{route('nurse.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
     <!-- ======= Menu collapse Icon ===== -->
   </div>
   <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
@@ -164,7 +164,7 @@
           <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
           <p class="text-muted">{{$profile->role}}</p>
           <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-            <a href="{{route('admin.profile.edit')}}" class="dropdown-item">
+            <a href="{{route('nurse.profile.edit')}}" class="dropdown-item">
               <i class="ti ti-settings"></i>
               <span>Account Settings</span>
             </a>
@@ -172,7 +172,7 @@
               <i class="ti ti-user"></i>
               <span>Social Profile</span>
             </a>
-            <a href="{{route('admin.logout')}}" class="dropdown-item">
+            <a href="{{route('nurse.logout')}}" class="dropdown-item">
               <i class="ti ti-logout"></i>
               <span>Logout</span>
             </a>
@@ -202,26 +202,13 @@
           <a href="{{route('superadmin.dashboard')}}" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
               class="pc-mtext">Dashboard</span></a>
         </li>
-        {{-- <li class="pc-item pc-caption">
-          <label>Accounts</label>
-          <i class="ti ti-news"></i>
-        </li>
-        <li class="pc-item pc-hasmenu">
-          <a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-key"></i></span><span
-              class="pc-mtext">Authentication</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
-          <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/login-v3.html">Login</a></li>
-            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/register-v3.html">register</a></li>
-          </ul>
-        </li> --}}
         <li class="pc-item pc-caption">
           <label>Patient</label>
           <i class="ti ti-dashboard"></i>
         </li>
         <li class="pc-item">
-          <a href="{{route('admin.patient')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span></a>
+          <a href="{{route('nurse.patient')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span></a>
         </li>
-
       </ul>
     </div>
   </div>
