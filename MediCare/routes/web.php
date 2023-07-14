@@ -45,13 +45,12 @@ Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAp
 Route::get('/user/notification', [AppointmentController::class, 'notification'])->name('user.notification');
 Route::post('/user/notification/read', [AppointmentController::class, 'notificationRead'])->name('user.notification.read');
 
+    //profile
+    Route::get('/user/profile', [ProfileController::class, 'profile'])->name('user.profile');
+    Route::get('/profile/profile/password', [ProfileController::class, 'passwordProfile'])->name('user.profile.password');
+    Route::post('/user/profile/update', [ProfileController::class, 'profileUpdate'])->name('user.profile.update');
+    Route::post('/user/profile/update/password', [ProfileController::class, 'updatePassword'])->name('user.password.update');
 
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 require __DIR__.'/auth.php';
 

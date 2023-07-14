@@ -48,13 +48,13 @@
 
                                     @if (session('info'))
                                         <div class="alert alert-info">
-                                            <span class="fa fa-check-circle"></span> {{ session('info') }}
+                                            {{ session('info') }}
                                         </div>
                                     @endif
 
                                     @if ($appointments->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Appointment.
+                                        No Confirmed Appointment Yet.
                                     </div>
                                     @else
                                     <table class="table table-bordered">

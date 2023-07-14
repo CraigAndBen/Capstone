@@ -31,7 +31,7 @@ class AppointmentController extends Controller
         $users = User::where('role', 'doctor')->get();
         $infos = Doctor::all();
 
-        return view('user.appointment_create', compact('users', 'infos','timeList'));
+        return view('user.appointment.appointment_create', compact('users', 'infos','timeList'));
     }
 
     public function createAppointment(Request $request){
@@ -142,7 +142,7 @@ class AppointmentController extends Controller
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'pending')->get();
 
-        return view('user.appointment', compact('appointments','infos','timeList'));
+        return view('user.appointment.appointment', compact('appointments','infos','timeList'));
     }
 
     public function confirmedAppointmentList(){
@@ -167,7 +167,7 @@ class AppointmentController extends Controller
         $infos = Doctor::all();
         $doctors = User::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'confirmed')->get();
-        return view('user.confirmed_appointment', compact('appointments','infos','timeList','doctors'));
+        return view('user.appointment.confirmed_appointment', compact('appointments','infos','timeList','doctors'));
     }
 
     public function doneAppointmentList(){
@@ -192,7 +192,7 @@ class AppointmentController extends Controller
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->get();
 
-        return view('user.done_appointment', compact('appointments','infos','timeList'));
+        return view('user.appointment.done_appointment', compact('appointments','infos','timeList'));
     }
 
     public function cancelledAppointmentList(){
@@ -216,7 +216,7 @@ class AppointmentController extends Controller
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->get();
 
-        return view('user.cancelled_appointment', compact('appointments','infos','timeList'));
+        return view('user.appointment.cancelled_appointment', compact('appointments','infos','timeList'));
     }
     public function updateAppointment(Request $request){
 
@@ -310,7 +310,7 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $notifications = Notification::where('account_id', $user->id)->get();
 
-        return view('user.notification', compact('notifications'));
+        return view('user.notification.notification', compact('notifications'));
 
     }
 
