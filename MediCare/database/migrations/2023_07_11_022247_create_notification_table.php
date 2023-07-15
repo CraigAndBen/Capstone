@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('date');
             $table->string('time');
             $table->boolean('is_read')->default(false);
+            $table->string('specialties')->nullable();
             $table->timestamps();
         });
     }

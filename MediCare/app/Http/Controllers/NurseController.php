@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Nurse;
 use App\Models\Patient;
 use Illuminate\View\View;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,15 +20,11 @@ class NurseController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
 
-        return view('nurse_dashboard', compact('profile'));
-    }
-
-    public function edit(Request $request): View
-    {
-        return view('nurse.profile', [
-            'user' => $request->user(),
-        ]);
+        return view('nurse_dashboard', compact('profile','limitNotifications','count'));
     }
 
     /**
@@ -36,15 +34,21 @@ class NurseController extends Controller
     {
 
         $profile = $request->user();
+        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
 
-        return view('doctor.profile.profile', compact('profile') );
+        return view('nurse.profile.profile', compact('profile','limitNotifications','count'));
     }
 
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
+        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
 
-        return view('doctor.profile.profile_password', compact('profile') );
+        return view('nurse.profile.profile_password', compact('profile','limitNotifications','count'));
     }
 
     /**
@@ -138,10 +142,13 @@ class NurseController extends Controller
     public function patientList ()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::all();
 
-        return view('nurse.patient.patient', compact('patients', 'profile', 'doctors'));
+        return view('nurse.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count'));
     }
 
     public function patientUpdate(Request $request) 
@@ -168,6 +175,32 @@ class NurseController extends Controller
             } else {
                 return redirect()->back()->with('info', 'No changes were made.');
             }
+    }
+
+    public function notification(){
+        
+        $profile = Auth::user();
+        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        return view('nurse.notification.notification', compact('profile','notifications','limitNotifications','count'));
+
+    }
+
+    public function notificationRead(Request $request){
+
+        $notification = Notification::findOrFail($request->input('id'));
+
+        if($notification->is_read == 0){
+            $notification->is_read = 1;
+            $notification->save();
+    
+            return redirect()->route('nurse.notification');
+        } else {
+            return redirect()->route('nurse.notification');
+        }
+
     }
 
     private function hasChanges($info, $updatedData){

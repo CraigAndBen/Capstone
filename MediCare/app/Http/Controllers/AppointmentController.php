@@ -135,10 +135,11 @@ class AppointmentController extends Controller
     
             Notification::create([
                 'account_id' => $appointment->account_id,
-                'title' => 'appointment confirmation',
+                'title' => 'Appointment Created',
                 'message' => $message,
                 'date' => $currentDate,
                 'time' => $currentTime,
+                'specialties' => $appointment->specialties,
             ]);
             
             return back()->with('success', 'Appointment Created Successfully.'); 
@@ -332,29 +333,6 @@ class AppointmentController extends Controller
         }
     }
 
-    public function notification(){
-        
-        $user = Auth::user();
-        $notifications = Notification::where('account_id', $user->id)->get();
-
-        return view('user.notification.notification', compact('notifications'));
-
-    }
-
-    public function notificationRead(Request $request){
-
-        $notification = Notification::findOrFail($request->input('id'));
-
-        if($notification->is_read == 0){
-            $notification->is_read = 1;
-            $notification->save();
-    
-            return redirect()->route('user.notification');
-        } else {
-            return redirect()->route('user.notification');
-        }
-
-    }
 
     private function hasChanges($info, $updatedData){
         foreach ($updatedData as $key => $value) {

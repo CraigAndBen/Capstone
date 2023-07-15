@@ -68,9 +68,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <a href="#!" class="link-primary float-end text-decoration-underline">Mark as all
-                                    read</a>
-                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">01</span></h5>
+                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">{{$count}}</span></h5>
                             </div>
                             <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 215px)">
@@ -83,32 +81,32 @@
                                             <option value="other">Other</option>
                                         </select>
                                     </div>
-                                    @foreach ($notifications as $notification)
-                                      <a class="list-group-item list-group-item-action">
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
-                                                    alt="user-image" class="user-avtar" />
+                                    @foreach ($limitNotifications as $notification)
+                                        <a class="list-group-item list-group-item-action"
+                                            href="{{ route('doctor.appointment') }}">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                        alt="user-image" class="user-avtar" />
+                                                </div>
+                                                <div class="flex-grow-1 ms-1">
+                                                    <span class="float-end text-muted">{{ $notification->time }}</span>
+                                                    <h5>{{ ucwords($notification->title) }}</h5>
+                                                    <p class="text-body fs-6">
+                                                        {{ Str::words($notification->message, $limit = 10, $end = '...') }}
+                                                    </p>
+                                                    @if ($notification->is_read == 0)
+                                                        <div class="badge rounded-pill bg-light-danger">Unread</div>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <div class="flex-grow-1 ms-1">
-                                                <span class="float-end text-muted">2 min ago</span>
-                                                <h5>{{$notication->title}}</h5>
-                                                <p class="text-body fs-6">{{$notication->message}}</p>
-                                                @if ($notication->is_read == 0)
-                                                <div class="badge rounded-pill bg-light-danger">Unread</div>
-                                                @else
-                                                <div class="badge rounded-pill bg-light-danger">Unread</div>
-                                                @endif>
-                                            </div>
-                                        </div>
-                                      </a>
+                                        </a>
                                     @endforeach
-
                                 </div>
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="text-center py-2">
-                                <a href="#!" class="link-primary">Mark as all read</a>
+                                <a href="{{ route('doctor.appointment') }}" class="btn btn-primary">Show all</a>
                             </div>
                         </div>
                     </li>

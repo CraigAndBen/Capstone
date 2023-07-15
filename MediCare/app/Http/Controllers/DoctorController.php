@@ -23,11 +23,12 @@ class DoctorController extends Controller
     {
 
         $profile = auth()->user();
-        $notifications = Notification::where('account_id',$profile->id)->get();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $appointments = Appointment::all();
         $currentDate = date('Y-m-d'); 
-
-        dd($notifications);
 
         foreach ($appointments as $appointment) {
             
@@ -40,21 +41,23 @@ class DoctorController extends Controller
 
                 $currentDate = Carbon::now()->toTimeString();
                 $currentTime = Carbon::now()->toDateString();
-                $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable.';
+                $message = ' Your appointment that has a type of ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable.';
         
                 Notification::create([
                     'account_id' => $appointment->account_id,
-                    'title' => 'appointment confirmation',
+                    'title' => 'Appointment Unavailable',
                     'message' => $message,
                     'date' => $currentDate,
                     'time' => $currentTime,
                 ]);
 
-                return view('doctor_dashboard', compact('profile','notifications'));
-            } 
+                return view('doctor_dashboard', compact('profile','limitNotifications','count'));
+            }
+
+            return view('doctor_dashboard', compact('profile','limitNotifications','count'));
         }
 
-        return view('doctor_dashboard', compact('profile','notifications'));
+        return view('doctor_dashboard', compact('profile','limitNotifications','count'));
     }
 
     public function profile(Request $request): View
@@ -66,16 +69,24 @@ class DoctorController extends Controller
         ];
 
         $profile = $request->user();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $doctor = Doctor::where('account_id', $profile->id)->first();
 
-        return view('doctor.profile.profile', compact('profile', 'doctor', 'genders') );
+        return view('doctor.profile.profile', compact('profile', 'doctor', 'genders','limitNotifications','count') );
     }
 
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
 
-        return view('doctor.profile.profile_password', compact('profile') );
+        return view('doctor.profile.profile_password', compact('profile','limitNotifications','count') );
     }
 
     /**
@@ -235,11 +246,15 @@ class DoctorController extends Controller
         ];
 
         $profile = auth()->user();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
         $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'pending')->get();
 
-        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime'));
+        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime','limitNotifications','count'));
     }
     public function confirmedAppointmentList()
     {
@@ -262,11 +277,15 @@ class DoctorController extends Controller
         ];
 
         $profile = auth()->user();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
         $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'confirmed')->get();
 
-        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime'));
+        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime','limitNotifications','count'));
         
     }
 
@@ -291,11 +310,15 @@ class DoctorController extends Controller
         ];
 
         $profile = auth()->user();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
         $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'done')->get();
 
-        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime'));
+        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime','limitNotifications','count'));
     }
 
     public function confirmedAppointment(Request $request)
@@ -349,10 +372,14 @@ class DoctorController extends Controller
     public function patientList ()
     {
         $profile = auth()->user();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::where('physician', $profile->id)->get();
 
-        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors'));
+        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count'));
     }
 
     public function patientUpdate(Request $request) 

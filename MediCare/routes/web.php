@@ -42,8 +42,8 @@ Route::post('/user/update/appointment', [AppointmentController::class, 'updateAp
 Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAppointment'])->name('user.cancel.appointment');
 
 // User Notification
-Route::get('/user/notification', [AppointmentController::class, 'notification'])->name('user.notification');
-Route::post('/user/notification/read', [AppointmentController::class, 'notificationRead'])->name('user.notification.read');
+Route::get('/user/notification', [UsersController::class, 'notification'])->name('user.notification');
+Route::post('/user/notification/read', [UsersController::class, 'notificationRead'])->name('user.notification.read');
 
 //profile
 Route::get('/user/profile', [ProfileController::class, 'profile'])->name('user.profile');
@@ -65,9 +65,12 @@ Route::middleware('auth', 'role:nurse')->group(function () {
     Route::post('/nurse/profile/update', [NurseController::class, 'profileUpdate'])->name('nurse.profile.update');
     Route::post('/nurse/profile/update/password', [NurseController::class, 'updatePassword'])->name('nurse.password.update');
 
-
     // Patient
     Route::get('/nurse/patient', [NurseController::class, 'patientList'])->name('nurse.patient');
+
+    // User Notification
+    Route::get('/nurse/notification', [NurseController::class, 'notification'])->name('nurse.notification');
+    Route::post('/nurse/notification/read', [NurseController::class, 'notificationRead'])->name('nurse.notification.read');
 
     // Logout
     Route::get('/nurse/logout', [NurseController::class, 'nurseLogout'])->name('nurse.logout');

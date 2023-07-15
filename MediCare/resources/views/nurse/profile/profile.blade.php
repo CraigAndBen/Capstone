@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Doctor Account</h5>
+                                <h5 class="m-b-10">Nurse Account</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Doctor Account</li>
+                                <li class="breadcrumb-item"><a href="{{ route('nurse.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('nurse.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item" aria-current="page">Nurse Account</li>
                             </ul>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                                                 address.</p>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('doctor.profile.update') }}">
+                                    <form method="POST" action="{{ route('nurse.profile.update') }}">
                                         @csrf
 
                                         @if ($errors->any())
