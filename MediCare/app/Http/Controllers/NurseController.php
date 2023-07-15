@@ -32,38 +32,106 @@ class NurseController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function profile(Request $request): View
     {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $profile = $request->user();
 
-        $saved = $request->user()->save();
-
-        if ($saved) {
-            return Redirect::route('doctor.profile.edit')->with('status', 'Profile Updated');
-        } else {
-            return Redirect::route('doctor.profile.edit')->with('status', 'Profile not Updated');
-        }
+        return view('doctor.profile.profile', compact('profile') );
     }
 
-    public function updatePassword(Request $request): RedirectResponse
+    public function passwordProfile(Request $request): View
     {
-        $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
-        ]);
+        $profile = $request->user();
 
-        $saved = $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        return view('doctor.profile.profile_password', compact('profile') );
+    }
 
-        if ($saved) {
-            return back()->with('status', 'Password Updated');
+    /**
+     * Update the user's profile information.
+     */
+    public function profileUpdate(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+        ]);
+        $user = $request->user();
+
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+        ];
+
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+
+        if ($userChange) {
+
+            if ($user->email != $request->input('email')) {
+
+                $request->validate([
+                    'email' => 'required|string|email|unique:users|max:255',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->email = $request->input('email');
+                $saved = $user->save();
+
+                if ($saved) {
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'Profile not updated successfully.');
+                }
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $saved = $user->save();
+
+                if ($saved) {
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'Profile not updated successfully.');
+                }
+            }
+
         } else {
-            return back()->with('status', 'Password not Updated');
+            return redirect()->back()->with('info', 'No changes were made.');
+        }
+
+    }
+
+    /**
+     * Delete the user's account.
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->route('user.profile.password')->with('info', 'Current password is incorrect.');
+
+        } else {
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->route('user.profile.password')->with('info', "Password doesn't change.");
+            }
+
+            $user->password = Hash::make($request->input('password'));
+
+            $user->save();
+
+            return redirect()->route('user.profile.password')->with('success', 'Password updated successfull.');
         }
     }
 

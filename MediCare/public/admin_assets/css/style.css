@@ -15976,10 +15976,11 @@ pre[class*=language-] > code {
   border-radius: 8px;
   font-size: 14px;
   font-weight: 400;
+  text-decoration: none;
 }
 .pc-sidebar .pc-link:active, .pc-sidebar .pc-link:focus, .pc-sidebar .pc-link:hover {
   text-decoration: none;
-  color: #6610F2;
+  color: blue;
 }
 .pc-sidebar .pc-link:active .pc-micon i,
 .pc-sidebar .pc-link:active .pc-micon svg, .pc-sidebar .pc-link:focus .pc-micon i,

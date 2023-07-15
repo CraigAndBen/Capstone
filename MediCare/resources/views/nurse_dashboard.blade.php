@@ -164,7 +164,7 @@
                 <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
                 <p class="text-muted">{{$profile->role}}</p>
                 <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-                    <a href="{{route('nurse.profile.edit')}}" class="dropdown-item">
+                    <a href="{{route('nurse.profile')}}" class="dropdown-item">
                     <i class="ti ti-settings"></i>
                     <span>Account Settings</span>
                     </a>
@@ -208,6 +208,16 @@
         </li>
         <li class="pc-item">
           <a href="{{route('nurse.patient')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span></a>
+        </li>
+        <li class="pc-item pc-caption">
+          <label>Account Settings</label>
+          <i class="ti ti-dashboard"></i>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('nurse.profile')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Profile</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('nurse.profile.password')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
         </li>
       </ul>
     </div>

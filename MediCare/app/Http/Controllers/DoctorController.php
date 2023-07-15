@@ -23,8 +23,11 @@ class DoctorController extends Controller
     {
 
         $profile = auth()->user();
+        $notifications = Notification::where('account_id',$profile->id)->get();
         $appointments = Appointment::all();
         $currentDate = date('Y-m-d'); 
+
+        dd($notifications);
 
         foreach ($appointments as $appointment) {
             
@@ -47,60 +50,165 @@ class DoctorController extends Controller
                     'time' => $currentTime,
                 ]);
 
-                return view('doctor_dashboard', compact('profile'));
+                return view('doctor_dashboard', compact('profile','notifications'));
             } 
-            
-            return view('doctor_dashboard', compact('profile'));
-            
         }
 
-
-
-        return view('doctor_dashboard', compact('profile'));
+        return view('doctor_dashboard', compact('profile','notifications'));
     }
 
-    public function edit(Request $request): View
+    public function profile(Request $request): View
     {
-        return view('doctor.profile', [
-            'user' => $request->user(),
-        ]);
+        $genders = [
+            'male' => 'Male',
+            'female' => 'Female',
+            'other' => 'Other',
+        ];
+
+        $profile = $request->user();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+
+        return view('doctor.profile.profile', compact('profile', 'doctor', 'genders') );
+    }
+
+    public function passwordProfile(Request $request): View
+    {
+        $profile = $request->user();
+
+        return view('doctor.profile.profile_password', compact('profile') );
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function profileUpdate(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'employment_date' => 'required|date',
+            'age' => 'required|numeric|gt:0',
+            'gender' => 'required|string|max:255',
+            'specialties' => 'required|string|max:255',
+            'qualification' => 'required|string|max:255',
+            'years_of_experience' => 'required|numeric|gt:0',
+            'address' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'birthdate' => 'required|date',
+            'phone' => 'required',
+        ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $user = $request->user();
+        $info = Doctor::where('account_id', $user->id)->first();
 
-        $saved = $request->user()->save();
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+        ];
 
-        if ($saved) {
-            return Redirect::route('doctor.profile.edit')->with('status', 'Profile Updated');
+        $infoUpdatedData = [
+            'age' => $request->input('age'),
+            'gender' => $request->input('gender'),
+            'birthdate' => $request->input('birthdate'),
+            'employment_date' => $request->input('employment_date'),
+            'specialties' => $request->input('specialties'),
+            'qualification' => $request->input('qualification'),
+            'years_of_experience' => $request->input('years_of_experience'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+        ];
+
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+        $infoChange = $this->hasChanges($info, $infoUpdatedData);
+
+
+        // Check if any changes were made to the form data
+        if ($userChange == true || $infoChange == true) {
+
+            if ($request->input('email') !== $user->email) {
+
+                $request->validate([
+                    'email' => 'required|string|email|max:255|unique:users,email,',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $info->age = $request->input('age');
+                $info->gender = $request->input('gender');
+                $info->qualification = $request->input('qualification');
+                $info->employment_date = $request->input('employment_date');
+                $info->specialties = $request->input('specialties');
+                $info->years_of_experience = $request->input('years_of_experience');
+                $info->address = $request->input('address');
+                $info->birthdate = $request->input('birthdate');
+                $info->phone = $request->input('phone');
+
+                $user->save();
+                $info->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $info->age = $request->input('age');
+                $info->gender = $request->input('gender');
+                $info->employment_date = $request->input('employment_date');
+                $info->qualification = $request->input('qualification');
+                $info->specialties = $request->input('specialties');
+                $info->years_of_experience = $request->input('years_of_experience');
+                $info->address = $request->input('address');
+                $info->birthdate = $request->input('birthdate');
+                $info->phone = $request->input('phone');
+
+                $user->save();
+                $info->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+            }
+
         } else {
-            return Redirect::route('doctor.profile.edit')->with('status', 'Profile not Updated');
+            return redirect()->back()->with('info', 'No changes were made.');
+
         }
+
     }
 
-    public function updatePassword(Request $request): RedirectResponse
+    /**
+     * Delete the user's account.
+     */
+    public function updatePassword(Request $request)
     {
-        $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        $saved = $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = $request->user();
 
-        if ($saved) {
-            return back()->with('status', 'Password Updated');
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->route('user.profile.password')->with('info', 'Current password is incorrect.');
+
         } else {
-            return back()->with('status', 'Password not Updated');
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->route('user.profile.password')->with('info', "Password doesn't change.");
+            }
+
+            $user->password = Hash::make($request->input('password'));
+
+            $user->save();
+
+            return redirect()->route('user.profile.password')->with('success', 'Password updated successfull.');
         }
     }
 

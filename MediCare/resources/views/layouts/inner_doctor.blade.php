@@ -37,7 +37,7 @@
  <!-- [ Header Topbar ] start -->
 <header class="pc-header">
   <div class="m-header mt-3">
-    <a href="{{route('superadmin.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+    <a href="{{route('doctor.dashboard')}}" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 150px; max-height: 90px"></a>
     <!-- ======= Menu collapse Icon ===== -->
   </div>
   <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
@@ -164,7 +164,7 @@
           <h4>Good Morning, <span class="small text-muted">{{$profile->first_name}}</span></h4>
           <p class="text-muted">{{$profile->role}}</p>
           <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-            <a href="{{route('doctor.profile.edit')}}" class="dropdown-item">
+            <a href="{{route('doctor.profile')}}" class="dropdown-item">
               <i class="ti ti-settings"></i>
               <span>Account Settings</span>
             </a>
@@ -199,21 +199,19 @@
           <i class="ti ti-dashboard"></i>
         </li>
         <li class="pc-item">
-          <a href="{{route('superadmin.dashboard')}}" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
+          <a href="{{route('doctor.dashboard')}}" class="pc-link"><span class="pc-micon"><i class="ti ti-dashboard"></i></span><span
               class="pc-mtext">Dashboard</span></a>
         </li>
-        {{-- <li class="pc-item pc-caption">
+        <li class="pc-item pc-caption">
           <label>Accounts</label>
           <i class="ti ti-news"></i>
         </li>
-        <li class="pc-item pc-hasmenu">
-          <a href="#!" class="pc-link"><span class="pc-micon"><i class="ti ti-key"></i></span><span
-              class="pc-mtext">Authentication</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
-          <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/login-v3.html">Login</a></li>
-            <li class="pc-item"><a class="pc-link" target="_blank" href="../pages/register-v3.html">register</a></li>
-          </ul>
-        </li> --}}
+        <li class="pc-item">
+          <a href="{{route('doctor.profile')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Profile</span></a>
+        </li>
+        <li class="pc-item">
+          <a href="{{route('doctor.profile.password')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+        </li>
         <li class="pc-item pc-caption">
           <label>Appointment</label>
           <i class="ti ti-dashboard"></i>
@@ -242,7 +240,7 @@
 
     @yield('content')
     <!-- [ Main Content ] end -->
-    {{-- <footer class="pc-footer">
+    <footer class="pc-footer">
       <div class="footer-wrapper container-fluid">
         <div class="row">
           <div class="col my-1">
@@ -257,7 +255,7 @@
           </div>
         </div>
       </div>
-    </footer> --}}
+    </footer>
  <!-- Required Js -->
 <script src="{{asset('admin_assets/js/plugins/popper.min.js')}}"></script>
 <script src="{{asset('admin_assets/js/plugins/simplebar.min.js')}}"></script>

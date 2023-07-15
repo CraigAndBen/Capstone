@@ -45,24 +45,25 @@ Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAp
 Route::get('/user/notification', [AppointmentController::class, 'notification'])->name('user.notification');
 Route::post('/user/notification/read', [AppointmentController::class, 'notificationRead'])->name('user.notification.read');
 
-    //profile
-    Route::get('/user/profile', [ProfileController::class, 'profile'])->name('user.profile');
-    Route::get('/profile/profile/password', [ProfileController::class, 'passwordProfile'])->name('user.profile.password');
-    Route::post('/user/profile/update', [ProfileController::class, 'profileUpdate'])->name('user.profile.update');
-    Route::post('/user/profile/update/password', [ProfileController::class, 'updatePassword'])->name('user.password.update');
+//profile
+Route::get('/user/profile', [ProfileController::class, 'profile'])->name('user.profile');
+Route::get('/user/profile/password', [ProfileController::class, 'passwordProfile'])->name('user.profile.password');
+Route::post('/user/profile/update', [ProfileController::class, 'profileUpdate'])->name('user.profile.update');
+Route::post('/user/profile/update/password', [ProfileController::class, 'updatePassword'])->name('user.password.update');
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::middleware('auth','role:nurse')->group(function(){
+Route::middleware('auth', 'role:nurse')->group(function () {
 
     // Dashboard
     Route::get('/nurse/dashboard', [NurseController::class, 'dashboard'])->name('nurse.dashboard');
 
     // Profile
-    Route::get('/nurse/profile', [NurseController::class, 'edit'])->name('nurse.profile.edit');
-    Route::patch('/nurse/profile/update', [NurseController::class, 'update'])->name('nurse.profile.update');
-    Route::put('/nurse/profile/update', [NurseController::class, 'updatePassword'])->name('nurse.password.update');
+    Route::get('/nurse/profile', [NurseController::class, 'profile'])->name('nurse.profile');
+    Route::get('/nurse/profile/password', [NurseController::class, 'passwordProfile'])->name('nurse.profile.password');
+    Route::post('/nurse/profile/update', [NurseController::class, 'profileUpdate'])->name('nurse.profile.update');
+    Route::post('/nurse/profile/update/password', [NurseController::class, 'updatePassword'])->name('nurse.password.update');
 
 
     // Patient
@@ -75,15 +76,16 @@ Route::middleware('auth','role:nurse')->group(function(){
 
 // Doctor
 
-Route::middleware('auth','role:doctor')->group(function(){
+Route::middleware('auth', 'role:doctor')->group(function () {
 
     // Dashboard
     Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
 
     // Profile
-    Route::get('/doctor/profile', [DoctorController::class, 'edit'])->name('doctor.profile.edit');
-    Route::patch('/doctor/profile/update', [DoctorController::class, 'update'])->name('doctor.profile.update');
-    Route::put('/doctor/profile/update', [DoctorController::class, 'updatePassword'])->name('doctor.password.update');
+    Route::get('/doctor/profile', [DoctorController::class, 'profile'])->name('doctor.profile');
+    Route::get('/doctor/profile/password', [DoctorController::class, 'passwordProfile'])->name('doctor.profile.password');
+    Route::post('/doctor/profile/update', [DoctorController::class, 'profileUpdate'])->name('doctor.profile.update');
+    Route::post('/doctor/profile/update/password', [DoctorController::class, 'updatePassword'])->name('doctor.password.update');
 
     // Appointment
     Route::get('/doctor/appointment', [DoctorController::class, 'appointment'])->name('doctor.appointment');
@@ -102,7 +104,7 @@ Route::middleware('auth','role:doctor')->group(function(){
 
 // Admin
 
-Route::middleware('auth','role:admin')->group(function(){
+Route::middleware('auth', 'role:admin')->group(function () {
 
     // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -121,7 +123,7 @@ Route::middleware('auth','role:admin')->group(function(){
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
 });
 
-Route::middleware('auth','role:super_admin')->group(function(){
+Route::middleware('auth', 'role:super_admin')->group(function () {
 
     Route::get('/super_admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
 
@@ -161,8 +163,3 @@ Route::middleware('auth','role:super_admin')->group(function(){
 
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });
-
-
-
-
-

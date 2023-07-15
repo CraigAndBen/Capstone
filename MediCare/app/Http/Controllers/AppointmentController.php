@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Appointment;
@@ -84,6 +85,19 @@ class AppointmentController extends Controller
                         'reason' => $request->input('reason'),
                         'status' => 'pending',
                     ]);
+
+                    $appointment = Appointment::latest()->first();
+                    $currentDate = Carbon::now()->toTimeString();
+                    $currentTime = Carbon::now()->toDateString();
+                    $message = ' You have a new appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . '. ';
+            
+                    Notification::create([
+                        'account_id' => $appointment->account_id,
+                        'title' => 'appointment confirmation',
+                        'message' => $message,
+                        'date' => $currentDate,
+                        'time' => $currentTime,
+                    ]);
                     
                     return back()->with('success', 'Appointment Created Successfully.'); 
                 }
@@ -112,6 +126,19 @@ class AppointmentController extends Controller
                 'appointment_time' => $request->input('appointment_time'),
                 'reason' => $request->input('reason'),
                 'status' => 'pending',
+            ]);
+
+            $appointment = Appointment::latest()->first();
+            $currentDate = Carbon::now()->toTimeString();
+            $currentTime = Carbon::now()->toDateString();
+            $message = ' You have a new appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . '. ';
+    
+            Notification::create([
+                'account_id' => $appointment->account_id,
+                'title' => 'appointment confirmation',
+                'message' => $message,
+                'date' => $currentDate,
+                'time' => $currentTime,
             ]);
             
             return back()->with('success', 'Appointment Created Successfully.'); 
