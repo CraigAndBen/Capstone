@@ -408,6 +408,33 @@ class DoctorController extends Controller
             }
     }
 
+    public function notification(){
+        
+        $profile = Auth::user();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        return view('doctor.notification.notification', compact('profile','notifications','limitNotifications','count'));
+
+    }
+
+    public function notificationRead(Request $request){
+
+        $notification = Notification::findOrFail($request->input('id'));
+
+        if($notification->is_read == 0){
+            $notification->is_read = 1;
+            $notification->save();
+    
+            return redirect()->route('doctor.notification');
+        } else {
+            return redirect()->route('doctor.notification');
+        }
+
+    }
+
     private function hasChanges($info, $updatedData){
         foreach ($updatedData as $key => $value) {
 

@@ -68,7 +68,7 @@ Route::middleware('auth', 'role:nurse')->group(function () {
     // Patient
     Route::get('/nurse/patient', [NurseController::class, 'patientList'])->name('nurse.patient');
 
-    // User Notification
+    // Nurse Notification
     Route::get('/nurse/notification', [NurseController::class, 'notification'])->name('nurse.notification');
     Route::post('/nurse/notification/read', [NurseController::class, 'notificationRead'])->name('nurse.notification.read');
 
@@ -100,6 +100,10 @@ Route::middleware('auth', 'role:doctor')->group(function () {
     // Patient
     Route::get('/doctor/patient', [DoctorController::class, 'patientList'])->name('doctor.patient');
     Route::post('/doctor/patient/update', [DoctorController::class, 'patientUpdate'])->name('doctor.patient.update');
+
+    // Doctor Notification
+    Route::get('/doctor/notification', [DoctorController::class, 'notification'])->name('doctor.notification');
+    Route::post('/doctor/notification/read', [DoctorController::class, 'notificationRead'])->name('doctor.notification.read');
 
     // Logout
     Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');

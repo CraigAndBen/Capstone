@@ -180,6 +180,13 @@
                                 class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
                     </li>
                     <li class="pc-item pc-caption">
+                        <label>Notification</label>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{{ route('doctor.notification') }}" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notification List</span></a>
+                    </li>
+                    <li class="pc-item pc-caption">
                         <label>Appointment</label>
                     </li>
                     <li class="pc-item">
