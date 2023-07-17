@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Patient;
 use Illuminate\View\View;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,62 +20,132 @@ class AdminController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
 
-        return view('admin_dashboard', compact('profile'));
+        return view('admin_dashboard', compact('profile','limitNotifications','count'));
     }
 
-    public function edit(Request $request): View
+    public function profile(Request $request): View
     {
-        return view('admin.profile', [
-            'user' => $request->user(),
-        ]);
+
+        $profile = $request->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        return view('admin.profile.profile', compact('profile','limitNotifications','count'));
+    }
+
+    public function passwordProfile(Request $request): View
+    {
+        $profile = $request->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        return view('admin.profile.profile_password', compact('profile','limitNotifications','count'));
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function profileUpdate(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+        ]);
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+        ];
 
-        $saved = $request->user()->save();
+        $userChange = $this->hasChanges($user, $userUpdatedData);
 
-        if ($saved) {
-            return Redirect::route('admin.profile.edit')->with('status', 'Profile Updated');
+        if ($userChange) {
+
+            if ($user->email != $request->input('email')) {
+
+                $request->validate([
+                    'email' => 'required|string|email|unique:users|max:255',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->email = $request->input('email');
+                $saved = $user->save();
+
+                if ($saved) {
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'Profile not updated successfully.');
+                }
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $saved = $user->save();
+
+                if ($saved) {
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'Profile not updated successfully.');
+                }
+            }
+
         } else {
-            return Redirect::route('admin.profile.edit')->with('status', 'Profile not Updated');
+            return redirect()->back()->with('info', 'No changes were made.');
         }
+
     }
 
-    public function updatePassword(Request $request): RedirectResponse
+    /**
+     * Delete the user's account.
+     */
+    public function updatePassword(Request $request)
     {
-        $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        $saved = $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = $request->user();
 
-        if ($saved) {
-            return back()->with('status', 'Password Updated');
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->route('user.profile.password')->with('info', 'Current password is incorrect.');
+
         } else {
-            return back()->with('status', 'Password not Updated');
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->route('user.profile.password')->with('info', "Password doesn't change.");
+            }
+
+            $user->password = Hash::make($request->input('password'));
+
+            $user->save();
+
+            return redirect()->route('user.profile.password')->with('success', 'Password updated successfull.');
         }
     }
     
     public function patientList(){
 
         $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $doctors = User::where('role','doctor')->get();
         $patients = Patient::all();
 
-        return view('admin.patient.patient', compact('patients','profile','doctors'));
+        return view('admin.patient.patient', compact('patients','profile','doctors','limitNotifications','count'));
 
     }
     
@@ -194,6 +265,32 @@ class AdminController extends Controller
             } else {
                 return redirect()->back()->with('info', 'No changes were made.');
             }
+    }
+
+    public function notification(){
+        
+        $profile = Auth::user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        return view('admin.notification.notification', compact('profile','notifications','limitNotifications','count'));
+
+    }
+
+    public function notificationRead(Request $request){
+
+        $notification = Notification::findOrFail($request->input('id'));
+
+        if($notification->is_read == 0){
+            $notification->is_read = 1;
+            $notification->save();
+    
+            return redirect()->route('admin.notification');
+        } else {
+            return redirect()->route('admin.notification');
+        }
+
     }
 
     private function hasChanges($info, $updatedData){

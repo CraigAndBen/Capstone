@@ -56,11 +56,22 @@
                                     </div>
                                 @endif
 
+                                <div class=" d-flex mb-3 justify-content-end">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#createModal">Add Account</button>
+                                </div>
+
                                 @if (session('info'))
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> {{ session('info') }}
                                     </div>
                                 @endif
+
+                                @if ($users->isEmpty())
+                                <div class="alert alert-info">
+                                    <span class="fa fa-check-circle"></span> No User Account Yet.
+                                </div>
+                                @else
 
 
                                 <div class=" d-flex mb-3 justify-content-end">
@@ -153,6 +164,7 @@
 
                                     </tbody>
                                 </table>
+                                @endif
                             </div>
                         </div>
                     </div>

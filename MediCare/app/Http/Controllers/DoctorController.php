@@ -377,7 +377,7 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::where('physician', $profile->id)->get();
+        $patients = Patient::where('physician', $profile->id)->where('discharged_date', '')->get();
 
         return view('doctor.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count'));
     }

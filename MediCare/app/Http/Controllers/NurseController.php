@@ -20,7 +20,7 @@ class NurseController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
@@ -34,7 +34,7 @@ class NurseController extends Controller
     {
 
         $profile = $request->user();
-        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
@@ -44,7 +44,7 @@ class NurseController extends Controller
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
-        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
@@ -142,11 +142,11 @@ class NurseController extends Controller
     public function patientList ()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::all();
+        $patients = Patient::where('discharged_date', '')->get();
 
         return view('nurse.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count'));
     }
@@ -180,7 +180,7 @@ class NurseController extends Controller
     public function notification(){
         
         $profile = Auth::user();
-        $notifications = Notification::where('specialties',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 

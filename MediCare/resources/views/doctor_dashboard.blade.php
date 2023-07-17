@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{{ asset('admin_assets/css/style-preset.css') }}" id="preset-style-link" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 </head>
 <!-- [Head] end -->
@@ -131,7 +133,7 @@
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
-                                    <a href="#" class="dropdown-item">
+                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#updateModal">
                                         <i class="ti ti-user"></i>
                                         <span>Social Profile</span>
                                     </a>
@@ -470,6 +472,45 @@
             <!-- [ Main Content ] end -->
         </div>
     </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h2 class="modal-title text-light" id="myModalLabel">Update Account</h2>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('doctor.profile.update') }}">
+                        @csrf
+                        <div class="form-floating mb-3">
+                            <input type="text" name="facebook" class="form-control"
+                                id="facebook" placeholder="Facebook Link"  />
+                            <label for="floatingInput">Facebook Link</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="twitter" class="form-control"
+                                id="twitter" placeholder="Twitter Link"  />
+                            <label for="floatingInput">Twitter Link</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="instagram" class="form-control"
+                                id="instagram" placeholder="Instagram Link"  />
+                            <label for="floatingInput">Instagram Link</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" name="linkedin" class="form-control"
+                                id="linkedin" placeholder="Linkedin Link"  />
+                            <label for="floatingInput">Linkedin Link</label> 
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
@@ -503,7 +544,12 @@
     <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
     <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script>
     <!-- [Page Specific JS] end -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <!-- [Body] end -->
+<script>
+
+</script>
 
 </html>

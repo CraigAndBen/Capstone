@@ -62,11 +62,17 @@
                                     </div>
                                 @endif
 
-
                                 <div class=" d-flex mb-3 justify-content-end">
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#createModal">Add Account</button>
                                 </div>
+
+                                @if ($users->isEmpty())
+                                    <div class="alert alert-info">
+                                        <span class="fa fa-check-circle"></span> No Nurse Account Yet.
+                                    </div>
+                                @else
+                                
                                 <table class="table table-bordered">
                                     <thead class="bg-primary text-light text-center">
                                         <tr>
@@ -158,6 +164,7 @@
 
                                     </tbody>
                                 </table>
+                                @endif
                             </div>
                         </div>
                     </div>

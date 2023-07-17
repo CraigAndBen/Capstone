@@ -16,35 +16,6 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             
-            // User
-            [
-                'first_name' => 'User',
-                'last_name' => 'User',
-                'email' => 'user@sample.com',
-                'password' => Hash::make('111'),
-                'role' => 'user',
-                'status' => 'active',
-            ],
-            
-            // Nurse
-            [
-                'first_name' => 'Nurse',
-                'last_name' => 'Nurse',
-                'email' => 'nurse@sample.com',
-                'password' => Hash::make('111'),
-                'role' => 'nurse',
-                'status' => 'active',
-            ],
-
-            // Doctor
-            [
-                'first_name' => 'Doctor',
-                'last_name' => 'Doctor',
-                'email' => 'doctor@sample.com',
-                'password' => Hash::make('111'),
-                'role' => 'doctor',
-                'status' => 'active',
-            ],    
             
             // Admin
             [

@@ -8,6 +8,7 @@ use App\Models\Nurse;
 use App\Models\Doctor;
 use App\Models\User_info;
 use Illuminate\View\View;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,63 +24,120 @@ class SuperAdminController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
 
-        return view('super_admin_dashboard', compact('profile'));
+        return view('super_admin_dashboard', compact('profile','limitNotifications','count'));
     }
 
-    public function edit(Request $request): View
+    public function profile(Request $request): View
     {
-        $user = $request->user();
-        $profile = auth()->user();
 
-        return view('superadmin.profile', compact('user', 'profile'));
+        $profile = $request->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        return view('superadmin.profile.profile', compact('profile','limitNotifications','count'));
     }
 
-    public function update(Request $request)
+    public function passwordProfile(Request $request): View
     {
-        $user = Auth::user();
+        $profile = $request->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
 
+        return view('superadmin.profile.profile_password', compact('profile','limitNotifications','count'));
+    }
+
+    /**
+     * Update the user's profile information.
+     */
+    public function profileUpdate(Request $request)
+    {
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,',
         ]);
+        $user = $request->user();
 
-        $updatedData = [
+        $userUpdatedData = [
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
         ];
 
-        // Check if any changes were made to the form data
-        if ($this->userHasChanges($user, $updatedData)) {
+        $userChange = $this->hasChanges($user, $userUpdatedData);
 
-            $user->first_name = $request->input('first_name');
-            $user->last_name = $request->input('last_name');
-            $user->email = $request->input('email');
+        if ($userChange) {
 
-            $user->save();
+            if ($user->email != $request->input('email')) {
 
-            return redirect()->back()->with('success', 'Profile updated successfully.');
+                $request->validate([
+                    'email' => 'required|string|email|unique:users|max:255',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->email = $request->input('email');
+                $saved = $user->save();
+
+                if ($saved) {
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'Profile not updated successfully.');
+                }
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $saved = $user->save();
+
+                if ($saved) {
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'Profile not updated successfully.');
+                }
+            }
+
         } else {
             return redirect()->back()->with('info', 'No changes were made.');
-
         }
 
     }
 
-    public function updatePassword(Request $request): RedirectResponse
+    /**
+     * Delete the user's account.
+     */
+    public function updatePassword(Request $request)
     {
-        $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user = $request->user();
 
-        return back()->with('success', 'Password Updated');
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->route('superadmin.profile.password')->with('info', 'Current password is incorrect.');
+
+        } else {
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->route('superadmin.profile.password')->with('info', "Password doesn't change.");
+            }
+
+            $user->password = Hash::make($request->input('password'));
+
+            $user->save();
+
+            return redirect()->route('superadmin.profile.password')->with('success', 'Password updated successfull.');
+        }
     }
 
     public function superAdminLogout(Request $request): RedirectResponse
@@ -98,10 +156,13 @@ class SuperAdminController extends Controller
     public function doctor()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $users = User::where('role', 'doctor')->get();
         $doctors = Doctor::all();
 
-        return view('superadmin.doctor', compact('users', 'profile', 'doctors'));
+        return view('superadmin.account.doctor', compact('users', 'profile', 'doctors','limitNotifications','count'));
     }
 
     public function createDoctor(Request $request)
@@ -190,13 +251,13 @@ class SuperAdminController extends Controller
             $user->status = 'inactive';
             $user->save();
 
-            return redirect()->route('superadmin.doctor')->with('status', 'User status updated to inactive.');
+            return redirect()->route('superadmin.doctor')->with('info', 'User status updated to inactive.');
         } else {
 
             $user->status = 'active';
             $user->save();
 
-            return redirect()->route('superadmin.doctor')->with('status', 'User status updated to active.');
+            return redirect()->route('superadmin.doctor')->with('info', 'User status updated to active.');
         }
     }
 
@@ -305,10 +366,13 @@ class SuperAdminController extends Controller
     public function nurse()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $users = User::where('role', 'nurse')->get();
         $nurses = Nurse::all();
 
-        return view('superadmin.nurse', compact('users', 'profile', 'nurses'));
+        return view('superadmin.account.nurse', compact('users', 'profile', 'nurses','limitNotifications','count'));
     }
 
     public function createNurse(Request $request)
@@ -467,13 +531,13 @@ class SuperAdminController extends Controller
             $user->status = 'inactive';
             $user->save();
 
-            return redirect()->route('superadmin.nurse')->with('status', 'User status updated to inactive.');
+            return redirect()->route('superadmin.nurse')->with('info', 'User status updated to inactive.');
         } else {
 
             $user->status = 'active';
             $user->save();
 
-            return redirect()->route('superadmin.nurse')->with('status', 'User status updated to active.');
+            return redirect()->route('superadmin.nurse')->with('info', 'User status updated to active.');
         }
     }
 
@@ -511,10 +575,13 @@ class SuperAdminController extends Controller
     public function user()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $users = User::where('role', 'user')->get();
         $users_info = User_info::all();
 
-        return view('superadmin.user', compact('users', 'profile', 'users_info'));
+        return view('superadmin.account.user', compact('users', 'profile', 'users_info','limitNotifications','count'));
     }
 
     public function createUser(Request $request)
@@ -655,13 +722,13 @@ class SuperAdminController extends Controller
             $user->status = 'inactive';
             $user->save();
 
-            return redirect()->route('superadmin.user')->with('status', 'User status updated to inactive.');
+            return redirect()->route('superadmin.user')->with('info', 'User status updated to inactive.');
         } else {
 
             $user->status = 'active';
             $user->save();
 
-            return redirect()->route('superadmin.user')->with('status', 'User status updated to active.');
+            return redirect()->route('superadmin.user')->with('info', 'User status updated to active.');
         }
     }
 
@@ -699,10 +766,13 @@ class SuperAdminController extends Controller
     public function admin()
     {
         $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $users = User::where('role', 'admin')->get();
         $admins = Admin::all();
 
-        return view('superadmin.admin', compact('users', 'profile', 'admins'));
+        return view('superadmin.account.admin', compact('users', 'profile', 'admins','limitNotifications','count'));
     }
 
     public function createAdmin(Request $request)
@@ -812,13 +882,13 @@ class SuperAdminController extends Controller
             $user->status = 'inactive';
             $user->save();
 
-            return redirect()->route('superadmin.admin')->with('status', 'User status updated to inactive.');
+            return redirect()->route('superadmin.admin')->with('info', 'User status updated to inactive.');
         } else {
 
             $user->status = 'active';
             $user->save();
 
-            return redirect()->route('superadmin.admin')->with('status', 'User status updated to active.');
+            return redirect()->route('superadmin.admin')->with('info', 'User status updated to active.');
         }
     }
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('time');
             $table->boolean('is_read')->default(false);
             $table->string('specialties')->nullable();
+            $table->enum('type', ['user','nurse','doctor','admin',''])->default('');
             $table->timestamps();
         });
     }

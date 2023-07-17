@@ -97,25 +97,21 @@
                   </div>
                 </div>
               </div>
-              {{-- <div class="d-grid">
-                <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                  <img src="{{asset('admin_assets/images/authentication/google-icon.svg')}}" />Sign In With Google
-                </button>
-              </div>
-              <div class="saprator mt-3">
-                <span>or</span>
-              </div>
-              <h5 class="my-4 d-flex justify-content-center">Sign in with Email address</h5> --}}
 
               <form method="POST" action="{{ route('login') }}">
                 @csrf
-                @if (session('status'))
-                <div class="row mt-4">
-                  <div class="col-md-6 bg-primary text-light text-center offset-md-3 p-2 rounded-pill">
-                    <h3>{{session('status')}}</h3>
-                  </div>
+                
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                    following errors: <br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                @endif
+            @endif
             
                 <div class="form-floating mb-3">
                   <input type="email" class="form-control" id="floatingInput email" placeholder="Email address" name="email" />

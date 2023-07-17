@@ -214,6 +214,14 @@
                                 class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
                     </li>
                     <li class="pc-item pc-caption">
+                        <label>Notification</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{{ route('nurse.notification') }}" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notification List</span></a>
+                    </li>
+                    <li class="pc-item pc-caption">
                         <label>Patient</label>
                         <i class="ti ti-apps"></i>
                     </li>
@@ -221,14 +229,6 @@
                         <a href="{{ route('nurse.patient') }}" class="pc-link"><span class="pc-micon"></span><span
                                 class="pc-mtext">Patient List</span></a>
                     </li>
-                    <li class="pc-item pc-caption">
-                      <label>Notification</label>
-                      <i class="ti ti-apps"></i>
-                  </li>
-                  <li class="pc-item">
-                      <a href="{{ route('nurse.notification') }}" class="pc-link"><span class="pc-micon"></span><span
-                              class="pc-mtext">Notification List</span></a>
-                  </li>
                 </ul>
             </div>
         </div>

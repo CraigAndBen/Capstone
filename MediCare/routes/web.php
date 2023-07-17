@@ -117,14 +117,19 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     // Profile
-    Route::get('/admin/profile', [AdminController::class, 'edit'])->name('admin.profile.edit');
-    Route::patch('/admin/profile/update', [AdminController::class, 'update'])->name('admin.profile.update');
-    Route::put('/admin/profile/update', [AdminController::class, 'updatePassword'])->name('admin.password.update');
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::get('/admin/profile/password', [AdminController::class, 'passwordProfile'])->name('admin.profile.password');
+    Route::post('/admin/profile/update', [AdminController::class, 'profileUpdate'])->name('admin.profile.update');
+    Route::post('/admin/profile/update/password', [AdminController::class, 'updatePassword'])->name('admin.password.update');
 
     // Patient
     Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
+
+    // Doctor Notification
+    Route::get('/admin/notification', [AdminController::class, 'notification'])->name('admin.notification');
+    Route::post('/admin/notification/read', [AdminController::class, 'notificationRead'])->name('admin.notification.read');
 
     // Logout
     Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
@@ -135,9 +140,14 @@ Route::middleware('auth', 'role:super_admin')->group(function () {
     Route::get('/super_admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
 
     // Profile
-    Route::get('/super_admin/profile', [SuperAdminController::class, 'edit'])->name('superadmin.profile.edit');
-    Route::patch('/super_admin/profile', [SuperAdminController::class, 'update'])->name('superadmin.profile.update');
-    Route::put('/super_admin/profile/update', [SuperAdminController::class, 'updatePassword'])->name('superadmin.password.update');
+    Route::get('/superadmin/profile', [SuperAdminController::class, 'profile'])->name('superadmin.profile');
+    Route::get('/superadmin/profile/password', [SuperAdminController::class, 'passwordProfile'])->name('superadmin.profile.password');
+    Route::post('/superadmin/profile/update', [SuperAdminController::class, 'profileUpdate'])->name('superadmin.profile.update');
+    Route::post('/superadmin/profile/update/password', [SuperAdminController::class, 'updatePassword'])->name('superadmin.password.update');
+
+    // Doctor Notification
+    Route::get('/superadmin/notification', [SuperAdminController::class, 'notification'])->name('superadmin.notification');
+    Route::post('/superadmin/notification/read', [SuperAdminController::class, 'notificationRead'])->name('superadmin.notification.read');
 
     // Doctor
     Route::get('/super_admin/doctor', [SuperAdminController::class, 'doctor'])->name('superadmin.doctor');
