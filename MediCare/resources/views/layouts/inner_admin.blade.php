@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{{ asset('admin_assets/css/style-preset.css') }}" id="preset-style-link" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 
 </head>
@@ -223,6 +225,18 @@
                     <li class="pc-item">
                         <a href="{{ route('admin.patient') }}" class="pc-link"><span class="pc-micon"></span><span
                                 class="pc-mtext">Patient List</span></a>
+                    </li>
+                    <li class="pc-item pc-caption">
+                        <label>Demographics</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{{ route('admin.demographics.gender') }}" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Gender Demographics</span></a>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{{ route('admin.demographics.age') }}" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Age Demographics</span></a>
                     </li>
 
                 </ul>

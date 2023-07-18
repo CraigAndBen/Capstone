@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Patient;
+use App\Models\User_info;
 use Illuminate\View\View;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -20,32 +21,32 @@ class AdminController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('admin_dashboard', compact('profile','limitNotifications','count'));
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count'));
     }
 
     public function profile(Request $request): View
     {
 
         $profile = $request->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('admin.profile.profile', compact('profile','limitNotifications','count'));
+        return view('admin.profile.profile', compact('profile', 'limitNotifications', 'count'));
     }
 
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('admin.profile.profile_password', compact('profile','limitNotifications','count'));
+        return view('admin.profile.profile_password', compact('profile', 'limitNotifications', 'count'));
     }
 
     /**
@@ -135,21 +136,22 @@ class AdminController extends Controller
             return redirect()->route('user.profile.password')->with('success', 'Password updated successfull.');
         }
     }
-    
-    public function patientList(){
+
+    public function patientList()
+    {
 
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $doctors = User::where('role','doctor')->get();
+        $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::all();
 
-        return view('admin.patient.patient', compact('patients','profile','doctors','limitNotifications','count'));
+        return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
 
     }
-    
-    public function patientStore (Request $request)
+
+    public function patientStore(Request $request)
     {
 
         $request->validate([
@@ -194,7 +196,7 @@ class AdminController extends Controller
 
     }
 
-    public function patientUpdate (Request $request) 
+    public function patientUpdate(Request $request)
     {
         $request->validate([
             'first_name' => 'required|string|max:255',
@@ -215,77 +217,79 @@ class AdminController extends Controller
 
         $patient = Patient::where('id', $request->id)->first();
 
-            $patientUpdatedData = [
-                'first_name' => $request->input('first_name'),
-                'middle_name' => $request->input('middle_name'),
-                'last_name' => $request->input('last_name'),
-                'street' => $request->input('street'),
-                'brgy' => $request->input('brgy'),
-                'city' => $request->input('city'),
-                'province' => $request->input('province'),
-                'birthdate' => $request->input('birthdate'),
-                'gender' => $request->input('gender'),
-                'phone' => $request->input('phone'),
-                'admitted_date' => $request->input('admitted_date'),
-                'discharged_date' => $request->input('discharged_date'),
-                'room_number' => $request->input('room_number'),
-                'bed_number' => $request->input('bed_number'),
-                'physician' => $request->input('physician'),
-                'medical_condition' => $request->input('medical_condition'),
-                'diagnosis' => $request->input('diagnosis'),
-                'medication' => $request->input('medication'),
+        $patientUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'birthdate' => $request->input('birthdate'),
+            'gender' => $request->input('gender'),
+            'phone' => $request->input('phone'),
+            'admitted_date' => $request->input('admitted_date'),
+            'discharged_date' => $request->input('discharged_date'),
+            'room_number' => $request->input('room_number'),
+            'bed_number' => $request->input('bed_number'),
+            'physician' => $request->input('physician'),
+            'medical_condition' => $request->input('medical_condition'),
+            'diagnosis' => $request->input('diagnosis'),
+            'medication' => $request->input('medication'),
 
-            ];
-    
-            $appointmentChange = $this->hasChanges($patient, $patientUpdatedData);
-    
-            if($appointmentChange) {
-                $patient->first_name = $request->input('first_name');
-                $patient->middle_name = $request->input('middle_name');
-                $patient->last_name = $request->input('last_name');
-                $patient->street = $request->input('street');
-                $patient->brgy = $request->input('brgy');
-                $patient->city = $request->input('city');
-                $patient->province = $request->input('province');
-                $patient->birthdate = $request->input('birthdate');
-                $patient->gender = $request->input('gender');
-                $patient->phone = $request->input('phone');
-                $patient->admitted_date = $request->input('admitted_date');
-                $patient->discharged_date = $request->input('discharged_date');
-                $patient->room_number = $request->input('room_number');
-                $patient->bed_number = $request->input('bed_number');
-                $patient->physician = $request->input('physician');
-                $patient->medical_condition = $request->input('medical_condition');
-                $patient->diagnosis = $request->input('diagnosis');
-                $patient->medication = $request->input('medication');
-    
-                $patient->save();
-    
-                return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
-            } else {
-                return redirect()->back()->with('info', 'No changes were made.');
-            }
+        ];
+
+        $appointmentChange = $this->hasChanges($patient, $patientUpdatedData);
+
+        if ($appointmentChange) {
+            $patient->first_name = $request->input('first_name');
+            $patient->middle_name = $request->input('middle_name');
+            $patient->last_name = $request->input('last_name');
+            $patient->street = $request->input('street');
+            $patient->brgy = $request->input('brgy');
+            $patient->city = $request->input('city');
+            $patient->province = $request->input('province');
+            $patient->birthdate = $request->input('birthdate');
+            $patient->gender = $request->input('gender');
+            $patient->phone = $request->input('phone');
+            $patient->admitted_date = $request->input('admitted_date');
+            $patient->discharged_date = $request->input('discharged_date');
+            $patient->room_number = $request->input('room_number');
+            $patient->bed_number = $request->input('bed_number');
+            $patient->physician = $request->input('physician');
+            $patient->medical_condition = $request->input('medical_condition');
+            $patient->diagnosis = $request->input('diagnosis');
+            $patient->medication = $request->input('medication');
+
+            $patient->save();
+
+            return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+        }
     }
 
-    public function notification(){
-        
+    public function notification()
+    {
+
         $profile = Auth::user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('admin.notification.notification', compact('profile','notifications','limitNotifications','count'));
+        return view('admin.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count'));
 
     }
 
-    public function notificationRead(Request $request){
+    public function notificationRead(Request $request)
+    {
 
         $notification = Notification::findOrFail($request->input('id'));
 
-        if($notification->is_read == 0){
+        if ($notification->is_read == 0) {
             $notification->is_read = 1;
             $notification->save();
-    
+
             return redirect()->route('admin.notification');
         } else {
             return redirect()->route('admin.notification');
@@ -293,7 +297,47 @@ class AdminController extends Controller
 
     }
 
-    private function hasChanges($info, $updatedData){
+    public function genderDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+                // Retrieve data from the database
+        $data = Patient::select('gender', \DB::raw('COUNT(*) as count'))
+            ->groupBy('gender')
+            ->get();
+
+        // Prepare data for the chart
+        $labels = $data->pluck('gender');
+        $values = $data->pluck('count');
+
+        return view('admin.patient-demo.gender', compact('profile','limitNotifications', 'count','labels','values'));
+    }
+
+    public function ageDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        // Retrieve data from the database
+        $data = Patient::selectRaw('FLOOR(DATEDIFF(CURRENT_DATE, birthdate) / 365.25) AS age, COUNT(*) AS count')
+            ->groupBy('age')
+            ->orderBy('age')
+            ->get();
+
+        // Prepare data for the chart
+        $labels = $data->pluck('age');
+        $values = $data->pluck('count');
+
+        return view('admin.patient-demo.age', compact('profile','limitNotifications', 'count','labels','values'));
+    }
+
+    private function hasChanges($info, $updatedData)
+    {
         foreach ($updatedData as $key => $value) {
 
             if ($info->{$key} != $value) {

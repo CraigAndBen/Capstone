@@ -122,6 +122,9 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::post('/admin/profile/update', [AdminController::class, 'profileUpdate'])->name('admin.profile.update');
     Route::post('/admin/profile/update/password', [AdminController::class, 'updatePassword'])->name('admin.password.update');
 
+    // Logout
+    Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
+
     // Patient
     Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
@@ -131,8 +134,11 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::get('/admin/notification', [AdminController::class, 'notification'])->name('admin.notification');
     Route::post('/admin/notification/read', [AdminController::class, 'notificationRead'])->name('admin.notification.read');
 
-    // Logout
-    Route::get('/admin/logout', [AdminController::class, 'adminLogout'])->name('admin.logout');
+    // Demographics
+    Route::get('/admin/demographics/gender', [AdminController::class, 'genderDemo'])->name('admin.demographics.gender');
+    Route::get('/admin/demographics/age', [AdminController::class, 'ageDemo'])->name('admin.demographics.age');
+
+
 });
 
 Route::middleware('auth', 'role:super_admin')->group(function () {
