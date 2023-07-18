@@ -493,40 +493,16 @@
                                                 id="floatingInput email" placeholder="Email Address" required />
                                             <label for="floatingInput">Email Address</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="password" name="password" class="form-control"
-                                                        id="password" placeholder="New Password" />
-                                                    <label for="floatingInput">Current Password</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-floating mt-2 input-group-append">
-                                                    <button class="btn btn-outline-primary" type="button"
-                                                        id="passwordTogglePassword">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div class="form-floating mb-3 ">
+                                            <input type="password" name="password" class="form-control"
+                                                id="password" placeholder="New Password" />
+                                            <label for="floatingInput">Password</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="password" name="password_confirmation"
-                                                        class="form-control" id="password_confirmation"
-                                                        placeholder="Password Confirmation" />
-                                                    <label for="floatingInput">Current Password</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-floating mt-2 input-group-append">
-                                                    <button class="btn btn-outline-primary" type="button"
-                                                        id="confirmationPassword">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div class="form-floating mb-3 ">
+                                            <input type="password" name="password_confirmation"
+                                                class="form-control" id="password_confirmation"
+                                                placeholder="Password Confirmation" />
+                                            <label for="floatingInput">Password Confirmation</label>
                                         </div>
                             </div>
                             <div class="modal-footer">
