@@ -9,6 +9,7 @@ use App\Models\User_info;
 use Illuminate\View\View;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
@@ -139,16 +140,27 @@ class AdminController extends Controller
 
     public function patientList()
     {
-
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::all();
+        $years = Patient::selectRaw('YEAR(admitted_date) as year')
+            ->get();
 
-        return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count','years'));
 
+    }
+
+    public function patientFetch(Request $request)
+    {
+        $year = $request->input('year');
+
+        // Fetch subcategory options based on the selected category ID
+        $subcategories = Subcategory::where('category_id', $categoryId)->get();
+
+        return response()->json($subcategories);
     }
 
     public function patientStore(Request $request)
@@ -316,6 +328,25 @@ class AdminController extends Controller
         return view('admin.patient-demo.gender', compact('profile','limitNotifications', 'count','labels','values'));
     }
 
+    public function genderFetch(Request $request)
+    {
+            $selectedYear = $request->input('year');
+    
+            // Fetch data for the selected year from your data source
+            $data = Patient::whereYear('admitted_at', $selectedYear)
+                ->select('label', 'value')
+                ->get();
+    
+            // Prepare data for the chart
+            $labels = $data->pluck('label');
+            $values = $data->pluck('value');
+    
+            return response()->json([
+                'labels' => $labels,
+                'values' => $values
+            ]);
+    }
+
     public function ageDemo()
     {
         $profile = auth()->user();
@@ -335,6 +366,7 @@ class AdminController extends Controller
 
         return view('admin.patient-demo.age', compact('profile','limitNotifications', 'count','labels','values'));
     }
+
 
     private function hasChanges($info, $updatedData)
     {

@@ -72,8 +72,21 @@
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
                                 @else
-
-
+                                    <div class="form-group">
+                                        <label for="category">Select Year Admitted:</label>
+                                        <select id="year_category" name="year_category" class="form-control">
+                                            <option value="">Select a Year</option>
+                                            @foreach ($years as $year)
+                                                <option value="{{ $year->year }}">{{ json_encode($year->year) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="category">Select Month Admitted:</label>
+                                        <select id="category" name="category" class="form-control">
+                                            <option value="">Select Year First</option>
+                                        </select>
+                                    </div>
 
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
@@ -94,7 +107,8 @@
 
                                                     @foreach ($doctors as $doctor)
                                                         @if ($patient->physician == $doctor->id)
-                                                            <td>Dr. {{ ucwords($doctor->first_name) }} {{ucwords($doctor->last_name)}}</td>
+                                                            <td>Dr. {{ ucwords($doctor->first_name) }}
+                                                                {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
                                                     @endforeach
                                                     <td>{{ ucwords($patient->admitted_date) }}</td>
@@ -126,9 +140,8 @@
                                                                     data-physician="{{ json_encode($patient->physician) }}"
                                                                     data-medical-condition="{{ json_encode($patient->medical_condition) }}"
                                                                     data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                    data-medication="{{ json_encode($patient->medication) }}"
-                                                                    >Update</a>
-                                                                    
+                                                                    data-medication="{{ json_encode($patient->medication) }}">Update</a>
+
                                                                 <a class="dropdown-item btn btn-primary" data-toggle="modal"
                                                                     data-target="#viewModal"
                                                                     data-first-name="{{ json_encode($patient->first_name) }}"
@@ -148,8 +161,7 @@
                                                                     data-physician="{{ json_encode($patient->physician) }}"
                                                                     data-medical-condition="{{ json_encode($patient->medical_condition) }}"
                                                                     data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                    data-medication="{{ json_encode($patient->medication) }}"
-                                                                    >View</a>
+                                                                    data-medication="{{ json_encode($patient->medication) }}">View</a>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -253,7 +265,7 @@
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
                                                     <option value="others">Others</option>
-                                                  </select>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -267,7 +279,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="date" name="discharged_date" class="form-control"
-                                                        id="floatingInput discharged_date" placeholder="Discharged Date" />
+                                                        id="floatingInput discharged_date"
+                                                        placeholder="Discharged Date" />
                                                     <label for="floatingInput">Discharged Date</label>
                                                 </div>
                                             </div>
@@ -292,7 +305,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{$doctor->id}}">Dr. {{$doctor->first_name }} {{$doctor->last_name}}</option>
+                                                    <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
+                                                        {{ $doctor->last_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -339,25 +353,22 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="hidden" id="id" name="id">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="first_name" placeholder="First Name"
-                                                        name="first_name"/>
+                                                    <input type="text" class="form-control ml-2" id="first_name"
+                                                        placeholder="First Name" name="first_name" />
                                                     <label for="floatingInput">First Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="middle_name" placeholder="Middle Name"
-                                                        name="middle_name"/>
+                                                    <input type="text" class="form-control ml-2" id="middle_name"
+                                                        placeholder="Middle Name" name="middle_name" />
                                                     <label for="floatingInput">Middle Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="last_name" placeholder="Last Name"
-                                                        name="last_name" />
+                                                    <input type="phone" class="form-control" id="last_name"
+                                                        placeholder="Last Name" name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
                                                 </div>
                                             </div>
@@ -415,7 +426,7 @@
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
                                                     <option value="others">Others</option>
-                                                  </select>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -454,7 +465,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{$doctor->id}}">Dr. {{$doctor->first_name }} {{$doctor->last_name}}</option>
+                                                    <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
+                                                        {{ $doctor->last_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -464,13 +476,13 @@
                                             <label for="floatingInput">Medical Condition</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="diagnosis" class="form-control"
-                                                id="diagnosis" placeholder="Diagnosis" />
+                                            <input type="text" name="diagnosis" class="form-control" id="diagnosis"
+                                                placeholder="Diagnosis" />
                                             <label for="floatingInput">Diagnosis</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="medication" class="form-control"
-                                                id="medication" placeholder="Medication" />
+                                            <input type="text" name="medication" class="form-control" id="medication"
+                                                placeholder="Medication" />
                                             <label for="floatingInput">Medication</label>
                                         </div>
 
@@ -485,162 +497,160 @@
                     </div>
                     {{-- End Update Modal --}}
 
-                                        {{-- Update modal --}}
-                                        <div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header bg-primary">
-                                                    <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
-                                                </div>
-                                                <div class="modal-body">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <div class="form-floating mb-3 ">
-                                                                    <input type="hidden" id="id" name="id">
-                                                                    <input type="text" class="form-control ml-2"
-                                                                        id="first_name" placeholder="First Name"
-                                                                        name="first_name" disabled/>
-                                                                    <label for="floatingInput">First Name</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="form-floating mb-3 ">
-                                                                    <input type="text" class="form-control ml-2"
-                                                                        id="middle_name" placeholder="Middle Name"
-                                                                        name="middle_name" disabled/>
-                                                                    <label for="floatingInput">Middle Name</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="form-floating mb-3 ">
-                                                                    <input type="phone" class="form-control"
-                                                                        id="last_name" placeholder="Last Name"
-                                                                        name="last_name" disabled/>
-                                                                    <label for="floatingInput">Last Name</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="text" name="street" class="form-control"
-                                                                        id="street" placeholder="Street" disabled/>
-                                                                    <label for="floatingInput">Street</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="text" name="brgy" class="form-control"
-                                                                        id="brgy" placeholder="Brgy"disabled />
-                                                                    <label for="floatingInput">Brgy</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="text" name="city" class="form-control"
-                                                                        id="city" placeholder="City" disabled/>
-                                                                    <label for="floatingInput">City</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="text" name="province" class="form-control"
-                                                                        id="province" placeholder="Street" disabled/>
-                                                                    <label for="floatingInput">Province</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="number" name="phone" class="form-control"
-                                                                        id="phone" placeholder="Phone" disabled/>
-                                                                    <label for="floatingInput">Phone</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="date" name="birthdate" class="form-control"
-                                                                        id="birthdate" placeholder="Birthdate" disabled/>
-                                                                    <label for="floatingInput">Birthdate</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <select class="form-control p-3" id="gender" name="gender" disabled>
-                                                                    <option>Select Gender</option>
-                                                                    <option value="male">Male</option>
-                                                                    <option value="female">Female</option>
-                                                                    <option value="others">Others</option>
-                                                                  </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="date" name="admitted_date" class="form-control"
-                                                                        id="admitted_date" placeholder="Admitted Date" disabled/>
-                                                                    <label for="floatingInput">Admitted Date</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="date" name="discharged_date" class="form-control"
-                                                                        id="discharged_date" placeholder="Discharged Date" disabled/>
-                                                                    <label for="floatingInput">Discharged Date</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="text" name="room_number" class="form-control"
-                                                                        id="room_number" placeholder="Room No" disabled/>
-                                                                    <label for="floatingInput">Room No</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-floating mb-3">
-                                                                    <input type="text" name="bed_number" class="form-control"
-                                                                        id="bed_number" placeholder="Bed No" disabled/>
-                                                                    <label for="floatingInput">Bed No</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-floating mb-3">
-                                                            <select class="form-control p-3" id="physician" name="physician" disabled>
-                                                                <option>Select physician</option>
-                                                                @foreach ($doctors as $doctor)
-                                                                    <option value="{{$doctor->id}}">Dr. {{$doctor->first_name }} {{$doctor->last_name}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-floating mb-3">
-                                                            <input type="text" name="medical_condtion" class="form-control"
-                                                                id="medical_condtion" placeholder="Medical Condition" disabled/>
-                                                            <label for="floatingInput">Medical Condition</label>
-                                                        </div>
-                                                        <div class="form-floating mb-3">
-                                                            <input type="text" name="diagnosis" class="form-control"
-                                                                id="diagnosis" placeholder="Diagnosis" disabled/>
-                                                            <label for="floatingInput">Diagnosis</label>
-                                                        </div>
-                                                        <div class="form-floating mb-3">
-                                                            <input type="text" name="medication" class="form-control"
-                                                                id="medication" placeholder="Medication" disabled/>
-                                                            <label for="floatingInput">Medication</label>
-                                                        </div>
-                
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                                </div>
+                    {{-- Update modal --}}
+                    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary">
+                                    <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="hidden" id="id" name="id">
+                                                <input type="text" class="form-control ml-2" id="first_name"
+                                                    placeholder="First Name" name="first_name" disabled />
+                                                <label for="floatingInput">First Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2" id="middle_name"
+                                                    placeholder="Middle Name" name="middle_name" disabled />
+                                                <label for="floatingInput">Middle Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="phone" class="form-control" id="last_name"
+                                                    placeholder="Last Name" name="last_name" disabled />
+                                                <label for="floatingInput">Last Name</label>
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- End Update Modal --}}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="street" class="form-control" id="street"
+                                                    placeholder="Street" disabled />
+                                                <label for="floatingInput">Street</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="brgy" class="form-control" id="brgy"
+                                                    placeholder="Brgy"disabled />
+                                                <label for="floatingInput">Brgy</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="city" class="form-control" id="city"
+                                                    placeholder="City" disabled />
+                                                <label for="floatingInput">City</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="province" class="form-control"
+                                                    id="province" placeholder="Street" disabled />
+                                                <label for="floatingInput">Province</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="number" name="phone" class="form-control" id="phone"
+                                                    placeholder="Phone" disabled />
+                                                <label for="floatingInput">Phone</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" name="birthdate" class="form-control"
+                                                    id="birthdate" placeholder="Birthdate" disabled />
+                                                <label for="floatingInput">Birthdate</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-control p-3" id="gender" name="gender" disabled>
+                                                <option>Select Gender</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                                <option value="others">Others</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" name="admitted_date" class="form-control"
+                                                    id="admitted_date" placeholder="Admitted Date" disabled />
+                                                <label for="floatingInput">Admitted Date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" name="discharged_date" class="form-control"
+                                                    id="discharged_date" placeholder="Discharged Date" disabled />
+                                                <label for="floatingInput">Discharged Date</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="room_number" class="form-control"
+                                                    id="room_number" placeholder="Room No" disabled />
+                                                <label for="floatingInput">Room No</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" name="bed_number" class="form-control"
+                                                    id="bed_number" placeholder="Bed No" disabled />
+                                                <label for="floatingInput">Bed No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <select class="form-control p-3" id="physician" name="physician" disabled>
+                                            <option>Select physician</option>
+                                            @foreach ($doctors as $doctor)
+                                                <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
+                                                    {{ $doctor->last_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="medical_condtion" class="form-control"
+                                            id="medical_condtion" placeholder="Medical Condition" disabled />
+                                        <label for="floatingInput">Medical Condition</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="diagnosis" class="form-control" id="diagnosis"
+                                            placeholder="Diagnosis" disabled />
+                                        <label for="floatingInput">Diagnosis</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="medication" class="form-control" id="medication"
+                                            placeholder="Medication" disabled />
+                                        <label for="floatingInput">Medication</label>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- End Update Modal --}}
 
 
                     <!-- [ sample-page ] end -->
@@ -740,6 +750,31 @@
                     modal.find('#medical_condition').val(medical_condition);
                     modal.find('#diagnosis').val(diagnosis);
                     modal.find('#medication').val(medication);
+                });
+                $('#year_category').change(function() {
+                    var year = $(this).val();
+
+                    // Make an AJAX request to the controller
+                    $.ajax({
+                        url: {{route('admin.demographics.gender.fetch')}}, // Replace with the actual route to your controller method
+                        type: 'POST',
+                        data: {
+                            year: year,
+                        },
+                        success: function(response) {
+                            // Clear the current options in the subcategory select input
+                            $('#year_category').empty();
+
+                            // Append the new options based on the response
+                            $.each(response, function(index, year) {
+                                $('#year_category').append($('<option></option>').attr(
+                                    'value', year).text(year));
+                            });
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            console.log(xhr.responseText);
+                        }
+                    });
                 });
             });
         </script>

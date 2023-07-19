@@ -127,6 +127,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
     // Patient
     Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
+    Route::get('/admin/patient/fetch', [AdminController::class, 'patientFetch'])->name('admin.patient.fetch');
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
 
@@ -136,6 +137,8 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
     // Demographics
     Route::get('/admin/demographics/gender', [AdminController::class, 'genderDemo'])->name('admin.demographics.gender');
+    Route::post('/admin/demogrpahics/gender/fetch', [AdminController::class, 'genderFetch'])->name('admin.demographics.gender.fetch');
+
     Route::get('/admin/demographics/age', [AdminController::class, 'ageDemo'])->name('admin.demographics.age');
 
 
