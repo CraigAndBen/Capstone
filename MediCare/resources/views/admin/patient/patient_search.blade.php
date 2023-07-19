@@ -66,6 +66,9 @@
                                     <div class="m-1">
                                       <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Patient</button>
                                     </div>
+                                    <div class="m-1">
+                                        <a href="{{route('admin.patient')}}" class="btn btn-secondary">Show All</a>
+                                    </div>
                                   </div>
                                 <hr>
 
@@ -85,11 +88,12 @@
                                         </div>
                                 </form>
 
-                                @if ($limitPatients->isEmpty())
+                                @if ($patients->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Patient.
+                                        <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
+                                <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
@@ -102,7 +106,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
-                                            @foreach ($limitPatients as $patient)
+                                            @foreach ($patients as $patient)
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
@@ -172,13 +176,15 @@
 
                                         </tbody>
                                     </table>
+                                </div>
                                 @endif
                             </div>
                         </div>
                     </div>
 
                     {{-- Create modal --}}
-                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">

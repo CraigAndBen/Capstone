@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules\Password;
 use App\Http\Requests\ProfileUpdateRequest;
@@ -146,21 +147,29 @@ class AdminController extends Controller
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::all();
-        $years = Patient::selectRaw('YEAR(admitted_date) as year')
-            ->get();
+        $limitPatients = $patients->take(5);
 
-        return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count','years'));
+        return view('admin.patient.patient', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
 
     }
 
-    public function patientFetch(Request $request)
+    public function patientSearch(Request $request)
     {
-        $year = $request->input('year');
-
-        // Fetch subcategory options based on the selected category ID
-        $subcategories = Subcategory::where('category_id', $categoryId)->get();
-
-        return response()->json($subcategories);
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = User::where('role', 'doctor')->get();
+        $searchTerm = $request->input('search');
+        $patients = Patient::where(function ($query) use ($searchTerm) {
+            $columns = Schema::getColumnListing('patient'); // Replace 'your_table' with the actual table name
+    
+            foreach ($columns as $column) {
+                $query->orWhere($column, 'LIKE', '%' . $searchTerm . '%');
+            }
+        })->get();
+    
+        return view('admin.patient.patient_search', compact('patients','profile','doctors','limitNotifications','count'));
     }
 
     public function patientStore(Request $request)

@@ -127,7 +127,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
     // Patient
     Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
-    Route::get('/admin/patient/fetch', [AdminController::class, 'patientFetch'])->name('admin.patient.fetch');
+    Route::get('/admin/patient/search', [AdminController::class, 'patientSearch'])->name('admin.patient.search');
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
 
