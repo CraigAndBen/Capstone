@@ -290,6 +290,37 @@ class AdminController extends Controller
         }
     }
 
+    public function patienAdmittedtList()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = User::where('role', 'doctor')->get();
+        $patients = Patient::whereNull('discharged_date')->get();
+        $limitPatients = $patients->take(5);
+
+        return view('admin.patient.patient_admitted', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+    }
+
+    public function patientAdmittedSearch(Request $request)
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = User::where('role', 'doctor')->get();
+        $searchTerm = $request->input('search');
+        $patients = Patient::whereNull('discharged_date')->where(function ($query) use ($searchTerm) {
+            $columns = Schema::getColumnListing('patient'); // Replace 'your_table' with the actual table name
+    
+            foreach ($columns as $column) {
+                $query->orWhere($column, 'LIKE', '%' . $searchTerm . '%');
+            }
+        })->get();
+    
+        return view('admin.patient.patient_admitted_search', compact('patients','profile','doctors','limitNotifications','count'));
+    }
     public function notification()
     {
 

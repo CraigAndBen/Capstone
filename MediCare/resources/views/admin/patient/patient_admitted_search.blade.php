@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Patient List</h5>
+                                <h5 class="m-b-10">Patient Admitted List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Patient List</li>
+                                <li class="breadcrumb-item" aria-current="page">Patient Admitted List</li>
                             </ul>
                         </div>
                     </div>
@@ -66,10 +66,13 @@
                                     <div class="m-1">
                                       <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Patient</button>
                                     </div>
+                                    <div class="m-1">
+                                        <a href="{{route('admin.patient.admitted')}}" class="btn btn-secondary">Show All</a>
+                                    </div>
                                   </div>
                                 <hr>
 
-                                <form action="{{ route('admin.patient.search') }}" method="GET">
+                                <form action="{{ route('admin.patient.admitted.search') }}" method="GET">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-10">
@@ -85,11 +88,12 @@
                                         </div>
                                 </form>
 
-                                @if ($limitPatients->isEmpty())
+                                @if ($patients->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Patient.
+                                        <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
+                                <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
@@ -97,12 +101,11 @@
                                                 <th>Last Name</th>
                                                 <th>Physician</th>
                                                 <th>Admitted Date</th>
-                                                <th>Discharged Date</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
-                                            @foreach ($limitPatients as $patient)
+                                            @foreach ($patients as $patient)
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
@@ -114,7 +117,6 @@
                                                         @endif
                                                     @endforeach
                                                     <td>{{ ucwords($patient->admitted_date) }}</td>
-                                                    <td>{{ ucwords($patient->discharged_date) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -172,13 +174,15 @@
 
                                         </tbody>
                                     </table>
+                                </div>
                                 @endif
                             </div>
                         </div>
                     </div>
 
                     {{-- Create modal --}}
-                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">

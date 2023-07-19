@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Appointment List</h5>
+                                <h5 class="m-b-10">Patient List</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Appointment List</li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item" aria-current="page">Patient List</li>
                             </ul>
                         </div>
                     </div>

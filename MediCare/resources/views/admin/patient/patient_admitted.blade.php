@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Patient List</h5>
+                                <h5 class="m-b-10">Patient Admitted List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Patient List</li>
+                                <li class="breadcrumb-item" aria-current="page">Patient Admitted List</li>
                             </ul>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                                   </div>
                                 <hr>
 
-                                <form action="{{ route('admin.patient.search') }}" method="GET">
+                                <form action="{{ route('admin.patient.admitted.search') }}" method="GET">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-10">
@@ -97,7 +97,6 @@
                                                 <th>Last Name</th>
                                                 <th>Physician</th>
                                                 <th>Admitted Date</th>
-                                                <th>Discharged Date</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -114,7 +113,6 @@
                                                         @endif
                                                     @endforeach
                                                     <td>{{ ucwords($patient->admitted_date) }}</td>
-                                                    <td>{{ ucwords($patient->discharged_date) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"

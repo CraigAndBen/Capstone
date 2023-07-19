@@ -227,6 +227,10 @@
                         <a href="{{ route('admin.patient') }}" class="pc-link"><span class="pc-micon"></span><span
                                 class="pc-mtext">Patient List</span></a>
                     </li>
+                    <li class="pc-item">
+                        <a href="{{ route('admin.patient.admitted') }}" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient Admitted List</span></a>
+                    </li>
                     <li class="pc-item pc-caption">
                         <label>Demographics</label>
                         <i class="ti ti-apps"></i>
