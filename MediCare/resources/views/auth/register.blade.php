@@ -1,56 +1,3 @@
-{{-- <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ml-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout> --}}
-
 <!DOCTYPE html>
 <html lang="en">
   <!-- [Head] start -->
@@ -111,37 +58,38 @@
 
               <form method="POST" action="{{route('register')}}">
                 @csrf
-                {{-- <x-input-error :messages="$errors->get('name')" class="mt-2" /> --}}
+
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                    following errors: <br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
                 <div class="form-floating mb-3">
                   <input type="text" name="first_name" class="form-control" id="floatingInput first_name" placeholder="First Name" />
                   <label for="floatingInput">First Name</label>
-                  <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
                 </div>
                 <div class="form-floating mb-3">
                   <input type="text" name="last_name" class="form-control" id="floatingInput last_name" placeholder="Last Name" />
                   <label for="floatingInput">Last Name</label>
-                  <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
                 </div>
                 <div class="form-floating mb-3">
                   <input type="email" name="email" class="form-control" id="floatingInput email" placeholder="Email Address" />
                   <label for="floatingInput">Email Address</label>
-                  <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
                 <div class="form-floating mb-3">
                   <input type="password" name="password" class="form-control" id="floatingInput password" placeholder="Password" />
                   <label for="floatingInput">Password</label>
-                  <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
                 <div class="form-floating mb-3">
                   <input type="password" name="password_confirmation" class="form-control" id="floatingInput password_confirmation" placeholder="password confirmation" />
                   <label for="floatingInput">Password Confirmation</label>
-                  <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                </div>
-                <div class="form-check mt-3s">
-                  <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
-                  <label class="form-check-label" for="customCheckc1">
-                    <h5>Agree with <span>Terms & Condition.</span></h5>
-                  </label>
                 </div>
                 <div class="d-grid mt-4">
                   <button type="submit" class="btn btn-primary p-2">Sign Up</button>

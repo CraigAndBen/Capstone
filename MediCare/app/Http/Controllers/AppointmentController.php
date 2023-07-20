@@ -37,6 +37,21 @@ class AppointmentController extends Controller
 
     public function createAppointment(Request $request){
 
+        $timeList = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
+        ];
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
@@ -62,7 +77,7 @@ class AppointmentController extends Controller
         if($count != 0){
             foreach ($appointments as $appointment) {
                 if($appointment->appointment_date != $request->input('appointment_date') || $appointment->appointment_time != $request->input('appointment_time')){
-    
+
                     $user = Auth::user();
     
                     Appointment::create([
@@ -101,8 +116,21 @@ class AppointmentController extends Controller
                     
                     return back()->with('success', 'Appointment Created Successfully.'); 
                 }
-    
-                return back()->with('info', 'The current date and time are unavailable, please select another date and time.');
+
+                $appoint = Appointment::where('appointment_date', $appointment->appointment_date)->get();
+
+                $appoint_time = $appoint->pluck('appointment_time');
+
+                foreach ($appoint_time as $time) {
+                    $timeList = array_filter($timeList, function ($value) use ($time) {
+                        return $value !== $time;
+                    });
+                }
+
+                return back()->with([
+                    'data' => $timeList,
+                    'info' => 'The current time are unavailable, please select from this available time: ',
+                ]);
             }
         } else {
             $user = Auth::user();
