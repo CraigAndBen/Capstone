@@ -71,8 +71,8 @@ class AppointmentController extends Controller
             'check' => 'accepted',
         ]);
 
-        $appointments = Appointment::all();
-        $count = Appointment::count();    
+        $appointments = Appointment::where('specialties', $request->input('specialties'))->whereNotIn('status', ['unavailable'])->get();
+        $count = $appointments->count();
 
         if($count != 0){
             foreach ($appointments as $appointment) {
@@ -127,9 +127,11 @@ class AppointmentController extends Controller
                     });
                 }
 
+                $time = implode(', ', $timeList);
+
                 return back()->with([
                     'data' => $timeList,
-                    'info' => 'The current time are unavailable, please select from this available time: ',
+                    'info' => 'The current time are unavailable, please select from this date: '. $request->input('appointment_date') .' available time: ' . $time . '.',
                 ]);
             }
         } else {
