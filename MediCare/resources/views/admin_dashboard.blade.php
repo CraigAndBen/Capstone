@@ -59,89 +59,89 @@
             <!-- [Mobile Media Block end] -->
             <div class="ms-auto">
                 <ul class="list-unstyled">
-                  <li class="dropdown pc-h-item">
-                    <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
-                        data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
-                        aria-expanded="false">
-                        <i class="ti ti-bell"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
-                        @if ($count > 0)
-                            <div class="dropdown-header">
-                                <h5>All Notification <span
-                                        class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
+                    <li class="dropdown pc-h-item">
+                        <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
+                            data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                            aria-expanded="false">
+                            <i class="ti ti-bell"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+                            @if ($count > 0)
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span
+                                            class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        <div class="list-group-item">
+                                            <select class="form-select">
+                                                <option value="all">All Notification</option>
+                                                <option value="new">New</option>
+                                                <option value="unread">Unread</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        @foreach ($limitNotifications as $notification)
+                                            <a class="list-group-item list-group-item-action"
+                                                href="{{ route('doctor.appointment') }}">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0">
+                                                        <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                            alt="user-image" class="user-avtar" />
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-1">
+                                                        <span
+                                                            class="float-end text-muted">{{ $notification->time }}</span>
+                                                        <h5>{{ ucwords($notification->title) }}</h5>
+                                                        <p class="text-body fs-6">
+                                                            {{ Str::words($notification->message, $limit = 10, $end = '...') }}
+                                                        </p>
+                                                        @if ($notification->is_read == 0)
+                                                            <div class="badge rounded-pill bg-light-danger">Unread</div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endforeach
                                     </div>
-                                    @foreach ($limitNotifications as $notification)
-                                        <a class="list-group-item list-group-item-action"
-                                            href="{{ route('doctor.appointment') }}">
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="text-center py-2">
+                                    <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                </div>
+                            @else
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        <div class="list-group-item">
+                                            <select class="form-select">
+                                                <option value="all">All Notification</option>
+                                                <option value="new">New</option>
+                                                <option value="unread">Unread</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <a class="list-group-item list-group-item-action">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">
-                                                    <span
-                                                        class="float-end text-muted">{{ $notification->time }}</span>
-                                                    <h5>{{ ucwords($notification->title) }}</h5>
-                                                    <p class="text-body fs-6">
-                                                        {{ Str::words($notification->message, $limit = 10, $end = '...') }}
-                                                    </p>
-                                                    @if ($notification->is_read == 0)
-                                                        <div class="badge rounded-pill bg-light-danger">Unread</div>
-                                                    @endif
+                                                    <h5>No Notification Yet.</h5>
                                                 </div>
                                             </div>
                                         </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="text-center py-2">
-                                <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
-                            </div>
-                        @else
-                            <div class="dropdown-header">
-                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
                                     </div>
-                                    <a class="list-group-item list-group-item-action">
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
-                                                    alt="user-image" class="user-avtar" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-1">
-                                                <h5>No Notification Yet.</h5>
-                                            </div>
-                                        </div>
-                                    </a>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
 
-                    </div>
-                </li>
+                        </div>
+                    </li>
                     <li class="dropdown pc-h-item header-user-profile">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
@@ -204,13 +204,15 @@
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.profile') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Update Profile</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.profile.password') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Account</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.profile')}}">Update Profile</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.profile.password')}}">Update Password</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
@@ -223,21 +225,29 @@
                         <label>Patient</label>
                         <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.patient') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.patient.admitted') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient Admitted List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.patient')}}">Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.patient.admitted')}}">Patient Admitted</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Demographics</label>
                         <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.demographics.gender') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Gender Demographics</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient Demographics</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.demographics.gender')}}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.demographics.age')}}">Age Demographics</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -253,132 +263,8 @@
             <!-- [ Main Content ] start -->
             <div class="row">
                 <!-- [ sample-page ] start -->
-                <div class="col-xl-4 col-md-6">
-                    <div class="card bg-secondary-dark dashnum-card text-white overflow-hidden">
-                        <span class="round small"></span>
-                        <span class="round big"></span>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="avtar avtar-lg">
-                                        <i class="text-white ti ti-credit-card"></i>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="btn-group">
-                                        <a type="button" class="avtar bg-secondary dropdown-toggle arrow-none"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="ti ti-dots"></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><button class="dropdown-item" type="button">Import Card</button></li>
-                                            <li><button class="dropdown-item" type="button">Export</button></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="text-white d-block f-34 f-w-500 my-2">1350 <i
-                                    class="ti ti-arrow-up-right-circle opacity-50"></i></span>
-                            <p class="mb-0 opacity-50">Total Pending Orders</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6">
-                    <div class="card bg-primary-dark dashnum-card text-white overflow-hidden">
-                        <span class="round small"></span>
-                        <span class="round big"></span>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="avtar avtar-lg">
-                                        <i class="text-white ti ti-credit-card"></i>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <ul class="nav nav-pills justify-content-end mb-0" id="chart-tab-tab"
-                                        role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link text-white active" id="chart-tab-home-tab"
-                                                data-bs-toggle="pill" data-bs-target="#chart-tab-home" type="button"
-                                                role="tab" aria-controls="chart-tab-home"
-                                                aria-selected="true">Month</button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link text-white" id="chart-tab-profile-tab"
-                                                data-bs-toggle="pill" data-bs-target="#chart-tab-profile"
-                                                type="button" role="tab" aria-controls="chart-tab-profile"
-                                                aria-selected="false">Year</button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="tab-content" id="chart-tab-tabContent">
-                                <div class="tab-pane show active" id="chart-tab-home" role="tabpanel"
-                                    aria-labelledby="chart-tab-home-tab" tabindex="0">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <span class="text-white d-block f-34 f-w-500 my-2">$130<i
-                                                    class="ti ti-arrow-up-right-circle opacity-50"></i></span>
-                                            <p class="mb-0 opacity-50">Total Earning</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <div id="tab-chart-1"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="chart-tab-profile" role="tabpanel"
-                                    aria-labelledby="chart-tab-profile-tab" tabindex="0">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <span class="text-white d-block f-34 f-w-500 my-2">$29961 <i
-                                                    class="ti ti-arrow-down-right-circle opacity-50"></i></span>
-                                            <p class="mb-0 opacity-50">C/W Last Year</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <div id="tab-chart-2"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-12">
-                    <div class="card bg-primary-dark dashnum-card dashnum-card-small text-white overflow-hidden">
-                        <span class="round bg-primary small"></span>
-                        <span class="round bg-primary big"></span>
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-center">
-                                <div class="avtar avtar-lg">
-                                    <i class="text-white ti ti-credit-card"></i>
-                                </div>
-                                <div class="ms-2">
-                                    <h4 class="text-white mb-1">$203k <i
-                                            class="ti ti-arrow-up-right-circle opacity-50"></i></h4>
-                                    <p class="mb-0 opacity-50 text-sm">Net Profit</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card dashnum-card dashnum-card-small overflow-hidden">
-                        <span class="round bg-warning small"></span>
-                        <span class="round bg-warning big"></span>
-                        <div class="card-body p-3">
-                            <div class="d-flex align-items-center">
-                                <div class="avtar avtar-lg bg-light-warning">
-                                    <i class="text-warning ti ti-credit-card"></i>
-                                </div>
-                                <div class="ms-2">
-                                    <h4 class="mb-1">$550K <i class="ti ti-arrow-up-right-circle opacity-50"></i>
-                                    </h4>
-                                    <p class="mb-0 opacity-50 text-sm">Total Revenue</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-xl-8 col-md-12">
+                <div class="col-xl-8 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-3 align-items-center">
@@ -398,7 +284,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-12">
+                <div class="col-xl-4 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-3 align-items-center">

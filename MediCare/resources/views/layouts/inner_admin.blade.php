@@ -197,19 +197,21 @@
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('admin.dashboard') }}" class="pc-link"><span class="pc-micon"><i
-                                    class="ti ti-dashboard"></i></span><span class="pc-mtext">Home</span></a>
+                        <a href="{{ route('superadmin.dashboard') }}" class="pc-link"><span
+                                class="pc-micon"></span><span class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.profile') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Update Profile</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.profile.password') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="{{route('admin.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Account</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.profile')}}">Update Profile</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.profile.password')}}">Update Password</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
@@ -220,29 +222,32 @@
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Patient</label>
-                        <i class="ti ti-dashboard"></i>
+                        <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.patient') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.patient.admitted') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient Admitted List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="{{route('admin.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.patient')}}">Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.patient.admitted')}}">Patient Admitted</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Demographics</label>
                         <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.demographics.gender') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Gender Demographics</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="{{route('admin.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient Demographics</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.demographics.gender')}}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.demographics.age')}}">Age Demographics</a></li>
+                        </ul>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('admin.demographics.age') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Age Demographics</span></a>
-                    </li>
-
                 </ul>
             </div>
         </div>
