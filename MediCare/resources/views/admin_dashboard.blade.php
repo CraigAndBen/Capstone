@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ asset('admin_assets/css/style-preset.css') }}" id="preset-style-link" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <!-- [Head] end -->
@@ -264,119 +265,50 @@
             <div class="row">
                 <!-- [ sample-page ] start -->
 
-                <div class="col-xl-8 col-md-12 mt-4">
+                <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-3 align-items-center">
                                 <div class="col">
-                                    <small>Total Growth</small>
-                                    <h3>$2,324.00</h3>
-                                </div>
-                                <div class="col-auto">
-                                    <select class="form-select p-r-35">
-                                        <option>Today</option>
-                                        <option selected>This Month</option>
-                                        <option>This Year</option>
-                                    </select>
+                                    <small>Total Patient This Year</small>
+                                    <h3>{{$patientCount}}</h3>
                                 </div>
                             </div>
-                            <div id="growthchart"></div>
+                            <canvas id="admittedPatientsChart" width="100%" height="95"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-12 mt-4">
+                <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-3 align-items-center">
                                 <div class="col">
-                                    <h4>Popular Stocks</h4>
+                                    <h5>Patient Diagnosis This Year</h5>
                                 </div>
                                 <div class="col-auto"> </div>
                             </div>
-                            <div class="rounded bg-light-secondary overflow-hidden mb-3">
-                                <div class="px-3 pt-3">
-                                    <div class="row mb-1 align-items-start">
-                                        <div class="col">
-                                            <h5 class="text-secondary mb-0">Bajaj Finery</h5>
-                                            <small class="text-muted">10% Profit</small>
-                                        </div>
-                                        <div class="col-auto">
-                                            <h4 class="mb-0">$1839.00</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="bajajchart"></div>
-                            </div>
-                            <ul class="list-group list-group-flush">
+
+                                <canvas id="diagnosisChart"></canvas>
+                            
+                            <ul class="list-group list-group-flush mt-3">
+                                @foreach ($rankedDiagnosis as $diagnosis)
+
                                 <li class="list-group-item px-0">
                                     <div class="row align-items-start">
                                         <div class="col">
-                                            <h5 class="mb-0">Bajaj Finery</h5>
-                                            <small class="text-success">10% Profit</small>
+                                            <h5 class="mb-0">{{$diagnosis->diagnosis}}</h5>
                                         </div>
                                         <div class="col-auto">
-                                            <h4 class="mb-0">$1839.00<span
+                                            <h5 class="mb-0">{{$diagnosis->total_occurrences}}<span
                                                     class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                        class="ti ti-chevron-up text-success"></i></span></h4>
+                                                        class="ti ti-chevron-up text-success"></i></span></h5>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item px-0">
-                                    <div class="row align-items-start">
-                                        <div class="col">
-                                            <h5 class="mb-0">TTML</h5>
-                                            <small class="text-danger">10% Profit</small>
-                                        </div>
-                                        <div class="col-auto">
-                                            <h4 class="mb-0">$100.00<span
-                                                    class="ms-2 align-top avtar avtar-xxs bg-light-danger"><i
-                                                        class="ti ti-chevron-down text-danger"></i></span></h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item px-0">
-                                    <div class="row align-items-start">
-                                        <div class="col">
-                                            <h5 class="mb-0">Reliance</h5>
-                                            <small class="text-success">10% Profit</small>
-                                        </div>
-                                        <div class="col-auto">
-                                            <h4 class="mb-0">$200.00<span
-                                                    class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                        class="ti ti-chevron-up text-success"></i></span></h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item px-0">
-                                    <div class="row align-items-start">
-                                        <div class="col">
-                                            <h5 class="mb-0">TTML</h5>
-                                            <small class="text-danger">10% Profit</small>
-                                        </div>
-                                        <div class="col-auto">
-                                            <h4 class="mb-0">$189.00<span
-                                                    class="ms-2 align-top avtar avtar-xxs bg-light-danger"><i
-                                                        class="ti ti-chevron-down text-danger"></i></span></h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item px-0">
-                                    <div class="row align-items-start">
-                                        <div class="col">
-                                            <h5 class="mb-0">Stolon</h5>
-                                            <small class="text-danger">10% Profit</small>
-                                        </div>
-                                        <div class="col-auto">
-                                            <h4 class="mb-0">$189.00<span
-                                                    class="ms-2 align-top avtar avtar-xxs bg-light-danger"><i
-                                                        class="ti ti-chevron-down text-danger"></i></span></h4>
-                                        </div>
-                                    </div>
-                                </li>
+                                @endforeach
                             </ul>
                             <div class="text-center">
-                                <a href="#!" class="b-b-primary text-primary">View all <i
-                                        class="ti ti-chevron-right"></i></a>
+                                <a href="#!" class="btn btn-primary">View all</a>
                             </div>
                         </div>
                     </div>
@@ -391,16 +323,13 @@
         <div class="footer-wrapper container-fluid">
             <div class="row">
                 <div class="col my-1">
-                    <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/"
-                            target="_blank">Codedthemes</a></p>
+                    <p class="m-0">Copyright &copy; <a>MediCare</a></p>
                 </div>
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/"
-                                target="_blank">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/contact/"
-                                target="_blank">Contact us</a></li>
+                        <li class="list-inline-item">Home</li>
+                        <li class="list-inline-item">Privacy Policy</li>
+                        <li class="list-inline-item">Contact us</li>
                     </ul>
                 </div>
             </div>
@@ -421,5 +350,83 @@
     <!-- [Page Specific JS] end -->
 </body>
 <!-- [Body] end -->
+<script>
+        var labels = {!! json_encode($labels) !!};
+        var values = {!! json_encode($values) !!};
 
+        var ctx = document.getElementById('admittedPatientsChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Admitted Patients',
+                    data: values,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)' // Change grid lines color
+                }
+            },
+            x: {
+                grid: {
+                    display: false // Hide x-axis grid lines
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'rgba(0, 0, 0, 0.8)' // Change legend text color
+                }
+            }
+        }
+    }
+        });
+
+        var labels = [];
+        var data = [];
+        @for ($month = 1; $month <= 12; $month++)
+            @php
+                $monthData = $rankedDiagnosis->firstWhere('month', $month);
+            @endphp
+            labels.push('{{ \Carbon\Carbon::createFromDate(null, $month, 1)->format('F') }}');
+            data.push({{ $monthData ? $monthData->total_occurrences : 0 }});
+        @endfor
+
+        // Get the chart context and create the line chart
+        var ctx = document.getElementById('diagnosisChart').getContext('2d');
+        var lineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '{{$rank1Diagnosis->diagnosis}}',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    </script>
+        </script>
 </html>

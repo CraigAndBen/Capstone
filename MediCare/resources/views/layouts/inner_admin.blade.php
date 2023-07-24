@@ -204,7 +204,7 @@
                         <label>Account Settings</label>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="{{route('admin.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Account</span><span
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Account</span><span
                                 class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
@@ -225,7 +225,7 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="{{route('admin.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span><span
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span><span
                                 class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
@@ -239,7 +239,7 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="{{route('admin.dashboard')}}" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient Demographics</span><span
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient Demographics</span><span
                                 class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
@@ -256,6 +256,23 @@
 
     @yield('content')
     <!-- [ Main Content ] end -->
+
+    <footer class="pc-footer">
+        <div class="footer-wrapper container-fluid">
+            <div class="row">
+                <div class="col my-1">
+                    <p class="m-0">Copyright &copy; MediCare</a></p>
+                </div>
+                <div class="col-auto my-1">
+                    <ul class="list-inline footer-link mb-0">
+                        <li class="list-inline-item">Home</a></li>
+                        <li class="list-inline-item">Privacy Policy</a></li>
+                        <li class="list-inline-item">Contact us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
     <!-- Required Js -->
     <script src="{{ asset('admin_assets/js/plugins/popper.min.js') }}"></script>
     <script src="{{ asset('admin_assets/js/plugins/simplebar.min.js') }}"></script>

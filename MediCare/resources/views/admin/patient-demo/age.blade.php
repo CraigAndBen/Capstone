@@ -1,7 +1,6 @@
 @extends('layouts.inner_admin')
 
 @section('content')
-
     <!-- [ Main Content ] start -->
     <div class="pc-container pb-3">
         <div class="pc-content ">
@@ -46,37 +45,35 @@
                 <!-- [ Main Content ] end -->
             </div>
         </div>
-
-
     @endsection
 
     @section('scripts')
         <script>
-        var labels = {!! json_encode($labels) !!};
-        var values = {!! json_encode($values) !!};
+            var labels = {!! json_encode($labels) !!};
+            var values = {!! json_encode($values) !!};
 
-        var ctx = document.getElementById('ageChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Age',
-                    data: values,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        stepSize: 1
+            var ctx = document.getElementById('ageChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Age',
+                        data: values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
                     }
                 }
-            }
-        })
+            })
         </script>
     @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Patient;
@@ -26,8 +27,32 @@ class AdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentYear = Carbon::now()->year;
+        $patients = Patient::whereYear('admitted_date', $currentYear)->get();
+        $patientCount = $patients->count();
 
-        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count'));
+        $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
+        ->selectRaw('COUNT(*) as total_occurrences')
+        ->whereYear('admitted_date', $currentYear)
+        ->groupBy('diagnosis', 'month')
+        ->orderByDesc('total_occurrences')
+        ->get();
+
+    // Retrieve the rank 1 diagnosis for the current year
+    $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
+        
+        $data = Patient::whereYear('admitted_date', $currentYear)
+            ->selectRaw('MONTH(admitted_date) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->get();
+
+        // Prepare data for the chart
+        $labels = $data->map(function ($item) {
+            return Carbon::createFromDate(null, $item->month, null)->format('F'); // Format as full month name
+        });
+        $values = $data->pluck('count');
+
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count','labels','values','patientCount','rankedDiagnosis','rank1Diagnosis'));
     }
 
     public function profile(Request $request): View
