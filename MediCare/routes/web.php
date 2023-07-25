@@ -142,7 +142,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::post('/admin/demogrpahics/gender/fetch', [AdminController::class, 'genderFetch'])->name('admin.demographics.gender.fetch');
 
     Route::get('/admin/demographics/age', [AdminController::class, 'ageDemo'])->name('admin.demographics.age');
-
+    Route::post('/admin/demogrpahics/age/search', [AdminController::class, 'ageSearch'])->name('admin.demographics.age.search');
 
 });
 

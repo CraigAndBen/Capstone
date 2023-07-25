@@ -41,16 +41,15 @@
                                     <div class="col-md-8">
                                         <form action="{{route('admin.demographics.age.search')}}" method="POST">
                                             @csrf
-                                        <select class="form-control p-3" id="gender" name="gender">
+                                        <select class="form-control p-3" id="year" name="year">
                                             <option>Select Year</option>
                                             @foreach ($admittedYears as $year)
-                                                @if ($year == $currentYear)
+                                                @if ($year == $yearSelected)
                                                 <option value="{{$year}}" selected>{{$year}}</option>
                                                 @else
                                                 <option value="{{$year}}">{{$year}}</option>
                                                 @endif
                                             @endforeach
-
                                         </select>
                                     </div>
                                     <div class="col-md-2 mt-2">

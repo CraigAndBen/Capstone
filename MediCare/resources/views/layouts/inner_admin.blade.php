@@ -260,16 +260,16 @@
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
             <div class="row">
-                <div class="col my-1">
-                    <p class="m-0">Copyright &copy; MediCare</a></p>
+                {{-- <div class="col my-1">
+                    <p class="m-0">Copyright &copy; <a>MediCare</a></p>
                 </div>
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item">Home</a></li>
-                        <li class="list-inline-item">Privacy Policy</a></li>
-                        <li class="list-inline-item">Contact us</a></li>
+                        <li class="list-inline-item">Home</li>
+                        <li class="list-inline-item">Privacy Policy</li>
+                        <li class="list-inline-item">Contact us</li>
                     </ul>
-                </div>
+                </div> --}}
             </div>
         </div>
     </footer>

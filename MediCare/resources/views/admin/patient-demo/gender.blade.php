@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Appointment List</h5>
+                                <h5 class="m-b-10">Gender Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Appointment List</li>
+                                <li class="breadcrumb-item" aria-current="page">Gender Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -35,7 +35,24 @@
                             <h1>Gender Demographics</h1>
                         </div>
                         <div class="card-body">
-                            <div class="container">
+                            <div class="row">
+                                <div class="col-md-2">
+
+                                </div>
+                                <div class="col-md-8">
+                                    <select class="form-control p-3" id="gender" name="gender">
+                                        <option>Select Year</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="others">Others</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mt-2">
+                                    <button type="submit" class="btn btn-primary">Select</button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
                                 <canvas id="genderChart"></canvas>
                             </div>
                         </div>
