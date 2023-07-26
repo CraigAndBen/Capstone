@@ -44,7 +44,7 @@
                                     <select class="form-control p-3" id="gender" name="gender">
                                         <option>Select Year</option>
                                         @foreach ($admittedYears as $year)
-                                            @if ($year == $currentYear)
+                                            @if ($year == $selectedYear)
                                             <option value="{{$year}}" selected>{{$year}}</option>
                                             @else
                                             <option value="{{$year}}">{{$year}}</option>

@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Age Demographics</h5>
+                                <h5 class="m-b-10">Admit Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Age Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Admit Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Age Demographics</h1>
+                            <h1>Admit Demographics</h1>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -39,12 +39,12 @@
 
                                 </div>
                                     <div class="col-md-8">
-                                        <form action="{{route('admin.demographics.age.search')}}" method="POST">
+                                        <form action="{{route('admin.demographics.admit.search')}}" method="POST">
                                             @csrf
                                         <select class="form-control p-3" id="year" name="year">
                                             <option>Select Year</option>
                                             @foreach ($admittedYears as $year)
-                                                @if ($year == $yearSelected)
+                                                @if ($year == $selectedYear)
                                                 <option value="{{$year}}" selected>{{$year}}</option>
                                                 @else
                                                 <option value="{{$year}}">{{$year}}</option>
@@ -59,7 +59,7 @@
                             </div>
                             <hr>
                             <div class="container">
-                                <canvas id="ageDemographicsChart" width="800" height="400"></canvas>
+                                <canvas id="admitPatientDemographicsChart" width="800" height="400"></canvas>
                             </div>
                         </div>
                     </div>
@@ -74,33 +74,21 @@
     @section('scripts')
     <script>
         // Prepare data for the bar graph
-        var labels = {!! json_encode($labels) !!};
-        var datasets = {!! json_encode($datasets) !!};
-
-        // Define a color palette for the bar graph
-        var colors = [
-            'rgba(54, 162, 235, 0.7)', // Blue
-            'rgba(255, 99, 132, 0.7)', // Red
-            'rgba(75, 192, 192, 0.7)', // Green
-            'rgba(255, 206, 86, 0.7)', // Yellow
-            'rgba(153, 102, 255, 0.7)', // Purple
-            // Add more colors if needed
-        ];
+        var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
+        var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
 
         // Get the chart context and create the bar graph
-        var ctx = document.getElementById('ageDemographicsChart').getContext('2d');
-        var ageDemographicsChart = new Chart(ctx, {
+        var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
+        var admitPatientDemographicsChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
-                datasets: datasets.map(function(data, index) {
-                    return {
-                        label: data.month,
-                        data: data.data,
-                        backgroundColor: colors[index % colors.length], // Use the predefined colors from the palette
-                        borderWidth: 1,
-                    };
-                })
+                labels: months,
+                datasets: [{
+                    label: 'Admit Patients',
+                    data: admitPatientCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderWidth: 1,
+                }]
             },
             options: {
                 responsive: true,

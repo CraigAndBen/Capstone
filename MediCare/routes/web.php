@@ -138,11 +138,18 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::post('/admin/notification/read', [AdminController::class, 'notificationRead'])->name('admin.notification.read');
 
     // Demographics
+    // Gender
     Route::get('/admin/demographics/gender', [AdminController::class, 'genderDemo'])->name('admin.demographics.gender');
-    Route::post('/admin/demogrpahics/gender/fetch', [AdminController::class, 'genderFetch'])->name('admin.demographics.gender.fetch');
-
+    Route::post('/admin/demogrpahics/gender/search', [AdminController::class, 'genderSearch'])->name('admin.demographics.gender.search');
+    //Age
     Route::get('/admin/demographics/age', [AdminController::class, 'ageDemo'])->name('admin.demographics.age');
     Route::post('/admin/demogrpahics/age/search', [AdminController::class, 'ageSearch'])->name('admin.demographics.age.search');
+    //Admit
+    Route::get('/admin/demographics/admit', [AdminController::class, 'admitDemo'])->name('admin.demographics.admit');
+    Route::post('/admin/demogrpahics/admit/search', [AdminController::class, 'admitSearch'])->name('admin.demographics.admit.search');
+    //Diagnose
+    Route::get('/admin/demographics/diagnose', [AdminController::class, 'diagnoseDemo'])->name('admin.demographics.diagnose');
+    Route::post('/admin/demogrpahics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.demographics.diagnose.search');
 
 });
 
