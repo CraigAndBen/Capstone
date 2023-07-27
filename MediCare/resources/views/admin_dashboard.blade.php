@@ -252,6 +252,18 @@
                             <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.diagnose')}}">Diagnose Demographics</a></li>
                         </ul>
                     </li>
+                    <li class="pc-item pc-caption">
+                        <label>Trend</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose Trend</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{route('admin.trend.diagnose')}}">Diagnose Rising Trend</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

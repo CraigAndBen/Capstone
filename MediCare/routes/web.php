@@ -151,6 +151,11 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::get('/admin/demographics/diagnose', [AdminController::class, 'diagnoseDemo'])->name('admin.demographics.diagnose');
     Route::post('/admin/demogrpahics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.demographics.diagnose.search');
 
+    //Trend
+    //Diagnose Rising Trend
+    Route::get('/admin/trend/diagnose', [AdminController::class, 'diagnoseTrend'])->name('admin.trend.diagnose');
+    Route::post('/admin/trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.trend.diagnose.search');
+
 });
 
 Route::middleware('auth', 'role:super_admin')->group(function () {

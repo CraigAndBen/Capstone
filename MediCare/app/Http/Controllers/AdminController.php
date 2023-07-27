@@ -716,7 +716,7 @@ class AdminController extends Controller
         // Get the current year
         $selectedYear = $request->input('year');
 
-                // Initialize an array to store diagnose patient counts for each month
+        // Initialize an array to store diagnose patient counts for each month
         $diagnosePatientCountsByMonth = [];
 
         // Loop through each month of the current year
@@ -737,7 +737,152 @@ class AdminController extends Controller
             ];
         }
 
-        return view('admin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth','diagnoseData','admittedYears','selectedYear','specificDiagnosis'));
+        return view('admin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'diagnoseData', 'admittedYears', 'selectedYear', 'specificDiagnosis'));
+    }
+
+    public function diagnoseTrend()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentYear = Carbon::now()->year;
+
+        $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
+        ->selectRaw('COUNT(*) as total_occurrences')
+        ->whereYear('admitted_date', $currentYear)
+        ->groupBy('diagnosis', 'month')
+        ->orderByDesc('total_occurrences')
+        ->get();
+
+        // Retrieve the unique years from the "admitted" column
+        $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->get()
+            ->pluck('year')
+            ->toArray();
+
+        // Count the number of unique years
+        $countUniqueYears = count($uniqueYears);
+
+        $diagnoseData = Patient::select('diagnosis')
+            ->distinct()
+            ->pluck('diagnosis')
+            ->toArray();
+
+        return view('admin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'countUniqueYears','rankedDiagnosis'));
+    }
+
+    public function diagnoseTrendSearch(Request $request)
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentYear = Carbon::now()->year;
+
+        $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
+        ->selectRaw('COUNT(*) as total_occurrences')
+        ->whereYear('admitted_date', $currentYear)
+        ->groupBy('diagnosis', 'month')
+        ->orderByDesc('total_occurrences')
+        ->get();
+
+        // Retrieve the unique years from the "admitted" column
+        $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->get()
+            ->pluck('year')
+            ->toArray();
+
+        // Count the number of unique years
+        $countUniqueYears = count($uniqueYears);
+
+        $diagnoseData = Patient::select('diagnosis')
+            ->distinct()
+            ->pluck('diagnosis')
+            ->toArray();
+        // The specific diagnosis you want to analyze
+        $specificDiagnosis = $request->input('diagnose');
+
+        // Retrieve admitted patient data for the specific diagnosis
+        $patients = Patient::where('diagnosis', $specificDiagnosis)
+            ->orderBy('admitted_date')
+            ->get();
+
+        // Initialize an array to store the yearly trend data
+        $yearlyTrendData = [];
+
+        // Loop through the patient data to calculate the yearly trend
+        $currentYear = null;
+        $yearlyCount = 0;
+        
+        foreach ($patients as $patient) {
+            $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
+            $year = $admittedDate->format('Y');
+
+            if ($year !== $currentYear) {
+                // Save the count for the previous year
+                if ($currentYear !== null) {
+                    $yearlyTrendData[] = [
+                        'year' => $currentYear,
+                        'count' => $yearlyCount,
+                    ];
+                }
+
+                // Reset the count for the current year
+                $currentYear = $year;
+                $yearlyCount = 1;
+            } else {
+                $yearlyCount++;
+            }
+        }
+
+        // Save the count for the last year
+        if ($currentYear !== null) {
+            $yearlyTrendData[] = [
+                'year' => $currentYear,
+                'count' => $yearlyCount,
+            ];
+        }
+
+        // Initialize an array to store the monthly trend data
+        $monthlyTrendData = [];
+
+        // Loop through the patient data to calculate the monthly trend
+        $currentMonth = null;
+        $monthlyCount = 0;
+        foreach ($patients as $patient) {
+            $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
+            $month = $admittedDate->format('F');
+            
+            if ($month !== $currentMonth) {
+                // Save the count for the previous month
+                if ($currentMonth !== null) {
+                    $monthlyTrendData[] = [
+                        'month' => $currentMonth,
+                        'count' => $monthlyCount,
+                    ];
+                }
+
+                // Reset the count for the current month
+                $currentMonth = $month;
+                $monthlyCount = 1;
+            } else {
+                $monthlyCount++;
+            }
+        }
+
+        // Save the count for the last month
+        if ($currentMonth !== null) {
+            $monthlyTrendData[] = [
+                'month' => $currentMonth,
+                'count' => $monthlyCount,
+            ];
+        }
+
+
+        return view('admin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData','rankedDiagnosis'));
     }
 
     private function hasChanges($info, $updatedData)
