@@ -158,55 +158,67 @@
                 <ul class="pc-navbar">
                     <li class="pc-item pc-caption">
                         <label>Dashboard</label>
-                        <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
                         <a href="{{ route('doctor.dashboard') }}" class="pc-link"><span class="pc-micon"><i
-                                    class="ti ti-dashboard"></i></span><span class="pc-mtext">Dashboard</span></a>
+                                    class="ti ti-dashboard"></i></span><span class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Accounts</label>
-                        <i class="ti ti-news"></i>
+                        <label>Account</label>
+                        <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.profile') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Update Profile</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.profile.password') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Profile Update</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.profile') }}">Update
+                                    Profile</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.social') }}">Update Social
+                                    Profile</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.profile.password') }}">Update Profile Password</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
-                        <i class="ti ti-dashboard"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.notification') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Notification List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notifcations</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.notification') }}">Notification List</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Appointment</label>
-                        <i class="ti ti-dashboard"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.appointment') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Appointment List</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.appointment.confirmed') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Confirmed List</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.appointment.done') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Done List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Appointment List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.appointment') }}">All
+                                    Appointment</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.appointment.confirmed') }}">Confirmed List</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.appointment.done') }}">Done List</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Patient</label>
-                        <i class="ti ti-dashboard"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.patient') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">
+                                    All Patient</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

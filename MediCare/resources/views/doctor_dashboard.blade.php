@@ -70,7 +70,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">{{$count}}</span></h5>
+                                <h5>All Notification <span
+                                        class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
                             </div>
                             <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 215px)">
@@ -133,7 +134,7 @@
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
-                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#updateModal">
+                                    <a href="{{ route('doctor.social') }}" class="dropdown-item">
                                         <i class="ti ti-user"></i>
                                         <span>Social Profile</span>
                                     </a>
@@ -171,45 +172,61 @@
                                     class="ti ti-dashboard"></i></span><span class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Account Settings</label>
+                        <label>Account</label>
+                        <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.profile') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Update Profile</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.profile.password') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Profile Update</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.profile') }}">Update
+                                    Profile</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.social') }}">Update Social
+                                    Profile</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.profile.password') }}">Update Profile Password</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.notification') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Notification List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notifcations</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.notification') }}">Notification List</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Appointment</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.appointment') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Appointment List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Appointment List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.appointment') }}">All
+                                    Appointment</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.appointment.confirmed') }}">Confirmed List</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.appointment.done') }}">Done List</a></li>
+                        </ul>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.appointment.confirmed') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Confirmed List</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.appointment.done') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Done List</span></a>
-                    </li>
-
                     <li class="pc-item pc-caption">
                         <label>Patient</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('doctor.patient') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">
+                                    All Patient</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -473,44 +490,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h2 class="modal-title text-light" id="myModalLabel">Update Account</h2>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{{ route('doctor.profile.update') }}">
-                        @csrf
-                        <div class="form-floating mb-3">
-                            <input type="text" name="facebook" class="form-control"
-                                id="facebook" placeholder="Facebook Link"  />
-                            <label for="floatingInput">Facebook Link</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" name="twitter" class="form-control"
-                                id="twitter" placeholder="Twitter Link"  />
-                            <label for="floatingInput">Twitter Link</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" name="instagram" class="form-control"
-                                id="instagram" placeholder="Instagram Link"  />
-                            <label for="floatingInput">Instagram Link</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" name="linkedin" class="form-control"
-                                id="linkedin" placeholder="Linkedin Link"  />
-                            <label for="floatingInput">Linkedin Link</label> 
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
@@ -545,11 +524,9 @@
     <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script>
     <!-- [Page Specific JS] end -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <!-- [Body] end -->
-<script>
-
-</script>
+<script></script>
 
 </html>

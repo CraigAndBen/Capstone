@@ -78,6 +78,19 @@ class DoctorController extends Controller
         return view('doctor.profile.profile', compact('profile', 'doctor', 'genders','limitNotifications','count') );
     }
 
+    public function socialProfile(Request $request): View
+    {
+
+        $profile = $request->user();
+        $info = Doctor::where('account_id',$profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+
+        return view('doctor.profile.profile_social', compact('profile', 'doctor','limitNotifications','count') );
+    }
+
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
@@ -104,7 +117,10 @@ class DoctorController extends Controller
             'specialties' => 'required|string|max:255',
             'qualification' => 'required|string|max:255',
             'years_of_experience' => 'required|numeric|gt:0',
-            'address' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'brgy' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'birthdate' => 'required|date',
             'phone' => 'required',
@@ -128,7 +144,10 @@ class DoctorController extends Controller
             'qualification' => $request->input('qualification'),
             'years_of_experience' => $request->input('years_of_experience'),
             'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
         ];
 
         $userChange = $this->hasChanges($user, $userUpdatedData);
@@ -154,7 +173,10 @@ class DoctorController extends Controller
                 $info->employment_date = $request->input('employment_date');
                 $info->specialties = $request->input('specialties');
                 $info->years_of_experience = $request->input('years_of_experience');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
 
@@ -175,7 +197,10 @@ class DoctorController extends Controller
                 $info->qualification = $request->input('qualification');
                 $info->specialties = $request->input('specialties');
                 $info->years_of_experience = $request->input('years_of_experience');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
 

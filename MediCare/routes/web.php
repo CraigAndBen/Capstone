@@ -86,9 +86,11 @@ Route::middleware('auth', 'role:doctor')->group(function () {
 
     // Profile
     Route::get('/doctor/profile', [DoctorController::class, 'profile'])->name('doctor.profile');
+    Route::get('/doctor/profile/social', [DoctorController::class, 'socialProfile'])->name('doctor.social');
     Route::get('/doctor/profile/password', [DoctorController::class, 'passwordProfile'])->name('doctor.profile.password');
     Route::post('/doctor/profile/update', [DoctorController::class, 'profileUpdate'])->name('doctor.profile.update');
     Route::post('/doctor/profile/update/password', [DoctorController::class, 'updatePassword'])->name('doctor.password.update');
+    Route::post('/doctor/profile/social/update', [DoctorController::class, 'updateSocialProfile'])->name('doctor.social.udpate');
 
     // Appointment
     Route::get('/doctor/appointment', [DoctorController::class, 'appointment'])->name('doctor.appointment');
@@ -176,7 +178,6 @@ Route::middleware('auth', 'role:super_admin')->group(function () {
     Route::get('/super_admin/doctor', [SuperAdminController::class, 'doctor'])->name('superadmin.doctor');
     Route::post('/super_admin/doctor/create', [SuperAdminController::class, 'createDoctor'])->name('superadmin.store.doctor');
     Route::post('/super_admin/doctor/update', [SuperAdminController::class, 'updateDoctorInfo'])->name('superadmin.update.doctor');
-    Route::post('/super_admin/doctor/update/status', [SuperAdminController::class, 'updateDoctorStatus'])->name('superadmin.doctor.update.status');
     Route::post('/super_admin/doctor/update/password', [SuperAdminController::class, 'updateDoctorPassword'])->name('superadmin.doctor.password.update');
 
     // Nurse

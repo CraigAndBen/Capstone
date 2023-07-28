@@ -177,7 +177,10 @@ class SuperAdminController extends Controller
             'specialties' => 'required|string|max:255',
             'qualification' => 'required|string|max:255',
             'years_of_experience' => 'required|numeric|gt:0',
-            'address' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'brgy' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|confirmed',
             'birthdate' => 'required|date',
@@ -205,7 +208,14 @@ class SuperAdminController extends Controller
             'years_of_experience' => $request->input('years_of_experience'),
             'phone' => $request->input('phone'),
             'birthdate' => $request->input('birthdate'),
-            'address' => $request->input('address'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'facebook_link' => $request->input('facebook'),
+            'twitter_link' => $request->input('twitter'),
+            'instagram' => $request->input('instagram'),
+            'linkedin' => $request->input('linkedin'),
         ]);
 
         return back()->with('success', 'User added sucessfully.');
@@ -241,26 +251,6 @@ class SuperAdminController extends Controller
 
     }
 
-    public function updateDoctorStatus(Request $request)
-    {
-
-        $user = User::findOrFail($request->input('user_id'));
-
-        if ($request->input('status') === 'active') {
-
-            $user->status = 'inactive';
-            $user->save();
-
-            return redirect()->route('superadmin.doctor')->with('info', 'User status updated to inactive.');
-        } else {
-
-            $user->status = 'active';
-            $user->save();
-
-            return redirect()->route('superadmin.doctor')->with('info', 'User status updated to active.');
-        }
-    }
-
     public function updateDoctorInfo(Request $request)
     {
 
@@ -274,7 +264,10 @@ class SuperAdminController extends Controller
             'specialties' => 'required|string|max:255',
             'qualification' => 'required|string|max:255',
             'years_of_experience' => 'required|numeric|gt:0',
-            'address' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'brgy' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'birthdate' => 'required|date',
             'phone' => 'required',
@@ -298,7 +291,14 @@ class SuperAdminController extends Controller
             'qualification' => $request->input('qualification'),
             'years_of_experience' => $request->input('years_of_experience'),
             'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'facebook_link' => $request->input('facebook'),
+            'twitter_link' => $request->input('twitter'),
+            'instagram_link' => $request->input('instagram'),
+            'linked_link' => $request->input('linkedin'),
         ];
 
         $userChange = $this->hasChanges($user, $userUpdatedData);
@@ -324,9 +324,17 @@ class SuperAdminController extends Controller
                 $info->employment_date = $request->input('employment_date');
                 $info->specialties = $request->input('specialties');
                 $info->years_of_experience = $request->input('years_of_experience');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
+                $info->facebook_link = $request->input('facebook');
+                $info->twitter_link = $request->input('twitter');
+                $info->instagram_link = $request->input('instagram');
+                $info->linkedin_link = $request->input('linked_link');
+
 
                 $user->save();
                 $info->save();
@@ -345,9 +353,16 @@ class SuperAdminController extends Controller
                 $info->qualification = $request->input('qualification');
                 $info->specialties = $request->input('specialties');
                 $info->years_of_experience = $request->input('years_of_experience');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
+                $info->facebook_link = $request->input('facebook');
+                $info->twitter_link = $request->input('twitter');
+                $info->instagram_link = $request->input('instagram');
+                $info->linkedin_link = $request->input('linked_link');
 
                 $user->save();
                 $info->save();
