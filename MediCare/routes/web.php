@@ -90,7 +90,7 @@ Route::middleware('auth', 'role:doctor')->group(function () {
     Route::get('/doctor/profile/password', [DoctorController::class, 'passwordProfile'])->name('doctor.profile.password');
     Route::post('/doctor/profile/update', [DoctorController::class, 'profileUpdate'])->name('doctor.profile.update');
     Route::post('/doctor/profile/update/password', [DoctorController::class, 'updatePassword'])->name('doctor.password.update');
-    Route::post('/doctor/profile/social/update', [DoctorController::class, 'updateSocialProfile'])->name('doctor.social.udpate');
+    Route::post('/doctor/profile/social/update', [DoctorController::class, 'updateSocialProfile'])->name('doctor.social.update');
 
     // Appointment
     Route::get('/doctor/appointment', [DoctorController::class, 'appointment'])->name('doctor.appointment');

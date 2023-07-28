@@ -217,9 +217,55 @@ class DoctorController extends Controller
 
     }
 
-    /**
-     * Delete the user's account.
-     */
+        public function updateSocialProfile(Request $request)
+    {
+        $user = $request->user();
+        $info = Doctor::where('account_id', $user->id)->first();
+
+        $infoUpdatedData = [
+            'facebook_link' => $request->input('age'),
+            'twitter_link' => $request->input('gender'),
+            'instagram_link' => $request->input('birthdate'),
+            'linkedin' => $request->input('employment_date'),
+        ];
+
+        $infoChange = $this->hasChanges($info, $infoUpdatedData);
+
+
+        // Check if any changes were made to the form data
+        if ($infoChange == true) {
+
+                $info->facebook_link = $request->input('facebook');
+                $info->twitter_link = $request->input('twitter');
+                $info->instagram_link = $request->input('instagram');
+                $info->linkedin_link = $request->input('linkedin');
+                $info->save();
+
+                return redirect()->back()->with('success', 'Social Profile updated successfully.');
+
+        } else {
+
+            if($info->image_name != $request->file('image')->getClientOriginalName())
+            {
+                $imageName = $request->file('image')->getClientOriginalName();
+                $request->image->move(public_path('images'), $imageName);
+
+                $info->image_name = $imageName;
+                $info->image_data = 'images/' . $imageName;
+                $info->save();
+            }else{
+
+                $info->save();
+                return redirect()->back()->with('info', 'The image is already uploaded.');
+                
+            }
+
+            return redirect()->back()->with('info', 'No changes were made.');
+
+        }
+
+    }
+
     public function updatePassword(Request $request)
     {
         $request->validate([

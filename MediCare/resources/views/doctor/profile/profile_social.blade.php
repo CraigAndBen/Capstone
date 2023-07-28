@@ -38,7 +38,7 @@
                                                 address.</p>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('doctor.profile.update') }}">
+                                    <form method="POST" action="{{ route('doctor.social.update') }}" enctype="multipart/form-data">
                                         @csrf
 
                                         @if ($errors->any())
@@ -68,27 +68,27 @@
 
                                         <div class="form-floating my-2">
                                             <input type="text" name="facebook" class="form-control"
-                                                id="facebook" placeholder="Facebook Link"  />
+                                                id="facebook" placeholder="Facebook Link" value="{{$doctor->facebook_link}}" />
                                             <label for="floatingInput">Facebook Link</label>
                                         </div>
                                         <div class="form-floating my-2">
                                             <input type="text" name="twitter" class="form-control"
-                                                id="twitter" placeholder="Twitter Link"  />
+                                                id="twitter" placeholder="Twitter Link" value="{{$doctor->twitter_link}}" />
                                             <label for="floatingInput">Twitter Link</label>
                                         </div>
                                         <div class="form-floating my-2">
                                             <input type="text" name="instagram" class="form-control"
-                                                id="instagram" placeholder="Instagram Link"  />
+                                                id="instagram" placeholder="Instagram Link" value="{{$doctor->instagram_link}}" />
                                             <label for="floatingInput">Instagram Link</label>
                                         </div>
                                         <div class="form-floating my-2">
                                             <input type="text" name="linkedin" class="form-control"
-                                                id="linkedin" placeholder="Linkedin Link"  />
+                                                id="linkedin" placeholder="Linkedin Link" value="{{$doctor->linkedin_link}}" />
                                             <label for="floatingInput">Linkedin Link</label> 
                                         </div>
                                         <hr>
                                             <div class="col-md-6 text-start">
-                                                <input type="file" name="image" accept="image/*" required>
+                                                <input type="file" name="image" id="image" value="{{ asset($doctor->image_data) }}">
                                             </div>
                                         <div class="text-center mt-4 mb-3">
                                             <button type="submit" class="btn btn-primary">Update</button>
