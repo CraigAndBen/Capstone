@@ -117,7 +117,7 @@
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}" alt="user-image"
+                            <img src="{{asset($info->image_data)}}" alt="user-image"
                                 class="user-avtar" />
                             <span>
                                 <i class="ti ti-settings"></i>
@@ -125,9 +125,9 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
+                                <h4>Good Morning, <span class="small text-muted">{{ucwords($profile->first_name)}} {{ucwords($profile->last_name)}}</span>
                                 </h4>
-                                <p class="text-muted">{{ $profile->role }}</p>
+                                <hr>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('doctor.profile') }}" class="dropdown-item">

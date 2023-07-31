@@ -68,28 +68,34 @@
 
                                         <div class="form-floating my-2">
                                             <input type="text" name="facebook" class="form-control"
-                                                id="facebook" placeholder="Facebook Link" value="{{$doctor->facebook_link}}" />
+                                                id="facebook" placeholder="Facebook Link" value="{{$info->facebook_link}}" />
                                             <label for="floatingInput">Facebook Link</label>
                                         </div>
                                         <div class="form-floating my-2">
                                             <input type="text" name="twitter" class="form-control"
-                                                id="twitter" placeholder="Twitter Link" value="{{$doctor->twitter_link}}" />
+                                                id="twitter" placeholder="Twitter Link" value="{{$info->twitter_link}}" />
                                             <label for="floatingInput">Twitter Link</label>
                                         </div>
                                         <div class="form-floating my-2">
                                             <input type="text" name="instagram" class="form-control"
-                                                id="instagram" placeholder="Instagram Link" value="{{$doctor->instagram_link}}" />
+                                                id="instagram" placeholder="Instagram Link" value="{{$info->instagram_link}}" />
                                             <label for="floatingInput">Instagram Link</label>
                                         </div>
                                         <div class="form-floating my-2">
                                             <input type="text" name="linkedin" class="form-control"
-                                                id="linkedin" placeholder="Linkedin Link" value="{{$doctor->linkedin_link}}" />
+                                                id="linkedin" placeholder="Linkedin Link" value="{{$info->linkedin_link}}" />
                                             <label for="floatingInput">Linkedin Link</label> 
                                         </div>
                                         <hr>
-                                            <div class="col-md-6 text-start">
-                                                <input type="file" name="image" id="image" value="{{ asset($doctor->image_data) }}">
-                                            </div>
+                                        <div class="form-floating my-2">
+                                            <input type="file" name="image" id="image">
+                                        </div>
+                                        <div class="form-floating my-2">
+                                            @if ($info->image_data)
+                                            <label for="floatingInput">Current Image</label> 
+                                            <img src="{{ asset($info->image_data) }}" alt="{{ $info->name }}" style="max-width: 300px;">
+                                            @endif
+                                        </div>
                                         <div class="text-center mt-4 mb-3">
                                             <button type="submit" class="btn btn-primary">Update</button>
                                         </div>

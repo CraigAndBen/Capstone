@@ -23,15 +23,15 @@ class DoctorController extends Controller
     {
 
         $profile = auth()->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $appointments = Appointment::all();
-        $currentDate = date('Y-m-d'); 
+        $currentDate = date('Y-m-d');
 
         foreach ($appointments as $appointment) {
-            
+
             if (strtotime($appointment->appointment_date) < strtotime($currentDate)) {
 
                 $appoint = Appointment::findOrFail($appointment->id);
@@ -42,7 +42,7 @@ class DoctorController extends Controller
                 $currentDate = Carbon::now()->toTimeString();
                 $currentTime = Carbon::now()->toDateString();
                 $message = ' Your appointment that has a type of ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable.';
-        
+
                 Notification::create([
                     'account_id' => $appointment->account_id,
                     'title' => 'Appointment Unavailable',
@@ -51,13 +51,13 @@ class DoctorController extends Controller
                     'time' => $currentTime,
                 ]);
 
-                return view('doctor_dashboard', compact('profile','limitNotifications','count'));
+                return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info'));
             }
 
-            return view('doctor_dashboard', compact('profile','limitNotifications','count'));
+            return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info'));
         }
 
-        return view('doctor_dashboard', compact('profile','limitNotifications','count'));
+        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info'));
     }
 
     public function profile(Request $request): View
@@ -69,37 +69,35 @@ class DoctorController extends Controller
         ];
 
         $profile = $request->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $doctor = Doctor::where('account_id', $profile->id)->first();
 
-        return view('doctor.profile.profile', compact('profile', 'doctor', 'genders','limitNotifications','count') );
+        return view('doctor.profile.profile', compact('profile', 'info', 'genders', 'limitNotifications', 'count'));
     }
 
     public function socialProfile(Request $request): View
     {
 
         $profile = $request->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $doctor = Doctor::where('account_id', $profile->id)->first();
 
-        return view('doctor.profile.profile_social', compact('profile', 'doctor','limitNotifications','count') );
+        return view('doctor.profile.profile_social', compact('profile', 'info', 'limitNotifications', 'count'));
     }
 
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('doctor.profile.profile_password', compact('profile','limitNotifications','count') );
+        return view('doctor.profile.profile_password', compact('profile', 'limitNotifications', 'count','info'));
     }
 
     /**
@@ -217,7 +215,7 @@ class DoctorController extends Controller
 
     }
 
-        public function updateSocialProfile(Request $request)
+    public function updateSocialProfile(Request $request)
     {
         $user = $request->user();
         $info = Doctor::where('account_id', $user->id)->first();
@@ -229,40 +227,75 @@ class DoctorController extends Controller
             'linkedin' => $request->input('employment_date'),
         ];
 
+        if ($request->hasFile('image')) {
+            $imageName = $request->image->getClientOriginalName();
+
+            $imageUpdatedData = [
+                'image_name' => $imageName,
+                'image_data' => 'images/' . $imageName,
+            ];
+
+            $imageChange = $this->hasChanges($info, $imageUpdatedData);
+        } else {
+            $imageChange = false;
+        }
+
         $infoChange = $this->hasChanges($info, $infoUpdatedData);
 
+        if ($infoChange) {
 
-        // Check if any changes were made to the form data
-        if ($infoChange == true) {
+            $info->facebook_link = $request->input('facebook');
+            $info->twitter_link = $request->input('twitter');
+            $info->instagram_link = $request->input('instagram');
+            $info->linkedin_link = $request->input('linkedin');
 
-                $info->facebook_link = $request->input('facebook');
-                $info->twitter_link = $request->input('twitter');
-                $info->instagram_link = $request->input('instagram');
-                $info->linkedin_link = $request->input('linkedin');
+            if ($request->hasFile('image')) {
+                if ($imageChange) {
+                    $imageName = $request->image->getClientOriginalName();
+    
+                    // Save the image to the public folder
+                    $request->image->move(public_path('images'), $imageName);
+    
+                    // Save the image path to the database
+                    $info->image_name = $imageName;
+                    $info->image_data = 'images/' . $imageName;
+                    $info->save();
+    
+                    return redirect()->back()->with('success', 'Social Profile updated successfully.');
+    
+                } else {
+                    return redirect()->back()->with('info', 'The image is already uploaded.');
+                }
+            } else {
                 $info->save();
-
                 return redirect()->back()->with('success', 'Social Profile updated successfully.');
-
+            }
+            
         } else {
-
-            if($info->image_name != $request->file('image')->getClientOriginalName())
-            {
-                $imageName = $request->file('image')->getClientOriginalName();
-                $request->image->move(public_path('images'), $imageName);
-
-                $info->image_name = $imageName;
-                $info->image_data = 'images/' . $imageName;
-                $info->save();
-            }else{
-
-                $info->save();
-                return redirect()->back()->with('info', 'The image is already uploaded.');
-                
+            if ($request->hasFile('image')) {
+                if ($imageChange) {
+                    $imageName = $request->image->getClientOriginalName();
+    
+                    // Save the image to the public folder
+                    $request->image->move(public_path('images'), $imageName);
+    
+                    // Save the image path to the database
+                    $info->image_name = $imageName;
+                    $info->image_data = 'images/' . $imageName;
+                    $info->save();
+    
+                    return redirect()->back()->with('success', 'Social Profile updated successfully.');
+    
+                } else {
+                    return redirect()->back()->with('info', 'The image is already uploaded.');
+                }
+            } else {
+                return redirect()->back()->with('info', 'No changes were made.');
             }
 
-            return redirect()->back()->with('info', 'No changes were made.');
-
         }
+
+
 
     }
 
@@ -317,15 +350,15 @@ class DoctorController extends Controller
         ];
 
         $profile = auth()->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
         $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'pending')->get();
 
-        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime','limitNotifications','count'));
+        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
     }
     public function confirmedAppointmentList()
     {
@@ -348,16 +381,16 @@ class DoctorController extends Controller
         ];
 
         $profile = auth()->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
         $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'confirmed')->get();
 
-        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime','limitNotifications','count'));
-        
+        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
+
     }
 
     public function doneAppointmentList()
@@ -381,15 +414,15 @@ class DoctorController extends Controller
         ];
 
         $profile = auth()->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
         $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'done')->get();
 
-        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime','limitNotifications','count'));
+        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
     }
 
     public function confirmedAppointment(Request $request)
@@ -440,65 +473,67 @@ class DoctorController extends Controller
         return redirect()->back()->with('success', 'Appointment Cancelled successfully.');
     }
 
-    public function patientList ()
+    public function patientList()
     {
         $profile = auth()->user();
-        $info = Doctor::where('account_id',$profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::where('physician', $profile->id)->where('discharged_date', '')->get();
 
-        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count'));
+        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count','info'));
     }
 
-    public function patientUpdate(Request $request) 
+    public function patientUpdate(Request $request)
     {
 
         $patient = Patient::where('id', $request->id)->first();
 
-            $patientUpdatedData = [
-                'medical_condition' => $request->input('medical_condition'),
-                'diagnosis' => $request->input('diagnosis'),
-                'medication' => $request->input('medication'),
-            ];
-    
-            $patientChange = $this->hasChanges($patient, $patientUpdatedData);
-    
-            if($patientChange) {
-                $patient->medical_condition = $request->input('medical_condition');
-                $patient->diagnosis = $request->input('diagnosis');
-                $patient->medication = $request->input('medication');
-    
-                $patient->save();
-    
-                return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
-            } else {
-                return redirect()->back()->with('info', 'No changes were made.');
-            }
+        $patientUpdatedData = [
+            'medical_condition' => $request->input('medical_condition'),
+            'diagnosis' => $request->input('diagnosis'),
+            'medication' => $request->input('medication'),
+        ];
+
+        $patientChange = $this->hasChanges($patient, $patientUpdatedData);
+
+        if ($patientChange) {
+            $patient->medical_condition = $request->input('medical_condition');
+            $patient->diagnosis = $request->input('diagnosis');
+            $patient->medication = $request->input('medication');
+
+            $patient->save();
+
+            return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+        }
     }
 
-    public function notification(){
-        
+    public function notification()
+    {
+
         $profile = Auth::user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('doctor.notification.notification', compact('profile','notifications','limitNotifications','count'));
+        return view('doctor.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'info'));
 
     }
 
-    public function notificationRead(Request $request){
+    public function notificationRead(Request $request)
+    {
 
         $notification = Notification::findOrFail($request->input('id'));
 
-        if($notification->is_read == 0){
+        if ($notification->is_read == 0) {
             $notification->is_read = 1;
             $notification->save();
-    
+
             return redirect()->route('doctor.notification');
         } else {
             return redirect()->route('doctor.notification');
@@ -506,7 +541,8 @@ class DoctorController extends Controller
 
     }
 
-    private function hasChanges($info, $updatedData){
+    private function hasChanges($info, $updatedData)
+    {
         foreach ($updatedData as $key => $value) {
 
             if ($info->{$key} != $value) {

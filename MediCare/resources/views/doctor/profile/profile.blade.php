@@ -96,14 +96,14 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="text" name="street" class="form-control"
-                                                        id="street" placeholder="Street" value="{{$doctor->street}}" />
+                                                        id="street" placeholder="Street" value="{{$info->street}}" />
                                                     <label for="floatingInput">Street</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="text" name="brgy" class="form-control"
-                                                        id="brgy" placeholder="Brgy" value="{{$doctor->brgy}}" />
+                                                        id="brgy" placeholder="Brgy" value="{{$info->brgy}}" />
                                                     <label for="floatingInput">Brgy</label>
                                                 </div>
                                             </div>
@@ -112,14 +112,14 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="text" name="city" class="form-control"
-                                                        id="city" placeholder="City" value="{{$doctor->city}}" />
+                                                        id="city" placeholder="City" value="{{$info->city}}" />
                                                     <label for="floatingInput">City</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="text" name="province" class="form-control"
-                                                        id="province" placeholder="Province" value="{{$doctor->province}}"/>
+                                                        id="province" placeholder="Province" value="{{$info->province}}"/>
                                                     <label for="floatingInput">Province</label>
                                                 </div>
                                             </div>
@@ -127,14 +127,14 @@
                                         <hr>
                                         <div class="form-floating my-2">
                                             <input type="text" name="specialties" class="form-control"
-                                                id="specialties" placeholder="Specialties" value="{{$doctor->specialties}}" />
+                                                id="specialties" placeholder="Specialties" value="{{$info->specialties}}" />
                                             <label for="floatingInput">Specialties</label>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating my-2">
                                                     <input type="number" class="form-control ml-2" id="age"
-                                                        placeholder="Age" name="age"  value="{{$doctor->age}}"/>
+                                                        placeholder="Age" name="age"  value="{{$info->age}}"/>
                                                     <label for="floatingInput">Age</label>
                                                 </div>
                                             </div>
@@ -142,28 +142,28 @@
                                                 <select class="form-control p-3" id="gender" name="gender">
                                                     <option>Select a Gender</option>
                                                     @foreach($genders as $value => $text)
-                                                        <option value="{{ $value }}" {{ $value == $doctor->gender ? 'selected' : '' }}>{{ $text }}</option>
+                                                        <option value="{{ $value }}" {{ $value == $info->gender ? 'selected' : '' }}>{{ $text }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-floating my-2">
                                             <input type="text" name="qualification" class="form-control"
-                                                id="qualification" placeholder="Qualifications"  value="{{$doctor->qualification}}"/>
+                                                id="qualification" placeholder="Qualifications"  value="{{$info->qualification}}"/>
                                             <label for="floatingInput">Qualifications</label>
                                         </div>
                                         <div class="row my-2">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="date" class="form-control ml-2"
-                                                        id="employment_date" placeholder="Employment Date" name="employment_date"  value="{{$doctor->employment_date}}"/>
+                                                        id="employment_date" placeholder="Employment Date" name="employment_date"  value="{{$info->employment_date}}"/>
                                                     <label for="floatingInput">Employment Date</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="number" class="form-control" id="years_of_experience"
-                                                        placeholder="Years of Experience" name="years_of_experience"  value="{{$doctor->years_of_experience}}"/>
+                                                        placeholder="Years of Experience" name="years_of_experience"  value="{{$info->years_of_experience}}"/>
                                                     <label for="floatingInput">Years of Experience</label>
                                                 </div>
                                             </div>
@@ -172,14 +172,14 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="date" class="form-control ml-2" id="birthdate"
-                                                        placeholder="Birthdate" name="birthdate"  value="{{$doctor->birthdate}}"/>
+                                                        placeholder="Birthdate" name="birthdate"  value="{{$info->birthdate}}"/>
                                                     <label for="floatingInput">Birthdate</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="number" class="form-control" id="phone"
-                                                        placeholder="Phone" name="phone"  value="{{$doctor->phone}}"/>
+                                                        placeholder="Phone" name="phone"  value="{{$info->phone}}"/>
                                                     <label for="floatingInput">Phone</label>
                                                 </div>
                                             </div>
