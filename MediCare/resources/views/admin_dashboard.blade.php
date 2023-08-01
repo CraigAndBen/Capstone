@@ -206,13 +206,14 @@
                         <label>Account Settings</label>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Account</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Update Account</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.profile') }}">Update
+                                    Profile</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.profile')}}">Update Profile</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.profile.password')}}">Update Password</a></li>
+                                    href="{{ route('admin.profile.password') }}">Update Password</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -227,13 +228,14 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.patient') }}">Patient</a>
+                            </li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.patient')}}">Patient</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.patient.admitted')}}">Patient Admitted</a></li>
+                                    href="{{ route('admin.patient.admitted') }}">Patient Admitted</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -241,15 +243,18 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient Demographics</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient Demographics</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.demographics.gender')}}">Gender Demographics</a></li>
+                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
+                                    Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.demographics.age')}}">Age Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.admit')}}">Admit Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.diagnose')}}">Diagnose Demographics</a></li>
+                                    href="{{ route('admin.demographics.admit') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -257,11 +262,12 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose Trend</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Diagnose Trend</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.trend.diagnose')}}">Diagnose Rising Trend</a></li>
+                                    href="{{ route('admin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -282,16 +288,23 @@
                 <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3 align-items-center">
-                                <div class="col">
-                                    <small>Total Patient This Year</small>
-                                    <h3>{{$patientCount}}</h3>
+                            @if ($patientCount)
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <small>Total Patient This Year</small>
+                                        <h3>{{ $patientCount }}</h3>
+                                    </div>
                                 </div>
-                            </div>
-                            <canvas id="admittedPatientsChart" width="100%" height="95"></canvas>
+                                <canvas id="admittedPatientsChart" width="100%" height="95"></canvas>
+                            @else
+                                <div class="text-center">
+                                    <h3>No Patient Yet.</h3>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
+
                 <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
@@ -301,29 +314,34 @@
                                 </div>
                                 <div class="col-auto"> </div>
                             </div>
-
+                            @if ($rankedDiagnosis)
                                 <canvas id="diagnosisChart"></canvas>
-                            
-                            <ul class="list-group list-group-flush mt-3">
-                                @foreach ($rankedDiagnosis as $diagnosis)
 
-                                <li class="list-group-item px-0">
-                                    <div class="row align-items-start">
-                                        <div class="col">
-                                            <h5 class="mb-0">{{$diagnosis->diagnosis}}</h5>
-                                        </div>
-                                        <div class="col-auto">
-                                            <h5 class="mb-0">{{$diagnosis->total_occurrences}}<span
-                                                    class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                        class="ti ti-chevron-up text-success"></i></span></h5>
-                                        </div>
-                                    </div>
-                                </li>
-                                @endforeach
-                            </ul>
-                            <div class="text-center">
-                                <a href="#!" class="btn btn-primary">View all</a>
-                            </div>
+                                <ul class="list-group list-group-flush mt-3">
+                                    @foreach ($rankedDiagnosis as $diagnosis)
+                                        <li class="list-group-item px-0">
+                                            <div class="row align-items-start">
+                                                <div class="col">
+                                                    <h5 class="mb-0">{{ $diagnosis->diagnosis }}</h5>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
+                                                            class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
+                                                                class="ti ti-chevron-up text-success"></i></span></h5>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <div class="text-center">
+                                    <a href="#!" class="btn btn-primary">View all</a>
+                                </div>
+                            @else
+                                <div class="text-center">
+                                    <h3>No Patient Yet.</h3>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -365,82 +383,82 @@
 </body>
 <!-- [Body] end -->
 <script>
-        var labels = {!! json_encode($labels) !!};
-        var values = {!! json_encode($values) !!};
+    var labels = {!! json_encode($labels) !!};
+    var values = {!! json_encode($values) !!};
 
-        var ctx = document.getElementById('admittedPatientsChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Admitted Patients',
-                    data: values,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.1)' // Change grid lines color
-                }
-            },
-            x: {
-                grid: {
-                    display: false // Hide x-axis grid lines
-                }
-            }
+    var ctx = document.getElementById('admittedPatientsChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Admitted Patients',
+                data: values,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
         },
-        plugins: {
-            legend: {
-                labels: {
-                    color: 'rgba(0, 0, 0, 0.8)' // Change legend text color
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)' // Change grid lines color
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false // Hide x-axis grid lines
+                    }
                 }
-            }
-        }
-    }
-        });
-
-        var labels = [];
-        var data = [];
-        @for ($month = 1; $month <= 12; $month++)
-            @php
-                $monthData = $rankedDiagnosis->firstWhere('month', $month);
-            @endphp
-            labels.push('{{ \Carbon\Carbon::createFromDate(null, $month, 1)->format('F') }}');
-            data.push({{ $monthData ? $monthData->total_occurrences : 0 }});
-        @endfor
-
-        // Get the chart context and create the line chart
-        var ctx = document.getElementById('diagnosisChart').getContext('2d');
-        var lineChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '{{$rank1Diagnosis->diagnosis}}',
-                    data: data,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 1,
-                    fill: true
-                }]
             },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(0, 0, 0, 0.8)' // Change legend text color
                     }
                 }
             }
-        });
+        }
+    });
 
-    </script>
-        </script>
+    var labels = [];
+    var data = [];
+    @for ($month = 1; $month <= 12; $month++)
+        @php
+            $monthData = $rankedDiagnosis->firstWhere('month', $month);
+        @endphp
+        labels.push('{{ \Carbon\Carbon::createFromDate(null, $month, 1)->format('F') }}');
+        data.push({{ $monthData ? $monthData->total_occurrences : 0 }});
+    @endfor
+
+    // Get the chart context and create the line chart
+    var ctx = document.getElementById('diagnosisChart').getContext('2d');
+    var lineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Rank 1 Diagnosis',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</script>
+
 </html>

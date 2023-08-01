@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use App\Models\Appointment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
@@ -29,6 +30,19 @@ class DoctorController extends Controller
         $count = $notifications->count();
         $appointments = Appointment::all();
         $currentDate = date('Y-m-d');
+
+        // Get the current year
+        $currentYear = Carbon::now()->year;
+
+        // Retrieve the patients handled by the specific doctor for the current year
+        $patientsByMonth = DB::table('patient')
+            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+            ->where('physician', $profile->id)
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('month')
+            ->get();
+
+        $patientCount = $patientsByMonth->count();
 
         foreach ($appointments as $appointment) {
 
@@ -51,13 +65,13 @@ class DoctorController extends Controller
                     'time' => $currentTime,
                 ]);
 
-                return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info'));
+                return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info' , 'patientsByMonth'));
             }
 
-            return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info'));
+            return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount'));
         }
 
-        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info'));
+        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount'));
     }
 
     public function profile(Request $request): View
