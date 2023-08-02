@@ -88,7 +88,7 @@
                                     </div>
                                     @foreach ($limitNotifications as $notification)
                                         <a class="list-group-item list-group-item-action"
-                                            href="{{ route('doctor.appointment') }}">
+                                            href="{{ route('doctor.notification') }}">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
@@ -111,7 +111,7 @@
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="text-center py-2">
-                                <a href="{{ route('doctor.appointment') }}" class="btn btn-primary">Show all</a>
+                                <a href="{{ route('doctor.notification') }}" class="btn btn-primary">Show all</a>
                             </div>
                         </div>
                     </li>
@@ -389,36 +389,49 @@
                     </div>
                 </div>
 
-                {{-- <div class="col-xl-6 col-md-12 mt-4">
+                <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-3 align-items-center">
                                 <div class="col">
-                                    <h5>Patient Diagnosis This Year</h5>
+                                    <h5>Appointment This Year</h5>
                                 </div>
                                 <div class="col-auto"> </div>
                             </div>
-                            @if ($rankedDiagnosis)
-                                <canvas id="diagnosisChart"></canvas>
+                            <canvas id="appointmentChart"></canvas>
+                            <hr>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col">
+                                    <h5>Current Appointments</h5>
+                                </div>
+                                <div class="col-auto"> </div>
+                            </div>
+                            @if ($limitCurrentMonthAppointments)
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($limitCurrentMonthAppointments as $appointment)
+                                                <tr>
+                                                    <td>{{ucwords($appointment->first_name)}} {{ucwords($appointment->last_name)}}</td>
+                                                    <td>{{ucwords($appointment->appointment_type)}}</td>
+                                                    <td>{{ucwords($appointment->appointment_date)}}</td>
+                                                    <td>{{ucwords($appointment->status)}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                                <ul class="list-group list-group-flush mt-3">
-                                    @foreach ($rankedDiagnosis as $diagnosis)
-                                        <li class="list-group-item px-0">
-                                            <div class="row align-items-start">
-                                                <div class="col">
-                                                    <h5 class="mb-0">{{ $diagnosis->diagnosis }}</h5>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
-                                                            class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                                class="ti ti-chevron-up text-success"></i></span></h5>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
                                 <div class="text-center">
-                                    <a href="#!" class="btn btn-primary">View all</a>
+                                    <a href="{{route('doctor.appointment')}}" class="btn btn-primary">View all</a>
                                 </div>
                             @else
                                 <div class="text-center">
@@ -428,7 +441,7 @@
 
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 <!-- [ sample-page ] end -->
             </div>
             <!-- [ Main Content ] end -->
@@ -440,16 +453,13 @@
         <div class="footer-wrapper container-fluid">
             <div class="row">
                 <div class="col my-1">
-                    <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/"
-                            target="_blank">Codedthemes</a></p>
+                    <p class="m-0">Copyright &copy; <a>MediCare</a></p>
                 </div>
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/"
-                                target="_blank">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/contact/"
-                                target="_blank">Contact us</a></li>
+                        <li class="list-inline-item">Home</li>
+                        <li class="list-inline-item">Privacy Policy</li>
+                        <li class="list-inline-item">Contact us</li>
                     </ul>
                 </div>
             </div>
@@ -474,7 +484,7 @@
 <!-- [Body] end -->
 <script>
      // Convert the PHP array to JavaScript variables
-     const months = @json($patientsByMonth->pluck('month'));
+     var months = @json($patientsByMonth->pluck('month'));
         const patientCounts = @json($patientsByMonth->pluck('count'));
 
         var ctx = document.getElementById('patientChart').getContext('2d');
@@ -488,6 +498,32 @@
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Convert the PHP array to JavaScript variables
+        var months = @json($months);
+        const appointmentCounts = @json($appointmentCounts);
+
+        var ctx = document.getElementById('appointmentChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Monthly Appointments',
+                    data: appointmentCounts,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    fill: false
                 }]
             },
             options: {

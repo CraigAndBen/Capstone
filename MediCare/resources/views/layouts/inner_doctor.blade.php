@@ -81,7 +81,7 @@
                                     </div>
                                     @foreach ($limitNotifications as $notification)
                                         <a class="list-group-item list-group-item-action"
-                                            href="{{ route('doctor.appointment') }}">
+                                            href="{{ route('doctor.notification') }}">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
@@ -104,7 +104,7 @@
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="text-center py-2">
-                                <a href="{{ route('doctor.appointment') }}" class="link-primary">Show all</a>
+                                <a href="{{ route('doctor.notification') }}" class="btn btn-primary">Show all</a>
                             </div>
                         </div>
                     </li>
@@ -229,21 +229,18 @@
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col my-1">
-                    <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/"
-                            target="_blank">Codedthemes</a></p>
+                    <p class="m-0">Copyright &copy; <a>MediCare</a></p>
                 </div>
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/"
-                                target="_blank">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/contact/"
-                                target="_blank">Contact us</a></li>
+                        <li class="list-inline-item">Home</li>
+                        <li class="list-inline-item">Privacy Policy</li>
+                        <li class="list-inline-item">Contact us</li>
                     </ul>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </footer>
     <!-- Required Js -->

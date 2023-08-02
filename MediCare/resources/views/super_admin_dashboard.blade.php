@@ -59,89 +59,89 @@
             <!-- [Mobile Media Block end] -->
             <div class="ms-auto">
                 <ul class="list-unstyled">
-                  <li class="dropdown pc-h-item">
-                    <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
-                        data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
-                        aria-expanded="false">
-                        <i class="ti ti-bell"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
-                        @if ($count > 0)
-                            <div class="dropdown-header">
-                                <h5>All Notification <span
-                                        class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
+                    <li class="dropdown pc-h-item">
+                        <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
+                            data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                            aria-expanded="false">
+                            <i class="ti ti-bell"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+                            @if ($count > 0)
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span
+                                            class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        <div class="list-group-item">
+                                            <select class="form-select">
+                                                <option value="all">All Notification</option>
+                                                <option value="new">New</option>
+                                                <option value="unread">Unread</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        @foreach ($limitNotifications as $notification)
+                                            <a class="list-group-item list-group-item-action"
+                                                href="{{ route('doctor.appointment') }}">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0">
+                                                        <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                            alt="user-image" class="user-avtar" />
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-1">
+                                                        <span
+                                                            class="float-end text-muted">{{ $notification->time }}</span>
+                                                        <h5>{{ ucwords($notification->title) }}</h5>
+                                                        <p class="text-body fs-6">
+                                                            {{ Str::words($notification->message, $limit = 10, $end = '...') }}
+                                                        </p>
+                                                        @if ($notification->is_read == 0)
+                                                            <div class="badge rounded-pill bg-light-danger">Unread</div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endforeach
                                     </div>
-                                    @foreach ($limitNotifications as $notification)
-                                        <a class="list-group-item list-group-item-action"
-                                            href="{{ route('doctor.appointment') }}">
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="text-center py-2">
+                                    <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                </div>
+                            @else
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        <div class="list-group-item">
+                                            <select class="form-select">
+                                                <option value="all">All Notification</option>
+                                                <option value="new">New</option>
+                                                <option value="unread">Unread</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <a class="list-group-item list-group-item-action">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">
-                                                    <span
-                                                        class="float-end text-muted">{{ $notification->time }}</span>
-                                                    <h5>{{ ucwords($notification->title) }}</h5>
-                                                    <p class="text-body fs-6">
-                                                        {{ Str::words($notification->message, $limit = 10, $end = '...') }}
-                                                    </p>
-                                                    @if ($notification->is_read == 0)
-                                                        <div class="badge rounded-pill bg-light-danger">Unread</div>
-                                                    @endif
+                                                    <h5>No Notification Yet.</h5>
                                                 </div>
                                             </div>
                                         </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="text-center py-2">
-                                <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
-                            </div>
-                        @else
-                            <div class="dropdown-header">
-                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
                                     </div>
-                                    <a class="list-group-item list-group-item-action">
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
-                                                    alt="user-image" class="user-avtar" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-1">
-                                                <h5>No Notification Yet.</h5>
-                                            </div>
-                                        </div>
-                                    </a>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
 
-                    </div>
-                </li>
+                        </div>
+                    </li>
                     <li class="dropdown pc-h-item header-user-profile">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
@@ -204,13 +204,16 @@
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.profile') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.profile.password') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Update Account</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.profile') }}">Update
+                                    Profile</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.profile.password') }}">Update Password</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
@@ -220,24 +223,24 @@
                                 class="pc-micon"></span><span class="pc-mtext">Notification List</span></a>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Account</label>
+                        <label>System Account</label>
                         <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.admin') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Admin</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.doctor') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Doctor</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.nurse') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Nurse</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.user') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">User</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Accounts</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.admin') }}">Admin
+                                    Account</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.doctor') }}">Doctor
+                                    Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.nurse') }}">Nurse
+                                    Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User
+                                    Account</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

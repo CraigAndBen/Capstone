@@ -44,6 +44,32 @@ class DoctorController extends Controller
 
         $patientCount = $patientsByMonth->count();
 
+        $currentMonth = Carbon::now()->month;
+
+        // Retrieve appointments for the specific doctor in the current month
+        $currentMonthAppointments = DB::table('appointment')
+            ->where('specialties', $info->specialties)
+            ->whereMonth('appointment_date', $currentMonth)
+            ->get();
+
+        $limitCurrentMonthAppointments = $currentMonthAppointments->take(5);
+
+        // Retrieve the monthly appointments for the specific doctor for the current year
+        $monthlyAppointments = DB::table('appointment')
+            ->select(DB::raw('MONTH(appointment_date) as month'), DB::raw('COUNT(*) as count'))
+            ->where('specialties', $info->specialties)
+            ->whereYear('appointment_date', $currentYear)
+            ->groupBy('month')
+            ->get();
+
+        // Format the data for the line graph
+        $months = [];
+        $appointmentCounts = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $months[] = Carbon::createFromFormat('m', $month)->format('F');
+            $appointmentCounts[] = $monthlyAppointments->where('month', $month)->pluck('count')->first() ?? 0;
+        }
+
         foreach ($appointments as $appointment) {
 
             if (strtotime($appointment->appointment_date) < strtotime($currentDate)) {
@@ -65,13 +91,13 @@ class DoctorController extends Controller
                     'time' => $currentTime,
                 ]);
 
-                return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info' , 'patientsByMonth'));
+                return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info' , 'patientsByMonth', 'limitCurrentMonthAppointments','months','appointmentCounts'));
             }
 
-            return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount'));
+            return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount', 'limitCurrentMonthAppointments','months','appointmentCounts'));
         }
 
-        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount'));
+        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount','limitCurrentMonthAppointments','months','appointmentCounts'));
     }
 
     public function profile(Request $request): View
@@ -370,7 +396,7 @@ class DoctorController extends Controller
         $count = $notifications->count();
         $infos = Doctor::all();
         $doctor = Doctor::where('account_id', $profile->id)->first();
-        $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'pending')->get();
+        $appointments = Appointment::where('specialties', $doctor->specialties)->get();
 
         return view('doctor.appointment.appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
     }
