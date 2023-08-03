@@ -135,7 +135,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
 
-    // Doctor Notification
+    //  Notification
     Route::get('/admin/notification', [AdminController::class, 'notification'])->name('admin.notification');
     Route::post('/admin/notification/read', [AdminController::class, 'notificationRead'])->name('admin.notification.read');
 
@@ -170,7 +170,7 @@ Route::middleware('auth', 'role:super_admin')->group(function () {
     Route::post('/superadmin/profile/update', [SuperAdminController::class, 'profileUpdate'])->name('superadmin.profile.update');
     Route::post('/superadmin/profile/update/password', [SuperAdminController::class, 'updatePassword'])->name('superadmin.password.update');
 
-    // Doctor Notification
+    // Notification
     Route::get('/superadmin/notification', [SuperAdminController::class, 'notification'])->name('superadmin.notification');
     Route::post('/superadmin/notification/read', [SuperAdminController::class, 'notificationRead'])->name('superadmin.notification.read');
 
@@ -201,6 +201,33 @@ Route::middleware('auth', 'role:super_admin')->group(function () {
     Route::post('/super_admin/admin/update/status', [SuperAdminController::class, 'updateAdminStatus'])->name('superadmin.admin.update.status');
     Route::post('/super_admin/nurse/update/password', [SuperAdminController::class, 'updateAdminPassword'])->name('superadmin.user.password.update');
 
+    // Patient
+    Route::get('/super_admin/patient', [SuperAdminController::class, 'patientList'])->name('superadmin.patient');
+    Route::get('/super_admin/patient/admitted', [SuperAdminController::class, 'patienAdmittedtList'])->name('superadmin.patient.admitted');
+    Route::get('/super_admin/patient/search', [SuperAdminController::class, 'patientSearch'])->name('superadmin.patient.search');
+    Route::get('/super_admin/patient/admitted/search', [SuperAdminController::class, 'patientAdmittedSearch'])->name('superadmin.patient.admitted.search');
+    Route::post('/super_admin/patient/store', [SuperAdminController::class, 'patientStore'])->name('superadmin.patient.store');
+    Route::post('/super_admin/patient/update', [SuperAdminController::class, 'patientUpdate'])->name('superadmin.patient.update');
 
+    // Demographics
+    // Gender
+    Route::get('/super_admin/demographics/gender', [SuperAdminController::class, 'genderDemo'])->name('superadmin.demographics.gender');
+    Route::post('/super_admin/demogrpahics/gender/search', [SuperAdminController::class, 'genderSearch'])->name('superadmin.demographics.gender.search');
+    //Age
+    Route::get('/super_admin/demographics/age', [SuperAdminController::class, 'ageDemo'])->name('superadmin.demographics.age');
+    Route::post('/super_admin/demogrpahics/age/search', [SuperAdminController::class, 'ageSearch'])->name('superadmin.demographics.age.search');
+    //Admit
+    Route::get('/super_admin/demographics/admit', [SuperAdminController::class, 'admitDemo'])->name('superadmin.demographics.admit');
+    Route::post('/super_admin/demogrpahics/admit/search', [SuperAdminController::class, 'admitSearch'])->name('superadmin.demographics.admit.search');
+    //Diagnose
+    Route::get('/super_admin/demographics/diagnose', [SuperAdminController::class, 'diagnoseDemo'])->name('superadmin.demographics.diagnose');
+    Route::post('/super_admin/demogrpahics/diagnose/search', [SuperAdminController::class, 'diagnoseSearch'])->name('superadmin.demographics.diagnose.search');
+
+    //Trend
+    //Diagnose Rising Trend
+    Route::get('/super_admin/trend/diagnose', [SuperAdminController::class, 'diagnoseTrend'])->name('superadmin.trend.diagnose');
+    Route::post('/super_admin/trend/diagnose/search', [SuperAdminController::class, 'diagnoseTrendSearch'])->name('superadmin.trend.diagnose.search');
+
+    // Super Admin Logout
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });

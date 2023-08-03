@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{{ asset('admin_assets/css/style-preset.css') }}" id="preset-style-link" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 
 </head>
@@ -201,13 +203,16 @@
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.profile') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.profile.password') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Update Account</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.profile') }}">Update
+                                    Profile</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.profile.password') }}">Update Password</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
@@ -217,24 +222,71 @@
                                 class="pc-micon"></span><span class="pc-mtext">Notification List</span></a>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Accounts</label>
-                        <i class="ti ti-dashboard"></i>
+                        <label>System Account</label>
+                        <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.admin') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Admin</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Accounts</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.admin') }}">Admin
+                                    Account</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.doctor') }}">Doctor
+                                    Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.nurse') }}">Nurse
+                                    Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User
+                                    Account</a></li>
+                        </ul>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.doctor') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Doctor</span></a>
+                    <li class="pc-item pc-caption">
+                        <label>Patient</label>
+                        <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.nurse') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Nurse</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.patient') }}">Patient</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.patient.admitted') }}">Patient Admitted</a></li>
+                        </ul>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.user') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">User</span></a>
+                    <li class="pc-item pc-caption">
+                        <label>Demographics</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient Demographics</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.gender') }}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.demographics.age') }}">Age
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.admit') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-caption">
+                        <label>Trend</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Diagnose Trend</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

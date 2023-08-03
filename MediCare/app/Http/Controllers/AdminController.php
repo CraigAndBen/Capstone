@@ -48,7 +48,7 @@ class AdminController extends Controller
 
         // Prepare data for the chart
         $labels = $data->map(function ($item) {
-            return Carbon::createFromDate(null, $item->month, null)->format('F'); // Format as full month name
+            return Carbon::createFromDate(null, $item->month, null)->format('F'); 
         });
         $values = $data->pluck('count');
 
