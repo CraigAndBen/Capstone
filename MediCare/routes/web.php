@@ -20,13 +20,9 @@ use App\Http\Controllers\SuperAdminController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', [UsersController::class, 'home'])->name('home');
 
-Route::get('/user/dashboard', function () {
-    return view('user_dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/user/dashboard', [UsersController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.logout');
 

@@ -314,11 +314,11 @@
                                 </div>
                                 <div class="col-auto"> </div>
                             </div>
-                            @if ($rankedDiagnosis)
+                            @if ($limitDiagnosis)
                                 <canvas id="diagnosisChart"></canvas>
 
                                 <ul class="list-group list-group-flush mt-3">
-                                    @foreach ($rankedDiagnosis as $diagnosis)
+                                    @foreach ($limitDiagnosis as $diagnosis)
                                         <li class="list-group-item px-0">
                                             <div class="row align-items-start">
                                                 <div class="col">
@@ -428,7 +428,7 @@
     var data = [];
     @for ($month = 1; $month <= 12; $month++)
         @php
-            $monthData = $rankedDiagnosis->firstWhere('month', $month);
+            $monthData = $limitDiagnosis->firstWhere('month', $month);
         @endphp
         labels.push('{{ \Carbon\Carbon::createFromDate(null, $month, 1)->format('F') }}');
         data.push({{ $monthData ? $monthData->total_occurrences : 0 }});

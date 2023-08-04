@@ -58,7 +58,7 @@
 
                                 @if (session('info'))
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> {{ session('info') }}
+                                        {{ session('info') }}
                                     </div>
                                 @endif
 
@@ -76,7 +76,7 @@
                                             <div class="form-floating mb-3">
                                                 <input type="text" class="form-control ml-2"
                                                     id="floatingInput search" placeholder="Search..."
-                                                    name="search" required />
+                                                    name="search"/>
                                                 <label for="floatingInput">Search</label>
                                             </div>
                                         </div>
@@ -179,7 +179,7 @@
 
                     {{-- Create modal --}}
                     <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
                                     <h2 class="modal-title text-light" id="myModalLabel">Adding Patient</h2>
@@ -306,8 +306,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
-                                                        {{ $doctor->last_name }}</option>
+                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                        {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -342,7 +342,7 @@
                     {{-- Update modal --}}
                     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel">
-                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
                                     <h2 class="modal-title text-light" id="myModalLabel">Update Patient Information</h2>
@@ -466,8 +466,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
-                                                        {{ $doctor->last_name }}</option>
+                                                <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                    {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -490,7 +490,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
                                 </form>
                             </div>
@@ -501,7 +501,7 @@
                     {{-- Update modal --}}
                     <div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel">
-                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
                                     <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
@@ -623,8 +623,8 @@
                                         <select class="form-control p-3" id="physician" name="physician" disabled>
                                             <option>Select physician</option>
                                             @foreach ($doctors as $doctor)
-                                                <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
-                                                    {{ $doctor->last_name }}</option>
+                                            <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                {{ ucwords($doctor->last_name) }}</option>
                                             @endforeach
                                         </select>
                                     </div>

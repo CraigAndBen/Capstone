@@ -37,6 +37,8 @@ class AdminController extends Controller
             ->groupBy('diagnosis', 'month')
             ->orderByDesc('total_occurrences')
             ->get();
+        
+        $limitDiagnosis = $rankedDiagnosis->take(5);
 
         // Retrieve the rank 1 diagnosis for the current year
         $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
@@ -52,7 +54,7 @@ class AdminController extends Controller
         });
         $values = $data->pluck('count');
 
-        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis'));
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'limitDiagnosis', 'rank1Diagnosis'));
     }
 
     public function profile(Request $request): View
@@ -180,6 +182,10 @@ class AdminController extends Controller
 
     public function patientSearch(Request $request)
     {
+        $request->validate([
+            'search' => 'required|string|max:255',
+        ]);
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -330,6 +336,10 @@ class AdminController extends Controller
 
     public function patientAdmittedSearch(Request $request)
     {
+        $request->validate([
+            'search' => 'required|string|max:255',
+        ]);
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);

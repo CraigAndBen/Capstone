@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Doctor;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,24 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UsersController extends Controller
 {
+
+    public function home()
+    {
+        $users = User::where('role', 'doctor')->get();
+        $doctor = Doctor::all();
+        $limitUser = $users->take(6);
+        $limitDoctor = $doctor->take(6);
+        return view('index', compact('limitDoctor','limitUser'));
+    }
+
+    public function dashboard()
+    {
+        $users = User::where('role', 'doctor')->get();
+        $doctor = Doctor::all();
+        $limitUser = $users->take(6);
+        $limitDoctor = $doctor->take(6);
+        return view('user_dashboard', compact('limitDoctor','limitUser'));
+    }
     public function notification(){
         
         $user = Auth::user();
