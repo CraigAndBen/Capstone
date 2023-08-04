@@ -177,7 +177,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Update Doctor Account</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('superadmin.update.doctor') }}">
+                                    <form method="POST" action="{{ route('superadmin.update.doctor') }}"  enctype="multipart/form-data">
                                         @csrf
                                         <div class="row my-2">
                                             <div class="col-md-4">
@@ -326,6 +326,17 @@
                                                     <input type="text" name="linkedin" class="form-control"
                                                         id="linkedin" placeholder="Linkedin Link" />
                                                     <label for="floatingInput">Linkedin Link</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row my-3">
+                                            <div class="col-md-3">
+                                                <label for="floatingInput">Change Profile Image:</label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="form-floating">
+                                                    <input type="file" name="image" id="image">
                                                 </div>
                                             </div>
                                         </div>
@@ -682,6 +693,17 @@
                                                     <input type="text" name="linkedin" class="form-control"
                                                         id="linkedin" placeholder="Linkedin Link" />
                                                     <label for="floatingInput">Linkedin Link</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row my-3">
+                                            <div class="col-md-2">
+                                                <label for="floatingInput">Change Profile Image:</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-floating">
+                                                    <input type="file" name="image" id="image">
                                                 </div>
                                             </div>
                                         </div>

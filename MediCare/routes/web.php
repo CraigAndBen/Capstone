@@ -40,6 +40,7 @@ Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAp
 // User Notification
 Route::get('/user/notification', [UsersController::class, 'notification'])->name('user.notification');
 Route::post('/user/notification/read', [UsersController::class, 'notificationRead'])->name('user.notification.read');
+Route::post('/user/notification/delete', [UsersController::class, 'notificationDelete'])->name('user.notification.delete');
 
 //profile
 Route::get('/user/profile', [ProfileController::class, 'profile'])->name('user.profile');

@@ -79,8 +79,8 @@ class DoctorController extends Controller
                 $appoint->status = 'unavailable';
                 $appoint->save();
 
-                $currentDate = Carbon::now()->toTimeString();
-                $currentTime = Carbon::now()->toDateString();
+                $currentTime = Carbon::now()->toTimeString();
+                $currentDate = Carbon::now()->toDateString();
                 $message = ' Your appointment that has a type of ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable.';
 
                 Notification::create([
@@ -90,11 +90,7 @@ class DoctorController extends Controller
                     'date' => $currentDate,
                     'time' => $currentTime,
                 ]);
-
-                return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info' , 'patientsByMonth', 'limitCurrentMonthAppointments','months','appointmentCounts'));
             }
-
-            return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount', 'limitCurrentMonthAppointments','months','appointmentCounts'));
         }
 
         return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount','limitCurrentMonthAppointments','months','appointmentCounts'));

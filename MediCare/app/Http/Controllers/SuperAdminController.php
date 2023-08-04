@@ -28,7 +28,7 @@ class SuperAdminController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;
@@ -56,28 +56,28 @@ class SuperAdminController extends Controller
         });
         $values = $data->pluck('count');
 
-        return view('super_admin_dashboard', compact('profile','limitNotifications','count','labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis'));
+        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis'));
     }
 
     public function profile(Request $request): View
     {
 
         $profile = $request->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('superadmin.profile.profile', compact('profile','limitNotifications','count'));
+        return view('superadmin.profile.profile', compact('profile', 'limitNotifications', 'count'));
     }
 
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
 
-        return view('superadmin.profile.profile_password', compact('profile','limitNotifications','count'));
+        return view('superadmin.profile.profile_password', compact('profile', 'limitNotifications', 'count'));
     }
 
     /**
@@ -184,13 +184,13 @@ class SuperAdminController extends Controller
     public function doctor()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $users = User::where('role', 'doctor')->get();
         $doctors = Doctor::all();
 
-        return view('superadmin.account.doctor', compact('users', 'profile', 'doctors','limitNotifications','count'));
+        return view('superadmin.account.doctor', compact('users', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
 
     public function createDoctor(Request $request)
@@ -224,29 +224,65 @@ class SuperAdminController extends Controller
             'role' => 'doctor',
         ]);
 
-        $latestUser = User::latest()->first();
+        if ($request->hasFile('image')) {
+            $imageName = $request->image->getClientOriginalName();
 
-        doctor::create([
-            'account_id' => $latestUser->id,
-            'age' => $request->input('age'),
-            'gender' => $request->input('gender'),
-            'specialties' => $request->input('specialties'),
-            'employment_date' => $request->input('employment_date'),
-            'qualification' => $request->input('qualification'),
-            'years_of_experience' => $request->input('years_of_experience'),
-            'phone' => $request->input('phone'),
-            'birthdate' => $request->input('birthdate'),
-            'street' => $request->input('street'),
-            'brgy' => $request->input('brgy'),
-            'city' => $request->input('city'),
-            'province' => $request->input('province'),
-            'facebook_link' => $request->input('facebook'),
-            'twitter_link' => $request->input('twitter'),
-            'instagram' => $request->input('instagram'),
-            'linkedin' => $request->input('linkedin'),
-        ]);
+            $request->image->move(public_path('images'), $imageName);
 
-        return back()->with('success', 'User added sucessfully.');
+            $latestUser = User::latest()->first();
+
+            doctor::create([
+                'account_id' => $latestUser->id,
+                'age' => $request->input('age'),
+                'gender' => $request->input('gender'),
+                'specialties' => $request->input('specialties'),
+                'employment_date' => $request->input('employment_date'),
+                'qualification' => $request->input('qualification'),
+                'years_of_experience' => $request->input('years_of_experience'),
+                'phone' => $request->input('phone'),
+                'birthdate' => $request->input('birthdate'),
+                'street' => $request->input('street'),
+                'brgy' => $request->input('brgy'),
+                'city' => $request->input('city'),
+                'province' => $request->input('province'),
+                'facebook_link' => $request->input('facebook'),
+                'twitter_link' => $request->input('twitter'),
+                'instagram_link' => $request->input('instagram'),
+                'linkedin_link' => $request->input('linkedin'),
+                'image_name' => $imageName,
+                'image_data' => 'images/' . $imageName,
+            ]);
+
+            return back()->with('success', 'User added sucessfully.');
+        } else {
+            $imageName = 'noprofile.jpeg';
+
+            $latestUser = User::latest()->first();
+
+            doctor::create([
+                'account_id' => $latestUser->id,
+                'age' => $request->input('age'),
+                'gender' => $request->input('gender'),
+                'specialties' => $request->input('specialties'),
+                'employment_date' => $request->input('employment_date'),
+                'qualification' => $request->input('qualification'),
+                'years_of_experience' => $request->input('years_of_experience'),
+                'phone' => $request->input('phone'),
+                'birthdate' => $request->input('birthdate'),
+                'street' => $request->input('street'),
+                'brgy' => $request->input('brgy'),
+                'city' => $request->input('city'),
+                'province' => $request->input('province'),
+                'facebook_link' => $request->input('facebook'),
+                'twitter_link' => $request->input('twitter'),
+                'instagram_link' => $request->input('instagram'),
+                'linkedin_link' => $request->input('linkedin'),
+                'image_name' => $imageName,
+                'image_data' => 'images/' . $imageName,
+            ]);
+
+            return back()->with('success', 'User added sucessfully.');
+        }
     }
 
     public function updateDoctorPassword(Request $request)
@@ -299,6 +335,7 @@ class SuperAdminController extends Controller
             'email' => 'required|string|email|max:255',
             'birthdate' => 'required|date',
             'phone' => 'required',
+            // 'image' => 'required|mimes:jpeg,png,pdf|max:2048',
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
@@ -329,15 +366,30 @@ class SuperAdminController extends Controller
             'linked_link' => $request->input('linkedin'),
         ];
 
+        if ($request->hasFile('image')) {
+            $imageName = $request->image->getClientOriginalName();
+
+            $imageUpdatedData = [
+                'image_name' => $imageName,
+                'image_data' => 'images/' . $imageName,
+            ];
+
+            $imageChange = $this->hasChanges($info, $imageUpdatedData);
+        } else {
+            $imageChange = false;
+        }
+
         $userChange = $this->hasChanges($user, $userUpdatedData);
         $infoChange = $this->hasChanges($info, $infoUpdatedData);
 
-
         // Check if any changes were made to the form data
-        if ($userChange == true || $infoChange == true) {
+        if ($userChange == true || $infoChange == true || $imageChange) {
 
             if ($request->input('email') !== $user->email) {
+                $imageName = $request->image->getClientOriginalName();
 
+                $request->image->move(public_path('images'), $imageName);
+                
                 $request->validate([
                     'email' => 'required|string|email|max:255|unique:users,email,',
                 ]);
@@ -362,7 +414,8 @@ class SuperAdminController extends Controller
                 $info->twitter_link = $request->input('twitter');
                 $info->instagram_link = $request->input('instagram');
                 $info->linkedin_link = $request->input('linked_link');
-
+                $info->image_name = $imageName;
+                $info->image_data = 'images/' . $imageName;
 
                 $user->save();
                 $info->save();
@@ -370,6 +423,9 @@ class SuperAdminController extends Controller
                 return redirect()->back()->with('success', 'Profile updated successfully.');
 
             } else {
+                $imageName = $request->image->getClientOriginalName();
+
+                $request->image->move(public_path('images'), $imageName);
 
                 $user->first_name = $request->input('first_name');
                 $user->last_name = $request->input('last_name');
@@ -391,6 +447,8 @@ class SuperAdminController extends Controller
                 $info->twitter_link = $request->input('twitter');
                 $info->instagram_link = $request->input('instagram');
                 $info->linkedin_link = $request->input('linked_link');
+                $info->image_name = $imageName;
+                $info->image_data = 'images/' . $imageName;
 
                 $user->save();
                 $info->save();
@@ -409,13 +467,13 @@ class SuperAdminController extends Controller
     public function nurse()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $users = User::where('role', 'nurse')->get();
         $nurses = Nurse::all();
 
-        return view('superadmin.account.nurse', compact('users', 'profile', 'nurses','limitNotifications','count'));
+        return view('superadmin.account.nurse', compact('users', 'profile', 'nurses', 'limitNotifications', 'count'));
     }
 
     public function createNurse(Request $request)
@@ -618,13 +676,13 @@ class SuperAdminController extends Controller
     public function user()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $users = User::where('role', 'user')->get();
         $users_info = User_info::all();
 
-        return view('superadmin.account.user', compact('users', 'profile', 'users_info','limitNotifications','count'));
+        return view('superadmin.account.user', compact('users', 'profile', 'users_info', 'limitNotifications', 'count'));
     }
 
     public function createUser(Request $request)
@@ -809,13 +867,13 @@ class SuperAdminController extends Controller
     public function admin()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $users = User::where('role', 'admin')->get();
         $admins = Admin::all();
 
-        return view('superadmin.account.admin', compact('users', 'profile', 'admins','limitNotifications','count'));
+        return view('superadmin.account.admin', compact('users', 'profile', 'admins', 'limitNotifications', 'count'));
     }
 
     public function createAdmin(Request $request)
@@ -1522,11 +1580,11 @@ class SuperAdminController extends Controller
         $currentYear = Carbon::now()->year;
 
         $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
-        ->selectRaw('COUNT(*) as total_occurrences')
-        ->whereYear('admitted_date', $currentYear)
-        ->groupBy('diagnosis', 'month')
-        ->orderByDesc('total_occurrences')
-        ->get();
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('diagnosis', 'month')
+            ->orderByDesc('total_occurrences')
+            ->get();
 
         // Retrieve the unique years from the "admitted" column
         $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
@@ -1543,7 +1601,7 @@ class SuperAdminController extends Controller
             ->pluck('diagnosis')
             ->toArray();
 
-        return view('superadmin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'countUniqueYears','rankedDiagnosis'));
+        return view('superadmin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'countUniqueYears', 'rankedDiagnosis'));
     }
 
     public function diagnoseTrendSearch(Request $request)
@@ -1555,11 +1613,11 @@ class SuperAdminController extends Controller
         $currentYear = Carbon::now()->year;
 
         $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
-        ->selectRaw('COUNT(*) as total_occurrences')
-        ->whereYear('admitted_date', $currentYear)
-        ->groupBy('diagnosis', 'month')
-        ->orderByDesc('total_occurrences')
-        ->get();
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('diagnosis', 'month')
+            ->orderByDesc('total_occurrences')
+            ->get();
 
         // Retrieve the unique years from the "admitted" column
         $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
@@ -1589,7 +1647,7 @@ class SuperAdminController extends Controller
         // Loop through the patient data to calculate the yearly trend
         $currentYear = null;
         $yearlyCount = 0;
-        
+
         foreach ($patients as $patient) {
             $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
             $year = $admittedDate->format('Y');
@@ -1628,7 +1686,7 @@ class SuperAdminController extends Controller
         foreach ($patients as $patient) {
             $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
             $month = $admittedDate->format('F');
-            
+
             if ($month !== $currentMonth) {
                 // Save the count for the previous month
                 if ($currentMonth !== null) {
@@ -1655,7 +1713,35 @@ class SuperAdminController extends Controller
         }
 
 
-        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData','rankedDiagnosis'));
+        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis'));
+    }
+
+    public function notification()
+    {
+
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+
+        return view('superadmin.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count'));
+
+    }
+
+    public function notificationRead(Request $request)
+    {
+
+        $notification = Notification::findOrFail($request->input('id'));
+
+        if ($notification->is_read == 0) {
+            $notification->is_read = 1;
+            $notification->save();
+
+            return redirect()->route('superadmin.notification');
+        } else {
+            return redirect()->route('superadmin.notification');
+        }
+
     }
 
     private function hasChanges($info, $updatedData)

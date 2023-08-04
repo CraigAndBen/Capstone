@@ -32,7 +32,7 @@ class UsersController extends Controller
     public function notification(){
         
         $user = Auth::user();
-        $notifications = Notification::where('account_id', $user->id)->get();
+        $notifications = Notification::where('account_id', $user->id)->orderBy('date','desc')->get();
 
         return view('user.notification.notification', compact('notifications'));
 
@@ -52,6 +52,16 @@ class UsersController extends Controller
         }
 
     }
+
+    public function notificationDelete(Request $request)
+    {
+        $data = Notification::findOrFail($request->input('id'));
+        $data->delete();
+
+        // Redirect back to the original page or any other page as needed.
+        return redirect()->route('user.notification')->with('success', 'Notification message deleted successfully.');
+    }
+
     public function userLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

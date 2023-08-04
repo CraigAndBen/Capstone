@@ -295,6 +295,23 @@
     <!-- [ Sidebar Menu ] end -->
 
     @yield('content')
+
+    <footer class="pc-footer">
+        <div class="footer-wrapper container-fluid">
+            <div class="row">
+                {{-- <div class="col my-1">
+                    <p class="m-0">Copyright &copy; <a>MediCare</a></p>
+                </div>
+                <div class="col-auto my-1">
+                    <ul class="list-inline footer-link mb-0">
+                        <li class="list-inline-item">Home</li>
+                        <li class="list-inline-item">Privacy Policy</li>
+                        <li class="list-inline-item">Contact us</li>
+                    </ul>
+                </div> --}}
+            </div>
+        </div>
+    </footer>
     <!-- [ Main Content ] end -->
     <!-- Required Js -->
     <script src="{{ asset('admin_assets/js/plugins/popper.min.js') }}"></script>

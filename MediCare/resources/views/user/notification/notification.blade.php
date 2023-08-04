@@ -1,7 +1,6 @@
 @extends('layouts.inner_home')
 
 @section('content')
-
     <section class="breadcrumbs">
         <div class="container" style="margin-top: 85px">
 
@@ -21,12 +20,13 @@
             <div class="auth-main">
                 <div class="auth-wrapper v3">
                     <div class="auth-form">
-                        <div class="card my-3 shadow">
-                            <div class="row m-3">
+                        <div class="card my-2 shadow">
+                            <div class="row m-4">
                                 <h2>Notification List</h2>
                             </div>
+                            <hr>
                             <div class="card-body">
-                                <div class="m-5">
+                                <div class="m-3">
                                     @if ($errors->any())
                                         <div class="alert alert-danger">
                                             <strong>Whoops!</strong> There were some problems with your input. Please fix
@@ -48,7 +48,7 @@
 
                                     @if (session('info'))
                                         <div class="alert alert-info">
-                                         {{ session('info') }}
+                                            {{ session('info') }}
                                         </div>
                                     @endif
 
@@ -70,9 +70,8 @@
                                                 @foreach ($notifications as $notification)
                                                     <tr class="p-3">
                                                         <td>{{ ucwords($notification->title) }}</td>
-                                                        <td>{{ 
-                                                        ucwords(Str::limit($notification->message, 30)) }}</td>
-                                                        @if ($notification->is_read == 0) 
+                                                        <td>{{ ucwords(Str::limit($notification->message, 30)) }}</td>
+                                                        @if ($notification->is_read == 0)
                                                             <td>Unread</td>
                                                         @else
                                                             <td>read</td>
@@ -85,21 +84,38 @@
                                                                     Actions
                                                                 </button>
                                                                 <div class="dropdown-menu">
-                                                                    <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                    data-target="#viewModal"
-                                                                    data-id="{{ json_encode($notification->id) }}"
-                                                                    data-title="{{ json_encode(ucwords($notification->title)) }}"
-                                                                    data-message="{{ json_encode($notification->message) }}"
-                                                                    data-date="{{ json_encode($notification->date) }}"
-                                                                    data-time="{{ json_encode($notification->time) }}"
-                                                                    data-is-read="{{ json_encode($notification->is_read) }}"
-                                                                    >Read</a>
+                                                                    @if ($notification->is_read == 0)
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#viewModal"
+                                                                            data-id="{{ json_encode($notification->id) }}"
+                                                                            data-title="{{ json_encode(ucwords($notification->title)) }}"
+                                                                            data-message="{{ json_encode($notification->message) }}"
+                                                                            data-date="{{ json_encode($notification->date) }}"
+                                                                            data-time="{{ json_encode($notification->time) }}"
+                                                                            data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
+                                                                    @else
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#viewModal"
+                                                                            data-id="{{ json_encode($notification->id) }}"
+                                                                            data-title="{{ json_encode(ucwords($notification->title)) }}"
+                                                                            data-message="{{ json_encode($notification->message) }}"
+                                                                            data-date="{{ json_encode($notification->date) }}"
+                                                                            data-time="{{ json_encode($notification->time) }}"
+                                                                            data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#deleteModal"
+                                                                            data-id="{{ json_encode($notification->id) }}"
+                                                                            data-title="{{ json_encode(ucwords($notification->title)) }}"
+                                                                            data-message="{{ json_encode($notification->message) }}"
+                                                                            data-date="{{ json_encode($notification->date) }}"
+                                                                            data-time="{{ json_encode($notification->time) }}"
+                                                                            data-is-read="{{ json_encode($notification->is_read) }}">Delete</a>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                     @endif
@@ -131,7 +147,7 @@
                         <p class="text-bold" id="message"></p>
                     </div>
                     <div class="modal-footer">
-                        <form action="{{route('user.notification.read')}}" method="post">
+                        <form action="{{ route('user.notification.read') }}" method="post">
                             @csrf
                             <input type="hidden" name="id" id="id">
                             <input type="hidden" name="is_read" id="is_read">
@@ -144,6 +160,41 @@
         </div>
     </div>
 
+    <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-light">
+                    <h3 class="modal-title" id="title"></h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <h4 class="text-bold">Date: </h4>
+                        <p class="text-bold" id="date"></p>
+                        <h4 class="text-bold">Time: </h4>
+                        <p class="text-bold" id="time"></p>
+                    </div>
+                    <div class="row">
+                        <h4 class="text-bold">Message: </h4>
+                        <p class="text-bold" id="message"></p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <h4 class="text-bold">Do you really want to delete this? </h4>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ route('user.notification.delete') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id" id="id">
+                            <button type="sumbit" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -151,6 +202,24 @@
         $(document).ready(function() {
 
             $('#viewModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = JSON.parse(button.data('id'));
+                var title = JSON.parse(button.data('title'));
+                var message = JSON.parse(button.data('message'));
+                var date = JSON.parse(button.data('date'));
+                var time = JSON.parse(button.data('time'));
+                var is_read = JSON.parse(button.data('is-read'));
+                var modal = $(this);
+
+                modal.find('#id').val(id);
+                modal.find('#title').text(title);
+                modal.find('#message').text(message);
+                modal.find('#date').text(date);
+                modal.find('#time').text(time);
+                modal.find('#is_read').val(is_read);
+            });
+
+            $('#deleteModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var id = JSON.parse(button.data('id'));
                 var title = JSON.parse(button.data('title'));
