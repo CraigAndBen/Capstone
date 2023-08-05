@@ -390,11 +390,10 @@ class DoctorController extends Controller
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $infos = Doctor::all();
-        $doctor = Doctor::where('account_id', $profile->id)->first();
-        $appointments = Appointment::where('specialties', $doctor->specialties)->get();
+        $doctors = Doctor::all();
+        $appointments = Appointment::where('specialties', $info->specialties)->orderBy('appointment_date', 'desc')->get();
 
-        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
+        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
     }
     public function confirmedAppointmentList()
     {
@@ -421,11 +420,10 @@ class DoctorController extends Controller
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $infos = Doctor::all();
-        $doctor = Doctor::where('account_id', $profile->id)->first();
-        $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'confirmed')->get();
+        $doctors = Doctor::all();
+        $appointments = Appointment::where('specialties', $info->specialties, 'status')->where('status', 'confirmed')->get();
 
-        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
+        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
 
     }
 
@@ -454,11 +452,10 @@ class DoctorController extends Controller
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $infos = Doctor::all();
-        $doctor = Doctor::where('account_id', $profile->id)->first();
-        $appointments = Appointment::where('specialties', $doctor->specialties, 'status')->where('status', 'done')->get();
+        $doctors = Doctor::all();
+        $appointments = Appointment::where('specialties', $info->specialties, 'status')->where('status', 'done')->get();
 
-        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'infos', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
+        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count','info'));
     }
 
     public function confirmedAppointment(Request $request)
@@ -472,8 +469,8 @@ class DoctorController extends Controller
         $appointment->doctor_id = $doctor->account_id;
         $appointment->save();
 
-        $currentDate = Carbon::now()->toTimeString();
-        $currentTime = Carbon::now()->toDateString();
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
         $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is confirmed.';
 
         Notification::create([
@@ -495,12 +492,24 @@ class DoctorController extends Controller
         $appointment->status = 'done';
         $appointment->save();
 
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
+        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is done.';
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'appointment done',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+        ]);
+
+
         return redirect()->back()->with('success', 'Appointment Done successfully.');
     }
 
     public function cancelAppointment(Request $request)
     {
-
         $appointment = Appointment::findOrFail($request->input('appointment_id'));
 
         $appointment->status = 'cancelled';

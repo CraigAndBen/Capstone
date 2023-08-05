@@ -232,8 +232,8 @@
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="specialties" name="specialties" disabled>
                                                 <option>Select Specialist</option>
-                                                @foreach ($infos as $info)
-                                                    <option value="{{ $info->specialties }}">{{ $info->specialties }}</option>
+                                                @foreach ($doctors as $doctor)
+                                                    <option value="{{ $doctor->specialties }}">{{ $doctor->specialties }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

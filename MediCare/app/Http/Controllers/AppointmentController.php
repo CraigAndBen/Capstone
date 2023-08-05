@@ -198,7 +198,7 @@ class AppointmentController extends Controller
 
         $user = Auth::user();
         $infos = Doctor::all();
-        $appointments = Appointment::where('account_id', $user->id)->where('status', 'pending')->get();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'pending')->orderBy('created_at', 'desc')->get();
 
         return view('user.appointment.appointment', compact('appointments','infos','timeList'));
     }
@@ -359,8 +359,18 @@ class AppointmentController extends Controller
             $appointment->status = 'cancelled';
             $appointment->save();
 
-            return redirect()->route('user.appointment')->with('status', 'Appoinment cancelled successfully.');
+            return redirect()->route('user.appointment')->with('info', 'Appoinment cancelled successfully.');
         }
+    }
+
+    public function deleteAppointment(Request $request){
+        $appointment = Appointment::findOrFail($request->input('id'));
+
+        $appointment->delete();
+
+        // Redirect with a success message
+        return redirect()->route('user.cancelled.appointment')->with('success', 'Appointment deleted successfully.');
+
     }
 
 

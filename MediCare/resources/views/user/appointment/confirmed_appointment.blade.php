@@ -22,9 +22,10 @@
                 <div class="auth-wrapper v3">
                     <div class="auth-form">
                         <div class="card my-3 shadow">
-                            <div class="row m-3">
+                            <div class="row m-4">
                                 <h2>Confirmed Appointment List</h2>
                             </div>
+                            <hr>
                             <div class="card-body">
                                 <div class="m-5">
                                     @if ($errors->any())

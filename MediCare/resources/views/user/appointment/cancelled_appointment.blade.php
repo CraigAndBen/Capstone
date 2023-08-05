@@ -21,10 +21,11 @@
             <div class="auth-main">
                 <div class="auth-wrapper v3">
                     <div class="auth-form">
-                        <div class="card my-3 shadow">
+                        <div class="card my-4 shadow">
                             <div class="row m-3">
                                 <h2>Cancelled Appointment List</h2>
                             </div>
+                            <hr>
                             <div class="card-body">
                                 <div class="m-5">
                                     @if ($errors->any())
@@ -88,26 +89,6 @@
                                                                 </button>
                                                                 <div class="dropdown-menu">
                                                                     <a class="dropdown-item btn btn-primary"
-                                                                        data-toggle="modal" data-target="#updateModal"
-                                                                        data-appointment-id="{{ json_encode($appointment->id) }}"
-                                                                        data-first-name="{{ json_encode($appointment->first_name) }}"
-                                                                        data-middle-name="{{ json_encode($appointment->middle_name) }}"
-                                                                        data-last-name="{{ json_encode($appointment->last_name) }}"
-                                                                        data-street="{{ json_encode($appointment->street) }}"
-                                                                        data-brgy="{{ json_encode($appointment->brgy) }}"
-                                                                        data-city="{{ json_encode($appointment->city) }}"
-                                                                        data-province="{{ json_encode($appointment->province) }}"
-                                                                        data-email="{{ json_encode($appointment->email) }}"
-                                                                        data-birthdate="{{ json_encode($appointment->birthdate) }}"
-                                                                        data-gender="{{ json_encode($appointment->gender) }}"
-                                                                        data-phone="{{ json_encode($appointment->phone) }}"
-                                                                        data-specialties="{{ json_encode($appointment->specialties) }}"
-                                                                        data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
-                                                                        data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
-                                                                        data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
-                                                                        data-reason="{{ json_encode($appointment->reason) }}">Update
-                                                                    </a>
-                                                                    <a class="dropdown-item btn btn-primary"
                                                                         data-toggle="modal" data-target="#viewModal"
                                                                         data-first-name="{{ json_encode($appointment->first_name) }}"
                                                                         data-middle-name="{{ json_encode($appointment->middle_name) }}"
@@ -125,26 +106,12 @@
                                                                         data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                         data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                         data-reason="{{ json_encode($appointment->reason) }}">View</a>
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                        data-toggle="modal" data-target="#updateModal"
-                                                                        data-appointment-id="{{ json_encode($appointment->id) }}"
-                                                                        data-first-name="{{ json_encode($appointment->first_name) }}"
-                                                                        data-middle-name="{{ json_encode($appointment->middle_name) }}"
-                                                                        data-last-name="{{ json_encode($appointment->last_name) }}"
-                                                                        data-street="{{ json_encode($appointment->street) }}"
-                                                                        data-brgy="{{ json_encode($appointment->brgy) }}"
-                                                                        data-city="{{ json_encode($appointment->city) }}"
-                                                                        data-province="{{ json_encode($appointment->province) }}"
-                                                                        data-email="{{ json_encode($appointment->email) }}"
-                                                                        data-birthdate="{{ json_encode($appointment->birthdate) }}"
-                                                                        data-gender="{{ json_encode($appointment->gender) }}"
-                                                                        data-phone="{{ json_encode($appointment->phone) }}"
-                                                                        data-specialties="{{ json_encode($appointment->specialties) }}"
-                                                                        data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
-                                                                        data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
-                                                                        data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
-                                                                        data-reason="{{ json_encode($appointment->reason) }}">Re-cancel
-                                                                    </a>
+                                                                        <form action="{{route('user.appointment.delete')}}" method="POST">
+                                                                            @csrf
+                                                                            <input type="hidden" name="id" value="{{$appointment->id}}">
+                                                                            <button class="dropdown-item btn btn-primary" type="submit"
+                                                                            >Delete</button>
+                                                                        </form>
                                                                 </div>
                                                             </div>
                                                         </td>

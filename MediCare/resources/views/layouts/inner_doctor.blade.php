@@ -149,7 +149,7 @@
         <div class="navbar-wrapper">
             <div class="m-header">
                 <div class="mt-3">
-                    <a href="/doctor/dashboard" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
+                    <a href="{{route('doctor.dashboard')}}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
                             alt="" class="" style="max-width: 150px; max-height: 90px"></a>
                 </div>
             </div>

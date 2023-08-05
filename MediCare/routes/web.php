@@ -36,6 +36,7 @@ Route::get('/user/appointment/cancelled', [AppointmentController::class, 'cancel
 Route::post('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');
 Route::post('/user/update/appointment', [AppointmentController::class, 'updateAppointment'])->name('user.update.appointment');
 Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAppointment'])->name('user.cancel.appointment');
+Route::post('/user/appointment/delete', [AppointmentController::class, 'deleteAppointment'])->name('user.appointment.delete');
 
 // User Notification
 Route::get('/user/notification', [UsersController::class, 'notification'])->name('user.notification');
