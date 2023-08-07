@@ -43,7 +43,7 @@
     <header class="pc-header">
         <div class="m-header mt-3">
 
-            <a href="{{ route('superadmin.dashboard') }}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
+            <a href="{{ route('admin.dashboard') }}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
                     alt="" class="" style="max-width: 150px; max-height: 90px"></a>
             <!-- ======= Menu collapse Icon ===== -->
         </div>
@@ -109,7 +109,7 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="text-center py-2">
-                                    <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                    <a href="{{ route('admin.notification') }}" class="btn btn-primary">Show all</a>
                                 </div>
                             @else
                                 <div class="dropdown-header">
@@ -199,7 +199,7 @@
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('superadmin.dashboard') }}" class="pc-link"><span
+                        <a href="{{ route('admin.dashboard') }}" class="pc-link"><span
                                 class="pc-micon"></span><span class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
@@ -308,13 +308,13 @@
                 <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3 align-items-center">
-                                <div class="col">
-                                    <h5>Patient Diagnosis This Year</h5>
+                            @if ($diagnosisCount)
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <h5>Patient Diagnosis This Year</h5>
+                                    </div>
+                                    <div class="col-auto"> </div>
                                 </div>
-                                <div class="col-auto"> </div>
-                            </div>
-                            @if ($limitDiagnosis)
                                 <canvas id="diagnosisChart"></canvas>
 
                                 <ul class="list-group list-group-flush mt-3">
@@ -333,12 +333,12 @@
                                         </li>
                                     @endforeach
                                 </ul>
-                                <div class="text-center">
-                                    <a href="#!" class="btn btn-primary">View all</a>
+                                <div class="text-center my-3">
+                                    <a href="{{route('admin.demographics.diagnose')}}" class="btn btn-primary">View all</a>
                                 </div>
                             @else
-                                <div class="text-center">
-                                    <h3>No Patient Yet.</h3>
+                                <div class="text-center my-3">
+                                    <h3>No Diagnosis Yet.</h3>
                                 </div>
                             @endif
 

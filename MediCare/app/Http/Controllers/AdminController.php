@@ -38,6 +38,7 @@ class AdminController extends Controller
             ->orderByDesc('total_occurrences')
             ->get();
         
+        $diagnosisCount = $rankedDiagnosis->count();
         $limitDiagnosis = $rankedDiagnosis->take(5);
 
         // Retrieve the rank 1 diagnosis for the current year
@@ -54,7 +55,7 @@ class AdminController extends Controller
         });
         $values = $data->pluck('count');
 
-        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'limitDiagnosis', 'rank1Diagnosis'));
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'limitDiagnosis', 'rank1Diagnosis','diagnosisCount'));
     }
 
     public function profile(Request $request): View
@@ -173,10 +174,10 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::all();
+        $patients = Patient::orderBy('admitted_date','desc')->get();
         $limitPatients = $patients->take(5);
 
-        return view('admin.patient.patient', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
 
     }
 

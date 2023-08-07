@@ -328,13 +328,14 @@
                 <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
+                            @if ($diagnosisCount)
                             <div class="row mb-3 align-items-center">
                                 <div class="col">
                                     <h5>Patient Diagnosis This Year</h5>
                                 </div>
                                 <div class="col-auto"> </div>
                             </div>
-                            @if ($rankedDiagnosis)
+
                                 <canvas id="diagnosisChart"></canvas>
 
                                 <ul class="list-group list-group-flush mt-3">

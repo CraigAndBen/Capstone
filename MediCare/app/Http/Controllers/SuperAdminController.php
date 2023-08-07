@@ -42,7 +42,7 @@ class SuperAdminController extends Controller
             ->orderByDesc('total_occurrences')
             ->get();
 
-        // Retrieve the rank 1 diagnosis for the current year
+        $diagnosisCount = $rankedDiagnosis->count();
         $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
 
         $data = Patient::whereYear('admitted_date', $currentYear)
@@ -56,7 +56,7 @@ class SuperAdminController extends Controller
         });
         $values = $data->pluck('count');
 
-        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis'));
+        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis','diagnosisCount'));
     }
 
     public function profile(Request $request): View
@@ -1029,10 +1029,9 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::all();
-        $limitPatients = $patients->take(5);
+        $patients = Patient::orderBy('admitted_date','desc')->get();
 
-        return view('superadmin.patient.patient', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count','patients'));
 
     }
 

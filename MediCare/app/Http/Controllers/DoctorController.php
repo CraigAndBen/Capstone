@@ -52,6 +52,7 @@ class DoctorController extends Controller
             ->whereMonth('appointment_date', $currentMonth)
             ->get();
 
+        $appointmentCount = $currentMonthAppointments->count();
         $limitCurrentMonthAppointments = $currentMonthAppointments->take(5);
 
         // Retrieve the monthly appointments for the specific doctor for the current year
@@ -93,7 +94,7 @@ class DoctorController extends Controller
             }
         }
 
-        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount','limitCurrentMonthAppointments','months','appointmentCounts'));
+        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth','patientCount','limitCurrentMonthAppointments','months','appointmentCounts','appointmentCount'));
     }
 
     public function profile(Request $request): View

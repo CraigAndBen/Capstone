@@ -119,15 +119,15 @@
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src="{{asset($info->image_data)}}" alt="user-image"
-                                class="user-avtar" />
+                            <img src="{{ asset($info->image_data) }}" alt="user-image" class="user-avtar" />
                             <span>
                                 <i class="ti ti-settings"></i>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Good Morning, <span class="small text-muted">{{ucwords($profile->first_name)}} {{ucwords($profile->last_name)}}</span>
+                                <h4>Good Morning, <span class="small text-muted">{{ ucwords($profile->first_name) }}
+                                        {{ ucwords($profile->last_name) }}</span>
                                 </h4>
                                 <hr>
                                 <div class="profile-notification-scroll position-relative"
@@ -268,21 +268,22 @@
                 <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3 align-items-center">
-                                <div class="col">
-                                    <h5>Appointment This Year</h5>
+                            @if ($appointmentCount)
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <h5>Appointment This Year</h5>
+                                    </div>
+                                    <div class="col-auto"> </div>
                                 </div>
-                                <div class="col-auto"> </div>
-                            </div>
-                            <canvas id="appointmentChart"></canvas>
-                            <hr>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col">
-                                    <h5>Current Appointments</h5>
+                                <canvas id="appointmentChart"></canvas>
+                                <hr>
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <h5>Current Appointments</h5>
+                                    </div>
+                                    <div class="col-auto"> </div>
                                 </div>
-                                <div class="col-auto"> </div>
-                            </div>
-                            @if ($limitCurrentMonthAppointments)
+
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead class="thead-dark">
@@ -296,10 +297,11 @@
                                         <tbody>
                                             @foreach ($limitCurrentMonthAppointments as $appointment)
                                                 <tr>
-                                                    <td>{{ucwords($appointment->first_name)}} {{ucwords($appointment->last_name)}}</td>
-                                                    <td>{{ucwords($appointment->appointment_type)}}</td>
-                                                    <td>{{ucwords($appointment->appointment_date)}}</td>
-                                                    <td>{{ucwords($appointment->status)}}</td>
+                                                    <td>{{ ucwords($appointment->first_name) }}
+                                                        {{ ucwords($appointment->last_name) }}</td>
+                                                    <td>{{ ucwords($appointment->appointment_type) }}</td>
+                                                    <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                    <td>{{ ucwords($appointment->status) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -307,11 +309,11 @@
                                 </div>
 
                                 <div class="text-center">
-                                    <a href="{{route('doctor.appointment')}}" class="btn btn-primary">View all</a>
+                                    <a href="{{ route('doctor.appointment') }}" class="btn btn-primary">View all</a>
                                 </div>
                             @else
                                 <div class="text-center">
-                                    <h3>No Patient Yet.</h3>
+                                    <h3>No Appointment Yet.</h3>
                                 </div>
                             @endif
 
@@ -359,57 +361,57 @@
 </body>
 <!-- [Body] end -->
 <script>
-     // Convert the PHP array to JavaScript variables
-     var months = @json($patientsByMonth->pluck('month'));
-        const patientCounts = @json($patientsByMonth->pluck('count'));
+    // Convert the PHP array to JavaScript variables
+    var months = @json($patientsByMonth->pluck('month'));
+    const patientCounts = @json($patientsByMonth->pluck('count'));
 
-        var ctx = document.getElementById('patientChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'Patient',
-                    data: patientCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    var ctx = document.getElementById('patientChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Patient',
+                data: patientCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
 
-        // Convert the PHP array to JavaScript variables
-        var months = @json($months);
-        const appointmentCounts = @json($appointmentCounts);
+    // Convert the PHP array to JavaScript variables
+    var months = @json($months);
+    const appointmentCounts = @json($appointmentCounts);
 
-        var ctx = document.getElementById('appointmentChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'Monthly Appointments',
-                    data: appointmentCounts,
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 2,
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    var ctx = document.getElementById('appointmentChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Monthly Appointments',
+                data: appointmentCounts,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
 </script>
 
 </html>
