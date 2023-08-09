@@ -64,25 +64,26 @@
 
                                 <div class="d-flex justify-content-end">
                                     <div class="m-1">
-                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Patient</button>
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
+                                            Patient</button>
                                     </div>
-                                  </div>
+                                </div>
                                 <hr>
 
-                                <form action="{{ route('admin.patient.search') }}" method="GET">
+                                <form action="{{ route('admin.patient.search') }}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-10">
                                             <div class="form-floating mb-3">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="floatingInput search" placeholder="Search..."
-                                                    name="search"/>
+                                                <input type="text" class="form-control ml-2" id="floatingInput search"
+                                                    placeholder="Search..." name="search" />
                                                 <label for="floatingInput">Search</label>
                                             </div>
                                         </div>
                                         <div class="col-md-2 mt-2">
                                             <button type="submit" class="btn btn-primary">Search</button>
                                         </div>
+                                    </div>
                                 </form>
 
                                 @if ($patients->isEmpty())
@@ -178,7 +179,8 @@
                     </div>
 
                     {{-- Create modal --}}
-                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
@@ -306,7 +308,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                    <option value="{{ $doctor->id }}">Dr.
+                                                        {{ ucwords($doctor->first_name) }}
                                                         {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
@@ -466,8 +469,9 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
-                                                    {{ ucwords($doctor->last_name) }}</option>
+                                                    <option value="{{ $doctor->id }}">Dr.
+                                                        {{ ucwords($doctor->first_name) }}
+                                                        {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -623,8 +627,9 @@
                                         <select class="form-control p-3" id="physician" name="physician" disabled>
                                             <option>Select physician</option>
                                             @foreach ($doctors as $doctor)
-                                            <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
-                                                {{ ucwords($doctor->last_name) }}</option>
+                                                <option value="{{ $doctor->id }}">Dr.
+                                                    {{ ucwords($doctor->first_name) }}
+                                                    {{ ucwords($doctor->last_name) }}</option>
                                             @endforeach
                                         </select>
                                     </div>

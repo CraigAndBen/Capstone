@@ -337,7 +337,6 @@
                             </div>
 
                                 <canvas id="diagnosisChart"></canvas>
-
                                 <ul class="list-group list-group-flush mt-3">
                                     @foreach ($rankedDiagnosis as $diagnosis)
                                         <li class="list-group-item px-0">
