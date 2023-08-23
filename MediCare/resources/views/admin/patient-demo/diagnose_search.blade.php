@@ -72,7 +72,7 @@
                             </form>
                         </div>
                         <hr>
-                        <div class="container mb-3">
+                        <div class="container mb-5">
                             <canvas id="diagnosePatientDemographicsChart" width="800" height="400"></canvas>
                         </div>
                     </div>

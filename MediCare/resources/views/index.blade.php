@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{asset('home_assets/img/favicon.png')}}" rel="icon">
+  <link href="{{ asset('logo.jpg') }}" rel="icon">
   <link href="{{asset('home_assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -658,13 +658,13 @@
               <div class="address">
                 <i class="bi bi-geo-alt"></i>
                 <h4>Location:</h4>
-                <p>A108 Adam Street, New York, NY 535022</p>
+                <p>C98V+GR4, Sta Elena Baras, Nabua, 4434 Camarines Sur Philippines </p>
               </div>
 
               <div class="email">
                 <i class="bi bi-envelope"></i>
                 <h4>Email:</h4>
-                <p>info@example.com</p>
+                <p>medicare@example.com</p>
               </div>
 
               <div class="phone">

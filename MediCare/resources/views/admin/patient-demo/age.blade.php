@@ -1,6 +1,7 @@
 @extends('layouts.inner_admin')
 
 @section('content')
+
     <!-- [ Main Content ] start -->
     <div class="pc-container pb-3">
         <div class="pc-content ">
@@ -60,7 +61,7 @@
                             </div>
                             <hr>
                             <div class="container">
-                                <canvas id="ageDemographicsChart" width="800" height="400"></canvas>
+                                <canvas id="ageDemographicsChart"></canvas>
                             </div>
                         </div>
                     </div>
