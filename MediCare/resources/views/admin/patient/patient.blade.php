@@ -86,7 +86,7 @@
                                     </div>
                                 </form>
 
-                                @if ($patients->isEmpty())
+                                @if ($limitPatients->isEmpty())
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
@@ -103,7 +103,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
-                                            @foreach ($patients as $patient)
+                                            @foreach ($limitPatients as $patient)
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>

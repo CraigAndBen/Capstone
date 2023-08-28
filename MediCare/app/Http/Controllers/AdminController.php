@@ -177,7 +177,7 @@ class AdminController extends Controller
         $patients = Patient::orderBy('admitted_date','desc')->get();
         $limitPatients = $patients->take(5);
 
-        return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('admin.patient.patient', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
 
     }
 
@@ -766,6 +766,8 @@ class AdminController extends Controller
         ->orderByDesc('total_occurrences')
         ->get();
 
+        $limitDiagnosis = $rankedDiagnosis->take(5);
+
         // Retrieve the unique years from the "admitted" column
         $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
@@ -781,7 +783,7 @@ class AdminController extends Controller
             ->pluck('diagnosis')
             ->toArray();
 
-        return view('admin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'countUniqueYears','rankedDiagnosis'));
+        return view('admin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData','limitDiagnosis', 'countUniqueYears','rankedDiagnosis'));
     }
 
     public function diagnoseTrendSearch(Request $request)
@@ -798,6 +800,8 @@ class AdminController extends Controller
         ->groupBy('diagnosis', 'month')
         ->orderByDesc('total_occurrences')
         ->get();
+
+        $limitDiagnosis = $rankedDiagnosis->take(5);
 
         // Retrieve the unique years from the "admitted" column
         $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
@@ -893,7 +897,7 @@ class AdminController extends Controller
         }
 
 
-        return view('admin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData','rankedDiagnosis'));
+        return view('admin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData','limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData','rankedDiagnosis'));
     }
 
     private function hasChanges($info, $updatedData)

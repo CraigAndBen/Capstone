@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <ul class="list-group list-group-flush mt-3">
-                                        @foreach ($rankedDiagnosis as $diagnosis)
+                                        @foreach ($limitDiagnosis as $diagnosis)
         
                                         <li class="list-group-item px-0">
                                             <div class="row align-items-start">
