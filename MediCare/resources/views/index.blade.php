@@ -396,7 +396,7 @@
                     <p>Includes a team of highly trained professionals, including cardiologists, cardiac nurses, and technicians who specialize in different aspects of heart care. Cardiology departments often utilize advanced diagnostic tools, such as electrocardiograms, echocardiograms, and cardiac catheterization, to evaluate and manage various cardiovascular conditions.</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="assets/img/departments-1.jpg" alt="" class="img-fluid">
+                    <img src="home_assets/img/departments-1.jpg" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>
@@ -408,7 +408,7 @@
                     <p>Neurologists use a variety of diagnostic tools and treatments to address conditions such as epilepsy, multiple sclerosis, stroke, and Alzheimer's disease. The department often works closely with other medical specialties to provide comprehensive care for patients with neurological disorders.</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="assets/img/departments-2.jpg" alt="" class="img-fluid">
+                    <img src="home_assets/img/departments-2.jpg" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>
@@ -420,7 +420,7 @@
                     <p> Hepatologists work closely with other medical professionals to manage various liver conditions, such as viral hepatitis, liver cancer, autoimmune liver diseases, and liver cirrhosis. The department utilizes advanced diagnostic and therapeutic tools to provide patients with personalized care and improve their quality of life.</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="assets/img/departments-3.jpg" alt="" class="img-fluid">
+                    <img src="home_assets/img/departments-3.jpg" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>
@@ -432,7 +432,7 @@
                     <p>Pediatricians provide preventive and therapeutic care for a wide range of medical conditions affecting children, including infectious diseases, allergies, developmental disorders, and chronic illnesses. The department is dedicated to promoting the overall health and development of children through routine check-ups, vaccinations, and family-centered care</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="assets/img/departments-4.jpg" alt="" class="img-fluid">
+                    <img src="home_assets/img/departments-4.jpg" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>
@@ -444,7 +444,7 @@
                     <p>Ophthalmologists are trained to perform eye exams, prescribe corrective lenses, and provide medical and surgical treatment for a range of conditions such as cataracts, glaucoma, and macular degeneration. The department uses advanced technology and techniques to improve vision and maintain the health of the eyes</p>
                   </div>
                   <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="assets/img/departments-5.jpg" alt="" class="img-fluid">
+                    <img src="home_assets/img/departments-5.jpg" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>

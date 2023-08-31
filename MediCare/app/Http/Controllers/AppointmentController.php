@@ -114,7 +114,7 @@ class AppointmentController extends Controller
                         'time' => $currentTime,
                     ]);
                     
-                    return back()->with('success', 'Appointment Created Successfully.'); 
+                    return back()->with('success', 'Appointment created successfully that dated: ' .$request->input('appointment_date') . 'and timed:' . $request->input('appointment_time')); 
                 }
 
                 $appoint = Appointment::where('appointment_date', $appointment->appointment_date)->get();
@@ -172,7 +172,7 @@ class AppointmentController extends Controller
                 'specialties' => $appointment->specialties,
             ]);
             
-            return back()->with('success', 'Appointment Created Successfully.'); 
+            return back()->with('success', 'Appointment created successfully that dated: ' .$request->input('appointment_date') . 'and timed:' . $request->input('appointment_time')); 
         }
 
 
