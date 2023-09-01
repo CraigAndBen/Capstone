@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('patient', function (Blueprint $table) {
+        Schema::create('guardians', function (Blueprint $table) {
             $table->id();
+            $table->smallInteger('patient_id')->nullable();
             $table->string('first_name')->nullable();
             $table->string('middle_name')->nullable();
             $table->string('last_name')->nullable();
@@ -20,17 +21,12 @@ return new class extends Migration
             $table->string('brgy')->nullable();
             $table->string('city')->nullable();
             $table->string('province')->nullable();
-            $table->date('birthdate')->nullable();
             $table->string('gender')->nullable();
+            $table->string('birthdate')->nullable();
+            $table->string('age')->nullable();
+            $table->string('relationship')->nullable();
             $table->string('phone')->nullable();
-            $table->string('admitted_date')->nullable();
-            $table->string('discharged_date')->nullable();
-            $table->smallInteger('room_number')->nullable();
-            $table->smallInteger('bed_number')->nullable();
-            $table->smallInteger('physician')->nullable();
-            $table->string('medical_condition')->nullable();
-            $table->string('diagnosis')->nullable();
-            $table->string('medication')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
@@ -40,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('patient');
+        Schema::dropIfExists('guardians');
     }
 };

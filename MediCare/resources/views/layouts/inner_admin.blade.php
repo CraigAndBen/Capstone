@@ -110,7 +110,7 @@
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="text-center py-2">
-                                <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                <a href="{{ route('admin.notification') }}" class="btn btn-primary">Show all</a>
                             </div>
                         @else
                             <div class="dropdown-header">
@@ -232,6 +232,8 @@
                                     href="{{route('admin.patient')}}">Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{route('admin.patient.admitted')}}">Patient Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                        href="{{route('admin.patient.outpatient')}}">Outpatient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">

@@ -11,7 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('super_admins', function (Blueprint $table) {
+            $table->id();
+            $table->smallInteger('account_id')->nullable();
+            $table->enum('access_level', ['half_access','full_access'])->default('full_access');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('super_admins');
     }
 };

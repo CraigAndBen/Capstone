@@ -236,6 +236,8 @@
                             </li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.patient.admitted') }}">Patient Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.patient.outpatient') }}">Outpatient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">

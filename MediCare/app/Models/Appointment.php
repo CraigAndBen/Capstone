@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
 
-    protected $table = 'appointment';
+    protected $table = 'appointments';
     protected $guarded = [];
 
     use HasFactory;

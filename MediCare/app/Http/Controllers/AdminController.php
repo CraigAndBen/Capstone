@@ -193,6 +193,7 @@ class AdminController extends Controller
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $searchTerm = $request->input('search');
+        
         $patients = Patient::where(function ($query) use ($searchTerm) {
             $columns = Schema::getColumnListing('patient'); // Replace 'your_table' with the actual table name
 
@@ -235,6 +236,7 @@ class AdminController extends Controller
             'province' => $request->input('province'),
             'birthdate' => $request->input('birthdate'),
             'phone' => $request->input('phone'),
+            'type' => 'admitted_patient',
             'admitted_date' => $request->input('admitted_date'),
             'discharged_date' => $request->input('discharged_date'),
             'room_number' => $request->input('room_number'),
@@ -247,6 +249,88 @@ class AdminController extends Controller
 
         return back()->with('success', 'Patient added sucessfully.');
 
+    }
+    public function outpatientStore(Request $request)
+    {
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'brgy' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'birthdate' => 'required|date',
+            'gender' => 'required|string|max:255',
+            'phone' => 'required',
+            'admitted_date' => 'required|date',
+            'room_number' => 'required',
+            'bed_number' => 'required',
+            'physician' => 'required|string|max:255',
+        ]);
+
+        Patient::create([
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'street' => $request->input('street'),
+            'gender' => $request->input('gender'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'birthdate' => $request->input('birthdate'),
+            'phone' => $request->input('phone'),
+            'type' => 'admitted_patient',
+            'admitted_date' => $request->input('admitted_date'),
+            'discharged_date' => $request->input('discharged_date'),
+            'room_number' => $request->input('room_number'),
+            'bed_number' => $request->input('bed_number'),
+            'physician' => $request->input('physician'),
+            'medical_condition' => $request->input('medical_condition'),
+            'diagnosis' => $request->input('diagnosis'),
+            'medication' => $request->input('medication'),
+        ]);
+
+        return back()->with('success', 'Patient added sucessfully.');
+
+    }
+
+    public function outpatientList()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = User::where('role', 'doctor')->get();
+        $patients = Patient::where('type', 'outpatient')->orderBy('created_at','desc')->get();
+        $limitPatients = $patients->take(5);
+
+        return view('admin.patient.patient_outpatient', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+    }
+
+    public function outpatientSearch(Request $request)
+    {
+        $request->validate([
+            'search' => 'required|string|max:255',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = User::where('role', 'doctor')->get();
+        $searchTerm = $request->input('search');
+        
+        $patients = Patient::where('type', 'outpatient')->where(function ($query) use ($searchTerm) {
+            $columns = Schema::getColumnListing('patients'); // Replace 'your_table' with the actual table name
+
+            foreach ($columns as $column) {
+                $query->orWhere($column, 'LIKE', '%' . $searchTerm . '%');
+            }
+        })->get();
+
+        return view('admin.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
 
     public function patientUpdate(Request $request)
@@ -329,7 +413,7 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::whereNull('discharged_date')->get();
+        $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at','desc')->get();
         $limitPatients = $patients->take(5);
 
         return view('admin.patient.patient_admitted', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));

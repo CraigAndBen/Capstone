@@ -11,21 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nurse', function (Blueprint $table) {
+        Schema::create('users_info', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('account_id')->nullable();
-            $table->smallInteger('age')->nullable();
-            $table->string('gender')->nullable();
-            $table->string('qualification')->nullable();
-            $table->enum('shift', ['day','night','rotating shifts'])->default('day');
-            $table->date('employment_date')->nullable();
-            $table->smallInteger('years_of_experience')->nullable();
+            $table->string('gender');
+            $table->smallInteger('age');
             $table->string('phone')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('photo')->nullable();
             $table->string('address')->nullable();
+            $table->string('occupation')->nullable();
             $table->timestamps();
-        });
+        }); 
     }
 
     /**
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nurse');
+        Schema::dropIfExists('users_info');
     }
 };

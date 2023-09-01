@@ -128,9 +128,12 @@ Route::middleware('auth', 'role:admin')->group(function () {
     // Patient
     Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
     Route::get('/admin/patient/admitted', [AdminController::class, 'patienAdmittedtList'])->name('admin.patient.admitted');
+    Route::get('/admin/patient/outpatient', [AdminController::class, 'outpatientList'])->name('admin.patient.outpatient');
     Route::get('/admin/patient/search', [AdminController::class, 'patientSearch'])->name('admin.patient.search');
     Route::get('/admin/patient/admitted/search', [AdminController::class, 'patientAdmittedSearch'])->name('admin.patient.admitted.search');
+    Route::get('/admin/patient/outpatient/search', [AdminController::class, 'outpatientSearch'])->name('admin.patient.outpatient.search');
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
+    Route::post('/admin/outpatient/store', [AdminController::class, 'outpatientStore'])->name('admin.outpatient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
 
     //  Notification

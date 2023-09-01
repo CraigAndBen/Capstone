@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
-    protected $table = 'patient';
+    protected $table = 'patients';
 
     protected $guarded = [];
     use HasFactory;

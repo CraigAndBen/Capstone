@@ -16,7 +16,7 @@
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Patient Admitted List</li>
+                                <li class="breadcrumb-item" aria-current="page">Outpatient List</li>
                             </ul>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Patient Admitted List</h1>
+                            <h1>Outpatient List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -64,15 +64,15 @@
 
                                 <div class="d-flex justify-content-end">
                                     <div class="m-1">
-                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Patient</button>
+                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Outpatient</button>
                                     </div>
                                     <div class="m-1">
-                                        <a href="{{route('admin.patient.admitted')}}" class="btn btn-secondary">Show All</a>
+                                        <a href="{{route('admin.patient.outpatient')}}" class="btn btn-secondary">Show All</a>
                                     </div>
                                   </div>
                                 <hr>
 
-                                <form action="{{ route('admin.patient.admitted.search') }}" method="GET">
+                                <form action="{{ route('admin.patient.outpatient.search') }}" method="GET">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-10">
