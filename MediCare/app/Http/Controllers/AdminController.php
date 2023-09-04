@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Patient;
+use App\Models\Guardian;
 use App\Models\User_info;
 use Illuminate\View\View;
 use App\Models\Notification;
@@ -207,7 +208,6 @@ class AdminController extends Controller
 
     public function patientStore(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
@@ -245,6 +245,12 @@ class AdminController extends Controller
             'medical_condition' => $request->input('medical_condition'),
             'diagnosis' => $request->input('diagnosis'),
             'medication' => $request->input('medication'),
+            'guardian_first_name' => $request->input('guardian_first_name'),
+            'guardian_last_name' => $request->input('guardian_last_name'),
+            'guardian_birhdate' => $request->input('guardian_birthdate'),
+            'relationship' => $request->input('relationship'),
+            'guardian_phone' => $request->input('guardian_phone'),
+            'guardian_email' => $request->input('guaridan_email'),
         ]);
 
         return back()->with('success', 'Patient added sucessfully.');
@@ -440,6 +446,42 @@ class AdminController extends Controller
         })->get();
 
         return view('admin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+    }
+    
+    public function guardianStore(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'brgy' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'birthdate' => 'required|date',
+            'gender' => 'required|string|max:255',
+            'phone' => 'required',
+            'relationship' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+        ]);
+
+        Guardian::create([
+            'patient_id' => $request->input('id'),
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'street' => $request->input('street'),
+            'gender' => $request->input('gender'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'birthdate' => $request->input('birthdate'),
+            'phone' => $request->input('phone'),
+            'relationship' => $request->input('relationship'),
+            'email' => $request->input('email'),
+        ]);
+
+        return back()->with('success', 'Guardian added sucessfully.');
     }
     public function notification()
     {

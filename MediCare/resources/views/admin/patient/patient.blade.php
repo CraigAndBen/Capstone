@@ -119,107 +119,116 @@
                                                                 {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
                                                     @endforeach
-                                                        @if ($patient->type == 'outpatient')
-                                                            <td>Outpatient</td>
-                                                            <td class="text-center">
-                                                                <div class="dropdown">
-                                                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                        data-toggle="dropdown">
-                                                                        Actions
-                                                                    </button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                            data-target="#updateaOutpatientpatientModal"
-                                                                            data-id="{{ json_encode($patient->id) }}"
-                                                                            data-first-name="{{ json_encode($patient->first_name) }}"
-                                                                            data-middle-name="{{ json_encode($patient->middle_name) }}"
-                                                                            data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                            data-street="{{ json_encode($patient->street) }}"
-                                                                            data-brgy="{{ json_encode($patient->brgy) }}"
-                                                                            data-city="{{ json_encode($patient->city) }}"
-                                                                            data-province="{{ json_encode($patient->province) }}"
-                                                                            data-phone="{{ json_encode($patient->phone) }}"
-                                                                            data-birthdate="{{ json_encode($patient->birthdate) }}"
-                                                                            data-gender="{{ json_encode($patient->gender) }}"
-                                                                            data-physician="{{ json_encode($patient->physician) }}"
-                                                                            data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                            data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                            data-medication="{{ json_encode($patient->medication) }}">Update</a>
-        
-                                                                        <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                            data-target="#viewOutpatientModal"
-                                                                            data-first-name="{{ json_encode($patient->first_name) }}"
-                                                                            data-middle-name="{{ json_encode($patient->middle_name) }}"
-                                                                            data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                            data-street="{{ json_encode($patient->street) }}"
-                                                                            data-brgy="{{ json_encode($patient->brgy) }}"
-                                                                            data-city="{{ json_encode($patient->city) }}"
-                                                                            data-province="{{ json_encode($patient->province) }}"
-                                                                            data-phone="{{ json_encode($patient->phone) }}"
-                                                                            data-birthdate="{{ json_encode($patient->birthdate) }}"
-                                                                            data-gender="{{ json_encode($patient->gender) }}"
-                                                                            data-physician="{{ json_encode($patient->physician) }}"
-                                                                            data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                            data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                            data-medication="{{ json_encode($patient->medication) }}">View</a>
-                                                                    </div>
+                                                    @if ($patient->type == 'outpatient')
+                                                        <td>Outpatient</td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle"
+                                                                    type="button" data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item btn btn-primary"
+                                                                        data-toggle="modal"
+                                                                        data-target="#updateaOutpatientpatientModal"
+                                                                        data-id="{{ json_encode($patient->id) }}"
+                                                                        data-first-name="{{ json_encode($patient->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($patient->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($patient->last_name) }}"
+                                                                        data-street="{{ json_encode($patient->street) }}"
+                                                                        data-brgy="{{ json_encode($patient->brgy) }}"
+                                                                        data-city="{{ json_encode($patient->city) }}"
+                                                                        data-province="{{ json_encode($patient->province) }}"
+                                                                        data-phone="{{ json_encode($patient->phone) }}"
+                                                                        data-birthdate="{{ json_encode($patient->birthdate) }}"
+                                                                        data-gender="{{ json_encode($patient->gender) }}"
+                                                                        data-physician="{{ json_encode($patient->physician) }}"
+                                                                        data-medical-condition="{{ json_encode($patient->medical_condition) }}"
+                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
+                                                                        data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
+                                                                        data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
+                                                                        data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
+                                                                        data-relationship="{{ json_encode($patient->relationship) }}"
+                                                                        data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
+                                                                        data-guardian-email="{{ json_encode($patient->guardian_email) }}"
+                                                                        data-medication="{{ json_encode($patient->medication) }}">Update</a>
+                                                                    <a class="dropdown-item btn btn-primary"
+                                                                        data-toggle="modal"
+                                                                        data-target="#viewOutpatientModal"
+                                                                        data-first-name="{{ json_encode($patient->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($patient->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($patient->last_name) }}"
+                                                                        data-street="{{ json_encode($patient->street) }}"
+                                                                        data-brgy="{{ json_encode($patient->brgy) }}"
+                                                                        data-city="{{ json_encode($patient->city) }}"
+                                                                        data-province="{{ json_encode($patient->province) }}"
+                                                                        data-phone="{{ json_encode($patient->phone) }}"
+                                                                        data-birthdate="{{ json_encode($patient->birthdate) }}"
+                                                                        data-gender="{{ json_encode($patient->gender) }}"
+                                                                        data-physician="{{ json_encode($patient->physician) }}"
+                                                                        data-medical-condition="{{ json_encode($patient->medical_condition) }}"
+                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
+                                                                        data-medication="{{ json_encode($patient->medication) }}">View</a>
                                                                 </div>
-                                                            </td>
-                                                        @else
-                                                            <td>Admitted Patient</td>
-                                                            <td class="text-center">
-                                                                <div class="dropdown">
-                                                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                        data-toggle="dropdown">
-                                                                        Actions
-                                                                    </button>
-                                                                    <div class="dropdown-menu">
-                                                                        <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                            data-target="#updateAdmittedpatientModal"
-                                                                            data-id="{{ json_encode($patient->id) }}"
-                                                                            data-first-name="{{ json_encode($patient->first_name) }}"
-                                                                            data-middle-name="{{ json_encode($patient->middle_name) }}"
-                                                                            data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                            data-street="{{ json_encode($patient->street) }}"
-                                                                            data-brgy="{{ json_encode($patient->brgy) }}"
-                                                                            data-city="{{ json_encode($patient->city) }}"
-                                                                            data-province="{{ json_encode($patient->province) }}"
-                                                                            data-phone="{{ json_encode($patient->phone) }}"
-                                                                            data-birthdate="{{ json_encode($patient->birthdate) }}"
-                                                                            data-gender="{{ json_encode($patient->gender) }}"
-                                                                            data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                            data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                            data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                            data-bed-no="{{ json_encode($patient->bed_number) }}"
-                                                                            data-physician="{{ json_encode($patient->physician) }}"
-                                                                            data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                            data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                            data-medication="{{ json_encode($patient->medication) }}">Update</a>
-        
-                                                                        <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                            data-target="#viewAdmittedPatientModal"
-                                                                            data-first-name="{{ json_encode($patient->first_name) }}"
-                                                                            data-middle-name="{{ json_encode($patient->middle_name) }}"
-                                                                            data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                            data-street="{{ json_encode($patient->street) }}"
-                                                                            data-brgy="{{ json_encode($patient->brgy) }}"
-                                                                            data-city="{{ json_encode($patient->city) }}"
-                                                                            data-province="{{ json_encode($patient->province) }}"
-                                                                            data-phone="{{ json_encode($patient->phone) }}"
-                                                                            data-birthdate="{{ json_encode($patient->birthdate) }}"
-                                                                            data-gender="{{ json_encode($patient->gender) }}"
-                                                                            data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                            data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                            data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                            data-bed-no="{{ json_encode($patient->bed_number) }}"
-                                                                            data-physician="{{ json_encode($patient->physician) }}"
-                                                                            data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                            data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                            data-medication="{{ json_encode($patient->medication) }}">View</a>
-                                                                    </div>
+                                                            </div>
+                                                        </td>
+                                                    @else
+                                                        <td>Admitted Patient</td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle"
+                                                                    type="button" data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item btn btn-primary"
+                                                                        data-toggle="modal"
+                                                                        data-target="#updateAdmittedpatientModal"
+                                                                        data-id="{{ json_encode($patient->id) }}"
+                                                                        data-first-name="{{ json_encode($patient->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($patient->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($patient->last_name) }}"
+                                                                        data-street="{{ json_encode($patient->street) }}"
+                                                                        data-brgy="{{ json_encode($patient->brgy) }}"
+                                                                        data-city="{{ json_encode($patient->city) }}"
+                                                                        data-province="{{ json_encode($patient->province) }}"
+                                                                        data-phone="{{ json_encode($patient->phone) }}"
+                                                                        data-birthdate="{{ json_encode($patient->birthdate) }}"
+                                                                        data-gender="{{ json_encode($patient->gender) }}"
+                                                                        data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-discharged-date="{{ json_encode($patient->discharged_date) }}"
+                                                                        data-room-no="{{ json_encode($patient->room_number) }}"
+                                                                        data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                        data-physician="{{ json_encode($patient->physician) }}"
+                                                                        data-medical-condition="{{ json_encode($patient->medical_condition) }}"
+                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
+                                                                        data-medication="{{ json_encode($patient->medication) }}">Update</a>
+
+                                                                    <a class="dropdown-item btn btn-primary"
+                                                                        data-toggle="modal"
+                                                                        data-target="#viewAdmittedPatientModal"
+                                                                        data-first-name="{{ json_encode($patient->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($patient->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($patient->last_name) }}"
+                                                                        data-street="{{ json_encode($patient->street) }}"
+                                                                        data-brgy="{{ json_encode($patient->brgy) }}"
+                                                                        data-city="{{ json_encode($patient->city) }}"
+                                                                        data-province="{{ json_encode($patient->province) }}"
+                                                                        data-phone="{{ json_encode($patient->phone) }}"
+                                                                        data-birthdate="{{ json_encode($patient->birthdate) }}"
+                                                                        data-gender="{{ json_encode($patient->gender) }}"
+                                                                        data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-discharged-date="{{ json_encode($patient->discharged_date) }}"
+                                                                        data-room-no="{{ json_encode($patient->room_number) }}"
+                                                                        data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                        data-physician="{{ json_encode($patient->physician) }}"
+                                                                        data-medical-condition="{{ json_encode($patient->medical_condition) }}"
+                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
+                                                                        data-medication="{{ json_encode($patient->medication) }}">View</a>
                                                                 </div>
-                                                            </td>
-                                                        @endif
+                                                            </div>
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
 
@@ -260,7 +269,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
+                                                    <input type="text" class="form-control"
                                                         id="floatingInput last_name" placeholder="Last Name"
                                                         name="last_name" required />
                                                     <label for="floatingInput">Last Name</label>
@@ -299,6 +308,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
@@ -323,6 +333,7 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
@@ -356,6 +367,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
@@ -380,6 +392,65 @@
                                             <input type="text" name="medication" class="form-control"
                                                 id="floatingInput medication" placeholder="Medication" />
                                             <label for="floatingInput">Medication</label>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput guardian_first_name" placeholder="Guardian First Name"
+                                                        name="guardian_first_name" />
+                                                    <label for="floatingInput">Guardian First Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput guardian_last_name" placeholder="Guardian Last Name"
+                                                        name="guardian_last_name" />
+                                                    <label for="floatingInput">Guardian Last Name</label>
+                                                </div>
+                                            </div>
+                                                <div class="form-floating mb-3 ">
+                                                    <select class="form-control p-3" id="relationship" name="relationship">
+                                                        <option>Select Relationship</option>
+                                                        <option value="parent">Parent</option>
+                                                        <option value="legal guardian">Legal Guardian</option>
+                                                        <option value="spouse">Spouse</option>
+                                                        <option value="sibling">Siblings</option>
+                                                        <option value="grandparent">Grandparent</option>
+                                                        <option value="aunt/Uncle">Aunt/Uncle</option>
+                                                        <option value="cousin">Cousin</option>
+                                                        <option value="extended family member">Extended Family Member</option>
+                                                        <option value="foster Parent">Foster Parent</option>
+                                                        <option value="close friend">Close Friend</option>
+                                                    </select>
+                                            </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" name="guardian_birthdate" class="form-control"
+                                                        id="floatingInput guardian_birthdate"
+                                                        placeholder="Guardian Birthdate"/>
+                                                    <label for="floatingInput">Guardian Birthdate</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="phone" class="form-control"
+                                                        id="floatingInput guardian_phone" placeholder="Guardian Phone"
+                                                        name="guardian_phone"/>
+                                                    <label for="floatingInput">Guardian Phone</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="phone" class="form-control"
+                                                        id="floatingInput guardian_phone" placeholder="Guardian Email"
+                                                        name="guardian_phone"/>
+                                                    <label for="floatingInput">Guardian Email</label>
+                                                </div>
+                                            </div>
                                         </div>
 
                                 </div>
@@ -672,6 +743,8 @@
                                                 placeholder="Medication" />
                                             <label for="floatingInput">Medication</label>
                                         </div>
+                                        <hr>
+
 
                                 </div>
                                 <div class="modal-footer">
@@ -684,7 +757,7 @@
                     </div>
                     {{-- End Update Modal --}}
 
-                    
+
                     {{-- Update modal --}}
                     <div class="modal fade" id="updateaOutpatientpatientModal" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel">
@@ -813,7 +886,7 @@
                     </div>
                     {{-- End Update Modal --}}
 
-                    
+
 
                     {{-- Update modal --}}
                     <div class="modal fade" id="viewAdmittedPatientModal" tabindex="-1" role="dialog"
@@ -1095,175 +1168,186 @@
                     </div>
                     {{-- End Update Modal --}}
 
-
-                    <!-- [ sample-page ] end -->
+                    <!-- [ Main Content ] end -->
                 </div>
-                <!-- [ Main Content ] end -->
             </div>
-        </div>
 
 
-    @endsection
+        @endsection
 
-    @section('scripts')
-        <script>
-            $(document).ready(function() {
+        @section('scripts')
+            <script>
+                $(document).ready(function() {
 
-                $('#updateAdmittedpatientModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget); // Button that triggered the modal
-                    var id = JSON.parse(button.data('id'));
-                    var first_name = JSON.parse(button.data('first-name'));
-                    var middle_name = JSON.parse(button.data('middle-name'));
-                    var last_name = JSON.parse(button.data('last-name'));
-                    var street = JSON.parse(button.data('street'));
-                    var brgy = JSON.parse(button.data('brgy'));
-                    var city = JSON.parse(button.data('city'));
-                    var province = JSON.parse(button.data('province'));
-                    var birthdate = JSON.parse(button.data('birthdate'));
-                    var gender = JSON.parse(button.data('gender'));
-                    var phone = JSON.parse(button.data('phone'));
-                    var admitted_date = JSON.parse(button.data('admitted-date'));
-                    var discharged_date = JSON.parse(button.data('discharged-date'));
-                    var room_number = JSON.parse(button.data('room-no'));
-                    var bed_number = JSON.parse(button.data('bed-no'));
-                    var physician = JSON.parse(button.data('physician'));
-                    var medical_condition = JSON.parse(button.data('medical-condition'));
-                    var diagnosis = JSON.parse(button.data('diagnosis'));
-                    var medication = JSON.parse(button.data('medication'));
-                    var modal = $(this);
+                    $('#updateAdmittedpatientModal').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget); // Button that triggered the modal
+                        var id = JSON.parse(button.data('id'));
+                        var first_name = JSON.parse(button.data('first-name'));
+                        var middle_name = JSON.parse(button.data('middle-name'));
+                        var last_name = JSON.parse(button.data('last-name'));
+                        var street = JSON.parse(button.data('street'));
+                        var brgy = JSON.parse(button.data('brgy'));
+                        var city = JSON.parse(button.data('city'));
+                        var province = JSON.parse(button.data('province'));
+                        var birthdate = JSON.parse(button.data('birthdate'));
+                        var gender = JSON.parse(button.data('gender'));
+                        var phone = JSON.parse(button.data('phone'));
+                        var admitted_date = JSON.parse(button.data('admitted-date'));
+                        var discharged_date = JSON.parse(button.data('discharged-date'));
+                        var room_number = JSON.parse(button.data('room-no'));
+                        var bed_number = JSON.parse(button.data('bed-no'));
+                        var physician = JSON.parse(button.data('physician'));
+                        var medical_condition = JSON.parse(button.data('medical-condition'));
+                        var diagnosis = JSON.parse(button.data('diagnosis'));
+                        var medication = JSON.parse(button.data('medication'));
+                        var modal = $(this);
 
-                    modal.find('#id').val(id);
-                    modal.find('#first_name').val(first_name);
-                    modal.find('#middle_name').val(middle_name);
-                    modal.find('#last_name').val(last_name);
-                    modal.find('#street').val(street);
-                    modal.find('#brgy').val(brgy);
-                    modal.find('#city').val(city);
-                    modal.find('#province').val(province);
-                    modal.find('#birthdate').val(birthdate);
-                    modal.find('#gender').val(gender);
-                    modal.find('#phone').val(phone);
-                    modal.find('#admitted_date').val(admitted_date);
-                    modal.find('#discharged_date').val(discharged_date);
-                    modal.find('#room_number').val(room_number);
-                    modal.find('#bed_number').val(bed_number);
-                    modal.find('#physician').val(physician);
-                    modal.find('#medical_condition').val(medical_condition);
-                    modal.find('#diagnosis').val(diagnosis);
-                    modal.find('#medication').val(medication);
+                        modal.find('#id').val(id);
+                        modal.find('#first_name').val(first_name);
+                        modal.find('#middle_name').val(middle_name);
+                        modal.find('#last_name').val(last_name);
+                        modal.find('#street').val(street);
+                        modal.find('#brgy').val(brgy);
+                        modal.find('#city').val(city);
+                        modal.find('#province').val(province);
+                        modal.find('#birthdate').val(birthdate);
+                        modal.find('#gender').val(gender);
+                        modal.find('#phone').val(phone);
+                        modal.find('#admitted_date').val(admitted_date);
+                        modal.find('#discharged_date').val(discharged_date);
+                        modal.find('#room_number').val(room_number);
+                        modal.find('#bed_number').val(bed_number);
+                        modal.find('#physician').val(physician);
+                        modal.find('#medical_condition').val(medical_condition);
+                        modal.find('#diagnosis').val(diagnosis);
+                        modal.find('#medication').val(medication);
+                    });
+
+                    $('#updateaOutpatientpatientModal').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget); // Button that triggered the modal
+                        var id = JSON.parse(button.data('id'));
+                        var first_name = JSON.parse(button.data('first-name'));
+                        var middle_name = JSON.parse(button.data('middle-name'));
+                        var last_name = JSON.parse(button.data('last-name'));
+                        var street = JSON.parse(button.data('street'));
+                        var brgy = JSON.parse(button.data('brgy'));
+                        var city = JSON.parse(button.data('city'));
+                        var province = JSON.parse(button.data('province'));
+                        var birthdate = JSON.parse(button.data('birthdate'));
+                        var gender = JSON.parse(button.data('gender'));
+                        var phone = JSON.parse(button.data('phone'));
+                        var physician = JSON.parse(button.data('physician'));
+                        var medical_condition = JSON.parse(button.data('medical-condition'));
+                        var diagnosis = JSON.parse(button.data('diagnosis'));
+                        var medication = JSON.parse(button.data('medication'));
+                        var guardian_first_name = JSON.parse(button.data('guardian-first_name'));
+                        var guardian_last_name = JSON.parse(button.data('guardian-last_name'));
+                        var guardian_birthdate = JSON.parse(button.data('guardian-birthdate'));
+                        var relationship = JSON.parse(button.data('relationship'));
+                        var guardian_phone = JSON.parse(button.data('guardian-phone'));
+                        var guardian_email = JSON.parse(button.data('guardian-email'));
+                        var modal = $(this);
+
+                        modal.find('#id').val(id);
+                        modal.find('#first_name').val(first_name);
+                        modal.find('#middle_name').val(middle_name);
+                        modal.find('#last_name').val(last_name);
+                        modal.find('#street').val(street);
+                        modal.find('#brgy').val(brgy);
+                        modal.find('#city').val(city);
+                        modal.find('#province').val(province);
+                        modal.find('#birthdate').val(birthdate);
+                        modal.find('#gender').val(gender);
+                        modal.find('#phone').val(phone);
+                        modal.find('#physician').val(physician);
+                        modal.find('#medical_condition').val(medical_condition);
+                        modal.find('#diagnosis').val(diagnosis);
+                        modal.find('#medication').val(medication);
+                        modal.find('#guardian_first_name').val(guardian_first_name);
+                        modal.find('#guardian_last_name').val(guardian_last_name);
+                        modal.find('#guardian_birthdate').val(guardian_birthdate);
+                        modal.find('#guardian_phone').val(guardian_phone);
+                        modal.find('#guardian_email').val(guardian_email);
+                        modal.find('#').val(guardian_phone);
+                    });
+
+                    $('#viewAdmittedPatientModal').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget); // Button that triggered the modal
+                        var first_name = JSON.parse(button.data('first-name'));
+                        var middle_name = JSON.parse(button.data('middle-name'));
+                        var last_name = JSON.parse(button.data('last-name'));
+                        var street = JSON.parse(button.data('street'));
+                        var brgy = JSON.parse(button.data('brgy'));
+                        var city = JSON.parse(button.data('city'));
+                        var province = JSON.parse(button.data('province'));
+                        var birthdate = JSON.parse(button.data('birthdate'));
+                        var gender = JSON.parse(button.data('gender'));
+                        var phone = JSON.parse(button.data('phone'));
+                        var admitted_date = JSON.parse(button.data('admitted-date'));
+                        var discharged_date = JSON.parse(button.data('discharged-date'));
+                        var room_number = JSON.parse(button.data('room-no'));
+                        var bed_number = JSON.parse(button.data('bed-no'));
+                        var physician = JSON.parse(button.data('physician'));
+                        var medical_condition = JSON.parse(button.data('medical-condition'));
+                        var diagnosis = JSON.parse(button.data('diagnosis'));
+                        var medication = JSON.parse(button.data('medication'));
+                        var modal = $(this);
+
+                        modal.find('#first_name').val(first_name);
+                        modal.find('#middle_name').val(middle_name);
+                        modal.find('#last_name').val(last_name);
+                        modal.find('#street').val(street);
+                        modal.find('#brgy').val(brgy);
+                        modal.find('#city').val(city);
+                        modal.find('#province').val(province);
+                        modal.find('#birthdate').val(birthdate);
+                        modal.find('#gender').val(gender);
+                        modal.find('#phone').val(phone);
+                        modal.find('#admitted_date').val(admitted_date);
+                        modal.find('#discharged_date').val(discharged_date);
+                        modal.find('#room_number').val(room_number);
+                        modal.find('#bed_number').val(bed_number);
+                        modal.find('#physician').val(physician);
+                        modal.find('#medical_condition').val(medical_condition);
+                        modal.find('#diagnosis').val(diagnosis);
+                        modal.find('#medication').val(medication);
+                    });
+
+                    $('#viewOutpatientModal').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget); // Button that triggered the modal
+                        var first_name = JSON.parse(button.data('first-name'));
+                        var middle_name = JSON.parse(button.data('middle-name'));
+                        var last_name = JSON.parse(button.data('last-name'));
+                        var street = JSON.parse(button.data('street'));
+                        var brgy = JSON.parse(button.data('brgy'));
+                        var city = JSON.parse(button.data('city'));
+                        var province = JSON.parse(button.data('province'));
+                        var birthdate = JSON.parse(button.data('birthdate'));
+                        var gender = JSON.parse(button.data('gender'));
+                        var phone = JSON.parse(button.data('phone'));
+                        var physician = JSON.parse(button.data('physician'));
+                        var medical_condition = JSON.parse(button.data('medical-condition'));
+                        var diagnosis = JSON.parse(button.data('diagnosis'));
+                        var medication = JSON.parse(button.data('medication'));
+                        var modal = $(this);
+
+                        modal.find('#first_name').val(first_name);
+                        modal.find('#middle_name').val(middle_name);
+                        modal.find('#last_name').val(last_name);
+                        modal.find('#street').val(street);
+                        modal.find('#brgy').val(brgy);
+                        modal.find('#city').val(city);
+                        modal.find('#province').val(province);
+                        modal.find('#birthdate').val(birthdate);
+                        modal.find('#gender').val(gender);
+                        modal.find('#phone').val(phone);
+                        modal.find('#physician').val(physician);
+                        modal.find('#medical_condition').val(medical_condition);
+                        modal.find('#diagnosis').val(diagnosis);
+                        modal.find('#medication').val(medication);
+                    });
                 });
 
-                $('#updateaOutpatientpatientModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget); // Button that triggered the modal
-                    var id = JSON.parse(button.data('id'));
-                    var first_name = JSON.parse(button.data('first-name'));
-                    var middle_name = JSON.parse(button.data('middle-name'));
-                    var last_name = JSON.parse(button.data('last-name'));
-                    var street = JSON.parse(button.data('street'));
-                    var brgy = JSON.parse(button.data('brgy'));
-                    var city = JSON.parse(button.data('city'));
-                    var province = JSON.parse(button.data('province'));
-                    var birthdate = JSON.parse(button.data('birthdate'));
-                    var gender = JSON.parse(button.data('gender'));
-                    var phone = JSON.parse(button.data('phone'));
-                    var physician = JSON.parse(button.data('physician'));
-                    var medical_condition = JSON.parse(button.data('medical-condition'));
-                    var diagnosis = JSON.parse(button.data('diagnosis'));
-                    var medication = JSON.parse(button.data('medication'));
-                    var modal = $(this);
 
-                    modal.find('#id').val(id);
-                    modal.find('#first_name').val(first_name);
-                    modal.find('#middle_name').val(middle_name);
-                    modal.find('#last_name').val(last_name);
-                    modal.find('#street').val(street);
-                    modal.find('#brgy').val(brgy);
-                    modal.find('#city').val(city);
-                    modal.find('#province').val(province);
-                    modal.find('#birthdate').val(birthdate);
-                    modal.find('#gender').val(gender);
-                    modal.find('#phone').val(phone);
-                    modal.find('#physician').val(physician);
-                    modal.find('#medical_condition').val(medical_condition);
-                    modal.find('#diagnosis').val(diagnosis);
-                    modal.find('#medication').val(medication);
-                });
-
-                $('#viewAdmittedPatientModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget); // Button that triggered the modal
-                    var first_name = JSON.parse(button.data('first-name'));
-                    var middle_name = JSON.parse(button.data('middle-name'));
-                    var last_name = JSON.parse(button.data('last-name'));
-                    var street = JSON.parse(button.data('street'));
-                    var brgy = JSON.parse(button.data('brgy'));
-                    var city = JSON.parse(button.data('city'));
-                    var province = JSON.parse(button.data('province'));
-                    var birthdate = JSON.parse(button.data('birthdate'));
-                    var gender = JSON.parse(button.data('gender'));
-                    var phone = JSON.parse(button.data('phone'));
-                    var admitted_date = JSON.parse(button.data('admitted-date'));
-                    var discharged_date = JSON.parse(button.data('discharged-date'));
-                    var room_number = JSON.parse(button.data('room-no'));
-                    var bed_number = JSON.parse(button.data('bed-no'));
-                    var physician = JSON.parse(button.data('physician'));
-                    var medical_condition = JSON.parse(button.data('medical-condition'));
-                    var diagnosis = JSON.parse(button.data('diagnosis'));
-                    var medication = JSON.parse(button.data('medication'));
-                    var modal = $(this);
-
-                    modal.find('#first_name').val(first_name);
-                    modal.find('#middle_name').val(middle_name);
-                    modal.find('#last_name').val(last_name);
-                    modal.find('#street').val(street);
-                    modal.find('#brgy').val(brgy);
-                    modal.find('#city').val(city);
-                    modal.find('#province').val(province);
-                    modal.find('#birthdate').val(birthdate);
-                    modal.find('#gender').val(gender);
-                    modal.find('#phone').val(phone);
-                    modal.find('#admitted_date').val(admitted_date);
-                    modal.find('#discharged_date').val(discharged_date);
-                    modal.find('#room_number').val(room_number);
-                    modal.find('#bed_number').val(bed_number);
-                    modal.find('#physician').val(physician);
-                    modal.find('#medical_condition').val(medical_condition);
-                    modal.find('#diagnosis').val(diagnosis);
-                    modal.find('#medication').val(medication);
-                });
-
-                $('#viewOutpatientModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget); // Button that triggered the modal
-                    var first_name = JSON.parse(button.data('first-name'));
-                    var middle_name = JSON.parse(button.data('middle-name'));
-                    var last_name = JSON.parse(button.data('last-name'));
-                    var street = JSON.parse(button.data('street'));
-                    var brgy = JSON.parse(button.data('brgy'));
-                    var city = JSON.parse(button.data('city'));
-                    var province = JSON.parse(button.data('province'));
-                    var birthdate = JSON.parse(button.data('birthdate'));
-                    var gender = JSON.parse(button.data('gender'));
-                    var phone = JSON.parse(button.data('phone'));
-                    var physician = JSON.parse(button.data('physician'));
-                    var medical_condition = JSON.parse(button.data('medical-condition'));
-                    var diagnosis = JSON.parse(button.data('diagnosis'));
-                    var medication = JSON.parse(button.data('medication'));
-                    var modal = $(this);
-
-                    modal.find('#first_name').val(first_name);
-                    modal.find('#middle_name').val(middle_name);
-                    modal.find('#last_name').val(last_name);
-                    modal.find('#street').val(street);
-                    modal.find('#brgy').val(brgy);
-                    modal.find('#city').val(city);
-                    modal.find('#province').val(province);
-                    modal.find('#birthdate').val(birthdate);
-                    modal.find('#gender').val(gender);
-                    modal.find('#phone').val(phone);
-                    modal.find('#physician').val(physician);
-                    modal.find('#medical_condition').val(medical_condition);
-                    modal.find('#diagnosis').val(diagnosis);
-                    modal.find('#medication').val(medication);
-                });
-            });
-        </script>
-    @endsection
+            </script>
+        @endsection

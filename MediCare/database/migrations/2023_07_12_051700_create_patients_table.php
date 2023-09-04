@@ -32,6 +32,12 @@ return new class extends Migration
             $table->string('medical_condition')->nullable();
             $table->string('diagnosis')->nullable();
             $table->string('medication')->nullable();
+            $table->string('guardian_first_name')->nullable();
+            $table->string('guardian_last_name')->nullable();
+            $table->string('guardian_birthdate')->nullable();
+            $table->string('relationship')->nullable();
+            $table->string('guardian_phone')->nullable();
+            $table->string('guardian_email')->nullable();
             $table->timestamps();
         });
     }

@@ -52,7 +52,7 @@ Route::post('/user/profile/update/password', [ProfileController::class, 'updateP
 
 require __DIR__ . '/auth.php';
 
-Route::middleware('auth', 'role:nurse')->group(function () {
+Route::middleware(['auth', 'role:nurse'])->group(function () {
 
     // Dashboard
     Route::get('/nurse/dashboard', [NurseController::class, 'dashboard'])->name('nurse.dashboard');
@@ -77,7 +77,7 @@ Route::middleware('auth', 'role:nurse')->group(function () {
 
 // Doctor
 
-Route::middleware('auth', 'role:doctor')->group(function () {
+Route::middleware(['auth', 'role:doctor'])->group(function () {
 
     // Dashboard
     Route::get('/doctor/dashboard', [DoctorController::class, 'dashboard'])->name('doctor.dashboard');
@@ -111,7 +111,7 @@ Route::middleware('auth', 'role:doctor')->group(function () {
 
 // Admin
 
-Route::middleware('auth', 'role:admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -135,6 +135,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/outpatient/store', [AdminController::class, 'outpatientStore'])->name('admin.outpatient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
+    Route::post('/admin/guardian/store', [AdminController::class, 'guardianStore'])->name('admin.guardian.store');
 
     //  Notification
     Route::get('/admin/notification', [AdminController::class, 'notification'])->name('admin.notification');
@@ -161,7 +162,7 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
 });
 
-Route::middleware('auth', 'role:super_admin')->group(function () {
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
     Route::get('/super_admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
 
