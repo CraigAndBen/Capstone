@@ -202,6 +202,12 @@
                                                                         data-physician="{{ json_encode($patient->physician) }}"
                                                                         data-medical-condition="{{ json_encode($patient->medical_condition) }}"
                                                                         data-diagnosis="{{ json_encode($patient->diagnosis) }}"
+                                                                        data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
+                                                                        data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
+                                                                        data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
+                                                                        data-relationship="{{ json_encode($patient->relationship) }}"
+                                                                        data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
+                                                                        data-guardian-email="{{ json_encode($patient->guardian_email) }}"
                                                                         data-medication="{{ json_encode($patient->medication) }}">Update</a>
 
                                                                     <a class="dropdown-item btn btn-primary"
@@ -380,7 +386,7 @@
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input type="text" name="medical_condtion" class="form-control"
-                                                id="floatingInput medical_condtion" placeholder="Medical Condition" />
+                                                id="floatingInput medical_condition" placeholder="Medical Condition" />
                                             <label for="floatingInput">Medical Condition</label>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -447,8 +453,8 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="phone" class="form-control"
-                                                        id="floatingInput guardian_phone" placeholder="Guardian Email"
-                                                        name="guardian_phone" />
+                                                        id="floatingInput guardian_email" placeholder="Guardian Email"
+                                                        name="guardian_email" />
                                                     <label for="floatingInput">Guardian Email</label>
                                                 </div>
                                             </div>
@@ -571,7 +577,7 @@
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input type="text" name="medical_condtion" class="form-control"
-                                                id="floatingInput medical_condtion" placeholder="Medical Condition" />
+                                                id="floatingInput medical_condition" placeholder="Medical Condition" />
                                             <label for="floatingInput">Medical Condition</label>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -806,6 +812,65 @@
                                             <label for="floatingInput">Medication</label>
                                         </div>
                                         <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="guardian_first_name"
+                                                        placeholder="Guardian First Name" name="guardian_first_name" />
+                                                    <label for="floatingInput">Guardian First Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="guardian_last_name"
+                                                        placeholder="Guardian Last Name" name="guardian_last_name" />
+                                                    <label for="floatingInput">Guardian Last Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mb-3 ">
+                                            <select class="form-control p-3" id="relationship" name="relationship">
+                                                <option>Select Relationship</option>
+                                                <option value="parent">Parent</option>
+                                                <option value="legal guardian">Legal Guardian</option>
+                                                <option value="spouse">Spouse</option>
+                                                <option value="sibling">Siblings</option>
+                                                <option value="grandparent">Grandparent</option>
+                                                <option value="aunt/Uncle">Aunt/Uncle</option>
+                                                <option value="cousin">Cousin</option>
+                                                <option value="extended family member">Extended Family Member</option>
+                                                <option value="foster Parent">Foster Parent</option>
+                                                <option value="close friend">Close Friend</option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" name="guardian_birthdate" class="form-control"
+                                                        id="floatingInput guardian_birthdate"
+                                                        placeholder="Guardian Birthdate" />
+                                                    <label for="floatingInput">Guardian Birthdate</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="phone" class="form-control"
+                                                        id="guardian_phone" placeholder="Guardian Phone"
+                                                        name="guardian_phone" />
+                                                    <label for="floatingInput">Guardian Phone</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control"
+                                                        id="guardian_email" placeholder="Guardian Email"
+                                                        name="guardian_email" />
+                                                    <label for="floatingInput">Guardian Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
                                 </div>
@@ -1262,6 +1327,12 @@
                         var medical_condition = JSON.parse(button.data('medical-condition'));
                         var diagnosis = JSON.parse(button.data('diagnosis'));
                         var medication = JSON.parse(button.data('medication'));
+                        var guardian_first_name = JSON.parse(button.data('guardian-first_name'));
+                        var guardian_last_name = JSON.parse(button.data('guardian-last_name'));
+                        var guardian_birthdate = JSON.parse(button.data('guardian-birthdate'));
+                        var relationship = JSON.parse(button.data('relationship'));
+                        var guardian_phone = JSON.parse(button.data('guardian-phone'));
+                        var guardian_email = JSON.parse(button.data('guardian-email'));
                         var modal = $(this);
 
                         modal.find('#id').val(id);
@@ -1283,6 +1354,11 @@
                         modal.find('#medical_condition').val(medical_condition);
                         modal.find('#diagnosis').val(diagnosis);
                         modal.find('#medication').val(medication);
+                        modal.find('#guardian_first_name').val(guardian_first_name);
+                        modal.find('#guardian_last_name').val(guardian_last_name);
+                        modal.find('#relationship').val(relationship);
+                        modal.find('#guardian_phone').val(guardian_phone);
+                        modal.find('#guardian_email').val(guardian_email);
                     });
 
                     $('#updateaOutpatientpatientModal').on('show.bs.modal', function(event) {
