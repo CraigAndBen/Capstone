@@ -247,10 +247,10 @@ class AdminController extends Controller
             'medication' => $request->input('medication'),
             'guardian_first_name' => $request->input('guardian_first_name'),
             'guardian_last_name' => $request->input('guardian_last_name'),
-            'guardian_birhdate' => $request->input('guardian_birthdate'),
+            'guardian_birthdate' => $request->input('guardian_birthdate'),
             'relationship' => $request->input('relationship'),
             'guardian_phone' => $request->input('guardian_phone'),
-            'guardian_email' => $request->input('guaridan_email'),
+            'guardian_email' => $request->input('guardian_email'),
         ]);
 
         return back()->with('success', 'Patient added sucessfully.');
@@ -270,9 +270,6 @@ class AdminController extends Controller
             'birthdate' => 'required|date',
             'gender' => 'required|string|max:255',
             'phone' => 'required',
-            'admitted_date' => 'required|date',
-            'room_number' => 'required',
-            'bed_number' => 'required',
             'physician' => 'required|string|max:255',
         ]);
 
@@ -287,7 +284,7 @@ class AdminController extends Controller
             'province' => $request->input('province'),
             'birthdate' => $request->input('birthdate'),
             'phone' => $request->input('phone'),
-            'type' => 'admitted_patient',
+            'type' => 'outpatient',
             'admitted_date' => $request->input('admitted_date'),
             'discharged_date' => $request->input('discharged_date'),
             'room_number' => $request->input('room_number'),
@@ -296,9 +293,15 @@ class AdminController extends Controller
             'medical_condition' => $request->input('medical_condition'),
             'diagnosis' => $request->input('diagnosis'),
             'medication' => $request->input('medication'),
+            'guardian_first_name' => $request->input('guardian_first_name'),
+            'guardian_last_name' => $request->input('guardian_last_name'),
+            'guardian_birthdate' => $request->input('guardian_birthdate'),
+            'relationship' => $request->input('relationship'),
+            'guardian_phone' => $request->input('guardian_phone'),
+            'guardian_email' => $request->input('guardian_email'),
         ]);
 
-        return back()->with('success', 'Patient added sucessfully.');
+        return back()->with('success', 'Outpatient added sucessfully.');
 
     }
 

@@ -398,40 +398,41 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
-                                                        id="floatingInput guardian_first_name" placeholder="Guardian First Name"
-                                                        name="guardian_first_name" />
+                                                        id="floatingInput guardian_first_name"
+                                                        placeholder="Guardian First Name" name="guardian_first_name" />
                                                     <label for="floatingInput">Guardian First Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
-                                                        id="floatingInput guardian_last_name" placeholder="Guardian Last Name"
-                                                        name="guardian_last_name" />
+                                                        id="floatingInput guardian_last_name"
+                                                        placeholder="Guardian Last Name" name="guardian_last_name" />
                                                     <label for="floatingInput">Guardian Last Name</label>
                                                 </div>
                                             </div>
-                                                <div class="form-floating mb-3 ">
-                                                    <select class="form-control p-3" id="relationship" name="relationship">
-                                                        <option>Select Relationship</option>
-                                                        <option value="parent">Parent</option>
-                                                        <option value="legal guardian">Legal Guardian</option>
-                                                        <option value="spouse">Spouse</option>
-                                                        <option value="sibling">Siblings</option>
-                                                        <option value="grandparent">Grandparent</option>
-                                                        <option value="aunt/Uncle">Aunt/Uncle</option>
-                                                        <option value="cousin">Cousin</option>
-                                                        <option value="extended family member">Extended Family Member</option>
-                                                        <option value="foster Parent">Foster Parent</option>
-                                                        <option value="close friend">Close Friend</option>
-                                                    </select>
-                                            </div>
+                                        </div>
+                                        <div class="form-floating mb-3 ">
+                                            <select class="form-control p-3" id="relationship" name="relationship">
+                                                <option>Select Relationship</option>
+                                                <option value="parent">Parent</option>
+                                                <option value="legal guardian">Legal Guardian</option>
+                                                <option value="spouse">Spouse</option>
+                                                <option value="sibling">Siblings</option>
+                                                <option value="grandparent">Grandparent</option>
+                                                <option value="aunt/Uncle">Aunt/Uncle</option>
+                                                <option value="cousin">Cousin</option>
+                                                <option value="extended family member">Extended Family Member</option>
+                                                <option value="foster Parent">Foster Parent</option>
+                                                <option value="close friend">Close Friend</option>
+                                            </select>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
                                                     <input type="date" name="guardian_birthdate" class="form-control"
                                                         id="floatingInput guardian_birthdate"
-                                                        placeholder="Guardian Birthdate"/>
+                                                        placeholder="Guardian Birthdate" />
                                                     <label for="floatingInput">Guardian Birthdate</label>
                                                 </div>
                                             </div>
@@ -439,7 +440,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="phone" class="form-control"
                                                         id="floatingInput guardian_phone" placeholder="Guardian Phone"
-                                                        name="guardian_phone"/>
+                                                        name="guardian_phone" />
                                                     <label for="floatingInput">Guardian Phone</label>
                                                 </div>
                                             </div>
@@ -447,7 +448,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="phone" class="form-control"
                                                         id="floatingInput guardian_phone" placeholder="Guardian Email"
-                                                        name="guardian_phone"/>
+                                                        name="guardian_phone" />
                                                     <label for="floatingInput">Guardian Email</label>
                                                 </div>
                                             </div>
@@ -473,7 +474,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Adding Outpatient</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('admin.patient.store') }}">
+                                    <form method="POST" action="{{ route('admin.outpatient.store') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">
@@ -557,6 +558,7 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
@@ -581,6 +583,66 @@
                                             <input type="text" name="medication" class="form-control"
                                                 id="floatingInput medication" placeholder="Medication" />
                                             <label for="floatingInput">Medication</label>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput guardian_first_name"
+                                                        placeholder="Guardian First Name" name="guardian_first_name" />
+                                                    <label for="floatingInput">Guardian First Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput guardian_last_name"
+                                                        placeholder="Guardian Last Name" name="guardian_last_name" />
+                                                    <label for="floatingInput">Guardian Last Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mb-3 ">
+                                            <select class="form-control p-3" id="relationship" name="relationship">
+                                                <option>Select Relationship</option>
+                                                <option value="parent">Parent</option>
+                                                <option value="legal guardian">Legal Guardian</option>
+                                                <option value="spouse">Spouse</option>
+                                                <option value="sibling">Siblings</option>
+                                                <option value="grandparent">Grandparent</option>
+                                                <option value="aunt/Uncle">Aunt/Uncle</option>
+                                                <option value="cousin">Cousin</option>
+                                                <option value="extended family member">Extended Family Member</option>
+                                                <option value="foster Parent">Foster Parent</option>
+                                                <option value="close friend">Close Friend</option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" name="guardian_birthdate" class="form-control"
+                                                        id="floatingInput guardian_birthdate"
+                                                        placeholder="Guardian Birthdate" />
+                                                    <label for="floatingInput">Guardian Birthdate</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="phone" class="form-control"
+                                                        id="floatingInput guardian_phone" placeholder="Guardian Phone"
+                                                        name="guardian_phone" />
+                                                    <label for="floatingInput">Guardian Phone</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="phone" class="form-control"
+                                                        id="floatingInput guardian_phone" placeholder="Guardian Email"
+                                                        name="guardian_phone" />
+                                                    <label for="floatingInput">Guardian Email</label>
+                                                </div>
+                                            </div>
                                         </div>
 
                                 </div>
@@ -1080,15 +1142,15 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
-                                                <input type="text" name="street" class="form-control" id="street"
-                                                    placeholder="Street" disabled />
+                                                <input type="text" name="street" class="form-control"
+                                                    id="street" placeholder="Street" disabled />
                                                 <label for="floatingInput">Street</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
-                                                <input type="text" name="brgy" class="form-control" id="brgy"
-                                                    placeholder="Brgy"disabled />
+                                                <input type="text" name="brgy" class="form-control"
+                                                    id="brgy" placeholder="Brgy"disabled />
                                                 <label for="floatingInput">Brgy</label>
                                             </div>
                                         </div>
@@ -1096,8 +1158,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
-                                                <input type="text" name="city" class="form-control" id="city"
-                                                    placeholder="City" disabled />
+                                                <input type="text" name="city" class="form-control"
+                                                    id="city" placeholder="City" disabled />
                                                 <label for="floatingInput">City</label>
                                             </div>
                                         </div>
@@ -1112,8 +1174,8 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3">
-                                                <input type="number" name="phone" class="form-control" id="phone"
-                                                    placeholder="Phone" disabled />
+                                                <input type="number" name="phone" class="form-control"
+                                                    id="phone" placeholder="Phone" disabled />
                                                 <label for="floatingInput">Phone</label>
                                             </div>
                                         </div>
@@ -1347,7 +1409,5 @@
                         modal.find('#medication').val(medication);
                     });
                 });
-
-
             </script>
         @endsection
