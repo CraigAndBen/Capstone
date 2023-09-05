@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Patient Admitted List</h5>
+                                <h5 class="m-b-10">Outpatient List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Patient Admitted List</li>
+                                <li class="breadcrumb-item" aria-current="page">Outpatient List</li>
                             </ul>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Patient Admitted List</h1>
+                            <h1>Outpatient List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -64,15 +64,12 @@
 
                                 <div class="d-flex justify-content-end">
                                     <div class="m-1">
-                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Patient</button>
-                                    </div>
-                                    <div class="m-1">
-                                        <a href="{{route('superadmin.patient.admitted')}}" class="btn btn-secondary">Show All</a>
+                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Outpatient</button>
                                     </div>
                                   </div>
                                 <hr>
 
-                                <form action="{{ route('superadmin.patient.admitted.search') }}" method="GET">
+                                <form action="{{ route('superadmin.patient.outpatient.search') }}" method="GET">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-10">
@@ -88,24 +85,23 @@
                                         </div>
                                 </form>
 
-                                @if ($patients->isEmpty())
+                                @if ($limitPatients->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Patient Exist.
+                                        <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
                                 @else
-                                <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
                                                 <th>Physician</th>
-                                                <th>Admitted Date</th>
+                                                <th>Type</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
-                                            @foreach ($patients as $patient)
+                                            @foreach ($limitPatients as $patient)
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
@@ -116,7 +112,7 @@
                                                                 {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
                                                     @endforeach
-                                                    <td>{{ ucwords($patient->admitted_date) }}</td>
+                                                    <td>{{ ucwords($patient->type) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -186,19 +182,17 @@
 
                                         </tbody>
                                     </table>
-                                </div>
                                 @endif
                             </div>
                         </div>
                     </div>
 
                     {{-- Create modal --}}
-                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
-                        aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Adding Patient</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Adding Outpatient</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('superadmin.patient.store') }}">
@@ -285,44 +279,11 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="admitted_date" class="form-control"
-                                                        id="floatingInput admitted_date" placeholder="Admitted Date" />
-                                                    <label for="floatingInput">Admitted Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="discharged_date" class="form-control"
-                                                        id="floatingInput discharged_date"
-                                                        placeholder="Discharged Date" />
-                                                    <label for="floatingInput">Discharged Date</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="room_number" class="form-control"
-                                                        id="floatingInput room_number" placeholder="Room No" />
-                                                    <label for="floatingInput">Room No</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="bed_number" class="form-control"
-                                                        id="floatingInput bed_number" placeholder="Bed No" />
-                                                    <label for="floatingInput">Bed No</label>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
+                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
                                                         {{ $doctor->last_name }}</option>
                                                 @endforeach
                                             </select>
@@ -421,7 +382,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Update Patient Information</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Update Outpatient Information</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('superadmin.patient.update') }}">
@@ -504,38 +465,6 @@
                                                     <option value="female">Female</option>
                                                     <option value="others">Others</option>
                                                 </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="admitted_date" class="form-control"
-                                                        id="admitted_date" placeholder="Admitted Date" />
-                                                    <label for="floatingInput">Admitted Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="discharged_date" class="form-control"
-                                                        id="discharged_date" placeholder="Discharged Date" />
-                                                    <label for="floatingInput">Discharged Date</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="room_number" class="form-control"
-                                                        id="room_number" placeholder="Room No" />
-                                                    <label for="floatingInput">Room No</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="bed_number" class="form-control"
-                                                        id="bed_number" placeholder="Bed No" />
-                                                    <label for="floatingInput">Bed No</label>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -640,7 +569,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Outpatient Information</h2>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
@@ -723,38 +652,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3">
-                                                <input type="date" name="admitted_date" class="form-control"
-                                                    id="admitted_date" placeholder="Admitted Date" disabled />
-                                                <label for="floatingInput">Admitted Date</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3">
-                                                <input type="date" name="discharged_date" class="form-control"
-                                                    id="discharged_date" placeholder="Discharged Date" disabled />
-                                                <label for="floatingInput">Discharged Date</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" name="room_number" class="form-control"
-                                                    id="room_number" placeholder="Room No" disabled />
-                                                <label for="floatingInput">Room No</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" name="bed_number" class="form-control"
-                                                    id="bed_number" placeholder="Bed No" disabled />
-                                                <label for="floatingInput">Bed No</label>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="form-floating mb-3">
                                         <select class="form-control p-3" id="physician" name="physician" disabled>
                                             <option>Select physician</option>
@@ -780,65 +677,65 @@
                                         <label for="floatingInput">Medication</label>
                                     </div>
                                     <hr>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="guardian_first_name"
-                                                        placeholder="Guardian First Name" name="guardian_first_name" disabled/>
-                                                    <label for="floatingInput">Guardian First Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="guardian_last_name"
-                                                        placeholder="Guardian Last Name" name="guardian_last_name" disabled/>
-                                                    <label for="floatingInput">Guardian Last Name</label>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2"
+                                                    id="guardian_first_name"
+                                                    placeholder="Guardian First Name" name="guardian_first_name" disabled/>
+                                                <label for="floatingInput">Guardian First Name</label>
                                             </div>
                                         </div>
-                                        <div class="form-floating mb-3 ">
-                                            <select class="form-control p-3" id="relationship" name="relationship" disabled>
-                                                <option>Select Relationship</option>
-                                                <option value="parent">Parent</option>
-                                                <option value="legal guardian">Legal Guardian</option>
-                                                <option value="spouse">Spouse</option>
-                                                <option value="sibling">Siblings</option>
-                                                <option value="grandparent">Grandparent</option>
-                                                <option value="aunt/Uncle">Aunt/Uncle</option>
-                                                <option value="cousin">Cousin</option>
-                                                <option value="extended family member">Extended Family Member</option>
-                                                <option value="foster Parent">Foster Parent</option>
-                                                <option value="close friend">Close Friend</option>
-                                            </select>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="guardian_birthdate" class="form-control"
-                                                        id="guardian_birthdate"
-                                                        placeholder="Guardian Birthdate" disabled/>
-                                                    <label for="floatingInput">Guardian Birthdate</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_phone" placeholder="Guardian Phone"
-                                                        name="guardian_phone" disabled/>
-                                                    <label for="floatingInput">Guardian Phone</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_email" placeholder="Guardian Email"
-                                                        name="guardian_email" disabled/>
-                                                    <label for="floatingInput">Guardian Email</label>
-                                                </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2"
+                                                    id="guardian_last_name"
+                                                    placeholder="Guardian Last Name" name="guardian_last_name" disabled/>
+                                                <label for="floatingInput">Guardian Last Name</label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="form-floating mb-3 ">
+                                        <select class="form-control p-3" id="relationship" name="relationship" disabled>
+                                            <option>Select Relationship</option>
+                                            <option value="parent">Parent</option>
+                                            <option value="legal guardian">Legal Guardian</option>
+                                            <option value="spouse">Spouse</option>
+                                            <option value="sibling">Siblings</option>
+                                            <option value="grandparent">Grandparent</option>
+                                            <option value="aunt/Uncle">Aunt/Uncle</option>
+                                            <option value="cousin">Cousin</option>
+                                            <option value="extended family member">Extended Family Member</option>
+                                            <option value="foster Parent">Foster Parent</option>
+                                            <option value="close friend">Close Friend</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" name="guardian_birthdate" class="form-control"
+                                                    id="guardian_birthdate"
+                                                    placeholder="Guardian Birthdate" disabled/>
+                                                <label for="floatingInput">Guardian Birthdate</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="phone" class="form-control"
+                                                    id="guardian_phone" placeholder="Guardian Phone"
+                                                    name="guardian_phone" disabled/>
+                                                <label for="floatingInput">Guardian Phone</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="phone" class="form-control"
+                                                    id="guardian_email" placeholder="Guardian Email"
+                                                    name="guardian_email" disabled/>
+                                                <label for="floatingInput">Guardian Email</label>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                                 <div class="modal-footer">

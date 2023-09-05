@@ -16,7 +16,7 @@
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Patient Admitted List</li>
+                                <li class="breadcrumb-item" aria-current="page">Outpatient List</li>
                             </ul>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Patient Admitted List</h1>
+                            <h1>Outpatient List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -64,15 +64,15 @@
 
                                 <div class="d-flex justify-content-end">
                                     <div class="m-1">
-                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Patient</button>
+                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Outpatient</button>
                                     </div>
                                     <div class="m-1">
-                                        <a href="{{route('superadmin.patient.admitted')}}" class="btn btn-secondary">Show All</a>
+                                        <a href="{{route('superadmin.patient.outpatient')}}" class="btn btn-secondary">Show All</a>
                                     </div>
                                   </div>
                                 <hr>
 
-                                <form action="{{ route('superadmin.patient.admitted.search') }}" method="GET">
+                                <form action="{{ route('superadmin.patient.outpatient.search') }}" method="GET">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-10">
@@ -100,7 +100,7 @@
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
                                                 <th>Physician</th>
-                                                <th>Admitted Date</th>
+                                                <th>Type</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -116,7 +116,7 @@
                                                                 {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
                                                     @endforeach
-                                                    <td>{{ ucwords($patient->admitted_date) }}</td>
+                                                    <td>{{ ucwords($patient->type) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -322,8 +322,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ $doctor->first_name }}
-                                                        {{ $doctor->last_name }}</option>
+                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                        {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

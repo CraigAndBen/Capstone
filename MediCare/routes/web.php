@@ -135,7 +135,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/outpatient/store', [AdminController::class, 'outpatientStore'])->name('admin.outpatient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
-    Route::post('/admin/guardian/store', [AdminController::class, 'guardianStore'])->name('admin.guardian.store');
 
     //  Notification
     Route::get('/admin/notification', [AdminController::class, 'notification'])->name('admin.notification');
@@ -206,9 +205,12 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     // Patient
     Route::get('/super_admin/patient', [SuperAdminController::class, 'patientList'])->name('superadmin.patient');
     Route::get('/super_admin/patient/admitted', [SuperAdminController::class, 'patienAdmittedtList'])->name('superadmin.patient.admitted');
+    Route::get('/super_admin/patient/outpatient', [SuperAdminController::class, 'outpatientList'])->name('superadmin.patient.outpatient');
     Route::get('/super_admin/patient/search', [SuperAdminController::class, 'patientSearch'])->name('superadmin.patient.search');
     Route::get('/super_admin/patient/admitted/search', [SuperAdminController::class, 'patientAdmittedSearch'])->name('superadmin.patient.admitted.search');
+    Route::get('/super_admin/patient/outpatient/search', [SuperAdminController::class, 'outpatientSearch'])->name('superadmin.patient.outpatient.search');
     Route::post('/super_admin/patient/store', [SuperAdminController::class, 'patientStore'])->name('superadmin.patient.store');
+    Route::post('/super_admin/outpatient/store', [SuperAdminController::class, 'outpatientStore'])->name('superadmin.outpatient.store');
     Route::post('/super_admin/patient/update', [SuperAdminController::class, 'patientUpdate'])->name('superadmin.patient.update');
 
     // Demographics

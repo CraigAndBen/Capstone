@@ -246,8 +246,8 @@
 
                 <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
-                        <div class="card-body">
-                            @if ($patientCount)
+                        @if ($patientCount)
+                            <div class="card-body">
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
                                         <small>Total Patient This Year</small>
@@ -255,19 +255,22 @@
                                     </div>
                                 </div>
                                 <canvas id="patientChart" width="100%" height="95"></canvas>
-                            @else
+                            </div>
+                        @else
+                            <div class="card-body">
                                 <div class="text-center">
                                     <h3>No Patient Yet.</h3>
                                 </div>
-                            @endif
-                        </div>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
 
                 <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
-                        <div class="card-body">
-                            @if ($appointmentCount)
+                        @if ($appointmentCount)
+                            <div class="card-body">
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
                                         <h5>Appointment This Year</h5>
@@ -310,13 +313,16 @@
                                 <div class="text-center">
                                     <a href="{{ route('doctor.appointment') }}" class="btn btn-primary">View all</a>
                                 </div>
-                            @else
+                            </div>
+                        @else
+                            <div class="card-body">
                                 <div class="text-center">
                                     <h3>No Appointment Yet.</h3>
                                 </div>
-                            @endif
+                            </div>
+                        @endif
 
-                        </div>
+
                     </div>
                 </div>
                 <!-- [ sample-page ] end -->

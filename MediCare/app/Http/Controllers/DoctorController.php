@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rules\Password;
-use App\Http\Requests\ProfileUpdateRequest;
 
 class DoctorController extends Controller
 {
@@ -35,7 +32,7 @@ class DoctorController extends Controller
         $currentYear = Carbon::now()->year;
 
         // Retrieve the patients handled by the specific doctor for the current year
-        $patientsByMonth = DB::table('patient')
+        $patientsByMonth = DB::table('patients')
             ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
             ->where('physician', $profile->id)
             ->whereYear('admitted_date', $currentYear)
@@ -47,7 +44,7 @@ class DoctorController extends Controller
         $currentMonth = Carbon::now()->month;
 
         // Retrieve appointments for the specific doctor in the current month
-        $currentMonthAppointments = DB::table('appointment')
+        $currentMonthAppointments = DB::table('appointments')
             ->where('specialties', $info->specialties)
             ->whereMonth('appointment_date', $currentMonth)
             ->get();
@@ -56,7 +53,7 @@ class DoctorController extends Controller
         $limitCurrentMonthAppointments = $currentMonthAppointments->take(5);
 
         // Retrieve the monthly appointments for the specific doctor for the current year
-        $monthlyAppointments = DB::table('appointment')
+        $monthlyAppointments = DB::table('appointments')
             ->select(DB::raw('MONTH(appointment_date) as month'), DB::raw('COUNT(*) as count'))
             ->where('specialties', $info->specialties)
             ->whereYear('appointment_date', $currentYear)

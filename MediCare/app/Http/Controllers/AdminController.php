@@ -502,130 +502,6 @@ class AdminController extends Controller
                     return redirect()->back()->with('info', 'No changes were made.');
                 }
         }
-
-
-
-        // if($patient->type == 'outpatient')
-        // {
-        //     $patientUpdatedData = [
-        //         'first_name' => $request->input('first_name'),
-        //         'middle_name' => $request->input('middle_name'),
-        //         'last_name' => $request->input('last_name'),
-        //         'street' => $request->input('street'),
-        //         'brgy' => $request->input('brgy'),
-        //         'city' => $request->input('city'),
-        //         'province' => $request->input('province'),
-        //         'birthdate' => $request->input('birthdate'),
-        //         'gender' => $request->input('gender'),
-        //         'phone' => $request->input('phone'),
-        //         'physician' => $request->input('physician'),
-        //         'medical_condition' => $request->input('medical_condition'),
-        //         'diagnosis' => $request->input('diagnosis'),
-        //         'medication' => $request->input('medication'),
-        //         'guardian_first_name' => $request->input('guardian_first_name'),
-        //         'guardian_last_name' => $request->input('guardian_last_name'),
-        //         'guardian_birthdate' => $request->input('guardian_birthdate'),
-        //         'relationship' => $request->input('relationship'),
-        //         'guardian_phone' => $request->input('guardian_phone'),
-        //         'guardian_email' => $request->input('guardian_email'),
-    
-        //     ];
-    
-        //     $patientChange = $this->hasChanges($patient, $patientUpdatedData);
-    
-        //     if ($patientChange) {
-        //         $patient->first_name = $request->input('first_name');
-        //         $patient->middle_name = $request->input('middle_name');
-        //         $patient->last_name = $request->input('last_name');
-        //         $patient->street = $request->input('street');
-        //         $patient->brgy = $request->input('brgy');
-        //         $patient->city = $request->input('city');
-        //         $patient->province = $request->input('province');
-        //         $patient->birthdate = $request->input('birthdate');
-        //         $patient->gender = $request->input('gender');
-        //         $patient->phone = $request->input('phone');
-        //         $patient->physician = $request->input('physician');
-        //         $patient->medical_condition = $request->input('medical_condition');
-        //         $patient->diagnosis = $request->input('diagnosis');
-        //         $patient->medication = $request->input('medication');
-        //         $patient->guardian_first_name = $request->input('guardian_first_name');
-        //         $patient->guardian_last_name = $request->input('guardian_last_name');
-        //         $patient->guardian_birthdate = $request->input('guardian_birthdate');
-        //         $patient->relationship = $request->input('relationship');
-        //         $patient->guardian_phone = $request->input('guardian_phone');
-        //         $patient->guardian_email = $request->input('guardian_email');
-    
-        //         $patient->save();
-    
-        //         return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
-        //     } else {
-        //         return redirect()->back()->with('info', 'No changes were made.');
-        //     }
-        // }else{
-        //     $patientUpdatedData = [
-        //         'first_name' => $request->input('first_name'),
-        //         'middle_name' => $request->input('middle_name'),
-        //         'last_name' => $request->input('last_name'),
-        //         'street' => $request->input('street'),
-        //         'brgy' => $request->input('brgy'),
-        //         'city' => $request->input('city'),
-        //         'province' => $request->input('province'),
-        //         'birthdate' => $request->input('birthdate'),
-        //         'gender' => $request->input('gender'),
-        //         'phone' => $request->input('phone'),
-        //         'admitted_date' => $request->input('admitted_date'),
-        //         'discharged_date' => $request->input('discharged_date'),
-        //         'room_number' => $request->input('room_number'),
-        //         'bed_number' => $request->input('bed_number'),
-        //         'physician' => $request->input('physician'),
-        //         'medical_condition' => $request->input('medical_condition'),
-        //         'diagnosis' => $request->input('diagnosis'),
-        //         'medication' => $request->input('medication'),
-        //         'guardian_first_name' => $request->input('guardian_first_name'),
-        //         'guardian_last_name' => $request->input('guardian_last_name'),
-        //         'guardian_birthdate' => $request->input('guardian_birthdate'),
-        //         'relationship' => $request->input('relationship'),
-        //         'guardian_phone' => $request->input('guardian_phone'),
-        //         'guardian_email' => $request->input('guardian_email'),
-    
-        //     ];
-
-        //     $patientChange = $this->hasChanges($patient, $patientUpdatedData);
-
-        //     if ($patientChange) {
-        //         $patient->first_name = $request->input('first_name');
-        //         $patient->middle_name = $request->input('middle_name');
-        //         $patient->last_name = $request->input('last_name');
-        //         $patient->street = $request->input('street');
-        //         $patient->brgy = $request->input('brgy');
-        //         $patient->city = $request->input('city');
-        //         $patient->province = $request->input('province');
-        //         $patient->birthdate = $request->input('birthdate');
-        //         $patient->gender = $request->input('gender');
-        //         $patient->phone = $request->input('phone');
-        //         $patient->admitted_date = $request->input('admitted_date');
-        //         $patient->discharged_date = $request->input('discharged_date');
-        //         $patient->room_number = $request->input('room_number');
-        //         $patient->bed_number = $request->input('bed_number');
-        //         $patient->physician = $request->input('physician');
-        //         $patient->medical_condition = $request->input('medical_condition');
-        //         $patient->diagnosis = $request->input('diagnosis');
-        //         $patient->medication = $request->input('medication');
-        //         $patient->guardian_first_name = $request->input('guardian_first_name');
-        //         $patient->guardian_last_name = $request->input('guardian_last_name');
-        //         $patient->guardian_birthdate = $request->input('guardian_birthdate');
-        //         $patient->relationship = $request->input('relationship');
-        //         $patient->guardian_phone = $request->input('guardian_phone');
-        //         $patient->guardian_email = $request->input('guardian_email');
-    
-        //         $patient->save();
-    
-        //         return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
-        //     } else {
-        //         return redirect()->back()->with('info', 'No changes were made.');
-        //     }
-        // }
-        
     }
 
     public function patienAdmittedtList()
@@ -638,7 +514,7 @@ class AdminController extends Controller
         $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at','desc')->get();
         $limitPatients = $patients->take(5);
 
-        return view('admin.patient.patient_admitted', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.patient.patient_admitted', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
 
     public function patientAdmittedSearch(Request $request)
@@ -664,41 +540,6 @@ class AdminController extends Controller
         return view('admin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
     
-    public function guardianStore(Request $request)
-    {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-            'brgy' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'birthdate' => 'required|date',
-            'gender' => 'required|string|max:255',
-            'phone' => 'required',
-            'relationship' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-        ]);
-
-        Guardian::create([
-            'patient_id' => $request->input('id'),
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'street' => $request->input('street'),
-            'gender' => $request->input('gender'),
-            'brgy' => $request->input('brgy'),
-            'city' => $request->input('city'),
-            'province' => $request->input('province'),
-            'birthdate' => $request->input('birthdate'),
-            'phone' => $request->input('phone'),
-            'relationship' => $request->input('relationship'),
-            'email' => $request->input('email'),
-        ]);
-
-        return back()->with('success', 'Guardian added sucessfully.');
-    }
     public function notification()
     {
 

@@ -115,7 +115,8 @@
                                                                     data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                     data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                     data-reason="{{ json_encode($appointment->reason) }}">View</a>
-                                                                <form action="{{ route('doctor.confirm.appointment') }}"
+                                                                @if ($appointment->status == 'pending')
+                                                                    <form action="{{ route('doctor.confirm.appointment') }}"
                                                                     method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="appointment_id"
@@ -125,6 +126,8 @@
                                                                     <button type="submit"
                                                                         class="dropdown-item btn btn-primary">Confirm</button>
                                                                 </form>
+                                                                @endif
+        
                                                             </div>
                                                         </div>
                                                     </td>

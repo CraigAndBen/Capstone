@@ -14,8 +14,8 @@
                                 <h5 class="m-b-10">Notification List</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item" aria-current="page">Notification List</li>
                             </ul>
                         </div>
