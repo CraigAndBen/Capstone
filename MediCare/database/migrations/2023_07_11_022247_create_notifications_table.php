@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->smallInteger('account_id');
-            $table->string('title');
-            $table->text('message');
-            $table->string('date');
-            $table->string('time');
+            $table->smallInteger('account_id')->nullable();
+            $table->string('title')->nullable();
+            $table->text('message')->nullable();
+            $table->string('date')->nullable();
+            $table->string('time')->nullable();
             $table->boolean('is_read')->default(false);
             $table->string('specialties')->nullable();
+            $table->string('diagnose')->nullable();
             $table->enum('type', ['user','nurse','doctor','admin',''])->default('');
             $table->timestamps();
         });

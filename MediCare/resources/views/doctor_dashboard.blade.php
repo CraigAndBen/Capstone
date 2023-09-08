@@ -255,6 +255,33 @@
                                     </div>
                                 </div>
                                 <canvas id="patientChart" width="100%" height="95"></canvas>
+                                <script>
+                                     //Convert the PHP array to JavaScript variables
+                                        const patientMonths = @json($patientsByMonth->pluck('month'));
+                                        const patientCounts = @json($patientsByMonth->pluck('count'));
+
+                                        var ctx = document.getElementById('patientChart').getContext('2d');
+                                        var myChart = new Chart(ctx, {
+                                            type: 'bar',
+                                            data: {
+                                                labels: patientMonths,
+                                                datasets: [{
+                                                    label: 'Patient',
+                                                    data: patientCounts,
+                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                    borderWidth: 1
+                                                }]
+                                            },
+                                            options: {
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true
+                                                    }
+                                                }
+                                            }
+                                        });
+                                </script>
                             </div>
                         @else
                             <div class="card-body">
@@ -358,8 +385,8 @@
 
     <!-- [Page Specific JS] start -->
     <!-- Apex Chart -->
-    <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script>
+    {{-- <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script> --}}
     <!-- [Page Specific JS] end -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -367,40 +394,14 @@
 <!-- [Body] end -->
 <script>
     // Convert the PHP array to JavaScript variables
-    var months = @json($patientsByMonth->pluck('month'));
-    const patientCounts = @json($patientsByMonth->pluck('count'));
-
-    var ctx = document.getElementById('patientChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: months,
-            datasets: [{
-                label: 'Patient',
-                data: patientCounts,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    // Convert the PHP array to JavaScript variables
-    var months = @json($months);
+    const appointmentMonths = @json($months);
     const appointmentCounts = @json($appointmentCounts);
 
     var ctx = document.getElementById('appointmentChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: months,
+            labels: appointmentMonths,
             datasets: [{
                 label: 'Monthly Appointments',
                 data: appointmentCounts,
