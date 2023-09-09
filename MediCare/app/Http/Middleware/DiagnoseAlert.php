@@ -23,12 +23,14 @@ class DiagnoseAlert
         $currentYear = Carbon::now()->year;
         $currentMonth = Carbon::now()->month;
 
+        // Get unique years for which there are patient records
         $years = Patient::selectRaw('YEAR(created_at) as year')
             ->whereYear('created_at', '<', $currentYear)
             ->groupBy('year')
             ->orderBy('year')
             ->get();
 
+        // Get unique diagnoses
         $diagnoseData = Patient::select('diagnosis')
             ->whereNotNull('diagnosis')
             ->distinct()
@@ -55,10 +57,12 @@ class DiagnoseAlert
 
                     $currentTime = Carbon::now()->toTimeString();
                     $currentDate = Carbon::now()->toDateString();
-                    $title = $diagnose . ' is rising.';
-                    $message = 'The diagnose: ' . $diagnose . ' is rising from previous year: ' . $year->year;
+                    $title = "$diagnose yearly alert";
+                    $message = "The diagnose: $diagnose is rising from $currentYear to previous year: $year->year";
 
                     if ($notifications->isEmpty()) {
+                    // Create a new notification if no notifications exist
+
                         Notification::create([
                             'title' => $title,
                             'message' => $message,
@@ -71,8 +75,11 @@ class DiagnoseAlert
                     } else {
                         foreach ($notifications as $notification) {
 
-                            if ($notification->date != $currentDate && $notification->diagnose != $diagnose) {
-
+                            $notificationDate =  Carbon::parse($notification->date);
+                            $month = $notificationDate->month;
+                            
+                            if (($notification->title != $title && $month != $currentMonth) || ($notification->title == $title && $month != $currentMonth)) {
+                                // Create a new notification if conditions are met
                                 Notification::create([
                                     'title' => $title,
                                     'message' => $message,
@@ -89,54 +96,71 @@ class DiagnoseAlert
                 }
             }
 
-            $currentMonthCount = Patient::whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
-            ->where('diagnosis', $diagnose)
-            ->count();
+            // Initialize variables to track the highest count and month name
+            $highestCount = 0;
+            $highestMonth = '';
 
-            // Loop through each month of the year
-            for ($month = 1; $month < $currentMonth; $month++) {
-                // Retrieve diagnosis data for the current month
-                $previousMonthCount = Patient::whereMonth('created_at', $month)
-                    ->whereYear('created_at', $currentYear)
+            // Loop through previous months and get counts
+            for ($i = 1; $i < $currentMonth; $i++) {
+                $month = Carbon::now()->subMonths($i);
+                $monthName = $month->format('F Y');
+
+                $count = Patient::whereMonth('created_at', $month->month)
+                    ->whereYear('created_at', $month->year)
                     ->where('diagnosis', $diagnose)
                     ->count();
 
-                if($currentMonthCount > $previousMonthCount) {
+                if ($count > $highestCount) {
+                    $highestCount = $count;
+                    $highestMonth = $monthName;
+                }
+            }
 
-                    $monthName = Carbon::createFromDate($currentYear, $month)->monthName;
-                    $currentTime = Carbon::now()->toTimeString();
-                    $currentDate = Carbon::now()->toDateString();
-                    $title = $diagnose . ' is rising.';
-                    $message = 'The diagnose: ' . $diagnose . ' is rising from previous month: ' . $monthName;
+            // Get the count for the current month
+            $currentMonthCount = Patient::whereMonth('created_at', $currentMonth)
+                ->whereYear('created_at', $currentYear)
+                ->where('diagnosis', $diagnose)
+                ->count();
 
-                    if ($notifications->isEmpty()) {
-                        Notification::create([
-                            'title' => $title,
-                            'message' => $message,
-                            'date' => $currentDate,
-                            'time' => $currentTime,
-                            'type' => 'admin',
-                            'diagnose' => $diagnose,
-                        ]);
+            // Compare the highest count with the current month count
+            if ($currentMonthCount > $highestCount) {
 
-                    } else {
-                        foreach ($notifications as $notification) {
+                $currentTime = Carbon::now()->toTimeString();
+                $currentDate = Carbon::now()->toDateString();
 
-                            if ($notification->date != $currentDate && $notification->diagnose != $diagnose) {
+                $title = "$diagnose monthly alert";
+                $message = "The diagnose: $diagnose is rising from previous month: $highestMonth";
 
-                                Notification::create([
-                                    'title' => $title,
-                                    'message' => $message,
-                                    'date' => $currentDate,
-                                    'time' => $currentTime,
-                                    'type' => 'admin',
-                                    'diagnose' => $diagnose,
-                                ]);
-                            }
+                if ($notifications->isEmpty()) {
+                    // Create a new notification if no notifications exist
+                    Notification::create([
+                        'title' => $title,
+                        'message' => $message,
+                        'date' => $currentDate,
+                        'time' => $currentTime,
+                        'type' => 'admin',
+                        'diagnose' => $diagnose,
+                    ]);
+
+                } else {
+                    foreach ($notifications as $notification) {
+
+                        $notificationDate =  Carbon::parse($notification->date);
+                        $month = $notificationDate->month;
+
+                        if (($notification->title != $title && $month != $currentMonth) || ($notification->title == $title && $month != $currentMonth)) {
+                            // Create a new notification if conditions are met
+                            Notification::create([
+                                'title' => $title,
+                                'message' => $message,
+                                'date' => $currentDate,
+                                'time' => $currentTime,
+                                'type' => 'admin',
+                                'diagnose' => $diagnose,
+                            ]);
                         }
-
                     }
+
                 }
             }
 
