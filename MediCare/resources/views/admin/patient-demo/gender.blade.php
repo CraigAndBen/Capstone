@@ -13,8 +13,8 @@
                                 <h5 class="m-b-10">Gender Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item" aria-current="page">Gender Demographics</li>
                             </ul>
                         </div>
@@ -34,6 +34,29 @@
                             <h1>Gender Demographics</h1>
                         </div>
                         <div class="card-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
@@ -42,7 +65,7 @@
                                     <form action="{{ route('admin.demographics.gender.search') }}" method="POST">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
-                                            <option>Select Year</option>
+                                            <option value="">Select Year</option>
                                             @foreach ($admittedYears as $admittedYear)
                                                 @if ($admittedYear == $year)
                                                     <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
@@ -57,7 +80,7 @@
                                 <div class="col-md-2 mt-2">
                                     <button type="submit" class="btn btn-primary">Select</button>
                                 </div>
-                                    </form>
+                                </form>
                             </div>
                             <hr>
                             <div class="row">

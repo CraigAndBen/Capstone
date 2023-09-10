@@ -34,27 +34,51 @@
                             <h1>Age Demographics</h1>
                         </div>
                         <div class="card-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
                                 </div>
-                                    <div class="col-md-8">
-                                        <form action="{{route('admin.demographics.age.search')}}" method="POST">
-                                            @csrf
+                                <div class="col-md-8">
+                                    <form action="{{ route('admin.demographics.age.search') }}" method="POST">
+                                        @csrf
                                         <select class="form-control p-3" id="year" name="year">
                                             <option>Select Year</option>
                                             @foreach ($admittedYears as $admittedYear)
                                                 @if ($admittedYear == $year)
-                                                <option value="{{$admittedYear}}" selected>{{$admittedYear}}</option>
+                                                    <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
+                                                    </option>
                                                 @else
-                                                <option value="{{$admittedYear}}">{{$admittedYear}}</option>
+                                                    <option value="{{ $admittedYear }}">{{ $admittedYear }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
-                                    </div>
-                                    <div class="col-md-2 mt-2">
-                                        <button type="submit" class="btn btn-primary">Select</button>
-                                    </div>
+                                </div>
+                                <div class="col-md-2 mt-2">
+                                    <button type="submit" class="btn btn-primary">Select</button>
+                                </div>
                                 </form>
                             </div>
                             <hr>
@@ -81,14 +105,14 @@
     @endsection
 
     @section('scripts')
-    <script>
-        // Prepare data for the bar graph
-        var labels = {!! json_encode($labels) !!};
-        var datasets = {!! json_encode($datasets) !!};
+        <script>
+            // Prepare data for the bar graph
+            var labels = {!! json_encode($labels) !!};
+            var datasets = {!! json_encode($datasets) !!};
 
-        // Define a color palette for the bar graph
-        var colors = [
-            'rgba(54, 162, 235, 0.7)', // Blue
+            // Define a color palette for the bar graph
+            var colors = [
+                'rgba(54, 162, 235, 0.7)', // Blue
                 'rgba(255, 99, 132, 0.7)', // Red
                 'rgba(75, 192, 192, 0.7)', // Green
                 'rgba(255, 206, 86, 0.7)', // Yellow
@@ -100,34 +124,35 @@
                 'rgba(128, 128, 0, 0.7)', // Olive
                 'rgba(128, 0, 128, 0.7)', // Purple
                 'rgba(0, 128, 128, 0.7)', // Teal
-        ];
+            ];
 
-        // Get the chart context and create the bar graph
-        var ctx = document.getElementById('ageDemographicsChart').getContext('2d');
-        var ageDemographicsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: datasets.map(function(data, index) {
-                    return {
-                        label: data.month,
-                        data: data.data,
-                        backgroundColor: colors[index % colors.length], // Use the predefined colors from the palette
-                        borderWidth: 1,
-                    };
-                })
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        stacked: true, // Stack the bars on the x-axis for each month
-                    },
-                    y: {
-                        beginAtZero: true,
+            // Get the chart context and create the bar graph
+            var ctx = document.getElementById('ageDemographicsChart').getContext('2d');
+            var ageDemographicsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: datasets.map(function(data, index) {
+                        return {
+                            label: data.month,
+                            data: data.data,
+                            backgroundColor: colors[index % colors
+                            .length], // Use the predefined colors from the palette
+                            borderWidth: 1,
+                        };
+                    })
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true, // Stack the bars on the x-axis for each month
+                        },
+                        y: {
+                            beginAtZero: true,
+                        }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
     @endsection

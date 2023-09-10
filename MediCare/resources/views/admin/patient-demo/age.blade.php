@@ -34,6 +34,29 @@
                             <h1>Gender Demographics</h1>
                         </div>
                         <div class="card-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
@@ -115,7 +138,7 @@
                             label: data.month,
                             data: data.data,
                             backgroundColor: colors[index % colors
-                            .length], // Use the predefined colors from the palette
+                                .length], // Use the predefined colors from the palette
                             borderWidth: 1,
                         };
                     })

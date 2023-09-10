@@ -76,13 +76,13 @@
                                 </div>
                                 <hr>
 
-                                <form action="{{ route('superadmin.patient.search') }}" method="GET">
+                                <form action="{{ route('superadmdin.patient.search') }}" method="GET">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-10">
                                             <div class="form-floating mb-3">
                                                 <input type="text" class="form-control ml-2" id="floatingInput search"
-                                                    placeholder="Search..." name="search" />
+                                                    placeholder="Search" name="search" />
                                                 <label for="floatingInput">Search</label>
                                             </div>
                                         </div>
@@ -92,7 +92,7 @@
                                     </div>
                                 </form>
 
-                                @if ($limitPatients->isEmpty())
+                                @if ($patients->isEmpty())
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
@@ -108,7 +108,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
-                                            @foreach ($limitPatients as $patient)
+                                            @foreach ($patients as $patient)
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
@@ -252,6 +252,9 @@
 
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -266,7 +269,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Adding Patient</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('admin.patient.store') }}">
+                                    <form method="POST" action="{{ route('superadmin.patient.store') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">
@@ -492,7 +495,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Adding Outpatient</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('admin.outpatient.store') }}">
+                                    <form method="POST" action="{{ route('superadmin.outpatient.store') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">
@@ -684,7 +687,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Update Patient Information</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('admin.patient.update') }}">
+                                    <form method="POST" action="{{ route('superadmin.patient.update') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">
@@ -906,7 +909,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Update Patient Information</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('admin.patient.update') }}">
+                                    <form method="POST" action="{{ route('superadmin.patient.update') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">

@@ -176,19 +176,14 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::orderBy('admitted_date', 'desc')->get();
-        $limitPatients = $patients->take(5);
+        $patients = Patient::orderBy('admitted_date', 'desc')->paginate(10);
 
-        return view('admin.patient.patient', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
 
     }
 
     public function patientSearch(Request $request)
     {
-        $request->validate([
-            'search' => 'required|string|max:255',
-        ]);
-
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -197,12 +192,10 @@ class AdminController extends Controller
         $searchTerm = $request->input('search');
 
         $patients = Patient::where(function ($query) use ($searchTerm) {
-            $columns = Schema::getColumnListing('patient'); // Replace 'your_table' with the actual table name
-
-            foreach ($columns as $column) {
-                $query->orWhere($column, 'LIKE', '%' . $searchTerm . '%');
-            }
-        })->get();
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+        })->paginate(10);
 
         return view('admin.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
@@ -313,17 +306,13 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::where('type', 'outpatient')->orderBy('created_at', 'desc')->get();
-        $limitPatients = $patients->take(5);
+        $patients = Patient::where('type', 'outpatient')->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('admin.patient.patient_outpatient', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('admin.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
 
     public function outpatientSearch(Request $request)
     {
-        $request->validate([
-            'search' => 'required|string|max:255',
-        ]);
 
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
@@ -333,12 +322,10 @@ class AdminController extends Controller
         $searchTerm = $request->input('search');
 
         $patients = Patient::where('type', 'outpatient')->where(function ($query) use ($searchTerm) {
-            $columns = Schema::getColumnListing('patients'); // Replace 'your_table' with the actual table name
-
-            foreach ($columns as $column) {
-                $query->orWhere($column, 'LIKE', '%' . $searchTerm . '%');
-            }
-        })->get();
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+        })->paginate(10);
 
         return view('admin.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
@@ -511,18 +498,13 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at', 'desc')->get();
-        $limitPatients = $patients->take(5);
+        $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('admin.patient.patient_admitted', compact('limitPatients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('admin.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
 
     public function patientAdmittedSearch(Request $request)
     {
-        $request->validate([
-            'search' => 'required|string|max:255',
-        ]);
-
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -530,12 +512,10 @@ class AdminController extends Controller
         $doctors = User::where('role', 'doctor')->get();
         $searchTerm = $request->input('search');
         $patients = Patient::whereNull('discharged_date')->where(function ($query) use ($searchTerm) {
-            $columns = Schema::getColumnListing('patient'); // Replace 'your_table' with the actual table name
-
-            foreach ($columns as $column) {
-                $query->orWhere($column, 'LIKE', '%' . $searchTerm . '%');
-            }
-        })->get();
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+        })->paginate(10);
 
         return view('admin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
@@ -612,6 +592,10 @@ class AdminController extends Controller
 
     public function genderSearch(Request $request)
     {
+        $request->validate([
+            'year' => 'required',
+        ]);
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -765,6 +749,10 @@ class AdminController extends Controller
 
     public function ageSearch(Request $request)
     {
+        $request->validate([
+            'year' => 'required',
+        ]);
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -940,6 +928,10 @@ class AdminController extends Controller
 
     public function admitSearch(Request $request)
     {
+        $request->validate([
+            'year' => 'required',
+        ]);
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -1035,6 +1027,11 @@ class AdminController extends Controller
 
     public function diagnoseSearch(Request $request)
     {
+        $request->validate([
+            'diagnose' => 'required',
+            'year' => 'required',
+        ]);
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -1165,6 +1162,10 @@ class AdminController extends Controller
 
     public function diagnoseTrendSearch(Request $request)
     {
+        $request->validate([
+            'diagnose' => 'required',
+        ]);
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);

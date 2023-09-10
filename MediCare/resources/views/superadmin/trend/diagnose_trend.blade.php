@@ -1,4 +1,4 @@
-@extends('layouts.inner_superadmin')
+@extends('layouts.superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -35,26 +35,48 @@
                         </div>
                         <div class="card-body">
                             <h3>Ranked Diagnose</h3>
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
                                 </div>
                                 <div class="col-md-8">
                                     <ul class="list-group list-group-flush mt-3">
-                                        @foreach ($rankedDiagnosis as $diagnosis)
-        
-                                        <li class="list-group-item px-0">
-                                            <div class="row align-items-start">
-                                                <div class="col">
-                                                    <h5 class="mb-0">{{$diagnosis->diagnosis}}</h5>
+                                        @foreach ($limitDiagnosis as $diagnosis)
+                                            <li class="list-group-item px-0">
+                                                <div class="row align-items-start">
+                                                    <div class="col">
+                                                        <h5 class="mb-0">{{ $diagnosis->diagnosis }}</h5>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
+                                                                class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
+                                                                    class="ti ti-chevron-up text-success"></i></span></h5>
+                                                    </div>
                                                 </div>
-                                                <div class="col-auto">
-                                                    <h5 class="mb-0">{{$diagnosis->total_occurrences}}<span
-                                                            class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                                class="ti ti-chevron-up text-success"></i></span></h5>
-                                                </div>
-                                            </div>
-                                        </li>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -67,12 +89,13 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('superadmin.trend.diagnose.search') }}" method="POST">
+                                    <form action="{{ route('admin.trend.diagnose.search') }}" method="POST">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option>Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
-                                                <option value="{{ $diagnose->diagnosis }}">{{ $diagnose->diagnosis }}</option>
+                                                <option value="{{ $diagnose->diagnosis }}">{{ $diagnose->diagnosis }}
+                                                </option>
                                             @endforeach
                                         </select>
                                 </div>
@@ -100,5 +123,4 @@
 @endsection
 
 @section('scripts')
-
 @endsection

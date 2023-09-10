@@ -82,7 +82,7 @@
                                         <div class="col-md-10">
                                             <div class="form-floating mb-3">
                                                 <input type="text" class="form-control ml-2" id="floatingInput search"
-                                                    placeholder="Search..." name="search" />
+                                                    placeholder="Search" name="search" />
                                                 <label for="floatingInput">Search</label>
                                             </div>
                                         </div>
@@ -92,7 +92,7 @@
                                     </div>
                                 </form>
 
-                                @if ($limitPatients->isEmpty())
+                                @if ($patients->isEmpty())
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
@@ -108,7 +108,7 @@
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
-                                            @foreach ($limitPatients as $patient)
+                                            @foreach ($patients as $patient)
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
@@ -252,6 +252,9 @@
 
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                    </div>
                                 @endif
                             </div>
                         </div>

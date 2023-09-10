@@ -34,6 +34,29 @@
                             <h1>Diagnose Demographics</h1>
                         </div>
                         <div class="card-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
@@ -42,24 +65,25 @@
                                     <form action="{{ route('admin.demographics.diagnose.search') }}" method="POST">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
-                                            <option>Select Diagnose</option>
+                                            <option value="">Select Diagnose</option>
                                             @foreach ($diagnoseData as $diagnose)
                                                 @if ($diagnose == $specificDiagnosis)
-                                                <option value="{{$diagnose}}" selected>{{$diagnose}}</option>
+                                                    <option value="{{ $diagnose }}" selected>{{ ucwords($diagnose) }}
+                                                    </option>
                                                 @else
-                                                <option value="{{$diagnose}}">{{$diagnose}}</option>
+                                                    <option value="{{ $diagnose }}">{{ ucwords($diagnose) }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
                                 </div>
                                 <div class="col-md-4">
                                     <select class="form-control p-3" id="year" name="year">
-                                        <option>Select Year</option>
+                                        <option value="">Select Year</option>
                                         @foreach ($admittedYears as $year)
                                             @if ($year == $selectedYear)
-                                            <option value="{{$year}}" selected>{{$year}}</option>
+                                                <option value="{{ $year }}" selected>{{ $year }}</option>
                                             @else
-                                            <option value="{{$year}}">{{$year}}</option>
+                                                <option value="{{ $year }}">{{ $year }}</option>
                                             @endif
                                         @endforeach
                                     </select>
@@ -96,38 +120,38 @@
 @endsection
 
 @section('scripts')
-<script>
-    // Prepare data for the line graph
-    var months = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'month')) !!};
-    var diagnosePatientCounts = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'count')) !!};
+    <script>
+        // Prepare data for the line graph
+        var months = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'month')) !!};
+        var diagnosePatientCounts = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'count')) !!};
 
-    // Get the chart context and create the line graph
-    var ctx = document.getElementById('diagnosePatientDemographicsChart').getContext('2d');
-    var diagnosePatientDemographicsChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: months,
-            datasets: [{
-                label: 'Diagnose Patients',
-                data: diagnosePatientCounts,
-                fill: false,
-                borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                borderWidth: 2,
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    grid: {
-                        display: false,
+        // Get the chart context and create the line graph
+        var ctx = document.getElementById('diagnosePatientDemographicsChart').getContext('2d');
+        var diagnosePatientDemographicsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Diagnose Patients',
+                    data: diagnosePatientCounts,
+                    fill: false,
+                    borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
                     }
-                },
-                y: {
-                    beginAtZero: true,
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
 @endsection

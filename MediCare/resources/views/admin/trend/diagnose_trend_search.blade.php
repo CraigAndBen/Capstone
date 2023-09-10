@@ -34,6 +34,29 @@
                             <h1>Diagnose Trend</h1>
                         </div>
                         <div class="card-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <h3>Ranked Diagnose This Year</h3>
                             <div class="row">
                                 <div class="col-md-2">
@@ -70,7 +93,7 @@
                                     <form action="{{ route('admin.trend.diagnose.search') }}" method="POST">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
-                                            <option>Select Diagnose</option>
+                                            <option value="">Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
                                                 @if ($diagnose->diagnosis == $specificDiagnosis)
                                                 <option value="{{ $diagnose->diagnosis }}" selected>{{ $diagnose->diagnosis }}</option>
@@ -106,7 +129,7 @@
                             <canvas id="yearlyTrendChart" width="400" height="200"></canvas>
                         </div>
                         <hr>
-                        <div class="container p-3">
+                        <div class="row p-3">
                             <!-- Create the bar graph for yearly trend -->
                             <div class="my-3">
                                 <h3>Monthly Trend - <i>{{$specificDiagnosis}}</i></h3>

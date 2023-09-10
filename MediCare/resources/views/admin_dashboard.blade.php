@@ -155,9 +155,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
+                                <h4>Hi, Good Day! <span class="small text-muted">{{ ucwords($profile->first_name) }}</span>
                                 </h4>
-                                <p class="text-muted">{{ $profile->role }}</p>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('admin.profile') }}" class="dropdown-item">
@@ -324,7 +323,7 @@
                                         <li class="list-group-item px-0">
                                             <div class="row align-items-start">
                                                 <div class="col">
-                                                    <h5 class="mb-0">{{ $diagnosis->diagnosis }}</h5>
+                                                    <h5 class="mb-0">{{ ucwords($diagnosis->diagnosis) }}</h5>
                                                 </div>
                                                 <div class="col-auto">
                                                     <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span

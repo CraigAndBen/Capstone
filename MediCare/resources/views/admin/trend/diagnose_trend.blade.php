@@ -35,6 +35,29 @@
                         </div>
                         <div class="card-body">
                             <h3>Ranked Diagnose</h3>
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
@@ -70,7 +93,7 @@
                                     <form action="{{ route('admin.trend.diagnose.search') }}" method="POST">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
-                                            <option>Select Diagnose</option>
+                                            <option value="">Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
                                                 <option value="{{ $diagnose->diagnosis }}">{{ $diagnose->diagnosis }}</option>
                                             @endforeach

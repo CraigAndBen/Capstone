@@ -240,6 +240,13 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/super_admin/trend/diagnose', [SuperAdminController::class, 'diagnoseTrend'])->name('superadmin.trend.diagnose');
     Route::post('/super_admin/trend/diagnose/search', [SuperAdminController::class, 'diagnoseTrendSearch'])->name('superadmin.trend.diagnose.search');
 
+    //Report
+    Route::post('/super_admin/gender/report', [SuperAdminController::class, 'genderReport'])->name('superadmdin.gender.report');
+    Route::post('/super_admin/age/report', [SuperAdminController::class, 'ageReport'])->name('superadmdin.age.report');
+    Route::post('/super_admin/admit/report', [SuperAdminController::class, 'admitReport'])->name('superadmdin.admit.report');
+    Route::post('/super_admin/diagnose/report', [SuperAdminController::class, 'diagnoseReport'])->name('superadmdin.diagnose.report');
+    Route::post('/super_admin/diagnose_trend/report', [SuperAdminController::class, 'diagnoseTrendReport'])->name('superadmdin.diagnose.trend.report');
+
     // Super Admin Logout
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });

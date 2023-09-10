@@ -1,4 +1,4 @@
-@extends('layouts.inner_superadmin')
+@extends('layouts.superadmin')
 
 @section('content')
 
@@ -186,6 +186,9 @@
 
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                    </div>
                                 </div>
                                 @endif
                             </div>

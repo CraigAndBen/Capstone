@@ -1,4 +1,4 @@
-@extends('layouts.inner_superadmin')
+@extends('layouts.superadmin')
 
 @section('content')
 
@@ -68,7 +68,7 @@
                                             Patient</button>
                                     </div>
                                     <div class="m-1">
-                                        <a href="{{ route('superadmin.patient') }}" class="btn btn-secondary">Show All</a>
+                                        <a href="{{ route('superadmin.patient') }}" class="btn btn-success">Show All</a>
                                     </div>
                                 </div>
                                 <hr>
@@ -192,6 +192,9 @@
 
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center my-3">
+                                            {{ $patients->links('pagination::bootstrap-4') }}
+                                        </div>
                                     </div>
                                 @endif
                             </div>

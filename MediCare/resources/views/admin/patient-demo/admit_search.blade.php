@@ -34,27 +34,51 @@
                             <h1>Admit Demographics</h1>
                         </div>
                         <div class="card-body">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
                                 </div>
-                                    <div class="col-md-8">
-                                        <form action="{{route('admin.demographics.admit.search')}}" method="POST">
-                                            @csrf
+                                <div class="col-md-8">
+                                    <form action="{{ route('admin.demographics.admit.search') }}" method="POST">
+                                        @csrf
                                         <select class="form-control p-3" id="year" name="year">
-                                            <option>Select Year</option>
+                                            <option value="">Select Year</option>
                                             @foreach ($admittedYears as $admittedYear)
                                                 @if ($admittedYear == $year)
-                                                <option value="{{$admittedYear}}" selected>{{$admittedYear}}</option>
+                                                    <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
+                                                    </option>
                                                 @else
-                                                <option value="{{$admittedYear}}">{{$admittedYear}}</option>
+                                                    <option value="{{ $admittedYear }}">{{ $admittedYear }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
-                                    </div>
-                                    <div class="col-md-2 mt-2">
-                                        <button type="submit" class="btn btn-primary">Select</button>
-                                    </div>
+                                </div>
+                                <div class="col-md-2 mt-2">
+                                    <button type="submit" class="btn btn-primary">Select</button>
+                                </div>
                                 </form>
                             </div>
                             <hr>
@@ -81,35 +105,35 @@
     @endsection
 
     @section('scripts')
-    <script>
-        // Prepare data for the bar graph
-        var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
-        var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
+        <script>
+            // Prepare data for the bar graph
+            var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
+            var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
 
-        // Get the chart context and create the bar graph
-        var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
-        var admitPatientDemographicsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'Admit Patients',
-                    data: admitPatientCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                    borderWidth: 1,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        stacked: true, // Stack the bars on the x-axis for each month
-                    },
-                    y: {
-                        beginAtZero: true,
+            // Get the chart context and create the bar graph
+            var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
+            var admitPatientDemographicsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Admit Patients',
+                        data: admitPatientCounts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true, // Stack the bars on the x-axis for each month
+                        },
+                        y: {
+                            beginAtZero: true,
+                        }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
     @endsection
