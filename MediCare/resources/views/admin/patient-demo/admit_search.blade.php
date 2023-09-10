@@ -43,11 +43,11 @@
                                             @csrf
                                         <select class="form-control p-3" id="year" name="year">
                                             <option>Select Year</option>
-                                            @foreach ($admittedYears as $year)
-                                                @if ($year == $selectedYear)
-                                                <option value="{{$year}}" selected>{{$year}}</option>
+                                            @foreach ($admittedYears as $admittedYear)
+                                                @if ($admittedYear == $year)
+                                                <option value="{{$admittedYear}}" selected>{{$admittedYear}}</option>
                                                 @else
-                                                <option value="{{$year}}">{{$year}}</option>
+                                                <option value="{{$admittedYear}}">{{$admittedYear}}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -58,7 +58,16 @@
                                 </form>
                             </div>
                             <hr>
-                            <div class="container">
+                            <div class="row">
+                                <div class="col-md-10"> <!-- Adjust the column width as needed -->
+                                </div>
+                                <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
+                                    <form action="{{ route('admin.admit.report') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                        <button type="submit" class="btn btn-success">Generate Report</button>
+                                    </form>
+                                </div>
                                 <canvas id="admitPatientDemographicsChart" width="800" height="400"></canvas>
                             </div>
                         </div>

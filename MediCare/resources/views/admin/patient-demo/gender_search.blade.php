@@ -39,26 +39,37 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{route('admin.demographics.gender.search')}}" method="POST">
+                                    <form action="{{ route('admin.demographics.gender.search') }}" method="POST">
                                         @csrf
-                                    <select class="form-control p-3" id="gender" name="gender">
-                                        <option>Select Year</option>
-                                        @foreach ($admittedYears as $year)
-                                            @if ($year == $selectedYear)
-                                            <option value="{{$year}}" selected>{{$year}}</option>
-                                            @else
-                                            <option value="{{$year}}">{{$year}}</option>
-                                            @endif
-                                        @endforeach
+                                        <select class="form-control p-3" id="year" name="year">
+                                            <option>Select Year</option>
+                                            @foreach ($admittedYears as $admittedYear)
+                                                @if ($admittedYear == $year)
+                                                    <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $admittedYear }}">{{ $admittedYear }}</option>
+                                                @endif
+                                            @endforeach
 
-                                    </select>
+                                        </select>
                                 </div>
                                 <div class="col-md-2 mt-2">
                                     <button type="submit" class="btn btn-primary">Select</button>
                                 </div>
+                                </form>
                             </div>
                             <hr>
                             <div class="row">
+                                <div class="col-md-10"> <!-- Adjust the column width as needed -->
+                                </div>
+                                <div class="col-md-2 text-right"> <!-- Adjust the column width as needed -->
+                                    <form action="{{ route('admin.gender.report') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                        <button type="submit" class="btn btn-success">Generate Report</button>
+                                    </form>
+                                </div>
                                 <canvas id="genderDemographicsChart"></canvas>
                             </div>
                         </div>
@@ -72,41 +83,41 @@
     @endsection
 
     @section('scripts')
-    <script>
-        // Prepare data for the bar graph
-        var months = {!! json_encode(array_column($genderCountsByMonth, 'month')) !!};
-        var maleData = {!! json_encode(array_column($genderCountsByMonth, 'male')) !!};
-        var femaleData = {!! json_encode(array_column($genderCountsByMonth, 'female')) !!};
+        <script>
+            // Prepare data for the bar graph
+            var months = {!! json_encode(array_column($genderCountsByMonth, 'month')) !!};
+            var maleData = {!! json_encode(array_column($genderCountsByMonth, 'male')) !!};
+            var femaleData = {!! json_encode(array_column($genderCountsByMonth, 'female')) !!};
 
-        // Get the chart context and create the bar graph
-        var ctx = document.getElementById('genderDemographicsChart').getContext('2d');
-        var genderDemographicsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'Male',
-                    data: maleData,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                    borderWidth: 1,
-                }, {
-                    label: 'Female',
-                    data: femaleData,
-                    backgroundColor: 'rgba(255, 99, 132, 0.7)', // Red
-                    borderWidth: 1,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        stacked: true, // Stack the bars on the x-axis for each month
-                    },
-                    y: {
-                        beginAtZero: true,
+            // Get the chart context and create the bar graph
+            var ctx = document.getElementById('genderDemographicsChart').getContext('2d');
+            var genderDemographicsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Male',
+                        data: maleData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                        borderWidth: 1,
+                    }, {
+                        label: 'Female',
+                        data: femaleData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)', // Red
+                        borderWidth: 1,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true, // Stack the bars on the x-axis for each month
+                        },
+                        y: {
+                            beginAtZero: true,
+                        }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
     @endsection

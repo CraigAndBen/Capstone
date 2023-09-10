@@ -72,7 +72,17 @@
                             </form>
                         </div>
                         <hr>
-                        <div class="container mb-5">
+                        <div class="row mb-5 p-3">
+                            <div class="col-md-10"> <!-- Adjust the column width as needed -->
+                            </div>
+                            <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
+                                <form action="{{ route('admin.diagnose.report') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="diagnose" id="diagnose" value="{{ $specificDiagnosis }}">
+                                    <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                    <button type="submit" class="btn btn-success">Generate Report</button>
+                                </form>
+                            </div>
                             <canvas id="diagnosePatientDemographicsChart" width="800" height="400"></canvas>
                         </div>
                     </div>

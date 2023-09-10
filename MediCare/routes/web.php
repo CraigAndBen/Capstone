@@ -159,6 +159,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/trend/diagnose', [AdminController::class, 'diagnoseTrend'])->name('admin.trend.diagnose');
     Route::post('/admin/trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.trend.diagnose.search');
 
+    //Report
+    Route::post('/admin/gender/report', [AdminController::class, 'genderReport'])->name('admin.gender.report');
+    Route::post('/admin/age/report', [AdminController::class, 'ageReport'])->name('admin.age.report');
+    Route::post('/admin/admit/report', [AdminController::class, 'admitReport'])->name('admin.admit.report');
+    Route::post('/admin/diagnose/report', [AdminController::class, 'diagnoseReport'])->name('admin.diagnose.report');
+    Route::post('/admin/diagnose_trend/report', [AdminController::class, 'diagnoseTrendReport'])->name('admin.diagnose.trend.report');
+
+
 });
 
 Route::middleware(['auth', 'role:super_admin'])->group(function () {

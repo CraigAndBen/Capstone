@@ -43,11 +43,11 @@
                                             @csrf
                                         <select class="form-control p-3" id="year" name="year">
                                             <option>Select Year</option>
-                                            @foreach ($admittedYears as $year)
-                                                @if ($year == $yearSelected)
-                                                <option value="{{$year}}" selected>{{$year}}</option>
+                                            @foreach ($admittedYears as $admittedYear)
+                                                @if ($admittedYear == $year)
+                                                <option value="{{$admittedYear}}" selected>{{$admittedYear}}</option>
                                                 @else
-                                                <option value="{{$year}}">{{$year}}</option>
+                                                <option value="{{$admittedYear}}">{{$admittedYear}}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -58,7 +58,16 @@
                                 </form>
                             </div>
                             <hr>
-                            <div class="container">
+                            <div class="row">
+                                <div class="col-md-10"> <!-- Adjust the column width as needed -->
+                                </div>
+                                <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
+                                    <form action="{{ route('admin.age.report') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                        <button type="submit" class="btn btn-success">Generate Report</button>
+                                    </form>
+                                </div>
                                 <canvas id="ageDemographicsChart" width="800" height="400"></canvas>
                             </div>
                         </div>
@@ -80,11 +89,17 @@
         // Define a color palette for the bar graph
         var colors = [
             'rgba(54, 162, 235, 0.7)', // Blue
-            'rgba(255, 99, 132, 0.7)', // Red
-            'rgba(75, 192, 192, 0.7)', // Green
-            'rgba(255, 206, 86, 0.7)', // Yellow
-            'rgba(153, 102, 255, 0.7)', // Purple
-            // Add more colors if needed
+                'rgba(255, 99, 132, 0.7)', // Red
+                'rgba(75, 192, 192, 0.7)', // Green
+                'rgba(255, 206, 86, 0.7)', // Yellow
+                'rgba(153, 102, 255, 0.7)', // Purple
+                'rgba(255, 159, 64, 0.7)', // Orange
+                'rgba(255, 0, 0, 0.7)', // Bright Red
+                'rgba(0, 255, 0, 0.7)', // Bright Green
+                'rgba(0, 0, 255, 0.7)', // Bright Blue
+                'rgba(128, 128, 0, 0.7)', // Olive
+                'rgba(128, 0, 128, 0.7)', // Purple
+                'rgba(0, 128, 128, 0.7)', // Teal
         ];
 
         // Get the chart context and create the bar graph

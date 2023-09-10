@@ -88,7 +88,16 @@
                             </form>
                         </div>
                         <hr>
-                        <div class="container p-3">
+                        <div class="row p-3">
+                            <div class="col-md-10"> <!-- Adjust the column width as needed -->
+                            </div>
+                            <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
+                                <form action="{{ route('admin.diagnose.trend.report') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="diagnose" id="diagnose" value="{{ $specificDiagnosis }}">
+                                    <button type="submit" class="btn btn-success">Generate Report</button>
+                                </form>
+                            </div>
                             <!-- Create the bar graph for yearly trend -->
                             <div class="my-3">
                                 <h3>Yearly Trend - <i>{{$specificDiagnosis}}</i></h3>
