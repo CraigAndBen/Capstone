@@ -120,7 +120,7 @@
                 'rgba(153, 102, 255, 0.7)', // Purple
                 'rgba(255, 159, 64, 0.7)', // Orange
                 'rgba(255, 0, 0, 0.7)', // Bright Red
-                'rgba(0, 255, 0, 0.7)', // Bright Green
+                'rgba(100, 190, 0, 0.7)', // Bright Green
                 'rgba(0, 0, 255, 0.7)', // Bright Blue
                 'rgba(128, 128, 0, 0.7)', // Olive
                 'rgba(128, 0, 128, 0.7)', // Purple

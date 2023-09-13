@@ -56,11 +56,6 @@
                                     </div>
                                 @endif
 
-                                <div class=" d-flex mb-3 justify-content-end">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#createModal">Add Account</button>
-                                </div>
-
                                 @if (session('info'))
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> {{ session('info') }}
@@ -68,102 +63,87 @@
                                 @endif
 
                                 @if ($users->isEmpty())
-                                <div class="alert alert-info">
-                                    <span class="fa fa-check-circle"></span> No User Account Yet.
-                                </div>
+                                    <div class="alert alert-info">
+                                        <span class="fa fa-check-circle"></span> No User Account Yet.
+                                    </div>
                                 @else
-
-
-                                <div class=" d-flex mb-3 justify-content-end">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#createModal">Add Account</button>
-                                </div>
-                                <table class="table table-bordered">
-                                    <thead class="bg-primary text-light text-center">
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Email</th>
-                                            <th>Status</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($users as $user)
+                                    <div class=" d-flex mb-3 justify-content-end">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#createModal">Add Account</button>
+                                    </div>
+                                    <table class="table table-bordered">
+                                        <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <td>{{ $user->first_name }}</td>
-                                                <td>{{ $user->last_name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>{{ $user->status }}</td>
-                                                <td class="text-center">
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle" type="button"
-                                                            data-toggle="dropdown">
-                                                            Actions
-                                                        </button>
-                                                        <div class="dropdown-menu">
-
-                                                            @foreach ($users_info as $info)
-                                                                @if ($user->id === $info->account_id)
-                                                                    <a class="dropdown-item btn btn-primary"
-                                                                        data-toggle="modal" data-target="#updateModal"
-                                                                        data-user-id="{{ json_encode($user->id) }}"
-                                                                        data-first-name="{{ json_encode($user->first_name) }}"
-                                                                        data-last-name="{{ json_encode($user->last_name) }}"
-                                                                        data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                        data-age="{{ json_encode($info->age) }}"
-                                                                        data-gender="{{ json_encode($info->gender) }}"
-                                                                        data-birthdate="{{ json_encode($info->birthdate) }}"
-                                                                        data-occupation="{{ json_encode($info->occupation) }}"
-                                                                        data-address="{{ json_encode($info->address) }}"
-                                                                        data-phone="{{ json_encode($info->phone) }}"
-                                                                        data-email="{{ json_encode($user->email) }}">Update
-                                                                        Account Profile</a>
-                                                                    <a class="dropdown-item" data-toggle="modal"
-                                                                        data-target="#updatePasswordModal"
-                                                                        data-user-id="{{ json_encode($user->id) }}">Update
-                                                                        Password</a>
-
-                                                                    <form
-                                                                        action="{{ route('superadmin.user.update.status') }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <input type="hidden" name="user_id"
-                                                                            value="{{ $user->id }}">
-                                                                        <input type="hidden" name="status"
-                                                                            value="{{ $user->status }}">
-                                                                        @if ($user->status === 'active')
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Deactivate</button>
-                                                                        @else
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Activate</button>
-                                                                        @endif
-                                                                    </form>
-
-                                                                    <a class="dropdown-item btn btn-primary"
-                                                                        data-toggle="modal" data-target="#viewModal"
-                                                                        data-first-name="{{ json_encode($user->first_name) }}"
-                                                                        data-last-name="{{ json_encode($user->last_name) }}"
-                                                                        data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                        data-age="{{ json_encode($info->age) }}"
-                                                                        data-gender="{{ json_encode($info->gender) }}"
-                                                                        data-occupation="{{ json_encode($info->occupation) }}"
-                                                                        data-address="{{ json_encode($info->address) }}"
-                                                                        data-birthdate="{{ json_encode($info->birthdate) }}"
-                                                                        data-phone="{{ json_encode($info->phone) }}"
-                                                                        data-email="{{ json_encode($user->email) }}">View
-                                                                        Profile</a>
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Email</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        @endforeach
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($users as $user)
+                                                <tr class="text-center">
+                                                    <td>{{ ucwords($user->first_name) }}</td>
+                                                    <td>{{ ucwords($user->last_name) }}</td>
+                                                    <td>{{ ucwords($user->email) }}</td>
+                                                    <td class="text-center">
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                data-toggle="dropdown">
+                                                                Actions
+                                                            </button>
+                                                            <div class="dropdown-menu">
 
-                                    </tbody>
-                                </table>
+                                                                @foreach ($users_info as $info)
+                                                                    @if ($user->id == $info->account_id)
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#updateModal"
+                                                                            data-user-id="{{ json_encode($user->id) }}"
+                                                                            data-first-name="{{ json_encode($user->first_name) }}"
+                                                                            data-last-name="{{ json_encode($user->last_name) }}"
+                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                            data-age="{{ json_encode($info->age) }}"
+                                                                            data-gender="{{ json_encode($info->gender) }}"
+                                                                            data-birthdate="{{ json_encode($info->birthdate) }}"
+                                                                            data-street="{{ json_encode($info->street) }}"
+                                                                            data-brgy="{{ json_encode($info->brgy) }}"
+                                                                            data-city="{{ json_encode($info->city) }}"
+                                                                            data-province="{{ json_encode($info->province) }}"
+                                                                            data-occupation="{{ json_encode($info->occupation) }}"
+                                                                            data-phone="{{ json_encode($info->phone) }}"
+                                                                            data-email="{{ json_encode($user->email) }}">Update
+                                                                            Profile</a>
+                                                                        <a class="dropdown-item" data-toggle="modal"
+                                                                            data-target="#updatePasswordModal"
+                                                                            data-user-id="{{ json_encode($user->id) }}">Update
+                                                                            Password</a>
+
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#viewModal"
+                                                                            data-first-name="{{ json_encode($user->first_name) }}"
+                                                                            data-last-name="{{ json_encode($user->last_name) }}"
+                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                            data-age="{{ json_encode($info->age) }}"
+                                                                            data-gender="{{ json_encode($info->gender) }}"
+                                                                            data-occupation="{{ json_encode($info->occupation) }}"
+                                                                            data-street="{{ json_encode($info->street) }}"
+                                                                            data-brgy="{{ json_encode($info->brgy) }}"
+                                                                            data-city="{{ json_encode($info->city) }}"
+                                                                            data-province="{{ json_encode($info->province) }}"
+                                                                            data-birthdate="{{ json_encode($info->birthdate) }}"
+                                                                            data-phone="{{ json_encode($info->phone) }}"
+                                                                            data-email="{{ json_encode($user->email) }}">View
+                                                                            Profile</a>
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
                                 @endif
                             </div>
                         </div>
@@ -173,7 +153,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Update Doctor Account</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">User Account</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('superadmin.update.user') }}">
@@ -183,55 +163,65 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="hidden" id="user_id" name="user_id" />
                                                     <input type="text" class="form-control ml-2 first_name"
-                                                        id="first_name" placeholder="First Name" name="first_name"
-                                                        required />
+                                                        id="first_name" placeholder="First Name" name="first_name" />
                                                     <label for="floatingInput">First Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2 middle_name"
-                                                        id="middle_name" placeholder="Middle Name" name="middle_name"
-                                                        required />
+                                                        id="middle_name" placeholder="Middle Name" name="middle_name" />
                                                     <label for="floatingInput">Middle Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="phone" class="form-control" id="last_name"
-                                                        placeholder="Last Name" name="last_name" required />
+                                                        placeholder="Last Name" name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="occupation" class="form-control" id="occupation"
-                                                placeholder="Occupation" />
-                                            <label for="floatingInput">Occupation</label>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2" id="street"
+                                                        placeholder="street" name="street" />
+                                                    <label for="floatingInput">Street</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2" id="brgy"
+                                                        placeholder="Brgy" name="brgy" />
+                                                    <label for="floatingInput">Brgy</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="number" class="form-control ml-2" id="age"
-                                                        placeholder="Age" name="age" required />
-                                                    <label for="floatingInput">Age</label>
+                                                    <input type="text" class="form-control ml-2" id="city"
+                                                        placeholder="City" name="city" />
+                                                    <label for="floatingInput">City</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select a Gender</option>
-                                                    <option value="female">Female</option>
-                                                    <option value="male">Male</option>
-                                                    <option value="other">Other</option>
-                                                </select>
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2" id="province"
+                                                        placeholder="Province" name="province" />
+                                                    <label for="floatingInput">Province</label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="address" class="form-control" id="address"
-                                                placeholder="Address" />
-                                            <label for="floatingInput">Address</label>
-                                        </div>
                                         <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="number" class="form-control" id="age"
+                                                        placeholder="Age" name="age" />
+                                                    <label for="floatingInput">Age</label>
+                                                </div>
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="date" class="form-control ml-2" id="birthdate"
@@ -239,13 +229,30 @@
                                                     <label for="floatingInput">Birthdate</label>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <select class="form-control p-3" id="gender" name="gender">
+                                                        <option value="">Select a Gender</option>
+                                                        <option value="female">Female</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="number" class="form-control" id="phone"
-                                                        placeholder="Phone" name="phone" required />
+                                                        placeholder="Phone" name="phone" />
                                                     <label for="floatingInput">Phone</label>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="occupation" class="form-control" id="occupation"
+                                                placeholder="Occupation" />
+                                            <label for="floatingInput">Occupation</label>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input type="email" name="email" class="form-control" id="email"
@@ -276,7 +283,7 @@
                                             <div class="form-floating mb-3 ">
                                                 <input type="text" class="form-control ml-2 first_name"
                                                     id="first_name" placeholder="First Name" name="first_name"
-                                                    readonly />
+                                                    disabled />
                                                 <label for="floatingInput">First Name</label>
                                             </div>
                                         </div>
@@ -284,65 +291,95 @@
                                             <div class="form-floating mb-3 ">
                                                 <input type="text" class="form-control ml-2 middle_name"
                                                     id="middle_name" placeholder="Middle Name" name="middle_name"
-                                                    readonly />
+                                                    disabled />
                                                 <label for="floatingInput">Middle Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
                                                 <input type="phone" class="form-control" id="last_name"
-                                                    placeholder="Last Name" name="last_name" readonly />
+                                                    placeholder="Last Name" name="last_name" disabled />
                                                 <label for="floatingInput">Last Name</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" name="occupation" class="form-control" id="occupation"
-                                            placeholder="Occupation" readonly />
-                                        <label for="floatingInput">Occupation</label>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2" id="street"
+                                                    placeholder="Street" name="street" disabled />
+                                                <label for="floatingInput">Street</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2" id="brgy"
+                                                    placeholder="Brgy" name="brgy" disabled />
+                                                <label for="floatingInput">Brgy</label>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2" id="city"
+                                                    name="city" disabled />
+                                                <label for="floatingInput">City</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2" id="province"
+                                                    placeholder="Province" name="province" disabled />
+                                                <label for="floatingInput">Province</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
                                                 <input type="number" class="form-control ml-2" id="age"
-                                                    placeholder="Age" name="age" readonly />
+                                                    placeholder="Age" name="age" disabled />
                                                 <label for="floatingInput">Age</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <select class="form-control p-3" id="gender" name="gender" disabled>
-                                                <option>Select a Gender</option>
-                                                <option value="female">Female</option>
-                                                <option value="male">Male</option>
-                                                <option value="other">Other</option>
-                                            </select>
+                                            <div class="form-floating mb-3 ">
+                                                <input type="date" class="form-control ml-2" id="birthdate"
+                                                    placeholder="Date" name="birthdate" disabled />
+                                                <label for="floatingInput">Birthdate</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" name="address" class="form-control" id="address"
-                                            placeholder="Address" readonly />
-                                        <label for="floatingInput">Address</label>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
-                                                <input type="date" class="form-control ml-2" id="birthdate"
-                                                    placeholder="Date" name="birthdate" readonly />
-                                                <label for="floatingInput">Date</label>
-
+                                                <select class="form-control p-3" id="gender" name="gender" disabled>
+                                                    <option value="">Select a Gender</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="male">Male</option>
+                                                    <option value="other">Other</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
                                                 <input type="number" class="form-control" id="phone"
-                                                    placeholder="Phone" name="phone" readonly />
+                                                    placeholder="Phone" name="phone" disabled />
                                                 <label for="floatingInput">Phone</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-floating mb-3">
+                                        <input type="text" name="occupation" class="form-control" id="occupation"
+                                            placeholder="Occupation" disabled />
+                                        <label for="floatingInput">Occupation</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
                                         <input type="email" name="email" class="form-control" id="email"
-                                            placeholder="Email" readonly />
+                                            placeholder="Email" disabled />
                                         <label for="floatingInput">Email</label>
                                     </div>
                                 </div>
@@ -441,14 +478,13 @@
                                             <label for="floatingInput">Email Address</label>
                                         </div>
                                         <div class="form-floating mb-3 ">
-                                            <input type="password" name="password" class="form-control"
-                                                id="password" placeholder="New Password" />
+                                            <input type="password" name="password" class="form-control" id="password"
+                                                placeholder="New Password" />
                                             <label for="floatingInput">Password</label>
                                         </div>
                                         <div class="form-floating mb-3 ">
-                                            <input type="password" name="password_confirmation"
-                                                class="form-control" id="password_confirmation"
-                                                placeholder="Password Confirmation" />
+                                            <input type="password" name="password_confirmation" class="form-control"
+                                                id="password_confirmation" placeholder="Password Confirmation" />
                                             <label for="floatingInput">Password Confirmation</label>
                                         </div>
                                 </div>
@@ -473,57 +509,20 @@
                                     <form method="POST" action="{{ route('superadmin.user.password.update') }}">
                                         @csrf
                                         <input type="hidden" name="user_id" class="form-control" id="user_id" />
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="password" name="current_password" class="form-control"
-                                                        id="current_password" placeholder="Current Password" />
-                                                    <label for="floatingInput">Current Password</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-floating mt-2 input-group-append">
-                                                    <button class="btn btn-outline-primary toggle-password" type="button"
-                                                        id="currentPassTogglePassword">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div class="form-floating mb-3 ">
+                                            <input type="password" name="current_password" class="form-control"
+                                                id="current_password" placeholder="Current Password" />
+                                            <label for="floatingInput">Current Password</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="password" name="password" class="form-control"
-                                                        id="password" placeholder="New Password" />
-                                                    <label for="floatingInput">New Password</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-floating mt-2 input-group-append">
-                                                    <button class="btn btn-outline-primary toggle-password" type="button"
-                                                        id="passwordTogglePassword">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div class="form-floating mb-3 ">
+                                            <input type="password" name="password" class="form-control" id="password"
+                                                placeholder="New Password" />
+                                            <label for="floatingInput">New Password</label>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="password" name="password_confirmation"
-                                                        class="form-control" id="password_confirmation"
-                                                        placeholder="Password Confirmation" />
-                                                    <label for="floatingInput">Password Confirmation</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-floating mt-2 input-group-append">
-                                                    <button class="btn btn-outline-primary toggle-password" type="button"
-                                                        id="confirmationPassword">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div class="form-floating mb-3 ">
+                                            <input type="password" name="password_confirmation" class="form-control"
+                                                id="password_confirmation" placeholder="Password Confirmation" />
+                                            <label for="floatingInput">Password Confirmation</label>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -558,7 +557,10 @@
                     var occupation = JSON.parse(button.data('occupation'));
                     var age = JSON.parse(button.data('age'));
                     var gender = JSON.parse(button.data('gender'));
-                    var address = JSON.parse(button.data('address'));
+                    var street = JSON.parse(button.data('street'));
+                    var brgy = JSON.parse(button.data('brgy'));
+                    var city = JSON.parse(button.data('city'));
+                    var province = JSON.parse(button.data('province'));
                     var birthdate = JSON.parse(button.data('birthdate'));
                     var phone = JSON.parse(button.data('phone'));
                     var email = JSON.parse(button.data('email'));
@@ -570,7 +572,10 @@
                     modal.find('#occupation').val(occupation);
                     modal.find('#age').val(age);
                     modal.find('#gender').val(gender);
-                    modal.find('#address').val(address);
+                    modal.find('#street').val(street);
+                    modal.find('#brgy').val(brgy);
+                    modal.find('#city').val(city);
+                    modal.find('#province').val(province);
                     modal.find('#birthdate').val(birthdate);
                     modal.find('#phone').val(phone);
                     modal.find('#user_id').val(user_id);
@@ -585,7 +590,10 @@
                     var occupation = JSON.parse(button.data('occupation'));
                     var age = JSON.parse(button.data('age'));
                     var gender = JSON.parse(button.data('gender'));
-                    var address = JSON.parse(button.data('address'));
+                    var street = JSON.parse(button.data('street'));
+                    var brgy = JSON.parse(button.data('brgy'));
+                    var city = JSON.parse(button.data('city'));
+                    var province = JSON.parse(button.data('province'));
                     var birthdate = JSON.parse(button.data('birthdate'));
                     var phone = JSON.parse(button.data('phone'));
                     var email = JSON.parse(button.data('email'));
@@ -597,7 +605,10 @@
                     modal.find('#occupation').val(occupation);
                     modal.find('#age').val(age);
                     modal.find('#gender').val(gender);
-                    modal.find('#address').val(address);
+                    modal.find('#street').val(street);
+                    modal.find('#brgy').val(brgy);
+                    modal.find('#city').val(city);
+                    modal.find('#province').val(province);
                     modal.find('#birthdate').val(birthdate);
                     modal.find('#phone').val(phone);
                     modal.find('#email').val(email);

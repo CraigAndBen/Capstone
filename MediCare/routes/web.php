@@ -193,22 +193,20 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/super_admin/nurse', [SuperAdminController::class, 'nurse'])->name('superadmin.nurse');
     Route::post('/super_admin/nurse/create', [SuperAdminController::class, 'createNurse'])->name('superadmin.store.nurse');
     Route::post('/super_admin/nurse/update', [SuperAdminController::class, 'updateNurseInfo'])->name('superadmin.update.nurse');
-    Route::post('/super_admin/nurse/update/status', [SuperAdminController::class, 'updateNurseStatus'])->name('superadmin.nurse.update.status');
     Route::post('/super_admin/nurse/update/password', [SuperAdminController::class, 'updateNursePassword'])->name('superadmin.nurse.password.update');
 
     // User
     Route::get('/super_admin/user', [SuperAdminController::class, 'user'])->name('superadmin.user');
     Route::post('/super_admin/user/create', [SuperAdminController::class, 'createUser'])->name('superadmin.store.user');
     Route::post('/super_admin/user/update', [SuperAdminController::class, 'updateUserInfo'])->name('superadmin.update.user');
-    Route::post('/super_admin/user/update/status', [SuperAdminController::class, 'updateUserStatus'])->name('superadmin.user.update.status');
-    Route::post('/super_admin/nurse/update/password', [SuperAdminController::class, 'updateUserPassword'])->name('superadmin.user.password.update');
+    Route::post('/super_admin/user/update/password', [SuperAdminController::class, 'updateUserPassword'])->name('superadmin.user.password.update');
 
     // Admin
     Route::get('/super_admin/admin', [SuperAdminController::class, 'admin'])->name('superadmin.admin');
     Route::post('/super_admin/admin/create', [SuperAdminController::class, 'createAdmin'])->name('superadmin.store.admin');
     Route::post('/super_admin/admin/update', [SuperAdminController::class, 'updateAdminInfo'])->name('superadmin.update.admin');
     Route::post('/super_admin/admin/update/status', [SuperAdminController::class, 'updateAdminStatus'])->name('superadmin.admin.update.status');
-    Route::post('/super_admin/nurse/update/password', [SuperAdminController::class, 'updateAdminPassword'])->name('superadmin.user.password.update');
+    Route::post('/super_admin/admin/update/password', [SuperAdminController::class, 'updateAdminPassword'])->name('superadmin.admin.password.update');
 
     // Patient
     Route::get('/super_admin/patient', [SuperAdminController::class, 'patientList'])->name('superadmin.patient');

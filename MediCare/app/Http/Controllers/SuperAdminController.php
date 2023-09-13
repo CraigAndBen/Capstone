@@ -56,7 +56,7 @@ class SuperAdminController extends Controller
         });
         $values = $data->pluck('count');
 
-        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis','diagnosisCount'));
+        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis', 'diagnosisCount'));
     }
 
     public function profile(Request $request): View
@@ -317,7 +317,6 @@ class SuperAdminController extends Controller
 
     public function updateDoctorInfo(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
@@ -345,6 +344,7 @@ class SuperAdminController extends Controller
             'first_name' => $request->input('first_name'),
             'middle_name' => $request->input('middle_name'),
             'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
         ];
 
         $infoUpdatedData = [
@@ -382,83 +382,153 @@ class SuperAdminController extends Controller
         $userChange = $this->hasChanges($user, $userUpdatedData);
         $infoChange = $this->hasChanges($info, $infoUpdatedData);
 
-        // Check if any changes were made to the form data
-        if ($userChange == true || $infoChange == true || $imageChange) {
 
-            if ($request->input('email') !== $user->email) {
-                $imageName = $request->image->getClientOriginalName();
+        if ($imageChange) {
 
-                $request->image->move(public_path('images'), $imageName);
-                
-                $request->validate([
-                    'email' => 'required|string|email|max:255|unique:users,email,',
-                ]);
+            $imageName = $request->image->getClientOriginalName();
 
-                $user->first_name = $request->input('first_name');
-                $user->last_name = $request->input('last_name');
-                $user->middle_name = $request->input('middle_name');
-                $user->email = $request->input('email');
-                $info->age = $request->input('age');
-                $info->gender = $request->input('gender');
-                $info->qualification = $request->input('qualification');
-                $info->employment_date = $request->input('employment_date');
-                $info->specialties = $request->input('specialties');
-                $info->years_of_experience = $request->input('years_of_experience');
-                $info->street = $request->input('street');
-                $info->brgy = $request->input('brgy');
-                $info->city = $request->input('city');
-                $info->province = $request->input('province');
-                $info->birthdate = $request->input('birthdate');
-                $info->phone = $request->input('phone');
-                $info->facebook_link = $request->input('facebook');
-                $info->twitter_link = $request->input('twitter');
-                $info->instagram_link = $request->input('instagram');
-                $info->linkedin_link = $request->input('linked_link');
-                $info->image_name = $imageName;
-                $info->image_data = 'images/' . $imageName;
+            $request->image->move(public_path('images'), $imageName);
 
-                $user->save();
-                $info->save();
+            // Check if any changes were made to the form data
+            if ($userChange || $infoChange || $imageChange) {
 
-                return redirect()->back()->with('success', 'Profile updated successfully.');
+                if ($request->input('email') !== $user->email) {
+
+                    $request->validate([
+                        'email' => 'required|string|email|max:255|unique:users,email,',
+                    ]);
+
+                    $user->first_name = $request->input('first_name');
+                    $user->last_name = $request->input('last_name');
+                    $user->middle_name = $request->input('middle_name');
+                    $user->email = $request->input('email');
+                    $info->age = $request->input('age');
+                    $info->gender = $request->input('gender');
+                    $info->qualification = $request->input('qualification');
+                    $info->employment_date = $request->input('employment_date');
+                    $info->specialties = $request->input('specialties');
+                    $info->years_of_experience = $request->input('years_of_experience');
+                    $info->street = $request->input('street');
+                    $info->brgy = $request->input('brgy');
+                    $info->city = $request->input('city');
+                    $info->province = $request->input('province');
+                    $info->birthdate = $request->input('birthdate');
+                    $info->phone = $request->input('phone');
+                    $info->facebook_link = $request->input('facebook');
+                    $info->twitter_link = $request->input('twitter');
+                    $info->instagram_link = $request->input('instagram');
+                    $info->linkedin_link = $request->input('linked_link');
+                    $info->image_name = $imageName;
+                    $info->image_data = 'images/' . $imageName;
+
+                    $user->save();
+                    $info->save();
+
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+
+                } else {
+                    $user->first_name = $request->input('first_name');
+                    $user->last_name = $request->input('last_name');
+                    $user->middle_name = $request->input('middle_name');
+                    $user->email = $request->input('email');
+                    $info->age = $request->input('age');
+                    $info->gender = $request->input('gender');
+                    $info->employment_date = $request->input('employment_date');
+                    $info->qualification = $request->input('qualification');
+                    $info->specialties = $request->input('specialties');
+                    $info->years_of_experience = $request->input('years_of_experience');
+                    $info->street = $request->input('street');
+                    $info->brgy = $request->input('brgy');
+                    $info->city = $request->input('city');
+                    $info->province = $request->input('province');
+                    $info->birthdate = $request->input('birthdate');
+                    $info->phone = $request->input('phone');
+                    $info->facebook_link = $request->input('facebook');
+                    $info->twitter_link = $request->input('twitter');
+                    $info->instagram_link = $request->input('instagram');
+                    $info->linkedin_link = $request->input('linked_link');
+                    $info->image_name = $imageName;
+                    $info->image_data = 'images/' . $imageName;
+
+                    $user->save();
+                    $info->save();
+
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                }
 
             } else {
-                $imageName = $request->image->getClientOriginalName();
+                return redirect()->back()->with('info', 'No changes were made.');
 
-                $request->image->move(public_path('images'), $imageName);
-
-                $user->first_name = $request->input('first_name');
-                $user->last_name = $request->input('last_name');
-                $user->middle_name = $request->input('middle_name');
-                $user->email = $request->input('email');
-                $info->age = $request->input('age');
-                $info->gender = $request->input('gender');
-                $info->employment_date = $request->input('employment_date');
-                $info->qualification = $request->input('qualification');
-                $info->specialties = $request->input('specialties');
-                $info->years_of_experience = $request->input('years_of_experience');
-                $info->street = $request->input('street');
-                $info->brgy = $request->input('brgy');
-                $info->city = $request->input('city');
-                $info->province = $request->input('province');
-                $info->birthdate = $request->input('birthdate');
-                $info->phone = $request->input('phone');
-                $info->facebook_link = $request->input('facebook');
-                $info->twitter_link = $request->input('twitter');
-                $info->instagram_link = $request->input('instagram');
-                $info->linkedin_link = $request->input('linked_link');
-                $info->image_name = $imageName;
-                $info->image_data = 'images/' . $imageName;
-
-                $user->save();
-                $info->save();
-
-                return redirect()->back()->with('success', 'Profile updated successfully.');
             }
 
         } else {
-            return redirect()->back()->with('info', 'No changes were made.');
+            // Check if any changes were made to the form data
+            if ($userChange || $infoChange) {
 
+                if ($request->input('email') !== $user->email) {
+
+                    $request->validate([
+                        'email' => 'required|string|email|max:255|unique:users,email,',
+                    ]);
+
+                    $user->first_name = $request->input('first_name');
+                    $user->last_name = $request->input('last_name');
+                    $user->middle_name = $request->input('middle_name');
+                    $user->email = $request->input('email');
+                    $info->age = $request->input('age');
+                    $info->gender = $request->input('gender');
+                    $info->qualification = $request->input('qualification');
+                    $info->employment_date = $request->input('employment_date');
+                    $info->specialties = $request->input('specialties');
+                    $info->years_of_experience = $request->input('years_of_experience');
+                    $info->street = $request->input('street');
+                    $info->brgy = $request->input('brgy');
+                    $info->city = $request->input('city');
+                    $info->province = $request->input('province');
+                    $info->birthdate = $request->input('birthdate');
+                    $info->phone = $request->input('phone');
+                    $info->facebook_link = $request->input('facebook');
+                    $info->twitter_link = $request->input('twitter');
+                    $info->instagram_link = $request->input('instagram');
+                    $info->linkedin_link = $request->input('linked_link');
+
+                    $user->save();
+                    $info->save();
+
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+
+                } else {
+                    $user->first_name = $request->input('first_name');
+                    $user->last_name = $request->input('last_name');
+                    $user->middle_name = $request->input('middle_name');
+                    $user->email = $request->input('email');
+                    $info->age = $request->input('age');
+                    $info->gender = $request->input('gender');
+                    $info->employment_date = $request->input('employment_date');
+                    $info->qualification = $request->input('qualification');
+                    $info->specialties = $request->input('specialties');
+                    $info->years_of_experience = $request->input('years_of_experience');
+                    $info->street = $request->input('street');
+                    $info->brgy = $request->input('brgy');
+                    $info->city = $request->input('city');
+                    $info->province = $request->input('province');
+                    $info->birthdate = $request->input('birthdate');
+                    $info->phone = $request->input('phone');
+                    $info->facebook_link = $request->input('facebook');
+                    $info->twitter_link = $request->input('twitter');
+                    $info->instagram_link = $request->input('instagram');
+                    $info->linkedin_link = $request->input('linked_link');
+
+                    $user->save();
+                    $info->save();
+
+                    return redirect()->back()->with('success', 'Profile updated successfully.');
+                }
+
+            } else {
+                return redirect()->back()->with('info', 'No changes were made.');
+
+            }
         }
     }
     // End Doctor 
@@ -622,26 +692,6 @@ class SuperAdminController extends Controller
         }
     }
 
-    public function updateNurseStatus(Request $request)
-    {
-
-        $user = User::findOrFail($request->input('user_id'));
-
-        if ($request->input('status') === 'active') {
-
-            $user->status = 'inactive';
-            $user->save();
-
-            return redirect()->route('superadmin.nurse')->with('info', 'User status updated to inactive.');
-        } else {
-
-            $user->status = 'active';
-            $user->save();
-
-            return redirect()->route('superadmin.nurse')->with('info', 'User status updated to active.');
-        }
-    }
-
     public function updateNursePassword(Request $request)
     {
         $request->validate([
@@ -732,13 +782,6 @@ class SuperAdminController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'age' => 'required|numeric|gt:0',
-            'gender' => 'required|string|max:255',
-            'occupation' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'birthdate' => 'required|date',
-            'phone' => 'required',
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
@@ -756,15 +799,16 @@ class SuperAdminController extends Controller
             'birthdate' => $request->input('birthdate'),
             'occupation' => $request->input('occupation'),
             'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
         ];
 
         $userChange = $this->hasChanges($user, $userUpdatedData);
         $infoChange = $this->hasChanges($info, $infoUpdatedData);
 
-
-        // Check if any changes were made to the form data
-        if ($userChange == true || $infoChange == true) {
+        if ($userChange || $infoChange ) {
 
             if ($request->input('email') !== $user->email) {
 
@@ -779,7 +823,10 @@ class SuperAdminController extends Controller
                 $info->age = $request->input('age');
                 $info->gender = $request->input('gender');
                 $info->occupation = $request->input('occupation');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
 
@@ -797,7 +844,10 @@ class SuperAdminController extends Controller
                 $info->age = $request->input('age');
                 $info->gender = $request->input('gender');
                 $info->occupation = $request->input('occupation');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
 
@@ -813,51 +863,32 @@ class SuperAdminController extends Controller
         }
     }
 
-    public function updateUserStatus(Request $request)
-    {
-
-        $user = User::findOrFail($request->input('user_id'));
-
-        if ($request->input('status') === 'active') {
-
-            $user->status = 'inactive';
-            $user->save();
-
-            return redirect()->route('superadmin.user')->with('info', 'User status updated to inactive.');
-        } else {
-
-            $user->status = 'active';
-            $user->save();
-
-            return redirect()->route('superadmin.user')->with('info', 'User status updated to active.');
-        }
-    }
-
     public function updateUserPassword(Request $request)
     {
         $request->validate([
             'current_password' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
+        
 
         $user = User::findOrFail($request->input('user_id'));
 
         if (!Hash::check($request->input('current_password'), $user->password)) {
 
-            return redirect()->route('superadmin.user')->with('info', 'Current password is incorrect.');
+            return redirect()->back()->with('info', 'Current password is incorrect.');
 
         } else {
 
             if (Hash::check($request->input('password'), $user->password)) {
 
-                return redirect()->route('superadmin.user')->with('info', "Password doesn't change.");
+                return redirect()->back()->with('info', "Password doesn't change.");
+            } else{
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+    
+                return redirect()->back()->with('success','Password updated successfull.');
             }
-
-            $user->password = Hash::make($request->input('password'));
-
-            $user->save();
-
-            return redirect()->route('superadmin.nurse')->with('success', 'Password updated successfull.');
         }
 
     }
@@ -1325,7 +1356,7 @@ class SuperAdminController extends Controller
         return view('superadmin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
     }
 
-    
+
 
     public function genderDemo()
     {
@@ -1532,7 +1563,7 @@ class SuperAdminController extends Controller
         $request->validate([
             'year' => 'required',
         ]);
-        
+
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -1902,7 +1933,7 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate','diagnose'));
+        return view('superadmin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'diagnose'));
     }
 
     public function diagnoseTrend()
@@ -2167,7 +2198,7 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.report.diagnose_trend_report', compact('yearlyTrendData','monthlyTrendData','specificDiagnosis', 'year', 'currentTime', 'currentDate','specificDiagnosis'));
+        return view('superadmin.report.diagnose_trend_report', compact('yearlyTrendData', 'monthlyTrendData', 'specificDiagnosis', 'year', 'currentTime', 'currentDate', 'specificDiagnosis'));
     }
 
     public function notification()

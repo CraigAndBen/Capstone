@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('users_info', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('account_id')->nullable();
-            $table->string('gender');
-            $table->smallInteger('age');
+            $table->string('gender')->nullable();
+            $table->smallInteger('age')->nullable();
             $table->string('phone')->nullable();
             $table->date('birthdate')->nullable();
-            $table->string('photo')->nullable();
-            $table->string('address')->nullable();
+            $table->string('street')->nullable();
+            $table->string('brgy')->nullable();
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
             $table->string('occupation')->nullable();
             $table->timestamps();
         }); 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\User_info;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,16 +20,16 @@ class ProfileController extends Controller
      */
     public function profile(Request $request): View
     {
-        return view('user.profile.profile', [
-            'user' => $request->user(),
-        ]);
+        $user = $request->user();
+        $user_info = User_info::where('account_id',$user->id)->first();
+        return view('user.profile.profile', compact('user','user_info'));
     }
 
     public function passwordProfile(Request $request): View
     {
-        return view('user.profile.profile_password', [
-            'user' => $request->user(),
-        ]);
+        $user = $request->user();
+
+        return view('user.profile.profile_password', compact('user'));
     }
 
     /**
@@ -39,12 +40,25 @@ class ProfileController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
         ]);
+
         $user = $request->user();
+        $user_info = User_info::where('account_id',$user->id)->first();
 
         $userUpdatedData = [
             'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
             'last_name' => $request->input('last_name'),
+            'gender' => $request->input('gender'),
+            'age' => $request->input('age'),
+            'phone' => $request->input('phone'),
+            'birthdate' => $request->input('birthdate'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'occupation' => $request->input('occupation'),
             'email' => $request->input('email'),
         ];
 
@@ -61,9 +75,19 @@ class ProfileController extends Controller
                 $user->first_name = $request->input('first_name');
                 $user->last_name = $request->input('last_name');
                 $user->email = $request->input('email');
-                $saved = $user->save();
+                $user_info->gender = $request->input('gender');
+                $user_info->age = $request->input('age');
+                $user_info->phone = $request->input('phone');
+                $user_info->birthdate = $request->input('birthdate');
+                $user_info->street = $request->input('street');
+                $user_info->brgy = $request->input('brgy');
+                $user_info->city = $request->input('city');
+                $user_info->province = $request->input('province');
+                $user_info->occupation = $request->input('occupation');
+                $userSaved = $user->save();
+                $userInfosSaved = $user_info->save();
 
-                if ($saved) {
+                if ($userSaved && $userInfosSaved) {
                     return redirect()->back()->with('success', 'Profile updated successfully.');
                 } else {
                     return redirect()->back()->with('info', 'Profile not updated successfully.');
@@ -72,10 +96,22 @@ class ProfileController extends Controller
             } else {
 
                 $user->first_name = $request->input('first_name');
+                $user->middle_name = $request->input('middle_name');
                 $user->last_name = $request->input('last_name');
-                $saved = $user->save();
+                $user_info->gender = $request->input('gender');
+                $user_info->age = $request->input('age');
+                $user_info->phone = $request->input('phone');
+                $user_info->birthdate = $request->input('birthdate');
+                $user_info->street = $request->input('street');
+                $user_info->brgy = $request->input('brgy');
+                $user_info->city = $request->input('city');
+                $user_info->province = $request->input('province');
+                $user_info->occupation = $request->input('occupation');
+                $userSaved = $user->save();
+                $userInfosSaved = $user_info->save();
 
-                if ($saved) {
+
+                if ($userSaved && $userInfosSaved) {
                     return redirect()->back()->with('success', 'Profile updated successfully.');
                 } else {
                     return redirect()->back()->with('info', 'Profile not updated successfully.');
@@ -126,7 +162,7 @@ class ProfileController extends Controller
 
             if ($info->{$key} != $value) {
 
-                return true;
+                return $value;
             }
         }
 

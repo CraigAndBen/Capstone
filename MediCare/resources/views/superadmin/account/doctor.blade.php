@@ -125,8 +125,7 @@
                                                                             data-twitter="{{ json_encode($doctor->twitter_link) }}"
                                                                             data-instagram="{{ json_encode($doctor->instagram_link) }}"
                                                                             data-linkedin="{{ json_encode($doctor->linkedin_link) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">Update
-                                                                            Account Profile</a>
+                                                                            data-email="{{ json_encode($user->email) }}">Update Profile</a>
                                                                         <a class="dropdown-item btn btn-primary"
                                                                             data-toggle="modal"
                                                                             data-target="#updatePasswordModal"
@@ -154,7 +153,7 @@
                                                                             data-linkedin="{{ json_encode($doctor->linkedin_link) }}"
                                                                             data-birthdate="{{ json_encode($doctor->birthdate) }}"
                                                                             data-phone="{{ json_encode($doctor->phone) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">View Account Profile</a>
+                                                                            data-email="{{ json_encode($user->email) }}">View Profile</a>
                                                                     @endif
                                                                 @endforeach
                                                             </div>
