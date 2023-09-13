@@ -544,7 +544,7 @@
                                                 <div class="form-floating">
                                                     <input type="text" class="form-control ml-2"
                                                         id="floatingInput first_name" placeholder="First Name"
-                                                        name="first_name" required />
+                                                        name="first_name" />
                                                     <label for="floatingInput">First Name</label>
                                                 </div>
                                             </div>
@@ -552,7 +552,7 @@
                                                 <div class="form-floating">
                                                     <input type="text" class="form-control ml-2"
                                                         id="floatingInput middle_name" placeholder="Middle Name"
-                                                        name="middle_name" required />
+                                                        name="middle_name" />
                                                     <label for="floatingInput">Middle Name</label>
                                                 </div>
                                             </div>
@@ -560,7 +560,7 @@
                                                 <div class="form-floating ">
                                                     <input type="phone" class="form-control"
                                                         id="floatingInput last_name" placeholder="Last Name"
-                                                        name="last_name" required />
+                                                        name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
                                                 </div>
                                             </div>
@@ -608,8 +608,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="number" class="form-control ml-2"
-                                                        id="floatingInput age" placeholder="Age" name="age"
-                                                        required />
+                                                        id="floatingInput age" placeholder="Age" name="age"/>
                                                     <label for="floatingInput">Age</label>
                                                 </div>
                                             </div>
@@ -632,7 +631,7 @@
                                                 <div class="form-floating">
                                                     <input type="date" class="form-control ml-2"
                                                         id="floatingInput employment_date" placeholder="Employment Date"
-                                                        name="employment_date" required />
+                                                        name="employment_date"/>
                                                     <label for="floatingInput">Employment Date</label>
                                                 </div>
                                             </div>
@@ -650,7 +649,7 @@
                                                 <div class="form-floating">
                                                     <input type="date" class="form-control ml-2"
                                                         id="floatingInput birthdate" placeholder="Birthdate"
-                                                        name="birthdate" required />
+                                                        name="birthdate" />
                                                     <label for="floatingInput">Birthdate</label>
                                                 </div>
                                             </div>
@@ -744,17 +743,17 @@
                                     <form method="POST" action="{{ route('superadmin.doctor.password.update') }}">
                                         @csrf
                                         <input type="hidden" name="user_id" class="form-control" id="user_id" />
-                                        <div class="form-floating my-2">
+                                        <div class="form-floating mb-2">
                                             <input type="password" name="current_password" class="form-control"
                                                 id="current_password" placeholder="Current Password" />
                                             <label for="floatingInput">Current Password</label>
                                         </div>
-                                        <div class="form-floating my-2">
+                                        <div class="form-floating mb-2">
                                             <input type="password" name="password" class="form-control" id="password"
                                                 placeholder="New Password" />
                                             <label for="floatingInput">New Password</label>
                                         </div>
-                                        <div class="form-floating my-2">
+                                        <div class="form-floating mb-2">
                                             <input type="password" name="password_confirmation" class="form-control"
                                                 id="password_confirmation" placeholder="Password Confirmation" />
                                             <label for="floatingInput">Password Confirmation</label>

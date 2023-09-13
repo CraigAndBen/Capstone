@@ -72,98 +72,95 @@
                                         <span class="fa fa-check-circle"></span> No Nurse Account Yet.
                                     </div>
                                 @else
-                                
-                                <table class="table table-bordered">
-                                    <thead class="bg-primary text-light text-center">
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Email</th>
-                                            <th>Status</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($users as $user)
+                                    <table class="table table-bordered">
+                                        <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <td>{{ $user->first_name }}</td>
-                                                <td>{{ $user->last_name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>{{ $user->status }}</td>
-                                                <td class="text-center">
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle" type="button"
-                                                            data-toggle="dropdown">
-                                                            Actions
-                                                        </button>
-                                                        <div class="dropdown-menu">
-
-                                                            @foreach ($nurses as $nurse)
-                                                                @if ($user->id === $nurse->account_id)
-                                                                    <a class="dropdown-item btn btn-primary"
-                                                                        data-toggle="modal" data-target="#updateModal"
-                                                                        data-user-id="{{ json_encode($user->id) }}"
-                                                                        data-first-name="{{ json_encode($user->first_name) }}"
-                                                                        data-last-name="{{ json_encode($user->last_name) }}"
-                                                                        data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                        data-age="{{ json_encode($nurse->age) }}"
-                                                                        data-gender="{{ json_encode($nurse->gender) }}"
-                                                                        data-qualification="{{ json_encode($nurse->qualification) }}"
-                                                                        data-birthdate="{{ json_encode($nurse->birthdate) }}"
-                                                                        data-employment-date="{{ json_encode($nurse->employment_date) }}"
-                                                                        data-shift="{{ json_encode($nurse->shift) }}"
-                                                                        data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
-                                                                        data-address="{{ json_encode($nurse->address) }}"
-                                                                        data-phone="{{ json_encode($nurse->phone) }}"
-                                                                        data-email="{{ json_encode($user->email) }}">Update
-                                                                        Account Profile</a>
-                                                                    <a class="dropdown-item" data-toggle="modal"
-                                                                        data-target="#updatePasswordModal"
-                                                                        data-user-id="{{ json_encode($user->id) }}">Update
-                                                                        Password</a>
-
-                                                                    <form
-                                                                        action="{{ route('superadmin.nurse.update.status') }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <input type="hidden" name="user_id"
-                                                                            value="{{ $user->id }}">
-                                                                        <input type="hidden" name="status"
-                                                                            value="{{ $user->status }}">
-                                                                        @if ($user->status === 'active')
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Deactivate</button>
-                                                                        @else
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Activate</button>
-                                                                        @endif
-                                                                    </form>
-
-                                                                    <a class="dropdown-item btn btn-primary"
-                                                                        data-toggle="modal" data-target="#viewModal"
-                                                                        data-first-name="{{ json_encode($user->first_name) }}"
-                                                                        data-last-name="{{ json_encode($user->last_name) }}"
-                                                                        data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                        data-age="{{ json_encode($nurse->age) }}"
-                                                                        data-gender="{{ json_encode($nurse->gender) }}"
-                                                                        data-qualification="{{ json_encode($nurse->qualification) }}"
-                                                                        data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
-                                                                        data-shift="{{ json_encode($nurse->shift) }}"
-                                                                        data-address="{{ json_encode($nurse->address) }}"
-                                                                        data-birthdate="{{ json_encode($nurse->birthdate) }}"
-                                                                        data-phone="{{ json_encode($nurse->phone) }}"
-                                                                        data-email="{{ json_encode($user->email) }}">View
-                                                                        Profile</a>
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Email</th>
+                                                <th></th>
                                             </tr>
-                                        @endforeach
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($users as $user)
+                                                <tr>
+                                                    <td>{{ ucwords($user->first_name) }}</td>
+                                                    <td>{{ ucwords($user->last_name) }}</td>
+                                                    <td>{{ ucwords($user->email) }}</td>
+                                                    <td class="text-center">
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                data-toggle="dropdown">
+                                                                Actions
+                                                            </button>
+                                                            <div class="dropdown-menu">
 
-                                    </tbody>
-                                </table>
+                                                                @foreach ($nurses as $nurse)
+                                                                    @if ($user->id === $nurse->account_id)
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#updateModal"
+                                                                            data-user-id="{{ json_encode($user->id) }}"
+                                                                            data-first-name="{{ json_encode($user->first_name) }}"
+                                                                            data-last-name="{{ json_encode($user->last_name) }}"
+                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                            data-age="{{ json_encode($nurse->age) }}"
+                                                                            data-gender="{{ json_encode($nurse->gender) }}"
+                                                                            data-qualification="{{ json_encode($nurse->qualification) }}"
+                                                                            data-birthdate="{{ json_encode($nurse->birthdate) }}"
+                                                                            data-employment-date="{{ json_encode($nurse->employment_date) }}"
+                                                                            data-shift="{{ json_encode($nurse->shift) }}"
+                                                                            data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
+                                                                            data-address="{{ json_encode($nurse->address) }}"
+                                                                            data-phone="{{ json_encode($nurse->phone) }}"
+                                                                            data-email="{{ json_encode($user->email) }}">Update
+                                                                            Account Profile</a>
+                                                                        <a class="dropdown-item" data-toggle="modal"
+                                                                            data-target="#updatePasswordModal"
+                                                                            data-user-id="{{ json_encode($user->id) }}">Update
+                                                                            Password</a>
+
+                                                                        <form
+                                                                            action="{{ route('superadmin.nurse.update.status') }}"
+                                                                            method="POST">
+                                                                            @csrf
+                                                                            <input type="hidden" name="user_id"
+                                                                                value="{{ $user->id }}">
+                                                                            <input type="hidden" name="status"
+                                                                                value="{{ $user->status }}">
+                                                                            @if ($user->status == 'activated')
+                                                                                <button type="submit"
+                                                                                    class="dropdown-item btn btn-primary">Deactivate</button>
+                                                                            @else
+                                                                                <button type="submit"
+                                                                                    class="dropdown-item btn btn-primary">Activate</button>
+                                                                            @endif
+                                                                        </form>
+
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#viewModal"
+                                                                            data-first-name="{{ json_encode($user->first_name) }}"
+                                                                            data-last-name="{{ json_encode($user->last_name) }}"
+                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                            data-age="{{ json_encode($nurse->age) }}"
+                                                                            data-gender="{{ json_encode($nurse->gender) }}"
+                                                                            data-qualification="{{ json_encode($nurse->qualification) }}"
+                                                                            data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
+                                                                            data-shift="{{ json_encode($nurse->shift) }}"
+                                                                            data-address="{{ json_encode($nurse->address) }}"
+                                                                            data-birthdate="{{ json_encode($nurse->birthdate) }}"
+                                                                            data-phone="{{ json_encode($nurse->phone) }}"
+                                                                            data-email="{{ json_encode($user->email) }}">View
+                                                                            Profile</a>
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
                                 @endif
                             </div>
                         </div>
@@ -406,7 +403,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
                                                         id="floatingInput first_name" placeholder="First Name"
-                                                        name="first_name" required />
+                                                        name="first_name" />
                                                     <label for="floatingInput">First Name</label>
                                                 </div>
                                             </div>
@@ -414,7 +411,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
                                                         id="floatingInput middle_name" placeholder="Middle Name"
-                                                        name="middle_name" required />
+                                                        name="middle_name" />
                                                     <label for="floatingInput">Middle Name</label>
                                                 </div>
                                             </div>
@@ -422,32 +419,66 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="phone" class="form-control"
                                                         id="floatingInput last_name" placeholder="Last Name"
-                                                        name="last_name" required />
+                                                        name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput street" placeholder="Street" name="street" />
+                                                    <label for="floatingInput">Street</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput brgy" placeholder="Brgy" name="brgy" />
+                                                    <label for="floatingInput">Brgy</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput city" placeholder="city" name="city" />
+                                                    <label for="floatingInput">City</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput province" placeholder="Province"
+                                                        name="province" />
+                                                    <label for="floatingInput">Province</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 ">
                                                     <input type="number" class="form-control ml-2"
-                                                        id="floatingInput age" placeholder="Age" name="age"
-                                                        required />
+                                                        id="floatingInput age" placeholder="Age" name="age" />
                                                     <label for="floatingInput">Age</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select a Gender</option>
-                                                    <option value="female">Female</option>
-                                                    <option value="male">Male</option>
-                                                    <option value="other">Other</option>
-                                                </select>
+                                                <div class="form-floating mb-3 ">
+                                                    <input type="date" class="form-control ml-2"
+                                                        id="floatingInput birthdate" name="birthdate" />
+                                                    <label for="floatingInput">Birthdate</label>
+                                                </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="form-floating mb-3">
                                             <input type="text" name="qualification" class="form-control"
-                                                id="floatingInput qualification" placeholder="Qualifications" required />
+                                                id="floatingInput qualification" placeholder="Qualifications"/>
                                             <label for="floatingInput">Qualifications</label>
                                         </div>
                                         <div class="row">
@@ -455,7 +486,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="date" class="form-control ml-2"
                                                         id="floatingInput employment_date" placeholder="Employment Date"
-                                                        name="employment_date" required />
+                                                        name="employment_date"/>
                                                     <label for="floatingInput">Employment Date</label>
                                                 </div>
                                             </div>
@@ -468,50 +499,48 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="address" class="form-control"
-                                                id="floatingInput address" placeholder="Address" required />
-                                            <label for="floatingInput">Address</label>
-                                        </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="date" class="form-control ml-2"
-                                                        id="floatingInput birthdate" placeholder="Birthdate"
-                                                        name="birthdate" required />
-                                                    <label for="floatingInput">Birthdate</label>
+                                                    <select class="form-control p-3" id="gender" name="gender">
+                                                        <option>Select a Gender</option>
+                                                        <option value="female">Female</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="number" class="form-control" id="floatingInput phone"
-                                                        placeholder="Last Name" name="phone" required />
+                                                        placeholder="Last Name" name="phone" />
                                                     <label for="floatingInput">Phone</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <select class="form-control p-3" id="shift" name="shift">
-                                                    <option>Select a Shift</option>
+                                                    <option value="">Select a Shift</option>
                                                     <option value="day">Day</option>
                                                     <option value="night">Night</option>
                                                     <option value="rotating shifts">Rotating Shifts</option>
                                                 </select>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="form-floating mb-3">
                                             <input type="email" name="email" class="form-control"
-                                                id="floatingInput email" placeholder="Email Address" required />
+                                                id="floatingInput email" placeholder="Email Address"/>
                                             <label for="floatingInput">Email Address</label>
                                         </div>
                                         <div class="form-floating mb-3 ">
-                                            <input type="password" name="password" class="form-control"
-                                                id="password" placeholder="New Password" />
+                                            <input type="password" name="password" class="form-control" id="password"
+                                                placeholder="New Password" />
                                             <label for="floatingInput">Password</label>
                                         </div>
                                         <div class="form-floating mb-3 ">
-                                            <input type="password" name="password_confirmation"
-                                                class="form-control" id="password_confirmation"
-                                                placeholder="Password Confirmation" />
+                                            <input type="password" name="password_confirmation" class="form-control"
+                                                id="password_confirmation" placeholder="Password Confirmation" />
                                             <label for="floatingInput">Password Confirmation</label>
                                         </div>
                                 </div>

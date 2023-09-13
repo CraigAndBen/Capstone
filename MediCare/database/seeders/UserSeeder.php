@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
                 'email' => 'admin@sample.com',
                 'password' => Hash::make('111'),
                 'role' => 'admin',
-                'status' => 'active',
+                'status' => 'activated',
             ],      
             
             // Super Admin
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
                 'email' => 'super_admin@sample.com',
                 'password' => Hash::make('111'),
                 'role' => 'super_admin',
-                'status' => 'active',
+                'status' => 'activated',
             ],
             
         ]);

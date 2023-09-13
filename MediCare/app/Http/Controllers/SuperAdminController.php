@@ -199,20 +199,8 @@ class SuperAdminController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'age' => 'required|numeric|gt:0',
-            'gender' => 'required|string|max:255',
-            'employment_date' => 'required|date',
-            'specialties' => 'required|string|max:255',
-            'qualification' => 'required|string|max:255',
-            'years_of_experience' => 'required|numeric|gt:0',
-            'street' => 'required|string|max:255',
-            'brgy' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|confirmed',
-            'birthdate' => 'required|date',
-            'phone' => 'required',
         ]);
 
         $user = User::create([
@@ -297,20 +285,22 @@ class SuperAdminController extends Controller
 
         if (!Hash::check($request->input('current_password'), $user->password)) {
 
-            return redirect()->route('superadmin.doctor')->with('info', 'Current password is incorrect.');
+            return redirect()->back()->with('info', 'Current password is incorrect.');
 
         } else {
 
             if (Hash::check($request->input('password'), $user->password)) {
 
-                return redirect()->route('superadmin.doctor')->with('info', "Password doesn't change.");
+                return redirect()->back()->with('info', "Password doesn't change.");
+            } else {
+
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+    
+                return redirect()->back()->with('success', 'Password updated successfull.');
             }
 
-            $user->password = Hash::make($request->input('password'));
-
-            $user->save();
-
-            return redirect()->route('superadmin.doctor')->with('success', 'Password updated successfull.');
         }
 
     }
@@ -321,20 +311,7 @@ class SuperAdminController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'employment_date' => 'required|date',
-            'age' => 'required|numeric|gt:0',
-            'gender' => 'required|string|max:255',
-            'specialties' => 'required|string|max:255',
-            'qualification' => 'required|string|max:255',
-            'years_of_experience' => 'required|numeric|gt:0',
-            'street' => 'required|string|max:255',
-            'brgy' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'birthdate' => 'required|date',
-            'phone' => 'required',
-            // 'image' => 'required|mimes:jpeg,png,pdf|max:2048',
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
@@ -552,17 +529,8 @@ class SuperAdminController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'age' => 'required|numeric|gt:0',
-            'gender' => 'required|string|max:255',
-            'employment_date' => 'required|date',
-            'shift' => 'required|string|max:255',
-            'qualification' => 'required|string|max:255',
-            'years_of_experience' => 'required|numeric|gt:0',
-            'address' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|confirmed',
-            'birthdate' => 'required|date',
-            'phone' => 'required',
         ]);
 
         $user = User::create([
@@ -586,7 +554,10 @@ class SuperAdminController extends Controller
             'years_of_experience' => $request->input('years_of_experience'),
             'phone' => $request->input('phone'),
             'birthdate' => $request->input('birthdate'),
-            'address' => $request->input('address'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
         ]);
 
         return back()->with('success', 'User added sucessfully.');
@@ -720,6 +691,24 @@ class SuperAdminController extends Controller
         }
 
     }
+
+    public function updateNurseStatus(Request $request)
+    {
+
+        $user = User::findOrFail($request->input('user_id'));
+
+        if ($request->input('status') == 'activated') {
+
+            $user->status = 'deactivated';
+            $user->save();
+            return redirect()->back()->with('info', 'User status updated to deactivated.');
+        } else {
+
+            $user->status = 'activated';
+            $user->save();
+            return redirect()->back()->with('info', 'User status updated to activated.');
+        }
+    }
     // End Nurse
 
     // User
@@ -741,14 +730,8 @@ class SuperAdminController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'age' => 'required|numeric|gt:0',
-            'gender' => 'required|string|max:255',
-            'occupation' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
             'password' => 'required|string|min:8|confirmed',
-            'birthdate' => 'required|date',
-            'phone' => 'required',
         ]);
 
         $user = User::create([
@@ -769,7 +752,10 @@ class SuperAdminController extends Controller
             'occupation' => $request->input('occupation'),
             'phone' => $request->input('phone'),
             'birthdate' => $request->input('birthdate'),
-            'address' => $request->input('address'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
         ]);
 
         return back()->with('success', 'User added sucessfully.');
@@ -869,7 +855,6 @@ class SuperAdminController extends Controller
             'current_password' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
-        
 
         $user = User::findOrFail($request->input('user_id'));
 

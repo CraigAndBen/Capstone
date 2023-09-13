@@ -17,13 +17,15 @@ return new class extends Migration
             $table->smallInteger('age')->nullable();
             $table->string('gender')->nullable();
             $table->string('qualification')->nullable();
-            $table->enum('shift', ['day','night','rotating shifts'])->default('day');
+            $table->string('shift')->nullable();
             $table->date('employment_date')->nullable();
             $table->smallInteger('years_of_experience')->nullable();
             $table->string('phone')->nullable();
             $table->date('birthdate')->nullable();
-            $table->string('photo')->nullable();
-            $table->string('address')->nullable();
+            $table->string('street')->nullable();
+            $table->string('brgy')->nullable();
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
             $table->timestamps();
         });
     }

@@ -194,6 +194,8 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/super_admin/nurse/create', [SuperAdminController::class, 'createNurse'])->name('superadmin.store.nurse');
     Route::post('/super_admin/nurse/update', [SuperAdminController::class, 'updateNurseInfo'])->name('superadmin.update.nurse');
     Route::post('/super_admin/nurse/update/password', [SuperAdminController::class, 'updateNursePassword'])->name('superadmin.nurse.password.update');
+    Route::post('/super_admin/nuser/update/status', [SuperAdminController::class, 'updateNurseStatus'])->name('superadmin.nurse.update.status');
+
 
     // User
     Route::get('/super_admin/user', [SuperAdminController::class, 'user'])->name('superadmin.user');
