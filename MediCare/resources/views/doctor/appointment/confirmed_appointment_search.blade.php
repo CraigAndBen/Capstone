@@ -32,11 +32,16 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Appointment List </h1>
+                            <h1>Confirmed Appointment List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end m-4">
+                                    <div class="m-1">
+                                        <a href="{{ route('doctor.appointment.confirmed') }}" class="btn btn-success">Show All</a>
+                                    </div>
+                                </div>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -64,10 +69,10 @@
 
                                 @if ($appointments->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Appointment Yet.
+                                        <span class="fa fa-check-circle"></span> No Appointment Exist.
                                     </div>
                                 @else
-                                    <form action="{{ route('doctor.appointment.search') }}" method="POST">
+                                    <form action="{{ route('doctor.confimed.appointment.search') }}" method="POST">
                                         @csrf
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-md-2">
@@ -94,7 +99,6 @@
                                                 <th>Type</th>
                                                 <th>Date</th>
                                                 <th>Time</th>
-                                                <th>Status</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -107,7 +111,6 @@
                                                     <td>{{ ucwords($appointment->appointment_type) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_date) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                                    <td>{{ ucwords($appointment->status) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -133,20 +136,16 @@
                                                                     data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                     data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                     data-reason="{{ json_encode($appointment->reason) }}">View</a>
-                                                                @if ($appointment->status == 'pending')
-                                                                    <form
-                                                                        action="{{ route('doctor.confirm.appointment') }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <input type="hidden" name="appointment_id"
-                                                                            value="{{ $appointment->id }}">
-                                                                        <input type="hidden" name="status"
-                                                                            value="{{ $appointment->status }}">
-                                                                        <button type="submit"
-                                                                            class="dropdown-item btn btn-primary">Confirm</button>
-                                                                    </form>
-                                                                @endif
-
+                                                                <form action="{{ route('doctor.finish.appointment') }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <input type="hidden" name="appointment_id"
+                                                                        value="{{ $appointment->id }}">
+                                                                    <input type="hidden" name="status"
+                                                                        value="{{ $appointment->status }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Done</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -156,7 +155,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                        {{ $appointments->links('pagination::bootstrap-4') }}
                                     </div>
                                 @endif
                             </div>

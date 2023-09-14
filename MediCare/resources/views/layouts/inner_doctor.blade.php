@@ -67,7 +67,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">{{$count}}</span></h5>
+                                <h5>All Notification <span
+                                        class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
                             </div>
                             <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 215px)">
@@ -113,22 +114,22 @@
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src="{{ asset($info->image_data) }}" alt="user-image"
-                                class="user-avtar" />
+                            <img src="{{ asset($info->image_data) }}" alt="user-image" class="user-avtar" />
                             <span>
                                 <i class="ti ti-settings"></i>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Good Morning, <span class="small text-muted">{{ ucwords($profile->first_name)}}  {{ucwords($profile->last_name)}}</span></h4>
+                                <h4>Good Morning, <span class="small text-muted">{{ ucwords($profile->first_name) }}
+                                        {{ ucwords($profile->last_name) }}</span></h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('doctor.profile') }}" class="dropdown-item">
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
-                                    <a href="{{ route('doctor.social')}}" class="dropdown-item">
+                                    <a href="{{ route('doctor.social') }}" class="dropdown-item">
                                         <i class="ti ti-user"></i>
                                         <span>Social Profile</span>
                                     </a>
@@ -150,8 +151,9 @@
         <div class="navbar-wrapper">
             <div class="m-header">
                 <div class="mt-3">
-                    <a href="{{route('doctor.dashboard')}}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
-                            alt="" class="" style="max-width: 150px; max-height: 90px"></a>
+                    <a href="{{ route('doctor.dashboard') }}" class="logo me-auto"><img
+                            src="{{ asset('logo.jpg') }}" alt="" class=""
+                            style="max-width: 150px; max-height: 90px"></a>
                 </div>
             </div>
             <div class="navbar-content">
@@ -216,8 +218,10 @@
                                 class="pc-mtext">Patient List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">
-                                    All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">All
+                                    Patient</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.admitted') }}">Admitted List</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.outpatient') }}">Outpatient List</a></li>
                         </ul>
                     </li>
                 </ul>

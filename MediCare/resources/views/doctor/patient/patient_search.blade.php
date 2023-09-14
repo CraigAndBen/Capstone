@@ -37,6 +37,11 @@
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end m-4">
+                                    <div class="m-1">
+                                        <a href="{{ route('doctor.patient') }}" class="btn btn-success">Show All</a>
+                                    </div>
+                                </div>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -64,7 +69,7 @@
 
                                 @if ($patients->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Patient.
+                                        <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
                                     <form action="{{ route('doctor.patient.search') }}" method="POST">
@@ -90,7 +95,7 @@
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
-                                                <th>Diagnosis</th>
+                                                <th>Physician</th>
                                                 <th>Type</th>
                                                 <th></th>
                                             </tr>
@@ -102,12 +107,6 @@
                                                     <td>{{ ucwords($patient->last_name) }}</td>
                                                     <td>{{ ucwords($patient->diagnosis) }}</td>
 
-                                                    {{-- @foreach ($doctors as $doctor)
-                                                        @if ($patient->physician == $doctor->id)
-                                                            <td>Dr. {{ ucwords($doctor->first_name) }}
-                                                                {{ ucwords($doctor->last_name) }}</td>
-                                                        @endif
-                                                    @endforeach --}}
                                                     @if ($patient->type == 'admitted_patient')
                                                         <td> Admitted Patient</td>
                                                     @else

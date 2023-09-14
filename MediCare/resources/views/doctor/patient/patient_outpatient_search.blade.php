@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Patient List</h5>
+                                <h5 class="m-b-10">Outpatient List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Patient List</li>
+                                <li class="breadcrumb-item" aria-current="page">Outpatient List</li>
                             </ul>
                         </div>
                     </div>
@@ -37,6 +37,11 @@
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end m-4">
+                                    <div class="m-1">
+                                        <a href="{{ route('doctor.outpatient') }}" class="btn btn-success">Show All</a>
+                                    </div>
+                                </div>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -64,10 +69,10 @@
 
                                 @if ($patients->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Patient.
+                                        <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
-                                    <form action="{{ route('doctor.patient.search') }}" method="POST">
+                                    <form action="{{ route('doctor.outpatient.search') }}" method="POST">
                                         @csrf
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-md-2">
@@ -90,7 +95,7 @@
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
-                                                <th>Diagnosis</th>
+                                                <th>Physician</th>
                                                 <th>Type</th>
                                                 <th></th>
                                             </tr>
@@ -100,14 +105,13 @@
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
-                                                    <td>{{ ucwords($patient->diagnosis) }}</td>
 
-                                                    {{-- @foreach ($doctors as $doctor)
+                                                    @foreach ($doctors as $doctor)
                                                         @if ($patient->physician == $doctor->id)
                                                             <td>Dr. {{ ucwords($doctor->first_name) }}
                                                                 {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
-                                                    @endforeach --}}
+                                                    @endforeach
                                                     @if ($patient->type == 'admitted_patient')
                                                         <td> Admitted Patient</td>
                                                     @else

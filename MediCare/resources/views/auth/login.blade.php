@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="{{asset('admin_assets/fonts/material.css')}}" />
 <!-- [Template CSS Files] -->
 <link rel="stylesheet" href="{{asset('admin_assets/css/style.css')}}" id="main-style-link" />
-<link rel="stylesheet" href=".{{asset('admin_ssets/css/style-preset.css')}}" id="preset-style-link" />
+<link rel="stylesheet" href="{{asset('admin_assets/css/style-preset.css')}}" id="preset-style-link" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 

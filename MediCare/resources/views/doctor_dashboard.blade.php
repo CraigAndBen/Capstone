@@ -225,8 +225,9 @@
                                 class="pc-mtext">Patient List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">
-                                    All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.admitted') }}">Admitted Patient</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.outpatient') }}">OutPatient List</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -256,31 +257,31 @@
                                 </div>
                                 <canvas id="patientChart" width="100%" height="95"></canvas>
                                 <script>
-                                     //Convert the PHP array to JavaScript variables
-                                        const patientMonths = @json($patientsByMonth->pluck('month'));
-                                        const patientCounts = @json($patientsByMonth->pluck('count'));
+                                    //Convert the PHP array to JavaScript variables
+                                    const patientMonths = @json($patientsByMonth->pluck('month'));
+                                    const patientCounts = @json($patientsByMonth->pluck('count'));
 
-                                        var ctx = document.getElementById('patientChart').getContext('2d');
-                                        var myChart = new Chart(ctx, {
-                                            type: 'bar',
-                                            data: {
-                                                labels: patientMonths,
-                                                datasets: [{
-                                                    label: 'Patient',
-                                                    data: patientCounts,
-                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                    borderColor: 'rgba(54, 162, 235, 1)',
-                                                    borderWidth: 1
-                                                }]
-                                            },
-                                            options: {
-                                                scales: {
-                                                    y: {
-                                                        beginAtZero: true
-                                                    }
+                                    var ctx = document.getElementById('patientChart').getContext('2d');
+                                    var myChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: patientMonths,
+                                            datasets: [{
+                                                label: 'Patient',
+                                                data: patientCounts,
+                                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                borderColor: 'rgba(54, 162, 235, 1)',
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
                                                 }
                                             }
-                                        });
+                                        }
+                                    });
                                 </script>
                             </div>
                         @else

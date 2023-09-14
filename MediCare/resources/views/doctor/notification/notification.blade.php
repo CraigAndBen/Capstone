@@ -110,6 +110,9 @@
 
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $notifications->links('pagination::bootstrap-4') }}
+                                    </div>
                                 @endif
                             </div>
                         </div>

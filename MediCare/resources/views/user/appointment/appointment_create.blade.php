@@ -276,9 +276,7 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: [
-                    // Your events here
-                ],
+                events: '/user/appointment/event',
                 dateClick: function(info) {
                     var clickedDate = moment(info
                         .date); // Convert to moment object for easier comparison

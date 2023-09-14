@@ -11,7 +11,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Patient List</h5>
+                                <h5 class="m-b-10">Outpatient List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
@@ -67,32 +67,15 @@
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
                                 @else
-                                    <form action="{{ route('doctor.patient.search') }}" method="POST">
-                                        @csrf
-                                        <div class="row d-flex justify-content-center">
-                                            <div class="col-md-2">
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput search" placeholder="Search" name="search" />
-                                                    <label for="floatingInput">Search</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 mt-2">
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
-                                                <th>Diagnosis</th>
-                                                <th>Type</th>
-                                                <th></th>
+                                                <th>Physician</th>
+                                                <th>Admitted Date</th>
+                                                <th>Discharged Date</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
@@ -100,19 +83,15 @@
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
-                                                    <td>{{ ucwords($patient->diagnosis) }}</td>
 
-                                                    {{-- @foreach ($doctors as $doctor)
+                                                    @foreach ($doctors as $doctor)
                                                         @if ($patient->physician == $doctor->id)
                                                             <td>Dr. {{ ucwords($doctor->first_name) }}
                                                                 {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
-                                                    @endforeach --}}
-                                                    @if ($patient->type == 'admitted_patient')
-                                                        <td> Admitted Patient</td>
-                                                    @else
-                                                        <td>  OutPatient</td>
-                                                    @endif
+                                                    @endforeach
+                                                    <td>{{ ucwords($patient->admitted_date) }}</td>
+                                                    <td>{{ ucwords($patient->discharged_date) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -163,9 +142,6 @@
 
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
-                                    </div>
                                 @endif
                             </div>
                         </div>

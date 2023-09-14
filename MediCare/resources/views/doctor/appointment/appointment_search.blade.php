@@ -38,6 +38,12 @@
                             <div class="container">
 
 
+                                <div class="d-flex justify-content-end m-4">
+                                    <div class="m-1">
+                                        <a href="{{ route('doctor.appointment') }}" class="btn btn-success">Show All</a>
+                                    </div>
+                                </div>
+                                
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -64,7 +70,7 @@
 
                                 @if ($appointments->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Appointment Yet.
+                                        <span class="fa fa-check-circle"></span> No Appointment Exist.
                                     </div>
                                 @else
                                     <form action="{{ route('doctor.appointment.search') }}" method="POST">
@@ -156,7 +162,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                        {{ $appointments->links('pagination::bootstrap-4') }}
                                     </div>
                                 @endif
                             </div>

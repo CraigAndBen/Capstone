@@ -63,41 +63,56 @@
                                 @endif
 
                                 @if ($appointments->isEmpty())
-                                <div class="alert alert-info">
-                                    <span class="fa fa-check-circle"></span> No Confirmed Appointment Yet.
-                                </div>
+                                    <div class="alert alert-info">
+                                        <span class="fa fa-check-circle"></span> No Confirmed Appointment Yet.
+                                    </div>
                                 @else
+                                    <form action="{{ route('doctor.confimed.appointment.search') }}" method="POST">
+                                        @csrf
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput search" placeholder="Search" name="search" />
+                                                    <label for="floatingInput">Search</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mt-2">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
 
-                                <table class="table table-bordered">
-                                    <thead class="bg-primary text-light text-center">
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>specialties</th>
-                                            <th>Type</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($appointments as $appointment)
+                                    <table class="table table-bordered">
+                                        <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <td>{{ ucwords($appointment->first_name) }}</td>
-                                                <td>{{ ucwords($appointment->last_name) }}</td>
-                                                <td>{{ ucwords($appointment->specialties) }}</td>
-                                                <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                <td>{{ ucwords($appointment->appointment_date) }}</td>
-                                                <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                                <td>{{ ucwords($appointment->status) }}</td>
-                                                <td class="text-center">
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle" type="button"
-                                                            data-toggle="dropdown">
-                                                            Actions
-                                                        </button>
-                                                        <div class="dropdown-menu">
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>specialties</th>
+                                                <th>Type</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            @foreach ($appointments as $appointment)
+                                                <tr>
+                                                    <td>{{ ucwords($appointment->first_name) }}</td>
+                                                    <td>{{ ucwords($appointment->last_name) }}</td>
+                                                    <td>{{ ucwords($appointment->specialties) }}</td>
+                                                    <td>{{ ucwords($appointment->appointment_type) }}</td>
+                                                    <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                    <td>{{ ucwords($appointment->appointment_time) }}</td>
+                                                    <td class="text-center">
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                data-toggle="dropdown">
+                                                                Actions
+                                                            </button>
+                                                            <div class="dropdown-menu">
                                                                 <a class="dropdown-item btn btn-primary" data-toggle="modal"
                                                                     data-target="#viewModal"
                                                                     data-first-name="{{ json_encode($appointment->first_name) }}"
@@ -115,27 +130,28 @@
                                                                     data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
                                                                     data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                     data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
-                                                                    data-reason="{{ json_encode($appointment->reason) }}"
-                                                                    >View</a>
-                                                                    <form
-                                                                    action="{{ route('doctor.finish.appointment') }}"
+                                                                    data-reason="{{ json_encode($appointment->reason) }}">View</a>
+                                                                <form action="{{ route('doctor.finish.appointment') }}"
                                                                     method="POST">
                                                                     @csrf
                                                                     <input type="hidden" name="appointment_id"
                                                                         value="{{ $appointment->id }}">
                                                                     <input type="hidden" name="status"
                                                                         value="{{ $appointment->status }}">
-                                                                        <button type="submit"
-                                                                            class="dropdown-item btn btn-primary">Done</button>
-                                                                    </form>
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Done</button>
+                                                                </form>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                            </tr>                                     
-                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                            @endforeach
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $appointments->links('pagination::bootstrap-4') }}
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -143,33 +159,34 @@
 
 
                     <div class="modal fade" id="viewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header bg-primary text-light">
-                                <h3 class="modal-title" id="staticBackdropLabel">Appointment Update</h3>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-light">
+                                    <h3 class="modal-title" id="staticBackdropLabel">Appointment Update</h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
                                     <div class="row mt-4 text-start">
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
-                                                <input type="text" class="form-control ml-2" id="first_name" placeholder="First Name"
-                                                    name="first_name" disabled />
+                                                <input type="text" class="form-control ml-2" id="first_name"
+                                                    placeholder="First Name" name="first_name" disabled />
                                                 <label for="floatingInput">First Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
-                                                <input type="text" class="form-control" id="middle_name" placeholder="Middle Name"
-                                                    name="middle_name" disabled/>
+                                                <input type="text" class="form-control" id="middle_name"
+                                                    placeholder="Middle Name" name="middle_name" disabled />
                                                 <label for="floatingInput">Middle Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
-                                                <input type="text" class="form-control" id="last_name" placeholder="Last Name"
-                                                    name="last_name" disabled/>
+                                                <input type="text" class="form-control" id="last_name"
+                                                    placeholder="Last Name" name="last_name" disabled />
                                                 <label for="floatingInput">Last Name</label>
                                             </div>
                                         </div>
@@ -179,14 +196,14 @@
                                         <div class="col-md-6">
                                             <div class=" form-floating mb-3">
                                                 <input type="text" class="form-control" id="street" name="street"
-                                                    placeholder="Street" disabled/>
+                                                    placeholder="Street" disabled />
                                                 <label for="floatingInput">Street</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class=" form-floating mb-3">
                                                 <input type="text" class="form-control" id="brgy" name="brgy"
-                                                    placeholder="Brgy" disabled/>
+                                                    placeholder="Brgy" disabled />
                                                 <label for="floatingInput">State/Barangay</label>
                                             </div>
                                         </div>
@@ -195,14 +212,14 @@
                                         <div class="col-md-6">
                                             <div class=" form-floating mb-3">
                                                 <input type="text" class="form-control" id="city" name="city"
-                                                    placeholder="City" disabled/>
+                                                    placeholder="City" disabled />
                                                 <label for="floatingInput">City</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class=" form-floating mb-3">
-                                                <input type="text" class="form-control" id="province" name="province"
-                                                    placeholder="Province" disabled/>
+                                                <input type="text" class="form-control" id="province"
+                                                    name="province" placeholder="Province" disabled />
                                                 <label for="floatingInput">Province</label>
                                             </div>
                                         </div>
@@ -211,8 +228,8 @@
                                     <div class="row" form-floating mb-3>
                                         <div class="col-md-6">
                                             <div class=" form-floating mb-3">
-                                                <input type="date" class="form-control" id="birthdate" name="birthdate"
-                                                    placeholder="Date of Birth" disabled/>
+                                                <input type="date" class="form-control" id="birthdate"
+                                                    name="birthdate" placeholder="Date of Birth" disabled />
                                                 <label for="floatingInput">Date of Birth</label>
                                             </div>
                                         </div>
@@ -228,23 +245,25 @@
                                     <hr>
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="phone" name="phone"
-                                            placeholder="Phone" disabled/>
+                                            placeholder="Phone" disabled />
                                         <label for="floatingInput">Phone</label>
                                     </div>
                                     <hr>
                                     <div class="form-floating mb-3">
                                         <input type="email" class="form-control" id="email" name="email"
-                                            placeholder="Email Address" disabled/>
+                                            placeholder="Email Address" disabled />
                                         <label for="floatingInput">Email Address</label>
                                     </div>
                                     <hr>
                                     <div class="row mt-4">
                                         <h5>Which specialist do you want to appoint of?</h5>
                                         <div class="form-floating mb-3">
-                                            <select class="form-control p-3" id="specialties" name="specialties" disabled>
+                                            <select class="form-control p-3" id="specialties" name="specialties"
+                                                disabled>
                                                 <option>Select Specialist</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->specialties }}">{{ $doctor->specialties }}</option>
+                                                    <option value="{{ $doctor->specialties }}">{{ $doctor->specialties }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -252,7 +271,8 @@
                                     <div class="row mt-4">
                                         <div class="form-floating mb-3">
                                             <h5>Which procedure do you want to make an appointment for?</h5>
-                                            <select class="form-control  p-3" id="appointment_type" name="appointment_type" disabled>
+                                            <select class="form-control  p-3" id="appointment_type"
+                                                name="appointment_type" disabled>
                                                 <option>Select a Type of Appointment</option>
                                                 <option value="regular check-up">Regular Check-up</option>
                                                 <option value="Follow-up appointment">Follow-up Appointment</option>
@@ -267,19 +287,23 @@
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
                                                 <input type="date" class="form-control" id="appointment_date"
-                                                    name="appointment_date" placeholder="Date" min="<?= date('Y-m-d') ?>" disabled/>
+                                                    name="appointment_date" placeholder="Date" min="<?= date('Y-m-d') ?>"
+                                                    disabled />
                                                 <label for="floatingInput">Appointment Date</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
-                                                <select class="form-control  p-3" id="appointment_time" name="appointment_time" disabled>
+                                                <select class="form-control  p-3" id="appointment_time"
+                                                    name="appointment_time" disabled>
                                                     <option>Select Time of Appointment</option>
                                                     @foreach ($amTime as $time)
-                                                        <option value="{{ $time }} AM">{{ $time }} AM</option>
+                                                        <option value="{{ $time }} AM">{{ $time }} AM
+                                                        </option>
                                                     @endforeach
                                                     @foreach ($pmTime as $time)
-                                                        <option value="{{ $time }} PM">{{ $time }} PM</option>
+                                                        <option value="{{ $time }} PM">{{ $time }} PM
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -289,18 +313,18 @@
                                     <h5>Reason for appointment</h5>
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="reason" name="reason"
-                                            placeholder="Reason For Appointment" disabled/>
+                                            placeholder="Reason For Appointment" disabled />
                                         <label for="floatingInput">Reason for Appointment</label>
                                     </div>
                                     <hr>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" data-dismiss="modal">Back</button>
                                     </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
                     <!-- [ sample-page ] end -->
@@ -317,41 +341,41 @@
             $(document).ready(function() {
 
                 $('#viewModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var first_name = JSON.parse(button.data('first-name'));
-                var middle_name = JSON.parse(button.data('middle-name'));
-                var last_name = JSON.parse(button.data('last-name'));
-                var street = JSON.parse(button.data('street'));
-                var brgy = JSON.parse(button.data('brgy'));
-                var city = JSON.parse(button.data('city'));
-                var province = JSON.parse(button.data('province'));
-                var email = JSON.parse(button.data('email'));
-                var birthdate = JSON.parse(button.data('birthdate'));
-                var gender = JSON.parse(button.data('gender'));
-                var phone = JSON.parse(button.data('phone'));
-                var specialties = JSON.parse(button.data('specialties'));
-                var appointment_type = JSON.parse(button.data('appointment-type'));
-                var appointment_date = JSON.parse(button.data('appointment-date'));
-                var appointment_time = JSON.parse(button.data('appointment-time'));
-                var reason = JSON.parse(button.data('reason'));
-                var modal = $(this);
+                    var button = $(event.relatedTarget); // Button that triggered the modal
+                    var first_name = JSON.parse(button.data('first-name'));
+                    var middle_name = JSON.parse(button.data('middle-name'));
+                    var last_name = JSON.parse(button.data('last-name'));
+                    var street = JSON.parse(button.data('street'));
+                    var brgy = JSON.parse(button.data('brgy'));
+                    var city = JSON.parse(button.data('city'));
+                    var province = JSON.parse(button.data('province'));
+                    var email = JSON.parse(button.data('email'));
+                    var birthdate = JSON.parse(button.data('birthdate'));
+                    var gender = JSON.parse(button.data('gender'));
+                    var phone = JSON.parse(button.data('phone'));
+                    var specialties = JSON.parse(button.data('specialties'));
+                    var appointment_type = JSON.parse(button.data('appointment-type'));
+                    var appointment_date = JSON.parse(button.data('appointment-date'));
+                    var appointment_time = JSON.parse(button.data('appointment-time'));
+                    var reason = JSON.parse(button.data('reason'));
+                    var modal = $(this);
 
-                modal.find('#first_name').val(first_name);
-                modal.find('#middle_name').val(middle_name);
-                modal.find('#last_name').val(last_name);
-                modal.find('#street').val(street);
-                modal.find('#brgy').val(brgy);
-                modal.find('#city').val(city);
-                modal.find('#province').val(province);
-                modal.find('#email').val(email);
-                modal.find('#birthdate').val(birthdate);
-                modal.find('#gender').val(gender);
-                modal.find('#phone').val(phone);
-                modal.find('#specialties').val(specialties);
-                modal.find('#appointment_type').val(appointment_type);
-                modal.find('#appointment_date').val(appointment_date);
-                modal.find('#appointment_time').val(appointment_time);
-                modal.find('#reason').val(reason);
+                    modal.find('#first_name').val(first_name);
+                    modal.find('#middle_name').val(middle_name);
+                    modal.find('#last_name').val(last_name);
+                    modal.find('#street').val(street);
+                    modal.find('#brgy').val(brgy);
+                    modal.find('#city').val(city);
+                    modal.find('#province').val(province);
+                    modal.find('#email').val(email);
+                    modal.find('#birthdate').val(birthdate);
+                    modal.find('#gender').val(gender);
+                    modal.find('#phone').val(phone);
+                    modal.find('#specialties').val(specialties);
+                    modal.find('#appointment_type').val(appointment_type);
+                    modal.find('#appointment_date').val(appointment_date);
+                    modal.find('#appointment_time').val(appointment_time);
+                    modal.find('#reason').val(reason);
                 });
             });
         </script>
