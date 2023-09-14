@@ -114,7 +114,7 @@ class AppointmentController extends Controller
                         'time' => $currentTime,
                     ]);
                     
-                    return back()->with('success', 'Appointment created successfully that dated: ' .$request->input('appointment_date') . 'and timed:' . $request->input('appointment_time')); 
+                    return back()->with('success', 'Appointment created successfully that dated: ' .$request->input('appointment_date') . ' and timed: ' . $request->input('appointment_time')); 
                 }
 
                 $appoint = Appointment::where('appointment_date', $appointment->appointment_date)->get();
@@ -198,7 +198,7 @@ class AppointmentController extends Controller
 
         $user = Auth::user();
         $infos = Doctor::all();
-        $appointments = Appointment::where('account_id', $user->id)->where('status', 'pending')->orderBy('created_at', 'desc')->get();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'pending')->orderBy('created_at', 'desc')->paginate(10);
 
         return view('user.appointment.appointment', compact('appointments','infos','timeList'));
     }
@@ -224,7 +224,7 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $infos = Doctor::all();
         $doctors = User::all();
-        $appointments = Appointment::where('account_id', $user->id)->where('status', 'confirmed')->get();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'confirmed')->paginate(10);
         return view('user.appointment.confirmed_appointment', compact('appointments','infos','timeList','doctors'));
     }
 
@@ -248,7 +248,7 @@ class AppointmentController extends Controller
 
         $user = Auth::user();
         $infos = Doctor::all();
-        $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->get();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->paginate(10);
 
         return view('user.appointment.done_appointment', compact('appointments','infos','timeList'));
     }
@@ -272,7 +272,7 @@ class AppointmentController extends Controller
 
         $user = Auth::user();
         $infos = Doctor::all();
-        $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->get();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->paginate(10);
 
         return view('user.appointment.cancelled_appointment', compact('appointments','infos','timeList'));
     }

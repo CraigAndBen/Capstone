@@ -178,57 +178,57 @@
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('superadmin.update.doctor') }}"  enctype="multipart/form-data">
                                         @csrf
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating">
                                                     <input type="hidden" id="user_id" name="user_id" />
-                                                    <input type="text" class="form-control ml-2 first_name"
+                                                    <input type="text" class="form-control mb-3"
                                                         id="first_name" placeholder="First Name" name="first_name" />
                                                     <label for="floatingInput">First Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating">
-                                                    <input type="text" class="form-control ml-2 middle_name"
+                                                    <input type="text" class="form-control mb-3"
                                                         id="middle_name" placeholder="Middle Name" name="middle_name" />
                                                     <label for="floatingInput">Middle Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating">
-                                                    <input type="phone" class="form-control" id="last_name"
+                                                    <input type="phone" class="form-control mb-3" id="last_name"
                                                         placeholder="Last Name" name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="street" class="form-control"
+                                                    <input type="text" name="street" class="form-control mb-3"
                                                         id="street" placeholder="Street" />
                                                     <label for="floatingInput">Street</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="brgy" class="form-control"
+                                                    <input type="text" name="brgy" class="form-control mb-3"
                                                         id="brgy" placeholder="Brgy" />
                                                     <label for="floatingInput">Brgy</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-6">
-                                                <div class="form-floating">
+                                                <div class="form-floating mb-3">
                                                     <input type="text" name="city" class="form-control"
                                                         id="city" placeholder="City" />
                                                     <label for="floatingInput">City</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-floating">
+                                                <div class="form-floating mb-3">
                                                     <input type="text" name="province" class="form-control"
                                                         id="province" placeholder="Province" />
                                                     <label for="floatingInput">Province</label>
@@ -236,15 +236,10 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="form-floating my-2">
-                                            <input type="text" name="specialties" class="form-control"
-                                                id="specialties" placeholder="Specialties" />
-                                            <label for="floatingInput">Specialties</label>
-                                        </div>
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="number" class="form-control ml-2" id="age"
+                                                    <input type="number" class="form-control mb-3" id="age"
                                                         placeholder="Age" name="age" />
                                                     <label for="floatingInput">Age</label>
                                                 </div>
@@ -258,31 +253,10 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="form-floating my-2">
-                                            <input type="text" name="qualification" class="form-control"
-                                                id="qualification" placeholder="Qualifications" />
-                                            <label for="floatingInput">Qualifications</label>
-                                        </div>
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="date" class="form-control ml-2" id="employment_date"
-                                                        placeholder="Employment Date" name="employment_date" />
-                                                    <label for="floatingInput">Employment Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" id="years_of_experience"
-                                                        placeholder="Years of Experience" name="years_of_experience" />
-                                                    <label for="floatingInput">Years of Experience</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row my-2">
-                                            <div class="col-md-6">
-                                                <div class="form-floating">
-                                                    <input type="date" class="form-control ml-2" id="birthdate"
+                                                    <input type="date" class="form-control mb-3" id="birthdate"
                                                         placeholder="Birthdate" name="birthdate" />
                                                     <label for="floatingInput">Birthdate</label>
                                                 </div>
@@ -296,32 +270,59 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="row my-2">
+                                        <div class="form-floating my-2">
+                                            <input type="text" name="qualification" class="form-control mb-3"
+                                                id="qualification" placeholder="Qualifications" />
+                                            <label for="floatingInput">Qualifications</label>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
+                                                    <input type="date" class="form-control mb-3" id="employment_date"
+                                                        placeholder="Employment Date" name="employment_date" />
+                                                    <label for="floatingInput">Employment Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="number" class="form-control mb-3" id="years_of_experience"
+                                                        placeholder="Years of Experience" name="years_of_experience" />
+                                                    <label for="floatingInput">Years of Experience</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="specialties" class="form-control"
+                                                id="specialties" placeholder="Specialties" />
+                                            <label for="floatingInput">Specialties</label>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
                                                     <input type="text" name="facebook" class="form-control"
                                                         id="facebook" placeholder="Facebook Link" />
                                                     <label for="floatingInput">Facebook Link</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-floating">
+                                                <div class="form-floating mb-3">
                                                     <input type="text" name="twitter" class="form-control"
                                                         id="twitter" placeholder="twitter Link" />
                                                     <label for="floatingInput">Twitter Link</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-6">
-                                                <div class="form-floating">
+                                                <div class="form-floating mb-3">
                                                     <input type="text" name="instagram" class="form-control"
                                                         id="instagram" placeholder="Instagram Link" />
                                                     <label for="floatingInput">Instagram Link</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-floating">
+                                                <div class="form-floating mb-3">
                                                     <input type="text" name="linkedin" class="form-control"
                                                         id="linkedin" placeholder="Linkedin Link" />
                                                     <label for="floatingInput">Linkedin Link</label>
@@ -329,7 +330,7 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="row my-3">
+                                        <div class="row">
                                             <div class="col-md-3">
                                                 <label for="floatingInput">Change Profile Image:</label>
                                             </div>
@@ -340,7 +341,7 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="form-floating my-2">
+                                        <div class="form-floating mb-3">
                                             <input type="email" name="email" class="form-control" id="email"
                                                 placeholder="Email" />
                                             <label for="floatingInput">Email</label>
@@ -364,57 +365,57 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">View Account Profile</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row my-2">
+                                    <div class="row">
                                         <div class="col-md-4">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="hidden" id="user_id" name="user_id" />
-                                                <input type="text" class="form-control ml-2 first_name"
+                                                <input type="text" class="form-control"
                                                     id="first_name" placeholder="First Name" name="first_name" disabled/>
                                                 <label for="floatingInput">First Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control ml-2 middle_name"
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control"
                                                     id="middle_name" placeholder="Middle Name" name="middle_name" disabled/>
                                                 <label for="floatingInput">Middle Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <input type="phone" class="form-control" id="last_name"
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="last_name"
                                                     placeholder="Last Name" name="last_name" disabled/>
                                                 <label for="floatingInput">Last Name</label>
                                             </div>
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="row my-2">
+                                    <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="street" class="form-control" id="street"
                                                     placeholder="Street" disabled/>
                                                 <label for="floatingInput">Street</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="brgy" class="form-control" id="brgy"
                                                     placeholder="Brgy" disabled/>
                                                 <label for="floatingInput">Brgy</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row my-2">
+                                    <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="city" class="form-control" id="city"
                                                     placeholder="City" disabled/>
                                                 <label for="floatingInput">City</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="province" class="form-control"
                                                     id="province" placeholder="Province" disabled/>
                                                 <label for="floatingInput">Province</label>
@@ -422,14 +423,9 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="form-floating my-2">
-                                        <input type="text" name="specialties" class="form-control" id="specialties"
-                                            placeholder="Specialties" disabled/>
-                                        <label for="floatingInput">Specialties</label>
-                                    </div>
-                                    <div class="row my-2">
+                                    <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="number" class="form-control ml-2" id="age"
                                                     placeholder="Age" name="age" disabled/>
                                                 <label for="floatingInput">Age</label>
@@ -444,37 +440,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-floating my-2">
-                                        <input type="text" name="qualification" class="form-control"
-                                            id="qualification" placeholder="Qualifications" disabled/>
-                                        <label for="floatingInput">Qualifications</label>
-                                    </div>
-                                    <div class="row my-2">
+                                    <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input type="date" class="form-control ml-2" id="employment_date"
-                                                    placeholder="Employment Date" name="employment_date" disabled/>
-                                                <label for="floatingInput">Employment Date</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input type="number" class="form-control" id="years_of_experience"
-                                                    placeholder="Years of Experience" name="years_of_experience" disabled/>
-                                                <label for="floatingInput">Years of Experience</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row my-2">
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="date" class="form-control ml-2" id="birthdate"
                                                     placeholder="Birthdate" name="birthdate" disabled/>
                                                 <label for="floatingInput">Birthdate</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" id="phone"
                                                     placeholder="Phone" name="phone" disabled/>
                                                 <label for="floatingInput">Phone</label>
@@ -482,32 +457,59 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="row my-2">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="qualification" class="form-control"
+                                            id="qualification" placeholder="Qualifications" disabled/>
+                                        <label for="floatingInput">Qualifications</label>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" class="form-control ml-2" id="employment_date"
+                                                    placeholder="Employment Date" name="employment_date" disabled/>
+                                                <label for="floatingInput">Employment Date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="number" class="form-control" id="years_of_experience"
+                                                    placeholder="Years of Experience" name="years_of_experience" disabled/>
+                                                <label for="floatingInput">Years of Experience</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="specialties" class="form-control"
+                                            id="specialties" placeholder="Specialties" disabled/>
+                                        <label for="floatingInput">Specialties</label>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="facebook" class="form-control"
                                                     id="facebook" placeholder="Facebook Link" disabled/>
                                                 <label for="floatingInput">Facebook Link</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="twitter" class="form-control"
                                                     id="twitter" placeholder="twitter Link" disabled/>
                                                 <label for="floatingInput">Twitter Link</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row my-2">
+                                    <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="instagram" class="form-control"
                                                     id="instagram" placeholder="Instagram Link" disabled/>
                                                 <label for="floatingInput">Instagram Link</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="linkedin" class="form-control"
                                                     id="linkedin" placeholder="Linkedin Link" disabled/>
                                                 <label for="floatingInput">Linkedin Link</label>
@@ -515,7 +517,7 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="form-floating my-2">
+                                    <div class="form-floating mb-3">
                                         <input type="email" name="email" class="form-control" id="email"
                                             placeholder="Email" disabled/>
                                         <label for="floatingInput">Email</label>
@@ -539,10 +541,10 @@
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('superadmin.store.doctor') }}">
                                         @csrf
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating">
-                                                    <input type="text" class="form-control ml-2"
+                                                    <input type="text" class="form-control mb-3"
                                                         id="floatingInput first_name" placeholder="First Name"
                                                         name="first_name" />
                                                     <label for="floatingInput">First Name</label>
@@ -550,7 +552,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating">
-                                                    <input type="text" class="form-control ml-2"
+                                                    <input type="text" class="form-control mb-3"
                                                         id="floatingInput middle_name" placeholder="Middle Name"
                                                         name="middle_name" />
                                                     <label for="floatingInput">Middle Name</label>
@@ -558,7 +560,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating ">
-                                                    <input type="phone" class="form-control"
+                                                    <input type="phone" class="form-control mb-3"
                                                         id="floatingInput last_name" placeholder="Last Name"
                                                         name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
@@ -566,70 +568,83 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="street" class="form-control"
+                                                    <input type="text" name="street" class="form-control mb-3"
                                                         id="floatingInput street" placeholder="Street" />
                                                     <label for="floatingInput">Street</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="brgy" class="form-control"
+                                                    <input type="text" name="brgy" class="form-control mb-3"
                                                         id="floatingInput brgy" placeholder="Brgy" />
                                                     <label for="floatingInput">Brgy</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row my-2">
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="city" class="form-control"
+                                                    <input type="text" name="city" class="form-control mb-3"
                                                         id="floatingInput city" placeholder="City" />
                                                     <label for="floatingInput">City</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="province" class="form-control"
+                                                    <input type="text" name="province" class="form-control mb-3"
                                                         id="floatingInput province" placeholder="Province" />
                                                     <label for="floatingInput">Province</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <hr>
-                                        <div class="form-floating my-2">
-                                            <input type="text" name="specialties" class="form-control"
-                                                id="floatingInput specialties" placeholder="Email Address" />
-                                            <label for="floatingInput">Specialties</label>
-                                        </div>
-                                        <div class="row my-2">
+                                        <div class="row ">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="number" class="form-control ml-2"
+                                                    <input type="number" class="form-control mb-3"
                                                         id="floatingInput age" placeholder="Age" name="age"/>
                                                     <label for="floatingInput">Age</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="date" class="form-control mb-3"
+                                                        id="floatingInput birthdate" placeholder="Birthdate"
+                                                        name="birthdate" />
+                                                    <label for="floatingInput">Birthdate</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-md-6">
                                                 <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select a Gender</option>
+                                                    <option value="">Select a Gender</option>
                                                     <option value="female">Female</option>
                                                     <option value="male">Male</option>
                                                     <option value="other">Other</option>
                                                 </select>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input type="number" class="form-control mb-3" id="floatingInput phone"
+                                                        placeholder="Last Name" name="phone" />
+                                                    <label for="floatingInput">Phone</label>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <hr>
                                         <div class="form-floating my-2">
-                                            <input type="text" name="qualification" class="form-control"
+                                            <input type="text" name="qualification" class="form-control mb-3"
                                                 id="floatingInput qualification" placeholder="Qualifications" />
                                             <label for="floatingInput">Qualifications</label>
                                         </div>
                                         <div class="row my-2">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="date" class="form-control ml-2"
+                                                    <input type="date" class="form-control mb-3"
                                                         id="floatingInput employment_date" placeholder="Employment Date"
                                                         name="employment_date"/>
                                                     <label for="floatingInput">Employment Date</label>
@@ -637,42 +652,30 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="number" class="form-control"
+                                                    <input type="number" class="form-control mb-3"
                                                         id="floatingInput years_of_experience"
                                                         placeholder="Years of Experience" name="years_of_experience" />
                                                     <label for="floatingInput">Years of Experience</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row my-2">
-                                            <div class="col-md-6">
-                                                <div class="form-floating">
-                                                    <input type="date" class="form-control ml-2"
-                                                        id="floatingInput birthdate" placeholder="Birthdate"
-                                                        name="birthdate" />
-                                                    <label for="floatingInput">Birthdate</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control" id="floatingInput phone"
-                                                        placeholder="Last Name" name="phone" />
-                                                    <label for="floatingInput">Phone</label>
-                                                </div>
-                                            </div>
+                                        <div class="form-floating my-2">
+                                            <input type="text" name="specialties" class="form-control mb-3"
+                                                id="floatingInput specialties" placeholder="Specialties" />
+                                            <label for="floatingInput">Speacialties</label>
                                         </div>
                                         <hr>
                                         <div class="row my-2">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="facebook" class="form-control"
+                                                    <input type="text" name="facebook" class="form-control mb-3"
                                                         id="facebook" placeholder="Facebook Link" />
                                                     <label for="floatingInput">Facebook Link</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="twitter" class="form-control"
+                                                    <input type="text" name="twitter" class="form-control mb-3"
                                                         id="twitter" placeholder="twitter Link" />
                                                     <label for="floatingInput">Twitter Link</label>
                                                 </div>
@@ -681,14 +684,14 @@
                                         <div class="row my-2">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="instagram" class="form-control"
+                                                    <input type="text" name="instagram" class="form-control mb-3"
                                                         id="instagram" placeholder="Instagram Link" />
                                                     <label for="floatingInput">Instagram Link</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" name="linkedin" class="form-control"
+                                                    <input type="text" name="linkedin" class="form-control mb-3"
                                                         id="linkedin" placeholder="Linkedin Link" />
                                                     <label for="floatingInput">Linkedin Link</label>
                                                 </div>

@@ -297,7 +297,7 @@ class SuperAdminController extends Controller
                 $user->password = Hash::make($request->input('password'));
 
                 $user->save();
-    
+
                 return redirect()->back()->with('success', 'Password updated successfull.');
             }
 
@@ -570,16 +570,7 @@ class SuperAdminController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'employment_date' => 'required|date',
-            'age' => 'required|numeric|gt:0',
-            'gender' => 'required|string|max:255',
-            'shift' => 'required|string|max:255',
-            'qualification' => 'required|string|max:255',
-            'years_of_experience' => 'required|numeric|gt:0',
-            'address' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'birthdate' => 'required|date',
-            'phone' => 'required',
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
@@ -600,7 +591,10 @@ class SuperAdminController extends Controller
             'qualification' => $request->input('qualification'),
             'years_of_experience' => $request->input('years_of_experience'),
             'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
         ];
 
         $userChange = $this->hasChanges($user, $userUpdatedData);
@@ -626,7 +620,10 @@ class SuperAdminController extends Controller
                 $info->employment_date = $request->input('employment_date');
                 $info->shift = $request->input('shift');
                 $info->years_of_experience = $request->input('years_of_experience');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
 
@@ -647,7 +644,10 @@ class SuperAdminController extends Controller
                 $info->qualification = $request->input('qualification');
                 $info->shift = $request->input('shift');
                 $info->years_of_experience = $request->input('years_of_experience');
-                $info->address = $request->input('address');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
                 $info->birthdate = $request->input('birthdate');
                 $info->phone = $request->input('phone');
 
@@ -674,20 +674,21 @@ class SuperAdminController extends Controller
 
         if (!Hash::check($request->input('current_password'), $user->password)) {
 
-            return redirect()->route('superadmin.nurse')->with('info', 'Current password is incorrect.');
+            return redirect()->back()->with('success', 'Current password is incorrect.');
 
         } else {
 
             if (Hash::check($request->input('password'), $user->password)) {
 
-                return redirect()->route('superadmin.nurse')->with('info', "Password doesn't change.");
+                return redirect()->back()->with('success', "Password doesn't change.");
+            } else {
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Password updated successfull.');
             }
 
-            $user->password = Hash::make($request->input('password'));
-
-            $user->save();
-
-            return redirect()->route('superadmin.nurse')->with('success', 'Password updated successfull.');
         }
 
     }
@@ -794,7 +795,7 @@ class SuperAdminController extends Controller
         $userChange = $this->hasChanges($user, $userUpdatedData);
         $infoChange = $this->hasChanges($info, $infoUpdatedData);
 
-        if ($userChange || $infoChange ) {
+        if ($userChange || $infoChange) {
 
             if ($request->input('email') !== $user->email) {
 
@@ -867,12 +868,12 @@ class SuperAdminController extends Controller
             if (Hash::check($request->input('password'), $user->password)) {
 
                 return redirect()->back()->with('info', "Password doesn't change.");
-            } else{
+            } else {
                 $user->password = Hash::make($request->input('password'));
 
                 $user->save();
-    
-                return redirect()->back()->with('success','Password updated successfull.');
+
+                return redirect()->back()->with('success', 'Password updated successfull.');
             }
         }
 
@@ -1020,20 +1021,21 @@ class SuperAdminController extends Controller
 
         if (!Hash::check($request->input('current_password'), $user->password)) {
 
-            return redirect()->route('superadmin.admin')->with('info', 'Current password is incorrect.');
+            return redirect()->back()->with('info','Current password is incorrect.');
 
         } else {
 
             if (Hash::check($request->input('password'), $user->password)) {
 
-                return redirect()->route('superadmin.admin')->with('info', "Password doesn't change.");
+                return redirect()->back()->with('info',"Password doesn't change.");
+            } else {
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+
+                return redirect()->back()->with('success','Password updated successfull.');
             }
 
-            $user->password = Hash::make($request->input('password'));
-
-            $user->save();
-
-            return redirect()->route('superadmin.admin')->with('success', 'Password updated successfull.');
         }
 
     }

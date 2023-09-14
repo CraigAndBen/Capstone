@@ -68,7 +68,7 @@
                                                     <th>Date</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody class="text-center">
@@ -150,6 +150,9 @@
 
                                             </tbody>
                                         </table>
+                                        <div class="d-flex justify-content-center my-3">
+                                            {{ $apppointments->links('pagination::bootstrap-4') }}
+                                        </div>
                                     @endif
                                 </div>
                             </div>
