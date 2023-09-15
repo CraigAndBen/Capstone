@@ -81,7 +81,7 @@
                                                 <th></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="text-center">
                                             @foreach ($users as $user)
                                                 <tr>
                                                     <td>{{ ucwords($user->first_name) }}</td>

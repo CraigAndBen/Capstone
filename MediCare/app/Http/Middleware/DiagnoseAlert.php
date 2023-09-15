@@ -76,9 +76,9 @@ class DiagnoseAlert
                         foreach ($notifications as $notification) {
 
                             $notificationDate =  Carbon::parse($notification->date);
-                            $month = $notificationDate->month;
+                            $year = $notificationDate->year;
                             
-                            if (($notification->title != $title && $month != $currentMonth) || ($notification->title == $title && $month != $currentMonth)) {
+                            if (($notification->title != $title && $year != $currentYear) || ($notification->title == $title && $year != $currentYear)) {
                                 // Create a new notification if conditions are met
                                 Notification::create([
                                     'title' => $title,

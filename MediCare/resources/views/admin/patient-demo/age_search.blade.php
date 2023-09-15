@@ -62,11 +62,11 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('admin.demographics.age.search') }}" method="POST">
+                                    <form action="{{ route('admin.demographics.age.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
-                                            <option>Select Year</option>
-                                            @foreach ($admittedYears as $admittedYear)
+                                            <option value="">Select Year</option>
+                                            @foreach ($uniqueCombinedYears as $admittedYear)
                                                 @if ($admittedYear == $year)
                                                     <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
                                                     </option>

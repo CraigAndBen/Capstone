@@ -77,7 +77,9 @@
                                     <form action="{{ route('admin.patient.admitted.search') }}" method="GET">
                                         @csrf
                                         <div class="row">
-                                            <div class="col-md-10">
+                                            <div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-8">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control ml-2"
                                                         id="floatingInput search" placeholder="Search..." name="search" />

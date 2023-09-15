@@ -37,6 +37,12 @@
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <a href="{{ route('nurse.patient') }}" class="btn btn-success">Show All</a>
+                                    </div>
+                                </div>
+                                <hr>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -64,7 +70,7 @@
 
                                 @if ($patients->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Patient.
+                                        <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
                                     <form action="{{ route('nurse.patient.search') }}" method="GET">

@@ -60,6 +60,11 @@
             <div class="ms-auto">
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
+                        <div class="mt-3 text-left">
+                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                        </div>
+                    </li>
+                    <li class="dropdown pc-h-item">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
@@ -156,7 +161,6 @@
                             <div class="dropdown-header">
                                 <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
                                 </h4>
-                                <p class="text-muted">{{ $profile->role }}</p>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('nurse.profile') }}" class="dropdown-item">
@@ -207,7 +211,7 @@
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Update Account</span><span class="pc-arrow"><i
+                                class="pc-mtext">Profile Update</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('nurse.profile') }}">Update
@@ -220,9 +224,13 @@
                         <label>Notification</label>
                         <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('nurse.notification') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Notification List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notification List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.notification') }}">Notification</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Patient</label>
@@ -233,8 +241,7 @@
                                 class="pc-mtext">Patient List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.patient') }}">Patient
-                                    Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.patient') }}">Admitted Patient</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -252,13 +259,13 @@
                 <!-- [ sample-page ] start -->
                 <div class="col-sm-12 mt-3">
                     <div class="card">
-                        <div class="card-header py-3">
-                            <h3>Welcome Back Nurse {{ucwords($profile->first_name)}} {{ucwords($profile->last_name)}}</h3>
+                        <div class="card-header py-3 ">
+                            <h3>Welcome Back! {{ucwords($profile->first_name)}} {{ucwords($profile->last_name)}}</h3>
                         </div>
                         <div class="card-body">
-                            <div class="container">
-                                <a href="#" class="d-flex justify-content-center m-5">
-                                    <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 200px; max-height: 130px">
+                            <div class="container" style="height: 600px">
+                                <a href="#" class="d-flex justify-content-center mt-5">
+                                    <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 400px; max-height: 230px">
                                   </a>
                             </div>
                         </div>
@@ -273,7 +280,7 @@
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col my-1">
                     <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/"
                             target="_blank">Codedthemes</a></p>
@@ -287,7 +294,7 @@
                                 target="_blank">Contact us</a></li>
                     </ul>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </footer>
     <!-- Required Js -->
@@ -300,8 +307,8 @@
 
     <!-- [Page Specific JS] start -->
     <!-- Apex Chart -->
-    <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script>
+    {{-- <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script> --}}
     <!-- [Page Specific JS] end -->
 </body>
 <!-- [Body] end -->

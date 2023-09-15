@@ -60,6 +60,11 @@
             <div class="ms-auto">
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
+                        <div class="mt-3 text-left">
+                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                        </div>
+                    </li>
+                    <li class="dropdown pc-h-item">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
@@ -156,7 +161,6 @@
                             <div class="dropdown-header">
                                 <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
                                 </h4>
-                                <p class="text-muted">{{ $profile->role }}</p>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('nurse.profile') }}" class="dropdown-item">
@@ -192,40 +196,53 @@
             <div class="navbar-content">
                 <ul class="pc-navbar">
                     <li class="pc-item pc-caption">
-                        <label>Dashboard</label>
+                        <label>Home</label>
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('superadmin.dashboard') }}" class="pc-link"><span class="pc-micon"><i
-                                    class="ti ti-dashboard"></i></span><span class="pc-mtext">Dashboard</span></a>
+                        <a href="{{ route('superadmin.dashboard') }}" class="pc-link"><span
+                                class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
-                        <i class="ti ti-dashboard"></i>
+                        <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('nurse.profile') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Update Profile</span></a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{{ route('nurse.profile.password') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Update Profile Password</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Profile Update</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.profile') }}">Update
+                                    Profile</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('nurse.profile.password') }}">Update Profile Password</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
                         <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('nurse.notification') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Notification List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notification List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('nurse.notification') }}">Notification</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Patient</label>
-                        <i class="ti ti-dashboard"></i>
+                        <i class="ti ti-apps"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('nurse.patient') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.patient') }}">Admitted
+                                    Patient</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -235,9 +252,9 @@
 
     @yield('content')
     <!-- [ Main Content ] end -->
-    {{-- <footer class="pc-footer">
-      <div class="footer-wrapper container-fluid">
-        <div class="row">
+    <footer class="pc-footer">
+        <div class="footer-wrapper container-fluid">
+            {{-- <div class="row">
           <div class="col my-1">
             <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/" target="_blank">Codedthemes</a></p>
           </div>
@@ -248,9 +265,9 @@
               <li class="list-inline-item"><a href="https://codedthemes.com/contact/" target="_blank">Contact us</a></li>
             </ul>
           </div>
+        </div> --}}
         </div>
-      </div>
-    </footer> --}}
+    </footer>
     <!-- Required Js -->
     <script src="{{ asset('admin_assets/js/plugins/popper.min.js') }}"></script>
     <script src="{{ asset('admin_assets/js/plugins/simplebar.min.js') }}"></script>

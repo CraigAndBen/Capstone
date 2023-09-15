@@ -66,6 +66,7 @@ Route::middleware(['auth', 'role:nurse'])->group(function () {
 
     // Patient
     Route::get('/nurse/patient', [NurseController::class, 'patientList'])->name('nurse.patient');
+    Route::get('/nurse/patient/search', [NurseController::class, 'patientSearch'])->name('nurse.patient.search');
 
     // Nurse Notification
     Route::get('/nurse/notification', [NurseController::class, 'notification'])->name('nurse.notification');
@@ -152,21 +153,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Demographics
     // Gender
     Route::get('/admin/demographics/gender', [AdminController::class, 'genderDemo'])->name('admin.demographics.gender');
-    Route::post('/admin/demogrpahics/gender/search', [AdminController::class, 'genderSearch'])->name('admin.demographics.gender.search');
+    Route::get('/admin/demogrpahics/gender/search', [AdminController::class, 'genderSearch'])->name('admin.demographics.gender.search');
     //Age
     Route::get('/admin/demographics/age', [AdminController::class, 'ageDemo'])->name('admin.demographics.age');
-    Route::post('/admin/demogrpahics/age/search', [AdminController::class, 'ageSearch'])->name('admin.demographics.age.search');
+    Route::get('/admin/demogrpahics/age/search', [AdminController::class, 'ageSearch'])->name('admin.demographics.age.search');
     //Admit
     Route::get('/admin/demographics/admit', [AdminController::class, 'admitDemo'])->name('admin.demographics.admit');
-    Route::post('/admin/demogrpahics/admit/search', [AdminController::class, 'admitSearch'])->name('admin.demographics.admit.search');
+    Route::get('/admin/demogrpahics/admit/search', [AdminController::class, 'admitSearch'])->name('admin.demographics.admit.search');
     //Diagnose
     Route::get('/admin/demographics/diagnose', [AdminController::class, 'diagnoseDemo'])->name('admin.demographics.diagnose');
-    Route::post('/admin/demogrpahics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.demographics.diagnose.search');
+    Route::get('/admin/demogrpahics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.demographics.diagnose.search');
 
     //Trend
     //Diagnose Rising Trend
     Route::get('/admin/trend/diagnose', [AdminController::class, 'diagnoseTrend'])->name('admin.trend.diagnose');
-    Route::post('/admin/trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.trend.diagnose.search');
+    Route::get('/admin/trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.trend.diagnose.search');
 
     //Report
     Route::post('/admin/gender/report', [AdminController::class, 'genderReport'])->name('admin.gender.report');

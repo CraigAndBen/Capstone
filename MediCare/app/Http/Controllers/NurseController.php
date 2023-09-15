@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Nurse;
 use App\Models\Patient;
@@ -23,8 +24,12 @@ class NurseController extends Controller
         $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('nurse_dashboard', compact('profile','limitNotifications','count'));
+        return view('nurse_dashboard', compact('profile','limitNotifications','count','currentTime','currentDate'));
     }
 
     /**
@@ -37,8 +42,12 @@ class NurseController extends Controller
         $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('nurse.profile.profile', compact('profile','limitNotifications','count'));
+        return view('nurse.profile.profile', compact('profile','limitNotifications','count','currentTime','currentDate'));
     }
 
     public function passwordProfile(Request $request): View
@@ -47,8 +56,12 @@ class NurseController extends Controller
         $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('nurse.profile.profile_password', compact('profile','limitNotifications','count'));
+        return view('nurse.profile.profile_password', compact('profile','limitNotifications','count','currentTime','currentDate'));
     }
 
     /**
@@ -139,16 +152,20 @@ class NurseController extends Controller
         }
     }
 
-    public function patientList ()
+    public function patientList()
     {
         $profile = auth()->user();
         $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::where('discharged_date', '')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $patients = Patient::where('type', 'admitted_patient')->paginate(10);
 
-        return view('nurse.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count'));
+        return view('nurse.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count','currentTime','currentDate'));
     }
 
     public function patientUpdate(Request $request) 
@@ -177,15 +194,40 @@ class NurseController extends Controller
             }
     }
 
-    public function notification(){
-        
-        $profile = Auth::user();
+    public function patientSearch(Request $request)
+    {
+        $profile = auth()->user();
         $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $searchTerm = $request->input('search');
+        
+        $patients = Patient::where('type', 'admitted_patient')->where(function ($query) use ($searchTerm) {
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+        })->paginate(10);
 
-        return view('nurse.notification.notification', compact('profile','notifications','limitNotifications','count'));
+        return view('nurse.patient.patient_search', compact('patients', 'profile', 'doctors','limitNotifications','count','currentTime','currentDate'));
+    }
 
+    public function notification()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->paginate(10);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        return view('nurse.notification.notification', compact('profile','notifications','limitNotifications','count','currentTime','currentDate'));
     }
 
     public function notificationRead(Request $request){

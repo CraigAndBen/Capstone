@@ -61,7 +61,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -225,8 +225,10 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">All
                                     Patient</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.admitted') }}">Admitted List</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.outpatient') }}">Outpatient List</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.admitted') }}">Admitted
+                                    List</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.outpatient') }}">Outpatient List</a></li>
                         </ul>
                     </li>
                 </ul>
