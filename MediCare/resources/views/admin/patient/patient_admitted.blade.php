@@ -37,6 +37,13 @@
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
+                                            Patient</button>
+                                    </div>
+                                </div>
+                                <hr>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -62,34 +69,26 @@
                                     </div>
                                 @endif
 
-                                <div class="d-flex justify-content-end">
-                                    <div class="m-1">
-                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
-                                            Patient</button>
-                                    </div>
-                                </div>
-                                <hr>
-
-                                <form action="{{ route('admin.patient.admitted.search') }}" method="GET">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control ml-2" id="floatingInput search"
-                                                    placeholder="Search..." name="search" />
-                                                <label for="floatingInput">Search</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mt-2">
-                                            <button type="submit" class="btn btn-primary">Search</button>
-                                        </div>
-                                </form>
-
                                 @if ($patients->isEmpty())
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
                                 @else
+                                    <form action="{{ route('admin.patient.admitted.search') }}" method="GET">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput search" placeholder="Search..." name="search" />
+                                                    <label for="floatingInput">Search</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mt-2">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                    </form>
+
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
@@ -320,7 +319,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                    <option value="{{ $doctor->id }}">Dr.
+                                                        {{ ucwords($doctor->first_name) }}
                                                         {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
@@ -539,7 +539,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                    <option value="{{ $doctor->id }}">Dr.
+                                                        {{ ucwords($doctor->first_name) }}
                                                         {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
@@ -752,7 +753,8 @@
                                         <select class="form-control p-3" id="physician" name="physician" disabled>
                                             <option>Select physician</option>
                                             @foreach ($doctors as $doctor)
-                                                <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                <option value="{{ $doctor->id }}">Dr.
+                                                    {{ ucwords($doctor->first_name) }}
                                                     {{ ucwords($doctor->last_name) }}</option>
                                             @endforeach
                                         </select>
@@ -777,14 +779,15 @@
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
                                                 <input type="text" class="form-control ml-2" id="guardian_first_name"
-                                                    placeholder="Guardian First Name" name="guardian_first_name" disabled/>
+                                                    placeholder="Guardian First Name" name="guardian_first_name"
+                                                    disabled />
                                                 <label for="floatingInput">Guardian First Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
                                                 <input type="text" class="form-control ml-2" id="guardian_last_name"
-                                                    placeholder="Guardian Last Name" name="guardian_last_name" disabled/>
+                                                    placeholder="Guardian Last Name" name="guardian_last_name" disabled />
                                                 <label for="floatingInput">Guardian Last Name</label>
                                             </div>
                                         </div>
@@ -808,21 +811,21 @@
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3">
                                                 <input type="date" name="guardian_birthdate" class="form-control"
-                                                    id="guardian_birthdate" placeholder="Guardian Birthdate" disabled/>
+                                                    id="guardian_birthdate" placeholder="Guardian Birthdate" disabled />
                                                 <label for="floatingInput">Guardian Birthdate</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
                                                 <input type="phone" class="form-control" id="guardian_phone"
-                                                    placeholder="Guardian Phone" name="guardian_phone" disabled/>
+                                                    placeholder="Guardian Phone" name="guardian_phone" disabled />
                                                 <label for="floatingInput">Guardian Phone</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
                                                 <input type="phone" class="form-control" id="guardian_email"
-                                                    placeholder="Guardian Email" name="guardian_email" disabled/>
+                                                    placeholder="Guardian Email" name="guardian_email" disabled />
                                                 <label for="floatingInput">Guardian Email</label>
                                             </div>
                                         </div>

@@ -60,6 +60,11 @@
             <div class="ms-auto">
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
+                        <div class="mt-3 text-left">
+                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                        </div>
+                    </li>
+                    <li class="dropdown pc-h-item">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">

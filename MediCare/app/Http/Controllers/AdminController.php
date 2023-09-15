@@ -245,17 +245,12 @@ class AdminController extends Controller
     }
     public function outpatientStore(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-            'brgy' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'birthdate' => 'required|date',
-            'gender' => 'required|string|max:255',
+            'date' => 'required|date',
+            'time' => 'required',
             'phone' => 'required',
             'physician' => 'required|string|max:255',
         ]);
@@ -272,10 +267,8 @@ class AdminController extends Controller
             'birthdate' => $request->input('birthdate'),
             'phone' => $request->input('phone'),
             'type' => 'outpatient',
-            'admitted_date' => $request->input('admitted_date'),
-            'discharged_date' => $request->input('discharged_date'),
-            'room_number' => $request->input('room_number'),
-            'bed_number' => $request->input('bed_number'),
+            'date' => $request->input('date'),
+            'time' => $request->input('time'),
             'physician' => $request->input('physician'),
             'medical_condition' => $request->input('medical_condition'),
             'diagnosis' => $request->input('diagnosis'),
@@ -335,12 +328,6 @@ class AdminController extends Controller
                     'first_name' => 'required|string|max:255',
                     'middle_name' => 'required|string|max:255',
                     'last_name' => 'required|string|max:255',
-                    'street' => 'required|string|max:255',
-                    'brgy' => 'required|string|max:255',
-                    'city' => 'required|string|max:255',
-                    'province' => 'required|string|max:255',
-                    'birthdate' => 'required|date',
-                    'gender' => 'required|string|max:255',
                     'phone' => 'required',
                     'physician' => 'required|string|max:255',
                 ]);
@@ -356,6 +343,8 @@ class AdminController extends Controller
                     'birthdate' => $request->input('birthdate'),
                     'gender' => $request->input('gender'),
                     'phone' => $request->input('phone'),
+                    'date' => $request->input('date'),
+                    'time' => $request->input('time'),
                     'physician' => $request->input('physician'),
                     'medical_condition' => $request->input('medical_condition'),
                     'diagnosis' => $request->input('diagnosis'),
@@ -382,6 +371,8 @@ class AdminController extends Controller
                     $patient->birthdate = $request->input('birthdate');
                     $patient->gender = $request->input('gender');
                     $patient->phone = $request->input('phone');
+                    $patient->date = $request->input('date');
+                    $patient->time = $request->input('time');
                     $patient->physician = $request->input('physician');
                     $patient->medical_condition = $request->input('medical_condition');
                     $patient->diagnosis = $request->input('diagnosis');

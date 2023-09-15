@@ -27,6 +27,9 @@ class DoctorController extends Controller
         $count = $notifications->count();
         $appointments = Appointment::all();
         $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         // Get the current year
         $currentYear = Carbon::now()->year;
@@ -91,7 +94,7 @@ class DoctorController extends Controller
             }
         }
 
-        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth', 'patientCount', 'limitCurrentMonthAppointments', 'months', 'appointmentCounts', 'appointmentCount'));
+        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth', 'patientCount', 'limitCurrentMonthAppointments', 'months', 'appointmentCounts', 'appointmentCount', 'currentDate', 'currentTime'));
     }
 
     public function profile(Request $request): View
@@ -107,8 +110,12 @@ class DoctorController extends Controller
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile', compact('profile', 'info', 'genders', 'limitNotifications', 'count'));
+        return view('doctor.profile.profile', compact('profile', 'info', 'genders', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function socialProfile(Request $request): View
@@ -119,8 +126,12 @@ class DoctorController extends Controller
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile_social', compact('profile', 'info', 'limitNotifications', 'count'));
+        return view('doctor.profile.profile_social', compact('profile', 'info', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function passwordProfile(Request $request): View
@@ -130,8 +141,12 @@ class DoctorController extends Controller
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'info'));
+        return view('doctor.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'info','currentTime','currentDate'));
     }
 
     /**
@@ -389,11 +404,15 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
         ->orWhereNull('doctor_id')
         ->orderBy('appointment_date', 'desc')->paginate(10);
 
-        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info'));
+        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
     public function confirmedAppointmentList()
     {
@@ -421,10 +440,14 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
         ->where('status', 'confirmed')->paginate(10);
 
-        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info'));
+        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
 
     }
 
@@ -454,10 +477,14 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
         ->where('status', 'done')->paginate(10);
 
-        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info'));
+        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function confirmedAppointment(Request $request)
@@ -546,6 +573,10 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
         $appointments = Appointment::where('doctor_id',$profile->id)
@@ -555,7 +586,7 @@ class DoctorController extends Controller
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('doctor.appointment.appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info'));
+        return view('doctor.appointment.appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
 
     }
 
@@ -585,6 +616,10 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
         $appointments = Appointment::where('account_id',$profile->id)
@@ -594,7 +629,7 @@ class DoctorController extends Controller
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('doctor.appointment.confirmed_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info'));
+        return view('doctor.appointment.confirmed_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function doneAppointmentSearch(Request $request)
@@ -623,6 +658,10 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
         $appointments = Appointment::where('doctor_id',$profile->id)
@@ -632,7 +671,7 @@ class DoctorController extends Controller
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('doctor.appointment.done_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info'));
+        return view('doctor.appointment.done_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
     public function patientList()
     {
@@ -642,9 +681,13 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)->paginate(10);
 
-        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info'));
+        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function admittedPatientList()
@@ -655,11 +698,15 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
         ->where('type','admitted_patient')
         ->paginate(10);
 
-        return view('doctor.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info'));
+        return view('doctor.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function outpatientList()
@@ -670,11 +717,15 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
         ->where('type','outpatient')
         ->paginate(10);
 
-        return view('doctor.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info'));
+        return view('doctor.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function patientSearch(Request $request)
@@ -685,6 +736,10 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
         $patients = Patient::where('physician', $profile->id)
@@ -694,7 +749,7 @@ class DoctorController extends Controller
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('doctor.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info'));
+        return view('doctor.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function admittedPatientSearch(Request $request)
@@ -705,6 +760,10 @@ class DoctorController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
         $patients = Patient::where('physician', $profile->id)
@@ -715,7 +774,32 @@ class DoctorController extends Controller
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('doctor.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info'));
+        return view('doctor.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime','currentDate'));
+    }
+
+    public function outpatientSearch(Request $request)
+    {
+        $profile = auth()->user();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $searchTerm = $request->input('search');
+
+        $patients = Patient::where('physician', $profile->id)
+        ->where('type','outpatient')
+        ->where(function ($query) use ($searchTerm) {
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+        })->paginate(10);
+
+        return view('doctor.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function patientUpdate(Request $request)
@@ -752,8 +836,12 @@ class DoctorController extends Controller
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->paginate(10);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'info'));
+        return view('doctor.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
 
     }
 

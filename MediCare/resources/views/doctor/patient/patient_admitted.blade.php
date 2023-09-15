@@ -11,12 +11,12 @@
                 <div class="row align-items-center">
                     <div class="col-md-12">
                         <div class="page-header-title">
-                            <h5 class="m-b-10">Outpatient List</h5>
+                            <h5 class="m-b-10">Admitted Patient List</h5>
                         </div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item" aria-current="page">Patient List</li>
+                            <li class="breadcrumb-item" aria-current="page">Admitted Patient List</li>
                         </ul>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h1>Patient List</h1>
+                        <h1>Admitted Patient List</h1>
                     </div>
                     <div class="card-body">
                         <div class="container">

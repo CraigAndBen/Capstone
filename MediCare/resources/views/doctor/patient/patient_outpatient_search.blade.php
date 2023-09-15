@@ -16,7 +16,7 @@
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Outpatient List</li>
+                                <li class="breadcrumb-item" aria-current="page">Patient List</li>
                             </ul>
                         </div>
                     </div>
@@ -72,6 +72,7 @@
                                         <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
+
                                     <form action="{{ route('doctor.outpatient.search') }}" method="POST">
                                         @csrf
                                         <div class="row d-flex justify-content-center">
@@ -96,8 +97,9 @@
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
                                                 <th>Physician</th>
-                                                <th>Type</th>
-                                                <th></th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
@@ -112,11 +114,8 @@
                                                                 {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
                                                     @endforeach
-                                                    @if ($patient->type == 'admitted_patient')
-                                                        <td> Admitted Patient</td>
-                                                    @else
-                                                        <td>  OutPatient</td>
-                                                    @endif
+                                                    <td>{{ ucwords($patient->date) }}</td>
+                                                    <td>{{ ucwords($patient->time) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -130,10 +129,8 @@
                                                                     data-first-name="{{ json_encode($patient->first_name) }}"
                                                                     data-middle-name="{{ json_encode($patient->middle_name) }}"
                                                                     data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                    data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                    data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                    data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                    data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                    data-date="{{ json_encode($patient->date) }}"
+                                                                    data-time="{{ json_encode($patient->time) }}"
                                                                     data-physician="{{ json_encode($patient->physician) }}"
                                                                     data-medical-condition="{{ json_encode($patient->medical_condition) }}"
                                                                     data-diagnosis="{{ json_encode($patient->diagnosis) }}"
@@ -144,17 +141,8 @@
                                                                     data-first-name="{{ json_encode($patient->first_name) }}"
                                                                     data-middle-name="{{ json_encode($patient->middle_name) }}"
                                                                     data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                    data-street="{{ json_encode($patient->street) }}"
-                                                                    data-brgy="{{ json_encode($patient->brgy) }}"
-                                                                    data-city="{{ json_encode($patient->city) }}"
-                                                                    data-province="{{ json_encode($patient->province) }}"
-                                                                    data-phone="{{ json_encode($patient->phone) }}"
-                                                                    data-birthdate="{{ json_encode($patient->birthdate) }}"
-                                                                    data-gender="{{ json_encode($patient->gender) }}"
-                                                                    data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                    data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                    data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                    data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                    data-date="{{ json_encode($patient->date) }}"
+                                                                    data-time="{{ json_encode($patient->time) }}"
                                                                     data-physician="{{ json_encode($patient->physician) }}"
                                                                     data-medical-condition="{{ json_encode($patient->medical_condition) }}"
                                                                     data-diagnosis="{{ json_encode($patient->diagnosis) }}"
@@ -167,9 +155,6 @@
 
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
-                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -209,35 +194,20 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
-                                                    <input type="date" name="admitted_date" class="form-control"
-                                                        id="admitted_date" placeholder="Admitted Date" disabled />
-                                                    <label for="floatingInput">Admitted Date</label>
+                                                    <input type="date" name="date" class="form-control"
+                                                        id="date" placeholder="Date" disabled />
+                                                    <label for="floatingInput">Date</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
-                                                    <input type="date" name="discharged_date" class="form-control"
-                                                        id="discharged_date" placeholder="Discharged Date" disabled />
-                                                    <label for="floatingInput">Discharged Date</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="room_number" class="form-control"
-                                                        id="room_number" placeholder="Room No" disabled />
-                                                    <label for="floatingInput">Room No</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="bed_number" class="form-control"
-                                                        id="bed_number" placeholder="Bed No" disabled />
-                                                    <label for="floatingInput">Bed No</label>
+                                                    <input type="time" name="time" class="form-control"
+                                                        id="time" placeholder="Time" disabled />
+                                                    <label for="floatingInput">Time</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -250,6 +220,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        <hr>
                                         <div class="form-floating mb-3">
                                             <input type="text" name="medical_condtion" class="form-control"
                                                 id="medical_condtion" placeholder="Medical Condition" />
@@ -310,35 +281,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
-                                                <input type="date" name="admitted_date" class="form-control"
-                                                    id="admitted_date" placeholder="Admitted Date" disabled />
-                                                <label for="floatingInput">Admitted Date</label>
+                                                <input type="date" name="date" class="form-control"
+                                                    id="date" placeholder="Date" disabled />
+                                                <label for="floatingInput">Date</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
-                                                <input type="date" name="discharged_date" class="form-control"
-                                                    id="discharged_date" placeholder="Discharged Date" disabled />
-                                                <label for="floatingInput">Discharged Date</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" name="room_number" class="form-control"
-                                                    id="room_number" placeholder="Room No" disabled />
-                                                <label for="floatingInput">Room No</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" name="bed_number" class="form-control"
-                                                    id="bed_number" placeholder="Bed No" disabled />
-                                                <label for="floatingInput">Bed No</label>
+                                                <input type="time" name="time" class="form-control"
+                                                    id="time" placeholder="Time" disabled />
+                                                <label for="floatingInput">Time</label>
                                             </div>
                                         </div>
                                     </div>
@@ -351,6 +307,7 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <hr>
                                     <div class="form-floating mb-3">
                                         <input type="text" name="medical_condtion" class="form-control"
                                             id="medical_condtion" placeholder="Medical Condition" disabled />
@@ -395,10 +352,8 @@
                     var first_name = JSON.parse(button.data('first-name'));
                     var middle_name = JSON.parse(button.data('middle-name'));
                     var last_name = JSON.parse(button.data('last-name'));
-                    var admitted_date = JSON.parse(button.data('admitted-date'));
-                    var discharged_date = JSON.parse(button.data('discharged-date'));
-                    var room_number = JSON.parse(button.data('room-no'));
-                    var bed_number = JSON.parse(button.data('bed-no'));
+                    var date = JSON.parse(button.data('date'));
+                    var time = JSON.parse(button.data('time'));
                     var physician = JSON.parse(button.data('physician'));
                     var medical_condition = JSON.parse(button.data('medical-condition'));
                     var diagnosis = JSON.parse(button.data('diagnosis'));
@@ -409,10 +364,8 @@
                     modal.find('#first_name').val(first_name);
                     modal.find('#middle_name').val(middle_name);
                     modal.find('#last_name').val(last_name);
-                    modal.find('#admitted_date').val(admitted_date);
-                    modal.find('#discharged_date').val(discharged_date);
-                    modal.find('#room_number').val(room_number);
-                    modal.find('#bed_number').val(bed_number);
+                    modal.find('#date').val(date);
+                    modal.find('#time').val(time);
                     modal.find('#physician').val(physician);
                     modal.find('#medical_condition').val(medical_condition);
                     modal.find('#diagnosis').val(diagnosis);
@@ -424,10 +377,8 @@
                     var first_name = JSON.parse(button.data('first-name'));
                     var middle_name = JSON.parse(button.data('middle-name'));
                     var last_name = JSON.parse(button.data('last-name'));
-                    var admitted_date = JSON.parse(button.data('admitted-date'));
-                    var discharged_date = JSON.parse(button.data('discharged-date'));
-                    var room_number = JSON.parse(button.data('room-no'));
-                    var bed_number = JSON.parse(button.data('bed-no'));
+                    var date = JSON.parse(button.data('date'));
+                    var time = JSON.parse(button.data('time'));
                     var physician = JSON.parse(button.data('physician'));
                     var medical_condition = JSON.parse(button.data('medical-condition'));
                     var diagnosis = JSON.parse(button.data('diagnosis'));
@@ -437,10 +388,8 @@
                     modal.find('#first_name').val(first_name);
                     modal.find('#middle_name').val(middle_name);
                     modal.find('#last_name').val(last_name);
-                    modal.find('#admitted_date').val(admitted_date);
-                    modal.find('#discharged_date').val(discharged_date);
-                    modal.find('#room_number').val(room_number);
-                    modal.find('#bed_number').val(bed_number);
+                    modal.find('#date').val(date);
+                    modal.find('#time').val(time);
                     modal.find('#physician').val(physician);
                     modal.find('#medical_condition').val(medical_condition);
                     modal.find('#diagnosis').val(diagnosis);

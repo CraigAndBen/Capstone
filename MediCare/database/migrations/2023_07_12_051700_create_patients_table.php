@@ -26,6 +26,8 @@ return new class extends Migration
             $table->enum('type', ['outpatient','admitted_patient'])->default('outpatient');
             $table->string('admitted_date')->nullable();
             $table->string('discharged_date')->nullable();
+            $table->string('date')->nullable();
+            $table->string('time')->nullable();
             $table->smallInteger('room_number')->nullable();
             $table->smallInteger('bed_number')->nullable();
             $table->smallInteger('physician')->nullable();
