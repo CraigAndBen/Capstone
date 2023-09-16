@@ -79,9 +79,9 @@ class SuperAdminController extends Controller
         $appointmentData = $monthlyAppointments->pluck('count');
 
         $rolesData = DB::table('users')
-        ->select('role', DB::raw('COUNT(*) as count'))
-        ->groupBy('role')
-        ->get();
+            ->select('role', DB::raw('COUNT(*) as count'))
+            ->groupBy('role')
+            ->get();
 
         $rolesCount = $rolesData->count();
 
@@ -89,8 +89,11 @@ class SuperAdminController extends Controller
         $usersData = [];
 
         foreach ($rolesData as $role) {
-            $usersLabels[] = $role->role;
-            $usersData[] = $role->count;
+            if ($role->role !== 'super_admin') {
+                $capitalizedRole = ucfirst($role->role);
+                $usersLabels[] = $role->role;
+                $usersData[] = $role->count;
+            }
         }
 
         return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis', 'diagnosisCount', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount'));
@@ -1091,9 +1094,14 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::orderBy('admitted_date', 'desc')->paginate(10);
+        $patients = Patient::orderBy('admitted_date', 'desc')->orderBy('date', 'desc')->paginate(10);
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('superadmin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+
+        return view('superadmin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
 
     }
 
@@ -1105,6 +1113,10 @@ class SuperAdminController extends Controller
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $searchTerm = $request->input('search');
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         $patients = Patient::where(function ($query) use ($searchTerm) {
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
@@ -1112,7 +1124,7 @@ class SuperAdminController extends Controller
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('superadmin.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function patientStore(Request $request)
@@ -1121,13 +1133,6 @@ class SuperAdminController extends Controller
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'street' => 'required|string|max:255',
-            'brgy' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'birthdate' => 'required|date',
-            'gender' => 'required|string|max:255',
-            'phone' => 'required',
             'admitted_date' => 'required|date',
             'room_number' => 'required',
             'bed_number' => 'required',
@@ -1165,7 +1170,6 @@ class SuperAdminController extends Controller
         return back()->with('success', 'Patient added sucessfully.');
 
     }
-
     public function patientUpdate(Request $request)
     {
 
@@ -1178,12 +1182,6 @@ class SuperAdminController extends Controller
                     'first_name' => 'required|string|max:255',
                     'middle_name' => 'required|string|max:255',
                     'last_name' => 'required|string|max:255',
-                    'street' => 'required|string|max:255',
-                    'brgy' => 'required|string|max:255',
-                    'city' => 'required|string|max:255',
-                    'province' => 'required|string|max:255',
-                    'birthdate' => 'required|date',
-                    'gender' => 'required|string|max:255',
                     'phone' => 'required',
                     'physician' => 'required|string|max:255',
                 ]);
@@ -1199,6 +1197,8 @@ class SuperAdminController extends Controller
                     'birthdate' => $request->input('birthdate'),
                     'gender' => $request->input('gender'),
                     'phone' => $request->input('phone'),
+                    'date' => $request->input('date'),
+                    'time' => $request->input('time'),
                     'physician' => $request->input('physician'),
                     'medical_condition' => $request->input('medical_condition'),
                     'diagnosis' => $request->input('diagnosis'),
@@ -1225,6 +1225,8 @@ class SuperAdminController extends Controller
                     $patient->birthdate = $request->input('birthdate');
                     $patient->gender = $request->input('gender');
                     $patient->phone = $request->input('phone');
+                    $patient->date = $request->input('date');
+                    $patient->time = $request->input('time');
                     $patient->physician = $request->input('physician');
                     $patient->medical_condition = $request->input('medical_condition');
                     $patient->diagnosis = $request->input('diagnosis');
@@ -1249,13 +1251,6 @@ class SuperAdminController extends Controller
                     'first_name' => 'required|string|max:255',
                     'middle_name' => 'required|string|max:255',
                     'last_name' => 'required|string|max:255',
-                    'street' => 'required|string|max:255',
-                    'brgy' => 'required|string|max:255',
-                    'city' => 'required|string|max:255',
-                    'province' => 'required|string|max:255',
-                    'birthdate' => 'required|date',
-                    'gender' => 'required|string|max:255',
-                    'phone' => 'required',
                     'admitted_date' => 'required|date',
                     'room_number' => 'required',
                     'bed_number' => 'required',
@@ -1335,19 +1330,26 @@ class SuperAdminController extends Controller
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::where('type', 'outpatient')->orderBy('created_at', 'desc')->paginate(10);
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('superadmin.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function outpatientSearch(Request $request)
     {
-
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $searchTerm = $request->input('search');
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         $patients = Patient::where('type', 'outpatient')->where(function ($query) use ($searchTerm) {
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
@@ -1355,7 +1357,7 @@ class SuperAdminController extends Controller
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('superdmin.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function patienAdmittedtList()
@@ -1365,9 +1367,13 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('superadmin.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function patientAdmittedSearch(Request $request)
@@ -1378,13 +1384,17 @@ class SuperAdminController extends Controller
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $searchTerm = $request->input('search');
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::whereNull('discharged_date')->where(function ($query) use ($searchTerm) {
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(10);
 
-        return view('superadmin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
 
@@ -1395,16 +1405,35 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         // Current year
         $year = Carbon::now()->year;
+
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
 
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
+
+
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
+        $totalMaleCount = 0;
+        $totalFemaleCount = 0;
 
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
@@ -1415,11 +1444,15 @@ class SuperAdminController extends Controller
             // Retrieve admitted patient data for the current month
             $patients = Patient::select('gender')
                 ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->orWhereBetween('date', [$startDate, $endDate])
                 ->get();
 
             // Count the number of male and female patients for the current month
             $maleCount = $patients->where('gender', 'male')->count();
             $femaleCount = $patients->where('gender', 'female')->count();
+
+            $totalMaleCount += $maleCount;
+            $totalFemaleCount += $femaleCount;
 
             // Store the gender counts for the current month in the array
             $genderCountsByMonth[] = [
@@ -1428,7 +1461,12 @@ class SuperAdminController extends Controller
                 'female' => $femaleCount,
             ];
         }
-        return view('superadmin.patient-demo.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'admittedYears'));
+
+        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+
+
+        return view('superadmin.patient-demo.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
     }
 
     public function genderSearch(Request $request)
@@ -1441,16 +1479,34 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         //Selected Year
         $year = $request->input('year');
+
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
 
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
+
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
+        $totalMaleCount = 0;
+        $totalFemaleCount = 0;
 
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
@@ -1461,11 +1517,15 @@ class SuperAdminController extends Controller
             // Retrieve admitted patient data for the current month
             $patients = Patient::select('gender')
                 ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->orWhereBetween('date', [$startDate, $endDate])
                 ->get();
 
             // Count the number of male and female patients for the current month
             $maleCount = $patients->where('gender', 'male')->count();
             $femaleCount = $patients->where('gender', 'female')->count();
+
+            $totalMaleCount += $maleCount;
+            $totalFemaleCount += $femaleCount;
 
             // Store the gender counts for the current month in the array
             $genderCountsByMonth[] = [
@@ -1475,7 +1535,10 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.patient-demo.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'admittedYears'));
+        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+
+        return view('superadmin.patient-demo.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
     }
 
     public function genderReport(Request $request)
@@ -1492,6 +1555,8 @@ class SuperAdminController extends Controller
 
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
+        $totalMaleCount = 0;
+        $totalFemaleCount = 0;
 
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
@@ -1502,6 +1567,7 @@ class SuperAdminController extends Controller
             // Retrieve admitted patient data for the current month
             $patients = Patient::select('gender')
                 ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->orWhereBetween('date', [$startDate, $endDate])
                 ->get();
 
             // Count the number of male and female patients for the current month
@@ -1515,7 +1581,10 @@ class SuperAdminController extends Controller
                 'female' => $femaleCount,
             ];
         }
-        return view('superdmin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate'));
+
+        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+        return view('superadmin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts'));
 
     }
 
@@ -1526,13 +1595,29 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         // Get the current year
         $year = Carbon::now()->year;
+
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
+
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
 
         // Initialize an array to store the age group counts for each month
         $ageGroupsByMonth = [];
@@ -1551,6 +1636,8 @@ class SuperAdminController extends Controller
             '90+',
         ];
 
+        $totalPatientCount = 0;
+
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
             // Get the start and end dates of the current month
@@ -1560,7 +1647,11 @@ class SuperAdminController extends Controller
             // Retrieve admitted patient data for the current month
             $patients = Patient::select('birthdate')
                 ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->orWhereBetween('date', [$startDate, $endDate])
                 ->get();
+
+            // Increment the total patient count for this month
+            $totalPatientCount += $patients->count();
 
             // Initialize the age group counts with zeros for the current month
             $ageGroupCounts = [];
@@ -1586,7 +1677,7 @@ class SuperAdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
 
-        return view('superadmin.patient-demo.age', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'admittedYears'));
+        return view('superadmin.patient-demo.age', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount'));
     }
 
     public function ageSearch(Request $request)
@@ -1599,14 +1690,28 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         // Get the current year
         $year = $request->input('year');
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
 
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
         // Initialize an array to store the age group counts for each month
         $ageGroupsByMonth = [];
 
@@ -1659,7 +1764,7 @@ class SuperAdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
 
-        return view('superadmin.patient-demo.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'admittedYears'));
+        return view('superadmin.patient-demo.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate'));
     }
 
     public function ageReport(Request $request)
@@ -1691,6 +1796,8 @@ class SuperAdminController extends Controller
             '90+',
         ];
 
+        $totalPatientCount = 0;
+
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
             // Get the start and end dates of the current month
@@ -1700,7 +1807,11 @@ class SuperAdminController extends Controller
             // Retrieve admitted patient data for the current month
             $patients = Patient::select('birthdate')
                 ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->orWhereBetween('date', [$startDate, $endDate])
                 ->get();
+
+            // Increment the total patient count for this month
+            $totalPatientCount += $patients->count();
 
             // Initialize the age group counts with zeros for the current month
             $ageGroupCounts = [];
@@ -1726,24 +1837,30 @@ class SuperAdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
 
-        return view('superadmin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate'));
+        return view('superadmin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount'));
 
     }
 
-    public function admitDemo()
+    public function admittedDemo()
     {
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         // Get the current year
         $year = Carbon::now()->year;
+
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->where('type', 'admitted_patient')
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
-
 
         // Initialize an array to store admit patient counts for each month
         $admitPatientCountsByMonth = [];
@@ -1755,7 +1872,7 @@ class SuperAdminController extends Controller
             $endDate = $startDate->copy()->endOfMonth();
 
             // Retrieve admitted patient data for the current month
-            $admitPatientCounts = Patient::whereBetween('admitted_date', [$startDate, $endDate])
+            $admitPatientCounts = Patient::where('type', 'admitted_patient')->whereBetween('admitted_date', [$startDate, $endDate])
                 ->count();
 
             // Store the admit patient count for the current month in the array
@@ -1765,10 +1882,12 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.patient-demo.admit', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'year', 'admittedYears'));
+        $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
+
+        return view('superadmin.patient-demo.admitted', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
     }
 
-    public function admitSearch(Request $request)
+    public function admittedDemoSearch(Request $request)
     {
         $request->validate([
             'year' => 'required',
@@ -1778,14 +1897,19 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         // Get the current year
         $year = $request->input('year');
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->where('type', 'admitted_patient')
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
-
 
         // Initialize an array to store admit patient counts for each month
         $admitPatientCountsByMonth = [];
@@ -1797,7 +1921,7 @@ class SuperAdminController extends Controller
             $endDate = $startDate->copy()->endOfMonth();
 
             // Retrieve admitted patient data for the current month
-            $admitPatientCounts = Patient::whereBetween('admitted_date', [$startDate, $endDate])
+            $admitPatientCounts = Patient::where('type', 'admitted_patient')->whereBetween('admitted_date', [$startDate, $endDate])
                 ->count();
 
             // Store the admit patient count for the current month in the array
@@ -1807,10 +1931,12 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.patient-demo.admit_search', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'year', 'admittedYears'));
+        $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
+
+        return view('superadmin.patient-demo.admitted_search', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
     }
 
-    public function admitReport(Request $request)
+    public function admittedDemoReport(Request $request)
     {
         $year = $request->input('year');
         $currentYear = Carbon::now()->year; // Get current year
@@ -1819,6 +1945,7 @@ class SuperAdminController extends Controller
 
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->where('type', 'admitted_patient')
             ->pluck('year')
             ->toArray();
 
@@ -1833,7 +1960,7 @@ class SuperAdminController extends Controller
             $endDate = $startDate->copy()->endOfMonth();
 
             // Retrieve admitted patient data for the current month
-            $admitPatientCounts = Patient::whereBetween('admitted_date', [$startDate, $endDate])
+            $admitPatientCounts = Patient::where('type', 'admitted_patient')->whereBetween('admitted_date', [$startDate, $endDate])
                 ->count();
 
             // Store the admit patient count for the current month in the array
@@ -1843,7 +1970,140 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.report.admit_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate'));
+        $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
+
+        return view('superadmin.report.admit_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients'));
+    }
+
+    public function outpatientDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Get the current year
+        $year = Carbon::now()->year;
+
+        $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->where('type', 'outpatient')
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store admit patient counts for each month
+        $admitPatientCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $admitPatientCounts = Patient::where('type', 'outpatient')->whereBetween('date', [$startDate, $endDate])
+                ->count();
+
+            // Store the admit patient count for the current month in the array
+            $admitPatientCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $admitPatientCounts,
+            ];
+        }
+
+        $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
+
+        return view('superadmin.patient-demo.outpatient', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
+    }
+
+    public function outpatientDemoSearch(Request $request)
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Get the current year
+        $year = $request->input('year');
+
+        $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->where('type', 'outpatient')
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store admit patient counts for each month
+        $admitPatientCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $admitPatientCounts = Patient::where('type', 'outpatient')->whereBetween('date', [$startDate, $endDate])
+                ->count();
+
+            // Store the admit patient count for the current month in the array
+            $admitPatientCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $admitPatientCounts,
+            ];
+        }
+
+        $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
+
+        return view('superadmin.patient-demo.outpatient_search', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
+    }
+
+    public function outpatientDemoReport(Request $request)
+    {
+        $year = $request->input('year');
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentTime = Carbon::now()->toTimeString(); // Get current time (24-hour format)
+
+        $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->where('type', 'outpatient')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store admit patient counts for each month
+        $admitPatientCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $admitPatientCounts = Patient::where('type', 'outpatient')->whereBetween('date', [$startDate, $endDate])
+                ->count();
+
+            // Store the admit patient count for the current month in the array
+            $admitPatientCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $admitPatientCounts,
+            ];
+        }
+
+        $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
+
+        return view('superadmin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients'));
+
     }
 
     public function diagnoseDemo()
@@ -1852,19 +2112,36 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        $diagnoseData = Patient::select('diagnosis')
+        $AdmittedDiagnoseData = Patient::select('diagnosis')
             ->distinct()
+            ->whereNotNull('diagnosis')
             ->pluck('diagnosis')
             ->toArray();
 
         $currentYear = Carbon::now()->year;
+
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
 
-        return view('superadmin.patient-demo.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'admittedYears'));
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
+
+        return view('superadmin.patient-demo.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate'));
     }
 
     public function diagnoseSearch(Request $request)
@@ -1878,16 +2155,32 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        $diagnoseData = Patient::select('diagnosis')
+        $AdmittedDiagnoseData = Patient::select('diagnosis')
             ->distinct()
+            ->whereNotNull('diagnosis')
             ->pluck('diagnosis')
             ->toArray();
 
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
+
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
 
         // Define the specific diagnosis you want to analyze
         $specificDiagnosis = $request->input('diagnose');
@@ -1916,7 +2209,7 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'diagnoseData', 'admittedYears', 'selectedYear', 'specificDiagnosis'));
+        return view('superadmin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate'));
     }
 
     public function diagnoseReport(Request $request)
@@ -1964,7 +2257,152 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'diagnose'));
+        return view('superadmin.report.appointment_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'diagnose'));
+    }
+
+    public function appointmentDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $year = Carbon::now()->year;
+
+        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->whereNotNull('admitted_date')
+            ->pluck('year')
+            ->toArray();
+
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
+
+        $monthlyAppointments = Appointment::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('status', 'done')
+            ->whereYear('appointment_date', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $appointmentCount = $monthlyAppointments->count();
+        $appointmentLabels = $monthlyAppointments->pluck('month');
+        $appointmentData = $monthlyAppointments->pluck('count');
+
+
+        return view('superadmin.patient-demo.appointment', compact('profile', 'limitNotifications', 'count', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData'));
+    }
+
+    public function appointmentDemoSearch(Request $request)
+    {
+        $request->validate([
+            'year' => 'required',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $year = $request->input('year');
+
+        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->whereNotNull('admitted_date')
+            ->pluck('year')
+            ->toArray();
+
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
+
+        $monthlyAppointments = Appointment::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('status', 'done')
+            ->whereYear('appointment_date', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $appointmentCount = $monthlyAppointments->count();
+        $appointmentLabels = $monthlyAppointments->pluck('month');
+        $appointmentData = $monthlyAppointments->pluck('count');
+
+
+        return view('superadmin.patient-demo.appointment_search', compact('profile', 'limitNotifications', 'count', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData'));
+    }
+
+    public function appointmentReport(Request $request)
+    {
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentTime = Carbon::now()->toTimeString(); // Get current time (24-hour format)
+
+        $year = $request->input('year');
+
+        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->whereNotNull('admitted_date')
+            ->pluck('year')
+            ->toArray();
+
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+        $uniqueCombinedYears = array_unique($combinedYears);
+
+        $monthlyAppointments = Appointment::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('status', 'done')
+            ->whereYear('appointment_date', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $appointmentCount = $monthlyAppointments->count();
+        $appointmentLabels = $monthlyAppointments->pluck('month');
+        $appointmentData = $monthlyAppointments->pluck('count');
+
+
+        return view('superadmin.report.appointment_report', compact('profile', 'limitNotifications', 'count', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData'));
     }
 
     public function diagnoseTrend()
@@ -1974,6 +2412,10 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
             ->selectRaw('COUNT(*) as total_occurrences')
@@ -1999,7 +2441,7 @@ class SuperAdminController extends Controller
             ->pluck('diagnosis')
             ->toArray();
 
-        return view('superadmin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'countUniqueYears', 'rankedDiagnosis'));
+        return view('superadmin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'countUniqueYears', 'rankedDiagnosis', 'currentTime', 'currentDate'));
     }
 
     public function diagnoseTrendSearch(Request $request)
@@ -2013,6 +2455,10 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
         $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
             ->selectRaw('COUNT(*) as total_occurrences')
@@ -2117,7 +2563,7 @@ class SuperAdminController extends Controller
         }
 
 
-        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis'));
+        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis', 'currentTime', 'currentDate'));
     }
 
     public function diagnoseTrendReport(Request $request)

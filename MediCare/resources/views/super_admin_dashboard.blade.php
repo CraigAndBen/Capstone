@@ -299,7 +299,11 @@
                                     href="{{ route('superadmin.demographics.age') }}">Age
                                     Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.admit') }}">Admit Demographics</a></li>
+                                    href="{{ route('superadmin.demographics.admitted') }}">Admitted Demographics</a></li>
+                                    <li class="pc-item"><a class="pc-link"
+                                        href="{{ route('superadmin.demographics.outpatient') }}">Outpatient Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.appointment') }}">Appointment Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a>
                             </li>

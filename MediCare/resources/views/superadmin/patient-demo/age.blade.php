@@ -1,4 +1,4 @@
-@extends('layouts.superadmin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -62,11 +62,11 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('superadmin.demographics.age.search') }}" method="POST">
+                                    <form action="{{ route('superadmin.demographics.age.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
-                                            <option>Select Year</option>
-                                            @foreach ($admittedYears as $admittedYear)
+                                            <option value="">Select Year</option>
+                                            @foreach ($uniqueCombinedYears as $admittedYear)
                                                 @if ($admittedYear == $year)
                                                     <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
                                                     </option>
@@ -83,6 +83,9 @@
                                 </form>
                             </div>
                             <hr>
+                            <div class="my-5">
+                                <h3>Age Total - <i>{{$totalPatientCount}}</i></h3>
+                            </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
@@ -120,7 +123,7 @@
                 'rgba(153, 102, 255, 0.7)', // Purple
                 'rgba(255, 159, 64, 0.7)', // Orange
                 'rgba(255, 0, 0, 0.7)', // Bright Red
-                'rgba(0, 255, 0, 0.7)', // Bright Green
+                'rgba(100, 190, 0, 0.7)', // Bright Green
                 'rgba(0, 0, 255, 0.7)', // Bright Blue
                 'rgba(128, 128, 0, 0.7)', // Olive
                 'rgba(128, 0, 128, 0.7)', // Purple

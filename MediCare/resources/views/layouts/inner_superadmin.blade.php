@@ -63,92 +63,92 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
-                  <li class="dropdown pc-h-item">
-                    <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
-                        data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
-                        aria-expanded="false">
-                        <i class="ti ti-bell"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
-                        @if ($count > 0)
-                            <div class="dropdown-header">
-                                <h5>All Notification <span
-                                        class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
+                    <li class="dropdown pc-h-item">
+                        <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
+                            data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                            aria-expanded="false">
+                            <i class="ti ti-bell"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+                            @if ($count > 0)
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span
+                                            class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        <div class="list-group-item">
+                                            <select class="form-select">
+                                                <option value="all">All Notification</option>
+                                                <option value="new">New</option>
+                                                <option value="unread">Unread</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        @foreach ($limitNotifications as $notification)
+                                            <a class="list-group-item list-group-item-action"
+                                                href="{{ route('doctor.appointment') }}">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0">
+                                                        <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                            alt="user-image" class="user-avtar" />
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-1">
+                                                        <span
+                                                            class="float-end text-muted">{{ $notification->time }}</span>
+                                                        <h5>{{ ucwords($notification->title) }}</h5>
+                                                        <p class="text-body fs-6">
+                                                            {{ Str::words($notification->message, $limit = 10, $end = '...') }}
+                                                        </p>
+                                                        @if ($notification->is_read == 0)
+                                                            <div class="badge rounded-pill bg-light-danger">Unread</div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endforeach
                                     </div>
-                                    @foreach ($limitNotifications as $notification)
-                                        <a class="list-group-item list-group-item-action"
-                                            href="{{ route('doctor.appointment') }}">
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="text-center py-2">
+                                    <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                </div>
+                            @else
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        <div class="list-group-item">
+                                            <select class="form-select">
+                                                <option value="all">All Notification</option>
+                                                <option value="new">New</option>
+                                                <option value="unread">Unread</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <a class="list-group-item list-group-item-action">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">
-                                                    <span
-                                                        class="float-end text-muted">{{ $notification->time }}</span>
-                                                    <h5>{{ ucwords($notification->title) }}</h5>
-                                                    <p class="text-body fs-6">
-                                                        {{ Str::words($notification->message, $limit = 10, $end = '...') }}
-                                                    </p>
-                                                    @if ($notification->is_read == 0)
-                                                        <div class="badge rounded-pill bg-light-danger">Unread</div>
-                                                    @endif
+                                                    <h5>No Notification Yet.</h5>
                                                 </div>
                                             </div>
                                         </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="text-center py-2">
-                                <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
-                            </div>
-                        @else
-                            <div class="dropdown-header">
-                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
                                     </div>
-                                    <a class="list-group-item list-group-item-action">
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
-                                                    alt="user-image" class="user-avtar" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-1">
-                                                <h5>No Notification Yet.</h5>
-                                            </div>
-                                        </div>
-                                    </a>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
 
-                    </div>
-                </li>
+                        </div>
+                    </li>
                     <li class="dropdown pc-h-item header-user-profile">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
@@ -161,7 +161,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span></h4>
+                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
+                                </h4>
                                 <p class="text-muted">{{ $profile->role }}</p>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
@@ -273,12 +274,13 @@
                                 class="pc-mtext">Patient List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.patient') }}">Patient</a>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.patient') }}">Patient</a>
                             </li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.patient.admitted') }}">Patient Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                        href="{{ route('superadmin.patient.outpatient') }}">Outpatient</a></li>
+                                    href="{{ route('superadmin.patient.outpatient') }}">Outpatient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -292,12 +294,19 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.demographics.gender') }}">Gender Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.demographics.age') }}">Age
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.age') }}">Age
                                     Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.admit') }}">Admit Demographics</a></li>
+                                    href="{{ route('superadmin.demographics.admitted') }}">Admitted Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                                        href="{{ route('superadmin.demographics.outpatient') }}">Outpatient Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.appointment') }}">Appointment
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">

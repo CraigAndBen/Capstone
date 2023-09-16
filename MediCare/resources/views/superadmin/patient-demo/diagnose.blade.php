@@ -1,4 +1,4 @@
-@extends('layouts.superadmin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -62,19 +62,19 @@
 
                                 </div>
                                 <div class="col-md-4">
-                                    <form action="{{ route('superadmin.demographics.diagnose.search') }}" method="POST">
+                                    <form action="{{ route('superadmin.demographics.diagnose.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
-                                            <option>Select Diagnose</option>
-                                            @foreach ($diagnoseData as $diagnose)
+                                            <option value="">Select Diagnose</option>
+                                            @foreach ($AdmittedDiagnoseData as $diagnose)
                                                 <option value="{{ $diagnose }}">{{ ucwords($diagnose) }}</option>
                                             @endforeach
                                         </select>
                                 </div>
                                 <div class="col-md-4">
                                     <select class="form-control p-3" id="year" name="year">
-                                        <option>Select Year</option>
-                                        @foreach ($admittedYears as $year)
+                                        <option value="">Select Year</option>
+                                        @foreach ($uniqueCombinedYears as $year)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endforeach
                                     </select>

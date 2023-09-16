@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Age Demographics</h5>
+                                <h5 class="m-b-10">Appointment Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Age Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Appointment Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Age Demographics</h1>
+                            <h1>Appointment Demographics</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -62,7 +62,7 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('superadmin.demographics.age.search') }}" method="GET">
+                                    <form action="{{ route('superadmin.demographics.appointment.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
                                             <option value="">Select Year</option>
@@ -74,6 +74,7 @@
                                                     <option value="{{ $admittedYear }}">{{ $admittedYear }}</option>
                                                 @endif
                                             @endforeach
+
                                         </select>
                                 </div>
                                 <div class="col-md-2 mt-2">
@@ -82,20 +83,17 @@
                                 </form>
                             </div>
                             <hr>
-                            <div class="my-5">
-                                <h3>Age Total - <i>{{$totalPatientCount}}</i></h3>
-                            </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
                                 <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
-                                    <form action="{{ route('superadmin.age.report') }}" method="POST">
+                                    <form action="{{ route('superadmin.appointment.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="ageDemographicsChart" width="800" height="400"></canvas>
+                                <canvas id="appointmentChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -109,50 +107,41 @@
 
     @section('scripts')
         <script>
-            // Prepare data for the bar graph
-            var labels = {!! json_encode($labels) !!};
-            var datasets = {!! json_encode($datasets) !!};
+            var ctx = document.getElementById('appointmentChart').getContext('2d');
+            var labels = @json($appointmentLabels);
+            var data = @json($appointmentData);
 
-            // Define a color palette for the bar graph
-            var colors = [
-                'rgba(54, 162, 235, 0.7)', // Blue
-                'rgba(255, 99, 132, 0.7)', // Red
-                'rgba(75, 192, 192, 0.7)', // Green
-                'rgba(255, 206, 86, 0.7)', // Yellow
-                'rgba(153, 102, 255, 0.7)', // Purple
-                'rgba(255, 159, 64, 0.7)', // Orange
-                'rgba(255, 0, 0, 0.7)', // Bright Red
-                'rgba(0, 255, 0, 0.7)', // Bright Green
-                'rgba(0, 0, 255, 0.7)', // Bright Blue
-                'rgba(128, 128, 0, 0.7)', // Olive
-                'rgba(128, 0, 128, 0.7)', // Purple
-                'rgba(0, 128, 128, 0.7)', // Teal
-            ];
+            // Format the labels to display only the month names
+            labels = labels.map(function(dateString) {
+                var date = new Date(dateString);
+                var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                    'October', 'November', 'December'
+                ];
+                return monthNames[date.getMonth()];
+            });
 
-            // Get the chart context and create the bar graph
-            var ctx = document.getElementById('ageDemographicsChart').getContext('2d');
-            var ageDemographicsChart = new Chart(ctx, {
-                type: 'bar',
+            new Chart(ctx, {
+                type: 'line',
                 data: {
                     labels: labels,
-                    datasets: datasets.map(function(data, index) {
-                        return {
-                            label: data.month,
-                            data: data.data,
-                            backgroundColor: colors[index % colors
-                            .length], // Use the predefined colors from the palette
-                            borderWidth: 1,
-                        };
-                    })
+                    datasets: [{
+                        label: 'Appointment Count',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
                 },
                 options: {
-                    responsive: true,
                     scales: {
                         x: {
-                            stacked: true, // Stack the bars on the x-axis for each month
+                            type: 'category', // Use 'category' for category labels
+                            labels: labels, // Provide the labels
+                            beginAtZero: true,
+                            min: labels[0], // Specify the minimum label
+                            max: labels[labels.length - 1], // Specify the maximum label
                         },
                         y: {
-                            beginAtZero: true,
+                            beginAtZero: true
                         }
                     }
                 }

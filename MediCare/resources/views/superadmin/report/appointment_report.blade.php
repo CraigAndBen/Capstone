@@ -22,9 +22,8 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Diagnose Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>Appointment Analytics Report</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Diagnose: <i><b>{{ ucwords($diagnose) }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
@@ -43,7 +42,7 @@
         </div>
         <div class="row justify-content-center align-items-center">
             <div class="col-10">
-                <canvas id="diagnosePatientDemographicsChart"></canvas>
+                <canvas id="appointmentChart"></canvas>
             </div>
             <div class="col-2">
             </div>
@@ -51,7 +50,7 @@
         <div class="row justify-content-end align-items-end my-3">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('superadmin.demographics.diagnose') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('superadmin.demographics.appointment') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>
@@ -61,34 +60,41 @@
 @endsection
 @section('scripts')
     <script>
-        // Prepare data for the line graph
-        var months = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'month')) !!};
-        var diagnosePatientCounts = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'count')) !!};
+        var ctx = document.getElementById('appointmentChart').getContext('2d');
+        var labels = @json($appointmentLabels);
+        var data = @json($appointmentData);
 
-        // Get the chart context and create the line graph
-        var ctx = document.getElementById('diagnosePatientDemographicsChart').getContext('2d');
-        var diagnosePatientDemographicsChart = new Chart(ctx, {
+        // Format the labels to display only the month names
+        labels = labels.map(function(dateString) {
+            var date = new Date(dateString);
+            var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                'October', 'November', 'December'
+            ];
+            return monthNames[date.getMonth()];
+        });
+
+        new Chart(ctx, {
             type: 'line',
             data: {
-                labels: months,
+                labels: labels,
                 datasets: [{
-                    label: 'Diagnose Patients',
-                    data: diagnosePatientCounts,
-                    fill: false,
-                    borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                    borderWidth: 2,
+                    label: 'Appointment Count',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
                 }]
             },
             options: {
-                responsive: true,
                 scales: {
                     x: {
-                        grid: {
-                            display: false,
-                        }
+                        type: 'category', // Use 'category' for category labels
+                        labels: labels, // Provide the labels
+                        beginAtZero: true,
+                        min: labels[0], // Specify the minimum label
+                        max: labels[labels.length - 1], // Specify the maximum label
                     },
                     y: {
-                        beginAtZero: true,
+                        beginAtZero: true
                     }
                 }
             }

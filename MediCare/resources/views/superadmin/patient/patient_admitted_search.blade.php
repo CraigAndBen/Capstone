@@ -1,4 +1,4 @@
-@extends('layouts.superadmin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
 
@@ -37,6 +37,16 @@
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
+                                            Patient</button>
+                                    </div>
+                                    <div class="m-1">
+                                        <a href="{{ route('superadmin.patient.admitted') }}" class="btn btn-success">Show All</a>
+                                    </div>
+                                </div>
+                                <hr>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -62,134 +72,126 @@
                                     </div>
                                 @endif
 
-                                <div class="d-flex justify-content-end">
-                                    <div class="m-1">
-                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Patient</button>
-                                    </div>
-                                    <div class="m-1">
-                                        <a href="{{route('superadmin.patient.admitted')}}" class="btn btn-success">Show All</a>
-                                    </div>
-                                  </div>
-                                <hr>
-
-                                <form action="{{ route('superadmin.patient.admitted.search') }}" method="GET">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="floatingInput search" placeholder="Search..."
-                                                    name="search"/>
-                                                <label for="floatingInput">Search</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mt-2">
-                                            <button type="submit" class="btn btn-primary">Search</button>
-                                        </div>
-                                </form>
 
                                 @if ($patients->isEmpty())
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Physician</th>
-                                                <th>Admitted Date</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($patients as $patient)
+                                    <form action="{{ route('superadmin.patient.admitted.search') }}" method="GET">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput search" placeholder="Search..." name="search" />
+                                                    <label for="floatingInput">Search</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mt-2">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                    </form>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="bg-primary text-light text-center">
                                                 <tr>
-                                                    <td>{{ ucwords($patient->first_name) }}</td>
-                                                    <td>{{ ucwords($patient->last_name) }}</td>
-
-                                                    @foreach ($doctors as $doctor)
-                                                        @if ($patient->physician == $doctor->id)
-                                                            <td>Dr. {{ ucwords($doctor->first_name) }}
-                                                                {{ ucwords($doctor->last_name) }}</td>
-                                                        @endif
-                                                    @endforeach
-                                                    <td>{{ ucwords($patient->admitted_date) }}</td>
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                    data-target="#updateModal"
-                                                                    data-id="{{ json_encode($patient->id) }}"
-                                                                    data-first-name="{{ json_encode($patient->first_name) }}"
-                                                                    data-middle-name="{{ json_encode($patient->middle_name) }}"
-                                                                    data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                    data-street="{{ json_encode($patient->street) }}"
-                                                                    data-brgy="{{ json_encode($patient->brgy) }}"
-                                                                    data-city="{{ json_encode($patient->city) }}"
-                                                                    data-province="{{ json_encode($patient->province) }}"
-                                                                    data-phone="{{ json_encode($patient->phone) }}"
-                                                                    data-birthdate="{{ json_encode($patient->birthdate) }}"
-                                                                    data-gender="{{ json_encode($patient->gender) }}"
-                                                                    data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                    data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                    data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                    data-bed-no="{{ json_encode($patient->bed_number) }}"
-                                                                    data-physician="{{ json_encode($patient->physician) }}"
-                                                                    data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                    data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                    data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
-                                                                    data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
-                                                                    data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
-                                                                    data-relationship="{{ json_encode($patient->relationship) }}"
-                                                                    data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
-                                                                    data-guardian-email="{{ json_encode($patient->guardian_email) }}"
-                                                                    data-medication="{{ json_encode($patient->medication) }}">Update</a>
-
-                                                                <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                    data-target="#viewModal"
-                                                                    data-first-name="{{ json_encode($patient->first_name) }}"
-                                                                    data-middle-name="{{ json_encode($patient->middle_name) }}"
-                                                                    data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                    data-street="{{ json_encode($patient->street) }}"
-                                                                    data-brgy="{{ json_encode($patient->brgy) }}"
-                                                                    data-city="{{ json_encode($patient->city) }}"
-                                                                    data-province="{{ json_encode($patient->province) }}"
-                                                                    data-phone="{{ json_encode($patient->phone) }}"
-                                                                    data-birthdate="{{ json_encode($patient->birthdate) }}"
-                                                                    data-gender="{{ json_encode($patient->gender) }}"
-                                                                    data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                    data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                    data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                    data-bed-no="{{ json_encode($patient->bed_number) }}"
-                                                                    data-physician="{{ json_encode($patient->physician) }}"
-                                                                    data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                    data-diagnosis="{{ json_encode($patient->diagnosis) }}"
-                                                                    data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
-                                                                    data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
-                                                                    data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
-                                                                    data-relationship="{{ json_encode($patient->relationship) }}"
-                                                                    data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
-                                                                    data-guardian-email="{{ json_encode($patient->guardian_email) }}"
-                                                                    data-medication="{{ json_encode($patient->medication) }}">View</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Physician</th>
+                                                    <th>Admitted Date</th>
+                                                    <th>Action</th>
                                                 </tr>
-                                            @endforeach
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($patients as $patient)
+                                                    <tr>
+                                                        <td>{{ ucwords($patient->first_name) }}</td>
+                                                        <td>{{ ucwords($patient->last_name) }}</td>
 
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                                        @foreach ($doctors as $doctor)
+                                                            @if ($patient->physician == $doctor->id)
+                                                                <td>Dr. {{ ucwords($doctor->first_name) }}
+                                                                    {{ ucwords($doctor->last_name) }}</td>
+                                                            @endif
+                                                        @endforeach
+                                                        <td>{{ ucwords($patient->admitted_date) }}</td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle"
+                                                                    type="button" data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item btn btn-primary"
+                                                                        data-toggle="modal" data-target="#updateModal"
+                                                                        data-id="{{ json_encode($patient->id) }}"
+                                                                        data-first-name="{{ json_encode($patient->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($patient->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($patient->last_name) }}"
+                                                                        data-street="{{ json_encode($patient->street) }}"
+                                                                        data-brgy="{{ json_encode($patient->brgy) }}"
+                                                                        data-city="{{ json_encode($patient->city) }}"
+                                                                        data-province="{{ json_encode($patient->province) }}"
+                                                                        data-phone="{{ json_encode($patient->phone) }}"
+                                                                        data-birthdate="{{ json_encode($patient->birthdate) }}"
+                                                                        data-gender="{{ json_encode($patient->gender) }}"
+                                                                        data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-discharged-date="{{ json_encode($patient->discharged_date) }}"
+                                                                        data-room-no="{{ json_encode($patient->room_number) }}"
+                                                                        data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                        data-physician="{{ json_encode($patient->physician) }}"
+                                                                        data-medical-condition="{{ json_encode($patient->medical_condition) }}"
+                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
+                                                                        data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
+                                                                        data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
+                                                                        data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
+                                                                        data-relationship="{{ json_encode($patient->relationship) }}"
+                                                                        data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
+                                                                        data-guardian-email="{{ json_encode($patient->guardian_email) }}"
+                                                                        data-medication="{{ json_encode($patient->medication) }}">Update</a>
+
+                                                                    <a class="dropdown-item btn btn-primary"
+                                                                        data-toggle="modal" data-target="#viewModal"
+                                                                        data-first-name="{{ json_encode($patient->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($patient->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($patient->last_name) }}"
+                                                                        data-street="{{ json_encode($patient->street) }}"
+                                                                        data-brgy="{{ json_encode($patient->brgy) }}"
+                                                                        data-city="{{ json_encode($patient->city) }}"
+                                                                        data-province="{{ json_encode($patient->province) }}"
+                                                                        data-phone="{{ json_encode($patient->phone) }}"
+                                                                        data-birthdate="{{ json_encode($patient->birthdate) }}"
+                                                                        data-gender="{{ json_encode($patient->gender) }}"
+                                                                        data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-discharged-date="{{ json_encode($patient->discharged_date) }}"
+                                                                        data-room-no="{{ json_encode($patient->room_number) }}"
+                                                                        data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                        data-physician="{{ json_encode($patient->physician) }}"
+                                                                        data-medical-condition="{{ json_encode($patient->medical_condition) }}"
+                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
+                                                                        data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
+                                                                        data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
+                                                                        data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
+                                                                        data-relationship="{{ json_encode($patient->relationship) }}"
+                                                                        data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
+                                                                        data-guardian-email="{{ json_encode($patient->guardian_email) }}"
+                                                                        data-medication="{{ json_encode($patient->medication) }}">View</a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+
+                                            </tbody>
+                                        </table>
+                                        <div class="d-flex justify-content-center my-3">
+                                            {{ $patients->links('pagination::bootstrap-4') }}
+                                        </div>
                                     </div>
-                                </div>
                                 @endif
                             </div>
                         </div>
@@ -545,7 +547,8 @@
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                    <option value="{{ $doctor->id }}">Dr.
+                                                        {{ ucwords($doctor->first_name) }}
                                                         {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
@@ -570,16 +573,16 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
-                                                        id="guardian_first_name"
-                                                        placeholder="Guardian First Name" name="guardian_first_name" />
+                                                        id="guardian_first_name" placeholder="Guardian First Name"
+                                                        name="guardian_first_name" />
                                                     <label for="floatingInput">Guardian First Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
-                                                        id="guardian_last_name"
-                                                        placeholder="Guardian Last Name" name="guardian_last_name" />
+                                                        id="guardian_last_name" placeholder="Guardian Last Name"
+                                                        name="guardian_last_name" />
                                                     <label for="floatingInput">Guardian Last Name</label>
                                                 </div>
                                             </div>
@@ -603,24 +606,21 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
                                                     <input type="date" name="guardian_birthdate" class="form-control"
-                                                        id="guardian_birthdate"
-                                                        placeholder="Guardian Birthdate" />
+                                                        id="guardian_birthdate" placeholder="Guardian Birthdate" />
                                                     <label for="floatingInput">Guardian Birthdate</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_phone" placeholder="Guardian Phone"
-                                                        name="guardian_phone" />
+                                                    <input type="phone" class="form-control" id="guardian_phone"
+                                                        placeholder="Guardian Phone" name="guardian_phone" />
                                                     <label for="floatingInput">Guardian Phone</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_email" placeholder="Guardian Email"
-                                                        name="guardian_email" />
+                                                    <input type="phone" class="form-control" id="guardian_email"
+                                                        placeholder="Guardian Email" name="guardian_email" />
                                                     <label for="floatingInput">Guardian Email</label>
                                                 </div>
                                             </div>
@@ -762,7 +762,8 @@
                                         <select class="form-control p-3" id="physician" name="physician" disabled>
                                             <option>Select physician</option>
                                             @foreach ($doctors as $doctor)
-                                                <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                <option value="{{ $doctor->id }}">Dr.
+                                                    {{ ucwords($doctor->first_name) }}
                                                     {{ ucwords($doctor->last_name) }}</option>
                                             @endforeach
                                         </select>
@@ -783,65 +784,61 @@
                                         <label for="floatingInput">Medication</label>
                                     </div>
                                     <hr>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="guardian_first_name"
-                                                        placeholder="Guardian First Name" name="guardian_first_name" disabled/>
-                                                    <label for="floatingInput">Guardian First Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="guardian_last_name"
-                                                        placeholder="Guardian Last Name" name="guardian_last_name" disabled/>
-                                                    <label for="floatingInput">Guardian Last Name</label>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2" id="guardian_first_name"
+                                                    placeholder="Guardian First Name" name="guardian_first_name"
+                                                    disabled />
+                                                <label for="floatingInput">Guardian First Name</label>
                                             </div>
                                         </div>
-                                        <div class="form-floating mb-3 ">
-                                            <select class="form-control p-3" id="relationship" name="relationship" disabled>
-                                                <option>Select Relationship</option>
-                                                <option value="parent">Parent</option>
-                                                <option value="legal guardian">Legal Guardian</option>
-                                                <option value="spouse">Spouse</option>
-                                                <option value="sibling">Siblings</option>
-                                                <option value="grandparent">Grandparent</option>
-                                                <option value="aunt/Uncle">Aunt/Uncle</option>
-                                                <option value="cousin">Cousin</option>
-                                                <option value="extended family member">Extended Family Member</option>
-                                                <option value="foster Parent">Foster Parent</option>
-                                                <option value="close friend">Close Friend</option>
-                                            </select>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="guardian_birthdate" class="form-control"
-                                                        id="guardian_birthdate"
-                                                        placeholder="Guardian Birthdate" disabled/>
-                                                    <label for="floatingInput">Guardian Birthdate</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_phone" placeholder="Guardian Phone"
-                                                        name="guardian_phone" disabled/>
-                                                    <label for="floatingInput">Guardian Phone</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_email" placeholder="Guardian Email"
-                                                        name="guardian_email" disabled/>
-                                                    <label for="floatingInput">Guardian Email</label>
-                                                </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="text" class="form-control ml-2" id="guardian_last_name"
+                                                    placeholder="Guardian Last Name" name="guardian_last_name" disabled />
+                                                <label for="floatingInput">Guardian Last Name</label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="form-floating mb-3 ">
+                                        <select class="form-control p-3" id="relationship" name="relationship" disabled>
+                                            <option>Select Relationship</option>
+                                            <option value="parent">Parent</option>
+                                            <option value="legal guardian">Legal Guardian</option>
+                                            <option value="spouse">Spouse</option>
+                                            <option value="sibling">Siblings</option>
+                                            <option value="grandparent">Grandparent</option>
+                                            <option value="aunt/Uncle">Aunt/Uncle</option>
+                                            <option value="cousin">Cousin</option>
+                                            <option value="extended family member">Extended Family Member</option>
+                                            <option value="foster Parent">Foster Parent</option>
+                                            <option value="close friend">Close Friend</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" name="guardian_birthdate" class="form-control"
+                                                    id="guardian_birthdate" placeholder="Guardian Birthdate" disabled />
+                                                <label for="floatingInput">Guardian Birthdate</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="phone" class="form-control" id="guardian_phone"
+                                                    placeholder="Guardian Phone" name="guardian_phone" disabled />
+                                                <label for="floatingInput">Guardian Phone</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating mb-3 ">
+                                                <input type="phone" class="form-control" id="guardian_email"
+                                                    placeholder="Guardian Email" name="guardian_email" disabled />
+                                                <label for="floatingInput">Guardian Email</label>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                                 <div class="modal-footer">

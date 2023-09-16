@@ -1,4 +1,4 @@
-@extends('layouts.superadmin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Admit Demographics</h5>
+                                <h5 class="m-b-10">Appointment Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Admit Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Appointment Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Admit Demographics</h1>
+                            <h1>Appointment Demographics</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -62,11 +62,11 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('superadmin.demographics.admit.search') }}" method="POST">
+                                    <form action="{{ route('superadmin.demographics.appointment.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
-                                            <option>Select Year</option>
-                                            @foreach ($admittedYears as $admittedYear)
+                                            <option value="">Select Year</option>
+                                            @foreach ($uniqueCombinedYears as $admittedYear)
                                                 @if ($admittedYear == $year)
                                                     <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
                                                     </option>
@@ -74,6 +74,7 @@
                                                     <option value="{{ $admittedYear }}">{{ $admittedYear }}</option>
                                                 @endif
                                             @endforeach
+
                                         </select>
                                 </div>
                                 <div class="col-md-2 mt-2">
@@ -86,13 +87,13 @@
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
                                 <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
-                                    <form action="{{ route('superadmin.admit.report') }}" method="POST">
+                                    <form action="{{ route('superadmin.appointment.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="admitPatientDemographicsChart" width="800" height="400"></canvas>
+                                <canvas id="appointmentChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -106,34 +107,44 @@
 
     @section('scripts')
         <script>
-            // Prepare data for the bar graph
-            var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
-            var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
+               var ctx = document.getElementById('appointmentChart').getContext('2d');
+    var labels = @json($appointmentLabels);
+    var data = @json($appointmentData);
 
-            // Get the chart context and create the bar graph
-            var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
-            var admitPatientDemographicsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Admit Patients',
-                        data: admitPatientCounts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                        borderWidth: 1,
-                    }]
+    // Format the labels to display only the month names
+    labels = labels.map(function(dateString) {
+        var date = new Date(dateString);
+        var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+            'October', 'November', 'December'
+        ];
+        return monthNames[date.getMonth()];
+    });
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Appointment Count',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'category', // Use 'category' for category labels
+                    labels: labels, // Provide the labels
+                    beginAtZero: true,
+                    min: labels[0], // Specify the minimum label
+                    max: labels[labels.length - 1], // Specify the maximum label
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true, // Stack the bars on the x-axis for each month
-                        },
-                        y: {
-                            beginAtZero: true,
-                        }
-                    }
+                y: {
+                    beginAtZero: true
                 }
-            });
+            }
+        }
+    });
         </script>
     @endsection

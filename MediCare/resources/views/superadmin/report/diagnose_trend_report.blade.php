@@ -89,7 +89,7 @@
         <div class="row justify-content-end align-items-end my-3">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('admin.trend.diagnose') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('superadmin.trend.diagnose') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>

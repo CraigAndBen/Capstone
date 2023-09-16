@@ -40,17 +40,46 @@
 
             </div>
         </div>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-10">
+        <div class="row">
+            <div class="col-7">
                 <canvas id="admitPatientDemographicsChart"></canvas>
             </div>
-            <div class="col-2">
+            <div class="col-1">
+
+            </div>
+            <div class="col-3 text-center">
+                <table class="table table-bordered table-sm">
+                    <thead class="bg-primary text-light text-center">
+                        <tr>
+                            <th>Month</th>
+                            <th>Count</th>
+                            <th>total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($admitPatientCountsByMonth as $data)
+                            <tr>
+                                @if ($data['count'] > 0)
+                                <td>{{ $data['month'] }}</td>
+                                <td>{{ $data['count'] }}</td>
+                                @endif
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $totalAdmittedPatients}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
             </div>
         </div>
+        
         <div class="row justify-content-end align-items-end my-3">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('admin.demographics.admit') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('superadmin.demographics.admitted') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>

@@ -195,7 +195,7 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::orderBy('admitted_date', 'desc')->paginate(10);
+        $patients = Patient::orderBy('admitted_date', 'desc')->orderBy('date','desc')->paginate(10);
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');

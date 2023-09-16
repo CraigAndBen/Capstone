@@ -1,4 +1,4 @@
-@extends('layouts.superadmin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
 
@@ -37,6 +37,13 @@
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
+                                            Outpatient</button>
+                                    </div>
+                                </div>
+                                <hr>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -62,42 +69,38 @@
                                     </div>
                                 @endif
 
-                                <div class="d-flex justify-content-end">
-                                    <div class="m-1">
-                                      <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add Outpatient</button>
-                                    </div>
-                                  </div>
-                                <hr>
-
-                                <form action="{{ route('superadmin.patient.outpatient.search') }}" method="GET">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-10">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="floatingInput search" placeholder="Search..."
-                                                    name="search"/>
-                                                <label for="floatingInput">Search</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mt-2">
-                                            <button type="submit" class="btn btn-primary">Search</button>
-                                        </div>
-                                </form>
-
                                 @if ($patients->isEmpty())
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
                                 @else
+
+                                    <form action="{{ route('superadmin.patient.outpatient.search') }}" method="GET">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput search" placeholder="Search..." name="search" />
+                                                    <label for="floatingInput">Search</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mt-2">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                    </form>
+
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
                                                 <th>Physician</th>
-                                                <th>Type</th>
-                                                <th>Action</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
@@ -112,7 +115,8 @@
                                                                 {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
                                                     @endforeach
-                                                    <td>{{ ucwords($patient->type) }}</td>
+                                                    <td>{{ ucwords($patient->date) }}</td>
+                                                    <td>{{ ucwords($patient->time) }}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -133,10 +137,8 @@
                                                                     data-phone="{{ json_encode($patient->phone) }}"
                                                                     data-birthdate="{{ json_encode($patient->birthdate) }}"
                                                                     data-gender="{{ json_encode($patient->gender) }}"
-                                                                    data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                    data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                    data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                    data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                    data-date="{{ json_encode($patient->date) }}"
+                                                                    data-time="{{ json_encode($patient->time) }}"
                                                                     data-physician="{{ json_encode($patient->physician) }}"
                                                                     data-medical-condition="{{ json_encode($patient->medical_condition) }}"
                                                                     data-diagnosis="{{ json_encode($patient->diagnosis) }}"
@@ -160,10 +162,8 @@
                                                                     data-phone="{{ json_encode($patient->phone) }}"
                                                                     data-birthdate="{{ json_encode($patient->birthdate) }}"
                                                                     data-gender="{{ json_encode($patient->gender) }}"
-                                                                    data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                    data-discharged-date="{{ json_encode($patient->discharged_date) }}"
-                                                                    data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                    data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                    data-date="{{ json_encode($patient->date) }}"
+                                                                    data-time="{{ json_encode($patient->time) }}"
                                                                     data-physician="{{ json_encode($patient->physician) }}"
                                                                     data-medical-condition="{{ json_encode($patient->medical_condition) }}"
                                                                     data-diagnosis="{{ json_encode($patient->diagnosis) }}"
@@ -191,7 +191,8 @@
                     </div>
 
                     {{-- Create modal --}}
-                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
@@ -226,6 +227,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
@@ -258,6 +260,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
@@ -282,11 +285,31 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" name="date" class="form-control"
+                                                        id="floatingInput date" placeholder="Date" />
+                                                    <label for="floatingInput">Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="time" name="time" class="form-control"
+                                                        id="floatingInput time" placeholder="Time" />
+                                                    <label for="floatingInput">Time</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <html>
+
+                                        </html>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                    <option value="{{ $doctor->id }}">Dr.
+                                                        {{ ucwords($doctor->first_name) }}
                                                         {{ $doctor->last_name }}</option>
                                                 @endforeach
                                             </select>
@@ -378,14 +401,14 @@
                     </div>
                     {{-- End Create Modal --}}
 
-
                     {{-- Update modal --}}
                     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Update Outpatient Information</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Update Outpatient Information
+                                    </h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('superadmin.patient.update') }}">
@@ -414,6 +437,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
@@ -446,6 +470,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
@@ -470,11 +495,29 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="date" name="date" class="form-control"
+                                                        id="date" placeholder="Date" />
+                                                    <label for="floatingInput">Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="time" name="time" class="form-control"
+                                                        id="time" placeholder="Time" />
+                                                    <label for="floatingInput">Time</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option>Select physician</option>
                                                 @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                    <option value="{{ $doctor->id }}">Dr.
+                                                        {{ ucwords($doctor->first_name) }}
                                                         {{ ucwords($doctor->last_name) }}</option>
                                                 @endforeach
                                             </select>
@@ -499,16 +542,16 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
-                                                        id="guardian_first_name"
-                                                        placeholder="Guardian First Name" name="guardian_first_name" />
+                                                        id="guardian_first_name" placeholder="Guardian First Name"
+                                                        name="guardian_first_name" />
                                                     <label for="floatingInput">Guardian First Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
-                                                        id="guardian_last_name"
-                                                        placeholder="Guardian Last Name" name="guardian_last_name" />
+                                                        id="guardian_last_name" placeholder="Guardian Last Name"
+                                                        name="guardian_last_name" />
                                                     <label for="floatingInput">Guardian Last Name</label>
                                                 </div>
                                             </div>
@@ -532,24 +575,21 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
                                                     <input type="date" name="guardian_birthdate" class="form-control"
-                                                        id="guardian_birthdate"
-                                                        placeholder="Guardian Birthdate" />
+                                                        id="guardian_birthdate" placeholder="Guardian Birthdate" />
                                                     <label for="floatingInput">Guardian Birthdate</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_phone" placeholder="Guardian Phone"
-                                                        name="guardian_phone" />
+                                                    <input type="phone" class="form-control" id="guardian_phone"
+                                                        placeholder="Guardian Phone" name="guardian_phone" />
                                                     <label for="floatingInput">Guardian Phone</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="guardian_email" placeholder="Guardian Email"
-                                                        name="guardian_email" />
+                                                    <input type="phone" class="form-control" id="guardian_email"
+                                                        placeholder="Guardian Email" name="guardian_email" />
                                                     <label for="floatingInput">Guardian Email</label>
                                                 </div>
                                             </div>
@@ -599,6 +639,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
@@ -631,6 +672,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <hr>
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3">
@@ -655,11 +697,29 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" name="date" class="form-control" id="date"
+                                                    placeholder="Date" disabled />
+                                                <label for="floatingInput">Date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="time" name="time" class="form-control" id="time"
+                                                    placeholder="Time" disabled />
+                                                <label for="floatingInput">Time</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
                                     <div class="form-floating mb-3">
                                         <select class="form-control p-3" id="physician" name="physician" disabled>
                                             <option>Select physician</option>
                                             @foreach ($doctors as $doctor)
-                                                <option value="{{ $doctor->id }}">Dr. {{ ucwords($doctor->first_name) }}
+                                                <option value="{{ $doctor->id }}">Dr.
+                                                    {{ ucwords($doctor->first_name) }}
                                                     {{ ucwords($doctor->last_name) }}</option>
                                             @endforeach
                                         </select>
@@ -683,17 +743,16 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="guardian_first_name"
-                                                    placeholder="Guardian First Name" name="guardian_first_name" disabled/>
+                                                <input type="text" class="form-control ml-2" id="guardian_first_name"
+                                                    placeholder="Guardian First Name" name="guardian_first_name"
+                                                    disabled />
                                                 <label for="floatingInput">Guardian First Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="guardian_last_name"
-                                                    placeholder="Guardian Last Name" name="guardian_last_name" disabled/>
+                                                <input type="text" class="form-control ml-2" id="guardian_last_name"
+                                                    placeholder="Guardian Last Name" name="guardian_last_name" disabled />
                                                 <label for="floatingInput">Guardian Last Name</label>
                                             </div>
                                         </div>
@@ -717,24 +776,21 @@
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3">
                                                 <input type="date" name="guardian_birthdate" class="form-control"
-                                                    id="guardian_birthdate"
-                                                    placeholder="Guardian Birthdate" disabled/>
+                                                    id="guardian_birthdate" placeholder="Guardian Birthdate" disabled />
                                                 <label for="floatingInput">Guardian Birthdate</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
-                                                <input type="phone" class="form-control"
-                                                    id="guardian_phone" placeholder="Guardian Phone"
-                                                    name="guardian_phone" disabled/>
+                                                <input type="phone" class="form-control" id="guardian_phone"
+                                                    placeholder="Guardian Phone" name="guardian_phone" disabled />
                                                 <label for="floatingInput">Guardian Phone</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3 ">
-                                                <input type="phone" class="form-control"
-                                                    id="guardian_email" placeholder="Guardian Email"
-                                                    name="guardian_email" disabled/>
+                                                <input type="phone" class="form-control" id="guardian_email"
+                                                    placeholder="Guardian Email" name="guardian_email" disabled />
                                                 <label for="floatingInput">Guardian Email</label>
                                             </div>
                                         </div>
@@ -776,10 +832,8 @@
                     var birthdate = JSON.parse(button.data('birthdate'));
                     var gender = JSON.parse(button.data('gender'));
                     var phone = JSON.parse(button.data('phone'));
-                    var admitted_date = JSON.parse(button.data('admitted-date'));
-                    var discharged_date = JSON.parse(button.data('discharged-date'));
-                    var room_number = JSON.parse(button.data('room-no'));
-                    var bed_number = JSON.parse(button.data('bed-no'));
+                    var date = JSON.parse(button.data('date'));
+                    var time = JSON.parse(button.data('time'));
                     var physician = JSON.parse(button.data('physician'));
                     var medical_condition = JSON.parse(button.data('medical-condition'));
                     var diagnosis = JSON.parse(button.data('diagnosis'));
@@ -803,10 +857,8 @@
                     modal.find('#birthdate').val(birthdate);
                     modal.find('#gender').val(gender);
                     modal.find('#phone').val(phone);
-                    modal.find('#admitted_date').val(admitted_date);
-                    modal.find('#discharged_date').val(discharged_date);
-                    modal.find('#room_number').val(room_number);
-                    modal.find('#bed_number').val(bed_number);
+                    modal.find('#date').val(date);
+                    modal.find('#time').val(time);
                     modal.find('#physician').val(physician);
                     modal.find('#medical_condition').val(medical_condition);
                     modal.find('#diagnosis').val(diagnosis);
@@ -831,10 +883,8 @@
                     var birthdate = JSON.parse(button.data('birthdate'));
                     var gender = JSON.parse(button.data('gender'));
                     var phone = JSON.parse(button.data('phone'));
-                    var admitted_date = JSON.parse(button.data('admitted-date'));
-                    var discharged_date = JSON.parse(button.data('discharged-date'));
-                    var room_number = JSON.parse(button.data('room-no'));
-                    var bed_number = JSON.parse(button.data('bed-no'));
+                    var date = JSON.parse(button.data('date'));
+                    var time = JSON.parse(button.data('time'));
                     var physician = JSON.parse(button.data('physician'));
                     var medical_condition = JSON.parse(button.data('medical-condition'));
                     var diagnosis = JSON.parse(button.data('diagnosis'));
@@ -857,10 +907,8 @@
                     modal.find('#birthdate').val(birthdate);
                     modal.find('#gender').val(gender);
                     modal.find('#phone').val(phone);
-                    modal.find('#admitted_date').val(admitted_date);
-                    modal.find('#discharged_date').val(discharged_date);
-                    modal.find('#room_number').val(room_number);
-                    modal.find('#bed_number').val(bed_number);
+                    modal.find('#date').val(date);
+                    modal.find('#time').val(time);
                     modal.find('#physician').val(physician);
                     modal.find('#medical_condition').val(medical_condition);
                     modal.find('#diagnosis').val(diagnosis);

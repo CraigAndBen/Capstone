@@ -1,4 +1,4 @@
-@extends('layouts.superadmin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -65,18 +65,19 @@
                                 <div class="col-md-8">
                                     <ul class="list-group list-group-flush mt-3">
                                         @foreach ($limitDiagnosis as $diagnosis)
-                                            <li class="list-group-item px-0">
-                                                <div class="row align-items-start">
-                                                    <div class="col">
-                                                        <h5 class="mb-0">{{ $diagnosis->diagnosis }}</h5>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
-                                                                class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                                    class="ti ti-chevron-up text-success"></i></span></h5>
-                                                    </div>
+        
+                                        <li class="list-group-item px-0">
+                                            <div class="row align-items-start">
+                                                <div class="col">
+                                                    <h5 class="mb-0">{{$diagnosis->diagnosis}}</h5>
                                                 </div>
-                                            </li>
+                                                <div class="col-auto">
+                                                    <h5 class="mb-0">{{$diagnosis->total_occurrences}}<span
+                                                            class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
+                                                                class="ti ti-chevron-up text-success"></i></span></h5>
+                                                </div>
+                                            </div>
+                                        </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -89,13 +90,12 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('admin.trend.diagnose.search') }}" method="POST">
+                                    <form action="{{ route('superadmin.trend.diagnose.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
-                                            <option>Select Diagnose</option>
+                                            <option value="">Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
-                                                <option value="{{ $diagnose->diagnosis }}">{{ $diagnose->diagnosis }}
-                                                </option>
+                                                <option value="{{ $diagnose->diagnosis }}">{{ $diagnose->diagnosis }}</option>
                                             @endforeach
                                         </select>
                                 </div>
@@ -123,4 +123,5 @@
 @endsection
 
 @section('scripts')
+
 @endsection

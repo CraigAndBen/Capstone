@@ -40,17 +40,58 @@
 
             </div>
         </div>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-10">
+        <div class="row">
+            <div class="col-5">
                 <canvas id="ageDemographicsChart"></canvas>
             </div>
-            <div class="col-2">
+            <div class="col-1">
+
+            </div>
+            <div class="col-5 text-center">
+                <table class="table table-bordered table-sm">
+                    <thead class="bg-primary text-light text-center">
+                        <tr>
+                            <th>Month</th>
+                            @foreach ($labels as $ageGroup)
+                                <th>{{ $ageGroup }}</th>
+                            @endforeach
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- @foreach ($datasets as $data)
+                            <tr>
+                                <td>{{ $data['month'] }}</td>
+                                @foreach ($data['data'] as $count)
+                                        <td>{{ $count }}</td>
+                                @endforeach
+                            </tr>
+                        @endforeach --}}
+                        @foreach ($datasets as $data)
+                            <tr>
+                                <td>{{ $data['month'] }}</td>
+                                @php
+                                    $total = array_sum($data['data']); // Calculate the total for each month
+                                @endphp
+                                @foreach ($data['data'] as $count)
+                                    <td>{{ $count }}</td>
+                                @endforeach
+                                <td>{{ $total }}</td> <!-- Display the calculated total in the Total column -->
+                        @endforeach
+                        <tr>
+                        <td>Total</td>
+                        @for ($i = 0; $i <= 9; $i++)
+                            <td></td>
+                        @endfor
+                        <td>{{$totalPatientCount}}</td>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="row justify-content-end align-items-end my-3">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('admin.demographics.age') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('superadmin.demographics.age') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>
@@ -91,7 +132,7 @@
                         label: data.month,
                         data: data.data,
                         backgroundColor: colors[index % colors
-                        .length], // Use the predefined colors from the palette
+                            .length], // Use the predefined colors from the palette
                         borderWidth: 1,
                     };
                 })
