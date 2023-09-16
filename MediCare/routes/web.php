@@ -193,6 +193,10 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/superadmin/notification', [SuperAdminController::class, 'notification'])->name('superadmin.notification');
     Route::post('/superadmin/notification/read', [SuperAdminController::class, 'notificationRead'])->name('superadmin.notification.read');
 
+    // Appointment
+    Route::get('/superadmin/appointment', [SuperAdminController::class, 'appointment'])->name('superadmin.appointment');
+    Route::get('/superadmin/appointment/search', [SuperAdminController::class, 'appointmentSearch'])->name('superadmin.appointment.search');
+
     // Doctor
     Route::get('/super_admin/doctor', [SuperAdminController::class, 'doctor'])->name('superadmin.doctor');
     Route::post('/super_admin/doctor/create', [SuperAdminController::class, 'createDoctor'])->name('superadmin.store.doctor');

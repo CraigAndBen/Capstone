@@ -203,7 +203,7 @@
                                                             <h5>Which procedure do you want to make an appointment for?</h5>
                                                             <select class="form-control  p-3" id="appointment_type"
                                                                 name="appointment_type">
-                                                                <option>Select a Type of Appointment</option>
+                                                                <option value="">Select a Type of Appointment</option>
                                                                 <option value="regular check-up">Regular Check-up</option>
                                                                 <option value="Follow-up appointment">Follow-up Appointment
                                                                 </option>

@@ -37,7 +37,6 @@
                         <div class="card-body">
                             <div class="container">
 
-
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -107,9 +106,11 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
-
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                    </div>
                                 @endif
                             </div>
                         </div>

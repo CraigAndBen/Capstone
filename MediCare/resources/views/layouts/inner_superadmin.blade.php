@@ -61,6 +61,11 @@
             <!-- [Mobile Media Block end] -->
             <div class="ms-auto">
                 <ul class="list-unstyled">
+                    <li class="dropdown pc-h-item">
+                        <div class="mt-3 text-left">
+                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                        </div>
+                    </li>
                   <li class="dropdown pc-h-item">
                     <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                         data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
@@ -218,9 +223,26 @@
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.notification') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Notification List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notification List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.notification') }}">Notification</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-caption">
+                        <label>Appointment</label>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Appointment List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.appointment') }}">Appointment</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>System Account</label>

@@ -1,4 +1,4 @@
-@extends('layouts.inner_doctor')
+@extends('layouts.inner_superadmin')
 
 @section('content')
 
@@ -14,8 +14,8 @@
                                 <h5 class="m-b-10">Appointment List</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('doctor.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item" aria-current="page">Appointment List</li>
                             </ul>
                         </div>
@@ -36,7 +36,6 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
-
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -67,7 +66,7 @@
                                         <span class="fa fa-check-circle"></span> No Appointment Yet.
                                     </div>
                                 @else
-                                    <form action="{{ route('doctor.appointment.search') }}" method="POST">
+                                    <form action="{{ route('superadmin.appointment.search') }}" method="GET">
                                         @csrf
                                         <div class="row d-flex justify-content-center">
                                             <div class="col-md-2">
@@ -133,19 +132,6 @@
                                                                     data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                     data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                     data-reason="{{ json_encode($appointment->reason) }}">View</a>
-                                                                @if ($appointment->status == 'pending')
-                                                                    <form
-                                                                        action="{{ route('doctor.confirm.appointment') }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <input type="hidden" name="appointment_id"
-                                                                            value="{{ $appointment->id }}">
-                                                                        <input type="hidden" name="status"
-                                                                            value="{{ $appointment->status }}">
-                                                                        <button type="submit"
-                                                                            class="dropdown-item btn btn-primary">Confirm</button>
-                                                                    </form>
-                                                                @endif
 
                                                             </div>
                                                         </div>

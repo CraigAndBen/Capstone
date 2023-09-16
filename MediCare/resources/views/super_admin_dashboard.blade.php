@@ -26,7 +26,6 @@
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
@@ -62,6 +61,11 @@
             <!-- [Mobile Media Block end] -->
             <div class="ms-auto">
                 <ul class="list-unstyled">
+                    <li class="dropdown pc-h-item">
+                        <div class="mt-3 text-left">
+                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
+                        </div>
+                    </li>
                     <li class="dropdown pc-h-item">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
@@ -157,7 +161,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Hi, Good Day! <span class="small text-muted">{{ ucwords($profile->first_name) }}</span>
+                                <h4>Hi, Good Day! <span
+                                        class="small text-muted">{{ ucwords($profile->first_name) }}</span>
                                 </h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
@@ -220,9 +225,26 @@
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('superadmin.notification') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Notification List</span></a>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notification List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.notification') }}">Notification</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-caption">
+                        <label>Appointment</label>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Appointment List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.appointment') }}">Appointment</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>System Account</label>
@@ -253,12 +275,13 @@
                                 class="pc-mtext">Patient List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.patient') }}">Patient</a>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.patient') }}">Patient</a>
                             </li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.patient.admitted') }}">Patient Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                        href="{{ route('superadmin.patient.outpatient') }}">Outpatient</a></li>
+                                    href="{{ route('superadmin.patient.outpatient') }}">Outpatient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -272,12 +295,14 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.demographics.gender') }}">Gender Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.demographics.age') }}">Age
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.age') }}">Age
                                     Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.demographics.admit') }}">Admit Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                                    href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -318,7 +343,7 @@
                                         <h3>{{ $patientCount }}</h3>
                                     </div>
                                 </div>
-                                <canvas id="admittedPatientsChart" width="100%" height="95"></canvas>
+                                <canvas id="admittedPatientsChart" width="100%" height="70"></canvas>
                             @else
                                 <div class="text-center">
                                     <h3>No Patient Yet.</h3>
@@ -332,14 +357,14 @@
                     <div class="card">
                         <div class="card-body">
                             @if ($diagnosisCount)
-                            <div class="row mb-3 align-items-center">
-                                <div class="col">
-                                    <h5>Patient Diagnosis This Year</h5>
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <h5>Patient Diagnosis This Year</h5>
+                                    </div>
+                                    <div class="col-auto"> </div>
                                 </div>
-                                <div class="col-auto"> </div>
-                            </div>
 
-                                <canvas id="diagnosisChart"></canvas>
+                                <canvas id="diagnosisChart" width="100%" height="50"></canvas>
                                 <ul class="list-group list-group-flush mt-3">
                                     @foreach ($rankedDiagnosis as $diagnosis)
                                         <li class="list-group-item px-0">
@@ -368,6 +393,52 @@
                         </div>
                     </div>
                 </div>
+                <!-- [ sample-page ] end -->
+            </div>
+
+            <div class="row mt-2">
+                <!-- [ sample-page ] start -->
+
+                <div class="col-xl-6 col-md-12 mt-2">
+                    <div class="card">
+                        <div class="card-body">
+                            @if ($appointmentCount)
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <small>Total Appointment This Year</small>
+                                        <h3>{{ $appointmentCount }}</h3>
+                                    </div>
+                                </div>
+                                <canvas id="appointmentChart" width="100%" height="100"></canvas>
+                            @else
+                                <div class="text-center">
+                                    <h3>No Appointment Yet.</h3>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-md-12 mt-2">
+                    <div class="card">
+                        <div class="card-body">
+                            @if ($appointmentCount)
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <small>Total Users</small>
+                                        <h3>{{ $rolesCount }}</h3>
+                                    </div>
+                                </div>
+                                <canvas id="userRolesChart" width="400" height="60"></canvas>
+                            @else
+                                <div class="text-center">
+                                    <h3>No Users Yet.</h3>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 <!-- [ sample-page ] end -->
             </div>
             <!-- [ Main Content ] end -->
@@ -400,8 +471,8 @@
 
     <!-- [Page Specific JS] start -->
     <!-- Apex Chart -->
-    <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script>
+    {{-- <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script> --}}
     <!-- [Page Specific JS] end -->
 </body>
 <!-- [Body] end -->
@@ -481,5 +552,70 @@
             }
         }
     });
+
+    var ctx = document.getElementById('appointmentChart').getContext('2d');
+    var labels = @json($appointmentLabels);
+    var data = @json($appointmentData);
+
+    // Format the labels to display only the month names
+    labels = labels.map(function(dateString) {
+        var date = new Date(dateString);
+        var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+            'October', 'November', 'December'
+        ];
+        return monthNames[date.getMonth()];
+    });
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Appointment Count',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'category', // Use 'category' for category labels
+                    labels: labels, // Provide the labels
+                    beginAtZero: true,
+                    min: labels[0], // Specify the minimum label
+                    max: labels[labels.length - 1], // Specify the maximum label
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var ctx = document.getElementById('userRolesChart').getContext('2d');
+    var labels = @json($usersLabels);
+    var data = @json($usersData);
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)',
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+        }
+    });
 </script>
+
 </html>

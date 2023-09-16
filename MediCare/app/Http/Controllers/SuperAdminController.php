@@ -10,6 +10,7 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\User_info;
 use Illuminate\View\View;
+use App\Models\Appointment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,11 +29,18 @@ class SuperAdminController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;
-        $patients = Patient::whereYear('admitted_date', $currentYear)->get();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $patients = Patient::where(function ($query) use ($currentYear) {
+            $query->whereYear('admitted_date', $currentYear)
+                ->orWhereYear('date', $currentYear);
+        })->get();
         $patientCount = $patients->count();
 
         $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
@@ -56,7 +64,36 @@ class SuperAdminController extends Controller
         });
         $values = $data->pluck('count');
 
-        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis', 'diagnosisCount'));
+        $monthlyAppointments = Appointment::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('status', 'done')
+            ->whereYear('appointment_date', $currentYear)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+        $appointmentCount = $monthlyAppointments->count();
+        $appointmentLabels = $monthlyAppointments->pluck('month');
+        $appointmentData = $monthlyAppointments->pluck('count');
+
+        $rolesData = DB::table('users')
+        ->select('role', DB::raw('COUNT(*) as count'))
+        ->groupBy('role')
+        ->get();
+
+        $rolesCount = $rolesData->count();
+
+        $usersLabels = [];
+        $usersData = [];
+
+        foreach ($rolesData as $role) {
+            $usersLabels[] = $role->role;
+            $usersData[] = $role->count;
+        }
+
+        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis', 'diagnosisCount', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount'));
     }
 
     public function profile(Request $request): View
@@ -66,8 +103,12 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('superadmin.profile.profile', compact('profile', 'limitNotifications', 'count'));
+        return view('superadmin.profile.profile', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function passwordProfile(Request $request): View
@@ -76,8 +117,12 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('superadmin.profile.profile_password', compact('profile', 'limitNotifications', 'count'));
+        return view('superadmin.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     /**
@@ -151,20 +196,19 @@ class SuperAdminController extends Controller
 
         if (!Hash::check($request->input('current_password'), $user->password)) {
 
-            return redirect()->route('superadmin.profile.password')->with('info', 'Current password is incorrect.');
-
+            return redirect()->back()->with('info', 'Current password is incorrect.');
         } else {
 
             if (Hash::check($request->input('password'), $user->password)) {
 
-                return redirect()->route('superadmin.profile.password')->with('info', "Password doesn't change.");
+                return redirect()->back()->with('info', "Password doesn't change.");
             }
 
             $user->password = Hash::make($request->input('password'));
 
             $user->save();
 
-            return redirect()->route('superadmin.profile.password')->with('success', 'Password updated successfull.');
+            return redirect()->back()->with('success', 'Password updated successfull.');
         }
     }
 
@@ -1021,19 +1065,19 @@ class SuperAdminController extends Controller
 
         if (!Hash::check($request->input('current_password'), $user->password)) {
 
-            return redirect()->back()->with('info','Current password is incorrect.');
+            return redirect()->back()->with('info', 'Current password is incorrect.');
 
         } else {
 
             if (Hash::check($request->input('password'), $user->password)) {
 
-                return redirect()->back()->with('info',"Password doesn't change.");
+                return redirect()->back()->with('info', "Password doesn't change.");
             } else {
                 $user->password = Hash::make($request->input('password'));
 
                 $user->save();
 
-                return redirect()->back()->with('success','Password updated successfull.');
+                return redirect()->back()->with('success', 'Password updated successfull.');
             }
 
         }
@@ -2192,11 +2236,91 @@ class SuperAdminController extends Controller
     {
 
         $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(10);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-        return view('superadmin.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count'));
+        return view('superadmin.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
+
+    }
+
+    public function appointment()
+    {
+        $amTime = [
+            '8:30',
+            '9:00',
+            '9:30',
+            '10:30',
+            '11:00',
+            '11:30',
+        ];
+
+        $pmTime = [
+            '1:30',
+            '2:00',
+            '2:30',
+            '3:00',
+            '3:30',
+            '4:00',
+        ];
+
+        $profile = Auth::user();
+        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->paginate(10);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = Doctor::all();
+        $appointments = Appointment::whereNot('status', 'unvailable')->orderBy('appointment_date', 'desc')->paginate(10);
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        return view('superadmin.appointment.appointment', compact('profile', 'appointments', 'limitNotifications', 'amTime', 'pmTime', 'count', 'currentTime', 'currentDate', 'doctors'));
+
+    }
+
+    public function appointmentSearch(Request $request)
+    {
+
+        $amTime = [
+            '8:30',
+            '9:00',
+            '9:30',
+            '10:30',
+            '11:00',
+            '11:30',
+        ];
+
+        $pmTime = [
+            '1:30',
+            '2:00',
+            '2:30',
+            '3:00',
+            '3:30',
+            '4:00',
+        ];
+
+        $profile = Auth::user();
+        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->paginate(10);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $doctors = Doctor::all();
+        $searchTerm = $request->input('search');
+        $appointments = Appointment::where(function ($query) use ($searchTerm) {
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+        })->paginate(10);
+
+
+        return view('superadmin.appointment.appointment_search', compact('profile', 'appointments', 'limitNotifications', 'amTime', 'pmTime', 'count', 'currentTime', 'currentDate', 'doctors'));
 
     }
 

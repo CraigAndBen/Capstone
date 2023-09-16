@@ -409,6 +409,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
+        ->orWhere('specialties', $info->specialties)
         ->orWhereNull('doctor_id')
         ->orderBy('appointment_date', 'desc')->paginate(10);
 
