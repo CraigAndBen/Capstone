@@ -83,7 +83,7 @@
                             </div>
                             <hr>
                             <div class="my-5">
-                                <h3>Admitted Patient Total - <i>{{$totalAdmittedPatients}}</i></h3>
+                                <h3>Outpatient Total - <i>{{$totalAdmittedPatients}}</i></h3>
                             </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
@@ -95,7 +95,7 @@
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="admitPatientDemographicsChart" width="800" height="400"></canvas>
+                                <canvas id="admitPatientDemographicsChart" width="100%" height="40"></canvas>
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                     datasets: [{
                         label: 'Admit Patients',
                         data: admitPatientCounts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                        backgroundColor: 'rgba(255, 0, 0, 0.7)', // Red
                         borderWidth: 1,
                     }]
                 },
@@ -131,9 +131,17 @@
                     scales: {
                         x: {
                             stacked: true, // Stack the bars on the x-axis for each month
+                            title: {
+                            display: true,
+                            text: 'Months'
+                        }
                         },
                         y: {
                             beginAtZero: true,
+                            title: {
+                            display: true,
+                            text: 'Outpatient Count'
+                        }
                         }
                     }
                 }

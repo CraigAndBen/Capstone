@@ -83,6 +83,9 @@
                                 </form>
                             </div>
                             <hr>
+                            <div class="my-5">
+                                <h3>Gender Total - <i>{{$totalGenderCounts}}</i></h3>
+                            </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
@@ -93,7 +96,7 @@
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="genderDemographicsChart"></canvas>
+                                <canvas id="genderDemographicsChart" width="100%" height="40"></canvas>
                             </div>
                         </div>
                     </div>
@@ -135,9 +138,17 @@
                     scales: {
                         x: {
                             stacked: true, // Stack the bars on the x-axis for each month
+                            title: {
+                            display: true,
+                            text: 'Months'
+                        }
                         },
                         y: {
                             beginAtZero: true,
+                            title: {
+                            display: true,
+                            text: 'Gender Count'
+                        }
                         }
                     }
                 }

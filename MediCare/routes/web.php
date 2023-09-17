@@ -158,8 +158,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/demographics/age', [AdminController::class, 'ageDemo'])->name('admin.demographics.age');
     Route::get('/admin/demogrpahics/age/search', [AdminController::class, 'ageSearch'])->name('admin.demographics.age.search');
     //Admit
-    Route::get('/admin/demographics/admit', [AdminController::class, 'admitDemo'])->name('admin.demographics.admit');
-    Route::get('/admin/demogrpahics/admit/search', [AdminController::class, 'admitSearch'])->name('admin.demographics.admit.search');
+    Route::get('/admin/demographics/admitted', [AdminController::class, 'admittedDemo'])->name('admin.demographics.admitted');
+    Route::get('/admin/demogrpahics/admit/search', [AdminController::class, 'admittedDemoSearch'])->name('admin.demographics.admitted.search');
+    //Admit
+    Route::get('/admin/demographics/outpatient', [AdminController::class, 'outpatientDemo'])->name('admin.demographics.outpatient');
+    Route::get('/admin/demogrpahics/outpatient/search', [AdminController::class, 'outpatientDemoSearch'])->name('admin.demographics.outpatient.search');
     //Diagnose
     Route::get('/admin/demographics/diagnose', [AdminController::class, 'diagnoseDemo'])->name('admin.demographics.diagnose');
     Route::get('/admin/demogrpahics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.demographics.diagnose.search');
@@ -172,7 +175,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     //Report
     Route::post('/admin/gender/report', [AdminController::class, 'genderReport'])->name('admin.gender.report');
     Route::post('/admin/age/report', [AdminController::class, 'ageReport'])->name('admin.age.report');
-    Route::post('/admin/admit/report', [AdminController::class, 'admitReport'])->name('admin.admit.report');
+    Route::post('/admin/admitted/report', [AdminController::class, 'admittedDemoReport'])->name('admin.admitted.report');
+    Route::post('/admin/outpatient/report', [AdminController::class, 'outpatientDemoReport'])->name('admin.outpatient.report');
     Route::post('/admin/diagnose/report', [AdminController::class, 'diagnoseReport'])->name('admin.diagnose.report');
     Route::post('/admin/diagnose_trend/report', [AdminController::class, 'diagnoseTrendReport'])->name('admin.diagnose.trend.report');
 

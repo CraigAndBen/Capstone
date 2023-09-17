@@ -16,13 +16,17 @@
         @page {
             size: landscape;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 @endsection
 @section('content')
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Appointment Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>Admitted Patient Analytics Report</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
@@ -35,19 +39,50 @@
             </div>
 
         </div>
-        <div class="row justify-content-first">
-            <div class="col">
+        <div style="height: 80px"></div>
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <canvas id="admitPatientDemographicsChart"></canvas>
+            </div>
+            <div class="col-1">
 
             </div>
         </div>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-10">
-                <canvas id="appointmentChart"></canvas>
+
+        <div class="page-break my-5"></div>
+        <div style="height: 100px"></div>
+
+        <div class="row justify-content-center">
+            <div class="col-1">
+
             </div>
-            <div class="col-2">
+            <div class="col-9">
+                <table class="table table-bordered table-sm">
+                    <thead class="bg-primary text-light text-center">
+                        <tr>
+                            <th>Month</th>
+                            <th>Appointments</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @foreach ($appointmentCountsByMonth as $data)
+                            <tr>
+                                <td>{{ $data['month'] }}</td>
+                                <td>{{ $data['count'] }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td>Total</td>
+                            <td>{{ $totalAppointment }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-1">
+
             </div>
         </div>
-        <div class="row justify-content-end align-items-end my-3">
+        <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
                 <a id="back" href="{{ route('superadmin.demographics.appointment') }}" class="btn btn-danger">Back</a>
@@ -60,41 +95,40 @@
 @endsection
 @section('scripts')
     <script>
-        var ctx = document.getElementById('appointmentChart').getContext('2d');
-        var labels = @json($appointmentLabels);
-        var data = @json($appointmentData);
+        // Get the canvas element
+        // Prepare data for the bar graph
+        var months = {!! json_encode(array_column($appointmentCountsByMonth, 'month')) !!};
+        var admitPatientCounts = {!! json_encode(array_column($appointmentCountsByMonth, 'count')) !!};
 
-        // Format the labels to display only the month names
-        labels = labels.map(function(dateString) {
-            var date = new Date(dateString);
-            var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                'October', 'November', 'December'
-            ];
-            return monthNames[date.getMonth()];
-        });
-
-        new Chart(ctx, {
-            type: 'line',
+        // Get the chart context and create the bar graph
+        var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
+        var admitPatientDemographicsChart = new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: labels,
+                labels: months,
                 datasets: [{
-                    label: 'Appointment Count',
-                    data: data,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
+                    label: 'Appointment',
+                    data: admitPatientCounts,
+                    backgroundColor: 'rgba(128, 0, 128, 0.7)', // Purple
+                    borderWidth: 1,
                 }]
             },
             options: {
+                responsive: true,
                 scales: {
                     x: {
-                        type: 'category', // Use 'category' for category labels
-                        labels: labels, // Provide the labels
-                        beginAtZero: true,
-                        min: labels[0], // Specify the minimum label
-                        max: labels[labels.length - 1], // Specify the maximum label
+                        stacked: true, // Stack the bars on the x-axis for each month
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
                     },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Appointment Count'
+                        }
                     }
                 }
             }

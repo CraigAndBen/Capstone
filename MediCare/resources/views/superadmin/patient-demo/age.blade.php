@@ -83,20 +83,20 @@
                                 </form>
                             </div>
                             <hr>
-                            <div class="my-5">
+                            <div class="p-5">
                                 <h3>Age Total - <i>{{$totalPatientCount}}</i></h3>
                             </div>
-                            <div class="row">
+                            <div class="row m-5">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
-                                <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
+                                <div class="col-md-2 text-right mb-5"> <!-- Adjust the column width as needed -->
                                     <form action="{{ route('superadmin.age.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="ageDemographicsChart"></canvas>
+                                <canvas id="ageDemographicsChart" width="100%" height="40"></canvas>
                             </div>
                         </div>
                     </div>
@@ -151,9 +151,17 @@
                     scales: {
                         x: {
                             stacked: true, // Stack the bars on the x-axis for each month
+                            title: {
+                            display: true,
+                            text: 'Months'
+                        }
                         },
                         y: {
                             beginAtZero: true,
+                            title: {
+                            display: true,
+                            text: 'Age Count'
+                        }
                         }
                     }
                 }

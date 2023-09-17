@@ -83,6 +83,9 @@
                                 </form>
                             </div>
                             <hr>
+                            <div class="my-5">
+                                <h3>Outpatient Total - <i>{{$totalAppointment}}</i></h3>
+                            </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
@@ -93,7 +96,7 @@
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="appointmentChart"></canvas>
+                                <canvas id="appointmentChart" width="100%" height="40"></canvas>
                             </div>
                         </div>
                     </div>
@@ -107,44 +110,43 @@
 
     @section('scripts')
         <script>
-            var ctx = document.getElementById('appointmentChart').getContext('2d');
-            var labels = @json($appointmentLabels);
-            var data = @json($appointmentData);
+        // Get the canvas element
+        // Prepare data for the bar graph
+        var months = {!! json_encode(array_column($appointmentCountsByMonth, 'month')) !!};
+        var admitPatientCounts = {!! json_encode(array_column($appointmentCountsByMonth, 'count')) !!};
 
-            // Format the labels to display only the month names
-            labels = labels.map(function(dateString) {
-                var date = new Date(dateString);
-                var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-                    'October', 'November', 'December'
-                ];
-                return monthNames[date.getMonth()];
-            });
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Appointment Count',
-                        data: data,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            type: 'category', // Use 'category' for category labels
-                            labels: labels, // Provide the labels
-                            beginAtZero: true,
-                            min: labels[0], // Specify the minimum label
-                            max: labels[labels.length - 1], // Specify the maximum label
-                        },
-                        y: {
-                            beginAtZero: true
+        // Get the chart context and create the bar graph
+        var ctx = document.getElementById('appointmentChart').getContext('2d');
+        var admitPatientDemographicsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Appointment',
+                    data: admitPatientCounts,
+                    backgroundColor: 'rgba(128, 0, 128, 0.7)', // Purple
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true, // Stack the bars on the x-axis for each month
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Appointment Count'
                         }
                     }
                 }
-            });
+            }
+        });
         </script>
     @endsection

@@ -107,9 +107,9 @@
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>
                             </div>
-                            <canvas id="diagnosePatientDemographicsChart" width="800" height="400"></canvas>
+                            <canvas id="diagnosePatientDemographicsChart" width="100%" height="40"></canvas>
                         </div>
-                    </div>
+                    </div>  
                 </div>
 
                 <!-- [ sample-page ] end -->
@@ -132,7 +132,7 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: 'Diagnose Patients',
+                    label: {!! json_encode(ucwords($diagnose)) !!},
                     data: diagnosePatientCounts,
                     fill: false,
                     borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
@@ -145,10 +145,18 @@
                     x: {
                         grid: {
                             display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: 'Months'
                         }
                     },
-                    y: {
+                    y: { 
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Diagnose Count'
+                        }
                     }
                 }
             }

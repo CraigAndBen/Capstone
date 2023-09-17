@@ -259,7 +259,8 @@
                                     href="{{route('admin.demographics.gender')}}">Gender Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{route('admin.demographics.age')}}">Age Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.admit')}}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.admitted')}}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.outpatient')}}">Outpatient Demographics</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.diagnose')}}">Diagnose Demographics</a></li>
                         </ul>
                     </li>

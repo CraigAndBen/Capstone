@@ -16,6 +16,10 @@
         @page {
             size: landscape;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 @endsection
 @section('content')
@@ -24,7 +28,6 @@
             <div class="col-7 my-4">
                 <h5>Report Type: <i><b>Diagnose Analytics Report</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Diagnose: <i><b>{{ ucwords($diagnose) }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
@@ -36,19 +39,56 @@
             </div>
 
         </div>
-        <div class="row justify-content-first">
-            <div class="col">
+        <div style="height: 80px"></div>
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <canvas id="diagnosePatientDemographicsChart"></canvas>
+            </div>
+            <div class="col-1">
 
             </div>
         </div>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-10">
-                <canvas id="diagnosePatientDemographicsChart"></canvas>
+
+        <div class="page-break my-5"></div>
+        <div style="height: 100px"></div>
+
+        <div class="row justify-content-center">
+            <div class="col-1">
+
             </div>
-            <div class="col-2">
+            <div class="col-9">
+                <table class="table table-bordered table-sm text-center">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>{{ucwords($diagnose)}} Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $totalDiagnosedPatients = 0;
+                        @endphp
+                        @foreach ($diagnosePatientCountsByMonth as $patientCount)
+                            <tr>
+                                <td>{{ $patientCount['month'] }}</td>
+                                <td>{{ $patientCount['count'] }}</td>
+                                @php
+                                    $totalDiagnosedPatients += $patientCount['count'];
+                                @endphp
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td>Total</td>
+                            <td>{{ $totalDiagnosedPatients }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-1">
+
             </div>
         </div>
-        <div class="row justify-content-end align-items-end my-3">
+        <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
                 <a id="back" href="{{ route('admin.demographics.diagnose') }}" class="btn btn-danger">Back</a>
@@ -72,7 +112,7 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: 'Diagnose Patients',
+                    label: {!!json_encode(ucwords($diagnose))!!},
                     data: diagnosePatientCounts,
                     fill: false,
                     borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
@@ -85,10 +125,18 @@
                     x: {
                         grid: {
                             display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: 'Months'
                         }
                     },
                     y: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Diagnose Count'
+                        }
                     }
                 }
             }

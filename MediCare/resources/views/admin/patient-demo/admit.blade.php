@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Patient Demographics</h5>
+                                <h5 class="m-b-10">Admit Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Patient Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Admit Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Patient Demographics</h1>
+                            <h1>Admit Demographics</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -62,11 +62,11 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('admin.demographics.admit.search') }}" method="GET">
+                                    <form action="{{ route('admin.demographics.admit.search') }}" method="POST">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
-                                            <option value="">Select Year</option>
-                                            @foreach ($uniqueCombinedYears as $admittedYear)
+                                            <option>Select Year</option>
+                                            @foreach ($admittedYears as $admittedYear)
                                                 @if ($admittedYear == $year)
                                                     <option value="{{ $admittedYear }}" selected>{{ $admittedYear }}
                                                     </option>

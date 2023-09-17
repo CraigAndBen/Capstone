@@ -16,6 +16,10 @@
         @page {
             size: landscape;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 @endsection
 @section('content')
@@ -35,19 +39,68 @@
             </div>
 
         </div>
-        <div class="row justify-content-first">
-            <div class="col">
+        <div style="height: 80px"></div>
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <canvas id="ageDemographicsChart"></canvas>
+            </div>
+            <div class="col-1">
 
             </div>
         </div>
-        <div class="row justify-content-center align-items-center">
-            <div class="col-10">
-                <canvas id="ageDemographicsChart"></canvas>
+
+        <div class="page-break my-5"></div>
+        <div style="height: 100px"></div>
+
+        <div class="row justify-content-center">
+            <div class="col-1">
+
             </div>
-            <div class="col-2">
+            <div class="col-9">
+                <table class="table table table-bordered table-sm text-center">
+                    <thead class="bg-primary text-light text-center">
+                        <tr>
+                            <th>Month</th>
+                            @foreach ($labels as $ageGroup)
+                                <th>{{ $ageGroup }}</th>
+                            @endforeach
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @foreach ($datasets as $data)
+                            <tr>
+                                <td>{{ $data['month'] }}</td>
+                                @php
+                                    $total = array_sum($data['data']);
+                                @endphp
+                                @foreach ($data['data'] as $count)
+                                    <td>{{ $count }}</td>
+                                @endforeach
+                                <td>{{ $total }}</td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <td>Total</td>
+                            @foreach ($labels as $ageGroup)
+                                @php
+                                    $ageGroupTotal = 0;
+                                    foreach ($datasets as $data) {
+                                        $ageGroupTotal += $data['data'][$loop->index];
+                                    }
+                                @endphp
+                                <td>{{ $ageGroupTotal }}</td>
+                            @endforeach
+                            <td>{{ $totalPatientCount }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-1">
+
             </div>
         </div>
-        <div class="row justify-content-end align-items-end my-3">
+        <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
                 <a id="back" href="{{ route('admin.demographics.age') }}" class="btn btn-danger">Back</a>
@@ -91,7 +144,7 @@
                         label: data.month,
                         data: data.data,
                         backgroundColor: colors[index % colors
-                        .length], // Use the predefined colors from the palette
+                            .length], // Use the predefined colors from the palette
                         borderWidth: 1,
                     };
                 })
@@ -101,9 +154,17 @@
                 scales: {
                     x: {
                         stacked: true, // Stack the bars on the x-axis for each month
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
                     },
                     y: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Age Count'
+                        }
                     }
                 }
             }

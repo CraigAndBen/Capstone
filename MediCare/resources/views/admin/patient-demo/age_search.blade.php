@@ -82,6 +82,9 @@
                                 </form>
                             </div>
                             <hr>
+                            <div class="my-5">
+                                <h3>Age Total - <i>{{ $totalPatientCount }}</i></h3>
+                            </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
@@ -92,7 +95,7 @@
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="ageDemographicsChart" width="800" height="400"></canvas>
+                                <canvas id="ageDemographicsChart" width="100%" height="40"</canvas>
                             </div>
                         </div>
                     </div>
@@ -137,7 +140,7 @@
                             label: data.month,
                             data: data.data,
                             backgroundColor: colors[index % colors
-                            .length], // Use the predefined colors from the palette
+                                .length], // Use the predefined colors from the palette
                             borderWidth: 1,
                         };
                     })
@@ -147,9 +150,17 @@
                     scales: {
                         x: {
                             stacked: true, // Stack the bars on the x-axis for each month
+                            title: {
+                            display: true,
+                            text: 'Months'
+                        }
                         },
                         y: {
                             beginAtZero: true,
+                            title: {
+                            display: true,
+                            text: 'Age Count'
+                        }
                         }
                     }
                 }
