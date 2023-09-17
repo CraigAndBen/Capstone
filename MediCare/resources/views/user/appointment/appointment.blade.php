@@ -63,7 +63,7 @@
                                                 <tr>
                                                     <th>First Name</th>
                                                     <th>Last Name</th>
-                                                    <th>specialties</th>
+                                                    <th>Specialties</th>
                                                     <th>Type</th>
                                                     <th>Date</th>
                                                     <th>Time</th>

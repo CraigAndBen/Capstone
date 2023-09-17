@@ -34,15 +34,38 @@ class DoctorController extends Controller
         // Get the current year
         $currentYear = Carbon::now()->year;
 
-        // Retrieve the patients handled by the specific doctor for the current year
+        // // Retrieve the patients handled by the specific doctor for the current year
+        // $admittedPatientsByMonth = DB::table('patients')
+        //     ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+        //     ->where('physician', $profile->id)
+        //     ->whereYear('admitted_date', $currentYear)
+        //     ->groupBy('month')
+        //     ->get();
+
+        // $outpatientsByMonth = DB::table('patients')
+        //     ->select(DB::raw('DATE_FORMAT(date, "%M") as month'), DB::raw('COUNT(*) as count'))
+        //     ->where('physician', $profile->id)
+        //     ->whereYear('date', $currentYear)
+        //     ->groupBy('month')
+        //     ->get();
+
         $patientsByMonth = DB::table('patients')
-            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-            ->where('physician', $profile->id)
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy('month')
-            ->get();
+        ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+        ->where('physician', $profile->id)
+        ->whereYear('admitted_date', $currentYear)
+        ->orWhere(function ($query) use ($profile, $currentYear) {
+            $query->where('physician', $profile->id)
+                  ->whereYear('date', $currentYear);
+        })
+        ->groupBy('month')
+        ->get();
+
+        // $patientsByMonth = $admittedPatientsByMonth->union($outpatientsByMonth);
+
+        // $patientCount = $admittedPatientsByMonth->count() + $outpatientsByMonth->count();
 
         $patientCount = $patientsByMonth->count();
+        
 
         $currentMonth = Carbon::now()->month;
 
@@ -146,7 +169,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'info','currentTime','currentDate'));
+        return view('doctor.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     /**
@@ -409,9 +432,9 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
-        ->orWhere('specialties', $info->specialties)
-        ->orWhereNull('doctor_id')
-        ->orderBy('appointment_date', 'desc')->paginate(10);
+            ->orWhere('specialties', $info->specialties)
+            ->orWhereNull('doctor_id')
+            ->orderBy('appointment_date', 'desc')->paginate(10);
 
         return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -446,7 +469,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
-        ->where('status', 'confirmed')->paginate(10);
+            ->where('status', 'confirmed')->paginate(10);
 
         return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
 
@@ -483,7 +506,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
-        ->where('status', 'done')->paginate(10);
+            ->where('status', 'done')->paginate(10);
 
         return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -580,12 +603,12 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
-        $appointments = Appointment::where('doctor_id',$profile->id)
-        ->orWhereNull('doctor_id')
-        ->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+        $appointments = Appointment::where('doctor_id', $profile->id)
+            ->orWhereNull('doctor_id')
+            ->where(function ($query) use ($searchTerm) {
+                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            })->paginate(10);
 
         return view('doctor.appointment.appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
 
@@ -623,12 +646,12 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
-        $appointments = Appointment::where('account_id',$profile->id)
-        ->where('status','confirmed')
-        ->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+        $appointments = Appointment::where('account_id', $profile->id)
+            ->where('status', 'confirmed')
+            ->where(function ($query) use ($searchTerm) {
+                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            })->paginate(10);
 
         return view('doctor.appointment.confirmed_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -665,12 +688,12 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
-        $appointments = Appointment::where('doctor_id',$profile->id)
-        ->where('status','done')
-        ->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+        $appointments = Appointment::where('doctor_id', $profile->id)
+            ->where('status', 'done')
+            ->where(function ($query) use ($searchTerm) {
+                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            })->paginate(10);
 
         return view('doctor.appointment.done_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -704,8 +727,8 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
-        ->where('type','admitted_patient')
-        ->paginate(10);
+            ->where('type', 'admitted_patient')
+            ->paginate(10);
 
         return view('doctor.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -723,8 +746,8 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
-        ->where('type','outpatient')
-        ->paginate(10);
+            ->where('type', 'outpatient')
+            ->paginate(10);
 
         return view('doctor.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -744,11 +767,11 @@ class DoctorController extends Controller
         $searchTerm = $request->input('search');
 
         $patients = Patient::where('physician', $profile->id)
-        ->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+            ->where(function ($query) use ($searchTerm) {
+                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+            })->paginate(10);
 
         return view('doctor.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -768,14 +791,14 @@ class DoctorController extends Controller
         $searchTerm = $request->input('search');
 
         $patients = Patient::where('physician', $profile->id)
-        ->where('type','admitted_patient')
-        ->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+            ->where('type', 'admitted_patient')
+            ->where(function ($query) use ($searchTerm) {
+                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+            })->paginate(10);
 
-        return view('doctor.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime','currentDate'));
+        return view('doctor.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function outpatientSearch(Request $request)
@@ -793,12 +816,12 @@ class DoctorController extends Controller
         $searchTerm = $request->input('search');
 
         $patients = Patient::where('physician', $profile->id)
-        ->where('type','outpatient')
-        ->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+            ->where('type', 'outpatient')
+            ->where(function ($query) use ($searchTerm) {
+                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
+            })->paginate(10);
 
         return view('doctor.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }

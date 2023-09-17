@@ -30,14 +30,10 @@
                     <div class="auth-form">
                         <div class="card my-3 shadow">
                             <div class="card-body">
-                                <a href="#" class="d-flex justify-content-center mt-3">
-                                    <img src="{{ asset('logo.jpg') }}" alt="" class=""
-                                        style="max-width: 200px; max-height: 130px">
-                                </a>
                                 <div class="row mb-5">
                                     <div class="d-flex justify-content-center">
                                         <div class="auth-header text-center">
-                                            <h2 class="text-primary mt-5"><b>Doctor Appointment Request Form</b></h2>
+                                            <h2 class="text-primary mt-5"><b>Doctor Appointment Request Calendar</b></h2>
                                             <p class="f-16 mt-2">Fill the form below and we will get back soon to you for
                                                 more updates and plan your appointment.</p>
                                         </div>
