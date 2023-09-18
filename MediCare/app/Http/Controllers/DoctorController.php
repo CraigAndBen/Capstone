@@ -691,7 +691,7 @@ class DoctorController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where('physician', $profile->id)->paginate(10);
+        $patients = Patient::where('physician', $profile->id)->paginate(5);
 
         return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -710,7 +710,7 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
             ->where('type', 'admitted_patient')
-            ->paginate(10);
+            ->paginate(5);
 
         return view('doctor.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -729,7 +729,7 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
             ->where('type', 'outpatient')
-            ->paginate(10);
+            ->paginate(5);
 
         return view('doctor.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -753,7 +753,7 @@ class DoctorController extends Controller
                 $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(10);
+            })->paginate(5);
 
         return view('doctor.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -778,7 +778,7 @@ class DoctorController extends Controller
                 $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(10);
+            })->paginate(5);
 
         return view('doctor.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -803,7 +803,7 @@ class DoctorController extends Controller
                 $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(10);
+            })->paginate(5);
 
         return view('doctor.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -839,7 +839,7 @@ class DoctorController extends Controller
 
         $profile = Auth::user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->paginate(10);
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');

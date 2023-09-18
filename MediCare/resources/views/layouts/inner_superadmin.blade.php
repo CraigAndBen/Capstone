@@ -163,7 +163,6 @@
                             <div class="dropdown-header">
                                 <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
                                 </h4>
-                                <p class="text-muted">{{ $profile->role }}</p>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('superadmin.profile') }}" class="dropdown-item">

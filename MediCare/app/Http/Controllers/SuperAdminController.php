@@ -1125,7 +1125,7 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::orderBy('admitted_date', 'desc')->orderBy('date', 'desc')->paginate(10);
+        $patients = Patient::orderBy('admitted_date', 'desc')->orderBy('date', 'desc')->paginate(5);
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -1153,7 +1153,7 @@ class SuperAdminController extends Controller
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+        })->paginate(5);
 
         return view('superadmin.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
@@ -1360,7 +1360,7 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::where('type', 'outpatient')->orderBy('created_at', 'desc')->paginate(10);
+        $patients = Patient::where('type', 'outpatient')->orderBy('created_at', 'desc')->paginate(5);
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -1386,7 +1386,7 @@ class SuperAdminController extends Controller
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+        })->paginate(5);
 
         return view('superadmin.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
@@ -1402,7 +1402,7 @@ class SuperAdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at', 'desc')->paginate(10);
+        $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at', 'desc')->paginate(5);
 
         return view('superadmin.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
@@ -1423,7 +1423,7 @@ class SuperAdminController extends Controller
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+        })->paginate(5);
 
         return view('superadmin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
@@ -2491,6 +2491,15 @@ class SuperAdminController extends Controller
             ->orderByDesc('total_occurrences')
             ->get();
 
+        $diagnosesWithOccurrences = Patient::select('diagnosis')
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('diagnosis')
+            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
+            ->take(5) // Limit the result to the top 5 diagnoses
+            ->get();
+
+        $diagnosisCount = $diagnosesWithOccurrences->count();
         $limitDiagnosis = $rankedDiagnosis->take(5);
 
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
@@ -2517,7 +2526,7 @@ class SuperAdminController extends Controller
             ->pluck('diagnosis')
             ->toArray();
 
-        return view('superadmin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'countUniqueYears', 'rankedDiagnosis', 'currentTime', 'currentDate'));
+        return view('superadmin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'countUniqueYears', 'rankedDiagnosis', 'currentTime', 'currentDate', 'diagnosesWithOccurrences'));
     }
 
     public function diagnoseTrendSearch(Request $request)
@@ -2542,6 +2551,16 @@ class SuperAdminController extends Controller
             ->groupBy('diagnosis', 'month')
             ->orderByDesc('total_occurrences')
             ->get();
+
+        $diagnosesWithOccurrences = Patient::select('diagnosis')
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('diagnosis')
+            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
+            ->take(5) // Limit the result to the top 5 diagnoses
+            ->get();
+
+        $diagnosisCount = $diagnosesWithOccurrences->count();
 
         $limitDiagnosis = $rankedDiagnosis->take(5);
 
@@ -2643,7 +2662,7 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis', 'currentTime', 'currentDate'));
+        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis', 'currentTime', 'currentDate', 'diagnosesWithOccurrences'));
     }
 
     public function diagnoseTrendReport(Request $request)

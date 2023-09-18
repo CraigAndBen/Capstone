@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <ul class="list-group list-group-flush mt-3">
-                                        @foreach ($rankedDiagnosis as $diagnosis)
+                                        @foreach ($diagnosesWithOccurrences as $diagnosis)
         
                                         <li class="list-group-item px-0">
                                             <div class="row align-items-start">
@@ -67,7 +67,7 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('superadmin.trend.diagnose.search') }}" method="POST">
+                                    <form action="{{ route('superadmin.trend.diagnose.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option>Select Diagnose</option>
