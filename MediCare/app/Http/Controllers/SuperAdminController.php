@@ -46,23 +46,34 @@ class SuperAdminController extends Controller
         $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
             ->selectRaw('COUNT(*) as total_occurrences')
             ->whereYear('admitted_date', $currentYear)
+            ->groupBy(DB::raw('LOWER(diagnosis)'), 'month')
             ->groupBy('diagnosis', 'month')
             ->orderByDesc('total_occurrences')
             ->get();
 
-        $diagnosisCount = $rankedDiagnosis->count();
+        $diagnosesWithOccurrences = Patient::select('diagnosis')
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('diagnosis')
+            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
+            ->take(3) // Limit the result to the top 5 diagnoses
+            ->get();
+
+        $diagnosisCount = $diagnosesWithOccurrences->count();
+
         $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
 
-        $data = Patient::whereYear('admitted_date', $currentYear)
-            ->selectRaw('MONTH(admitted_date) as month, COUNT(*) as count')
+        $patientsByMonth = DB::table('patients')
+            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('admitted_date', $currentYear)
             ->groupBy('month')
             ->get();
 
-        // Prepare data for the chart
-        $labels = $data->map(function ($item) {
-            return Carbon::createFromDate(null, $item->month, null)->format('F'); // Format as full month name
-        });
-        $values = $data->pluck('count');
+        $patientsByYear = DB::table('patients')
+            ->whereYear('admitted_date', $currentYear)
+            ->get();
+
+        $patientCount = $patientsByYear->count();
 
         $monthlyAppointments = Appointment::select(
             DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
@@ -74,7 +85,11 @@ class SuperAdminController extends Controller
             ->orderBy('month')
             ->get();
 
-        $appointmentCount = $monthlyAppointments->count();
+        $appointmentByYear = DB::table('appointments')
+            ->whereYear('appointment_date', $currentYear)
+            ->get();
+
+        $appointmentCount = $appointmentByYear->count();
         $appointmentLabels = $monthlyAppointments->pluck('month');
         $appointmentData = $monthlyAppointments->pluck('count');
 
@@ -96,7 +111,7 @@ class SuperAdminController extends Controller
             }
         }
 
-        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'rankedDiagnosis', 'rank1Diagnosis', 'diagnosisCount', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount'));
+        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'patientsByMonth', 'patientCount', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'rank1Diagnosis', 'diagnosisCount', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount'));
     }
 
     public function profile(Request $request): View
@@ -234,10 +249,14 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $users = User::where('role', 'doctor')->get();
         $doctors = Doctor::all();
 
-        return view('superadmin.account.doctor', compact('users', 'profile', 'doctors', 'limitNotifications', 'count'));
+        return view('superadmin.account.doctor', compact('users', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function createDoctor(Request $request)
@@ -564,10 +583,14 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $users = User::where('role', 'nurse')->get();
         $nurses = Nurse::all();
 
-        return view('superadmin.account.nurse', compact('users', 'profile', 'nurses', 'limitNotifications', 'count'));
+        return view('superadmin.account.nurse', compact('users', 'profile', 'nurses', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function createNurse(Request $request)
@@ -766,10 +789,14 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $users = User::where('role', 'user')->get();
         $users_info = User_info::all();
 
-        return view('superadmin.account.user', compact('users', 'profile', 'users_info', 'limitNotifications', 'count'));
+        return view('superadmin.account.user', compact('users', 'profile', 'users_info', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function createUser(Request $request)
@@ -934,10 +961,14 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
         $users = User::where('role', 'admin')->get();
         $admins = Admin::all();
 
-        return view('superadmin.account.admin', compact('users', 'profile', 'admins', 'limitNotifications', 'count'));
+        return view('superadmin.account.admin', compact('users', 'profile', 'admins', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function createAdmin(Request $request)

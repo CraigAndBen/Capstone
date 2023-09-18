@@ -62,7 +62,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -160,7 +160,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Hi, Good Day! <span class="small text-muted">{{ ucwords($profile->first_name) }}</span>
+                                <h4>Hi, Good Day! <span
+                                        class="small text-muted">{{ ucwords($profile->first_name) }}</span>
                                 </h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
@@ -203,8 +204,8 @@
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('admin.dashboard') }}" class="pc-link"><span
-                                class="pc-micon"></span><span class="pc-mtext">Home</span></a>
+                        <a href="{{ route('admin.dashboard') }}" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
@@ -224,11 +225,11 @@
                         <label>Notification</label>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Notification List</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Notification
+                                List</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.notification')}}">Notification List</a></li>
+                                    href="{{ route('admin.notification') }}">Notification List</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -263,9 +264,9 @@
                                     Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.demographics.admitted') }}">Admitted Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" <li class="pc-item"><a class="pc-link"
+                                        href="{{ route('admin.demographics.outpatient') }}">Outpatient
+                                        Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
                         </ul>
@@ -304,11 +305,11 @@
                             @if ($patientCount)
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
-                                        <small>Total Patient This Year</small>
+                                        <small>Total Admitted Patient This Year</small>
                                         <h3>{{ $patientCount }}</h3>
                                     </div>
                                 </div>
-                                <canvas id="admittedPatientsChart" width="100%" height="85"></canvas>
+                                <canvas id="patientChart" width="100%" height="85"></canvas>
                             @else
                                 <div class="text-center">
                                     <h3>No Patient Yet.</h3>
@@ -331,7 +332,7 @@
                                 <canvas id="diagnosisChart"></canvas>
 
                                 <ul class="list-group list-group-flush mt-3">
-                                    @foreach ($limitDiagnosis as $diagnosis)
+                                    @foreach ($diagnosesWithOccurrences as $diagnosis)
                                         <li class="list-group-item px-0">
                                             <div class="row align-items-start">
                                                 <div class="col">
@@ -347,7 +348,8 @@
                                     @endforeach
                                 </ul>
                                 <div class="text-center my-3">
-                                    <a href="{{route('admin.demographics.diagnose')}}" class="btn btn-primary">View all</a>
+                                    <a href="{{ route('admin.demographics.diagnose') }}" class="btn btn-primary">View
+                                        all</a>
                                 </div>
                             @else
                                 <div class="text-center my-3">
@@ -396,42 +398,46 @@
 </body>
 <!-- [Body] end -->
 <script>
-    var labels = {!! json_encode($labels) !!};
-    var values = {!! json_encode($values) !!};
+    // PHP array to JavaScript variables
+    const patientMonths = @json($patientsByMonth->pluck('month'));
+    const patientCounts = @json($patientsByMonth->pluck('count'));
 
-    var ctx = document.getElementById('admittedPatientsChart').getContext('2d');
-    var chart = new Chart(ctx, {
+    // Create an array for all months
+    const allMonths = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // Initialize an array to store counts for each month
+    const monthCounts = Array.from({
+        length: 12
+    }, () => 0);
+
+    // Fill in the counts for the corresponding months
+    for (let i = 0; i < patientMonths.length; i++) {
+        const monthIndex = allMonths.indexOf(patientMonths[i]);
+        if (monthIndex !== -1) {
+            monthCounts[monthIndex] = patientCounts[i];
+        }
+    }
+
+    var ctx = document.getElementById('patientChart').getContext('2d');
+    var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: allMonths,
             datasets: [{
-                label: 'Patients',
-                data: values,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                label: 'Admitted Patient',
+                data: monthCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)' // Change grid lines color
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false // Hide x-axis grid lines
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: 'rgba(0, 0, 0, 0.8)' // Change legend text color
-                    }
+                    beginAtZero: true
                 }
             }
         }
@@ -441,7 +447,7 @@
     var data = [];
     @for ($month = 1; $month <= 12; $month++)
         @php
-            $monthData = $limitDiagnosis->firstWhere('month', $month);
+            $monthData = $rankedDiagnosis->firstWhere('month', $month);
         @endphp
         labels.push('{{ \Carbon\Carbon::createFromDate(null, $month, 1)->format('F') }}');
         data.push({{ $monthData ? $monthData->total_occurrences : 0 }});

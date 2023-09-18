@@ -34,38 +34,19 @@ class DoctorController extends Controller
         // Get the current year
         $currentYear = Carbon::now()->year;
 
-        // // Retrieve the patients handled by the specific doctor for the current year
-        // $admittedPatientsByMonth = DB::table('patients')
-        //     ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-        //     ->where('physician', $profile->id)
-        //     ->whereYear('admitted_date', $currentYear)
-        //     ->groupBy('month')
-        //     ->get();
-
-        // $outpatientsByMonth = DB::table('patients')
-        //     ->select(DB::raw('DATE_FORMAT(date, "%M") as month'), DB::raw('COUNT(*) as count'))
-        //     ->where('physician', $profile->id)
-        //     ->whereYear('date', $currentYear)
-        //     ->groupBy('month')
-        //     ->get();
-
         $patientsByMonth = DB::table('patients')
-        ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-        ->where('physician', $profile->id)
-        ->whereYear('admitted_date', $currentYear)
-        ->orWhere(function ($query) use ($profile, $currentYear) {
-            $query->where('physician', $profile->id)
-                  ->whereYear('date', $currentYear);
-        })
-        ->groupBy('month')
-        ->get();
+            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+            ->where('physician', $profile->id)
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('month')
+            ->get();
 
-        // $patientsByMonth = $admittedPatientsByMonth->union($outpatientsByMonth);
+        $patientsByYear = DB::table('patients')
+            ->where('physician', $profile->id)
+            ->whereYear('admitted_date', $currentYear)
+            ->get();
 
-        // $patientCount = $admittedPatientsByMonth->count() + $outpatientsByMonth->count();
-
-        $patientCount = $patientsByMonth->count();
-        
+        $patientCount = $patientsByYear->count();
 
         $currentMonth = Carbon::now()->month;
 
@@ -73,6 +54,7 @@ class DoctorController extends Controller
         $currentMonthAppointments = DB::table('appointments')
             ->where('specialties', $info->specialties)
             ->whereMonth('appointment_date', $currentMonth)
+            ->orderBy('appointment_date', 'desc')
             ->get();
 
         $appointmentCount = $currentMonthAppointments->count();

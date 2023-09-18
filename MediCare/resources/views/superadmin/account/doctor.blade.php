@@ -246,7 +246,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select a Gender</option>
+                                                    <option value="">Select a Gender</option>
                                                     <option value="female">Female</option>
                                                     <option value="male">Male</option>
                                                     <option value="other">Other</option>

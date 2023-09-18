@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Gender Demographics</h1>
+                            <h1>Age Demographics</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -83,10 +83,10 @@
                                 </form>
                             </div>
                             <hr>
-                            <div class="p-5">
+                            <div>
                                 <h3>Age Total - <i>{{$totalPatientCount}}</i></h3>
                             </div>
-                            <div class="row m-5">
+                            <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
                                 <div class="col-md-2 text-right mb-5"> <!-- Adjust the column width as needed -->
@@ -96,7 +96,7 @@
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="ageDemographicsChart" width="100%" height="40"></canvas>
+                                <canvas id="ageDemographicsChart" width="100%" height="35"></canvas>
                             </div>
                         </div>
                     </div>

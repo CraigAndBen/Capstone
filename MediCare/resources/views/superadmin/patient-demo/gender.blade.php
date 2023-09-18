@@ -83,20 +83,20 @@
                                 </form>
                             </div>
                             <hr>
-                            <div class="my-5">
+                            <div class="">
                                 <h3>Gender Total - <i>{{$totalGenderCounts}}</i></h3>
                             </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
-                                <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
+                                <div class="col-md-2 text-right"> <!-- Adjust the column width as needed -->
                                     <form action="{{ route('superadmin.gender.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="genderDemographicsChart" width="100%" height="40"></canvas>
+                                <canvas id="genderDemographicsChart" width="100%" height="35"></canvas>
                             </div>
                         </div>
                     </div>

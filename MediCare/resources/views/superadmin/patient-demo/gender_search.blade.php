@@ -83,7 +83,7 @@
                                 </form>
                             </div>
                             <hr>
-                            <div class="my-5">
+                            <div>
                                 <h3>Gender Total - <i>{{$totalGenderCounts}}</i></h3>
                             </div>
                             <div class="row">
@@ -96,7 +96,7 @@
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
-                                <canvas id="genderDemographicsChart" width="100%" height="40"></canvas>
+                                <canvas id="genderDemographicsChart" width="100%" height="35"></canvas>
                             </div>
                         </div>
                     </div>

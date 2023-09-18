@@ -65,7 +65,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -230,9 +230,12 @@
                                 class="pc-mtext">Patient List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">All Patient</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.admitted') }}">Admitted Patient</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.outpatient') }}">OutPatient List</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.patient') }}">All
+                                    Patient</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('doctor.admitted') }}">Admitted
+                                    Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('doctor.outpatient') }}">OutPatient List</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -256,24 +259,43 @@
                             <div class="card-body">
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
-                                        <small>Total Patient This Year</small>
+                                        <small>Total Admitted Patient This Year</small>
                                         <h3>{{ $patientCount }}</h3>
                                     </div>
                                 </div>
-                                <canvas id="patientChart" width="100%" height="95"></canvas>
+                                <canvas id="patientChart" width="100%" height="87"></canvas>
                                 <script>
-                                    //Convert the PHP array to JavaScript variables
+                                    // PHP array to JavaScript variables
                                     const patientMonths = @json($patientsByMonth->pluck('month'));
                                     const patientCounts = @json($patientsByMonth->pluck('count'));
+
+                                    // Create an array for all months
+                                    const allMonths = [
+                                        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                        'August', 'September', 'October', 'November', 'December'
+                                    ];
+
+                                    // Initialize an array to store counts for each month
+                                    const monthCounts = Array.from({
+                                        length: 12
+                                    }, () => 0);
+
+                                    // Fill in the counts for the corresponding months
+                                    for (let i = 0; i < patientMonths.length; i++) {
+                                        const monthIndex = allMonths.indexOf(patientMonths[i]);
+                                        if (monthIndex !== -1) {
+                                            monthCounts[monthIndex] = patientCounts[i];
+                                        }
+                                    }
 
                                     var ctx = document.getElementById('patientChart').getContext('2d');
                                     var myChart = new Chart(ctx, {
                                         type: 'bar',
                                         data: {
-                                            labels: patientMonths,
+                                            labels: allMonths,
                                             datasets: [{
-                                                label: 'Patient',
-                                                data: patientCounts,
+                                                label: 'Admitted Patient',
+                                                data: monthCounts,
                                                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                                 borderColor: 'rgba(54, 162, 235, 1)',
                                                 borderWidth: 1
@@ -326,6 +348,7 @@
                                                 <th>Name</th>
                                                 <th>Type</th>
                                                 <th>Date</th>
+                                                <th>Time</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
@@ -336,6 +359,7 @@
                                                         {{ ucwords($appointment->last_name) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_type) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                    <td>{{ ucwords($appointment->appointment_time) }}</td>
                                                     <td>{{ ucwords($appointment->status) }}</td>
                                                 </tr>
                                             @endforeach

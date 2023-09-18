@@ -34,11 +34,18 @@ class AdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where(function ($query) use ($currentYear) {
-            $query->whereYear('admitted_date', $currentYear)
-                ->orWhereYear('date', $currentYear);
-        })->get();
-        $patientCount = $patients->count();
+
+        $patientsByMonth = DB::table('patients')
+            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('month')
+            ->get();
+
+        $patientsByYear = DB::table('patients')
+            ->whereYear('admitted_date', $currentYear)
+            ->get();
+
+        $patientCount = $patientsByYear->count();
 
         $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
             ->selectRaw('COUNT(*) as total_occurrences')
@@ -48,24 +55,23 @@ class AdminController extends Controller
             ->orderByDesc('total_occurrences')
             ->get();
 
-        $diagnosisCount = $rankedDiagnosis->count();
-        $limitDiagnosis = $rankedDiagnosis->take(5);
+
+        $diagnosesWithOccurrences = Patient::select('diagnosis')
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('diagnosis')
+            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
+            ->take(5) // Limit the result to the top 5 diagnoses
+            ->get();
+
+        $diagnosisCount = $diagnosesWithOccurrences->count();
+        
+        // $limitDiagnosis = $rankedDiagnosis->take(5);
 
         // Retrieve the rank 1 diagnosis for the current year
         $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
 
-        $data = Patient::whereYear('admitted_date', $currentYear)
-            ->selectRaw('MONTH(admitted_date) as month, COUNT(*) as count')
-            ->groupBy('month')
-            ->get();
-
-        // Prepare data for the chart
-        $labels = $data->map(function ($item) {
-            return Carbon::createFromDate(null, $item->month, null)->format('F');
-        });
-        $values = $data->pluck('count');
-
-        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'labels', 'values', 'patientCount', 'limitDiagnosis', 'rank1Diagnosis', 'currentTime', 'currentDate', 'diagnosisCount'));
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'patientsByMonth', 'patientCount', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'rank1Diagnosis', 'currentTime', 'currentDate', 'diagnosisCount'));
     }
 
     public function profile(Request $request): View
@@ -195,7 +201,7 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::orderBy('admitted_date', 'desc')->orderBy('date', 'desc')->paginate(10);
+        $patients = Patient::orderBy('admitted_date', 'desc')->orderBy('date', 'desc')->paginate(5);
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -544,7 +550,7 @@ class AdminController extends Controller
     {
 
         $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');

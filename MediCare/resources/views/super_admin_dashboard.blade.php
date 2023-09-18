@@ -299,11 +299,14 @@
                                     href="{{ route('superadmin.demographics.age') }}">Age
                                     Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.admitted') }}">Admitted Demographics</a></li>
-                                    <li class="pc-item"><a class="pc-link"
-                                        href="{{ route('superadmin.demographics.outpatient') }}">Outpatient Demographics</a></li>
+                                    href="{{ route('superadmin.demographics.admitted') }}">Admitted Demographics</a>
+                            </li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.appointment') }}">Appointment Demographics</a></li>
+                                    href="{{ route('superadmin.demographics.outpatient') }}">Outpatient
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.demographics.appointment') }}">Appointment
+                                    Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a>
                             </li>
@@ -337,7 +340,7 @@
             <div class="row mt-2">
                 <!-- [ sample-page ] start -->
 
-                <div class="col-xl-6 col-md-12 mt-4">
+                <div class="col-xl-6 col-md-12 mt-2">
                     <div class="card">
                         <div class="card-body">
                             @if ($patientCount)
@@ -347,7 +350,7 @@
                                         <h3>{{ $patientCount }}</h3>
                                     </div>
                                 </div>
-                                <canvas id="admittedPatientsChart" width="100%" height="70"></canvas>
+                                <canvas id="patientChart" width="100%" height="40"></canvas>
                             @else
                                 <div class="text-center">
                                     <h3>No Patient Yet.</h3>
@@ -357,7 +360,7 @@
                     </div>
                 </div>
 
-                <div class="col-xl-6 col-md-12 mt-4">
+                <div class="col-xl-6 col-md-12 mt-2">
                     <div class="card">
                         <div class="card-body">
                             @if ($diagnosisCount)
@@ -368,18 +371,24 @@
                                     <div class="col-auto"> </div>
                                 </div>
 
-                                <canvas id="diagnosisChart" width="100%" height="50"></canvas>
+                                <canvas id="diagnosisChart" width="100%" height="23"></canvas>
                                 <ul class="list-group list-group-flush mt-3">
-                                    @foreach ($rankedDiagnosis as $diagnosis)
+                                    @foreach ($diagnosesWithOccurrences as $diagnosis)
                                         <li class="list-group-item px-0">
-                                            <div class="row align-items-start">
+                                            <div class="row align-items-center">
+                                                <!-- Use align-items-center for vertical alignment -->
                                                 <div class="col">
-                                                    <h5 class="mb-0">{{ $diagnosis->diagnosis }}</h5>
+                                                    <h6 class="mb-0"> <!-- Use h6 for smaller text -->
+                                                        {{ $diagnosis->diagnosis }}
+                                                    </h6>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
-                                                            class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                                class="ti ti-chevron-up text-success"></i></span></h5>
+                                                    <h6 class="mb-0"> <!-- Use h6 for smaller text -->
+                                                        {{ $diagnosis->total_occurrences }}
+                                                        <span class="ms-1 avtar avtar-xxs bg-light-success">
+                                                            <i class="ti ti-chevron-up text-success"></i>
+                                                        </span>
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </li>
@@ -403,7 +412,7 @@
             <div class="row mt-2">
                 <!-- [ sample-page ] start -->
 
-                <div class="col-xl-6 col-md-12 mt-2">
+                <div class="col-xl-6 col-md-12">
                     <div class="card">
                         <div class="card-body">
                             @if ($appointmentCount)
@@ -413,7 +422,7 @@
                                         <h3>{{ $appointmentCount }}</h3>
                                     </div>
                                 </div>
-                                <canvas id="appointmentChart" width="100%" height="100"></canvas>
+                                <canvas id="appointmentChart" width="100%" height="42"></canvas>
                             @else
                                 <div class="text-center">
                                     <h3>No Appointment Yet.</h3>
@@ -423,7 +432,7 @@
                     </div>
                 </div>
 
-                <div class="col-xl-6 col-md-12 mt-2">
+                <div class="col-xl-6 col-md-12">
                     <div class="card">
                         <div class="card-body">
                             @if ($appointmentCount)
@@ -433,7 +442,11 @@
                                         <h3>{{ $rolesCount }}</h3>
                                     </div>
                                 </div>
-                                <canvas id="userRolesChart" width="400" height="60"></canvas>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mx-auto"">
+                                        <canvas id="userRolesChart"></canvas>
+                                    </div>
+                                </div>
                             @else
                                 <div class="text-center">
                                     <h3>No Users Yet.</h3>
@@ -481,42 +494,46 @@
 </body>
 <!-- [Body] end -->
 <script>
-    var labels = {!! json_encode($labels) !!};
-    var values = {!! json_encode($values) !!};
+    // PHP array to JavaScript variables
+    const patientMonths = @json($patientsByMonth->pluck('month'));
+    const patientCounts = @json($patientsByMonth->pluck('count'));
 
-    var ctx = document.getElementById('admittedPatientsChart').getContext('2d');
-    var chart = new Chart(ctx, {
+    // Create an array for all months
+    const allMonths = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // Initialize an array to store counts for each month
+    const monthCounts = Array.from({
+        length: 12
+    }, () => 0);
+
+    // Fill in the counts for the corresponding months
+    for (let i = 0; i < patientMonths.length; i++) {
+        const monthIndex = allMonths.indexOf(patientMonths[i]);
+        if (monthIndex !== -1) {
+            monthCounts[monthIndex] = patientCounts[i];
+        }
+    }
+
+    var ctx = document.getElementById('patientChart').getContext('2d');
+    var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: allMonths,
             datasets: [{
-                label: 'Admitted Patients',
-                data: values,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                label: 'Admitted Patient',
+                data: monthCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)' // Change grid lines color
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false // Hide x-axis grid lines
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: 'rgba(0, 0, 0, 0.8)' // Change legend text color
-                    }
+                    beginAtZero: true
                 }
             }
         }
@@ -561,22 +578,26 @@
     var labels = @json($appointmentLabels);
     var data = @json($appointmentData);
 
-    // Format the labels to display only the month names
-    labels = labels.map(function(dateString) {
-        var date = new Date(dateString);
-        var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-            'October', 'November', 'December'
-        ];
-        return monthNames[date.getMonth()];
-    });
+
+    // Initialize an array to hold the data for all months, initially filled with zeros
+    var allMonthsData = Array.from({
+        length: 12
+    }, () => 0);
+
+    // Fill in the data for the corresponding months
+    for (var i = 0; i < labels.length; i++) {
+        var date = new Date(labels[i]);
+        var monthIndex = date.getMonth();
+        allMonthsData[monthIndex] = data[i];
+    }
 
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels,
+            labels: allMonths, // Use allMonths as labels
             datasets: [{
                 label: 'Appointment Count',
-                data: data,
+                data: allMonthsData, // Use allMonthsData as data
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             }]
@@ -584,11 +605,10 @@
         options: {
             scales: {
                 x: {
-                    type: 'category', // Use 'category' for category labels
-                    labels: labels, // Provide the labels
+                    type: 'category',
                     beginAtZero: true,
-                    min: labels[0], // Specify the minimum label
-                    max: labels[labels.length - 1], // Specify the maximum label
+                    min: 'January', // Specify the minimum label
+                    max: 'December', // Specify the maximum label
                 },
                 y: {
                     beginAtZero: true
@@ -618,6 +638,7 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false // Allow the chart to resize based on the container
         }
     });
 </script>
