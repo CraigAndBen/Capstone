@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Doctor;
@@ -657,6 +658,95 @@ class DoctorController extends Controller
             })->paginate(10);
 
         return view('doctor.appointment.done_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
+    }
+
+    public function appointmentCalendar(){
+        $profile = auth()->user();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = Doctor::all();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $amTime = [
+            '8:30',
+            '9:00',
+            '9:30',
+            '10:30',
+            '11:00',
+            '11:30',
+        ];
+
+        $pmTime = [
+            '1:30',
+            '2:00',
+            '2:30',
+            '3:00',
+            '3:30',
+            '4:00',
+        ];
+
+        
+        return view('doctor.appointment.appointment_calendar', compact('profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
+    }
+
+    public function appointmentEvents(){
+
+        $user = Auth::user();
+        $info = Doctor::where('account_id', $user->id)->first();
+        $appointments = Appointment::where('specialties', $info->specialties)
+        ->where('doctor_id', $user->id)
+        ->orWhereNull('doctor_id')
+        ->get(); // Replace with your own query to fetch the event data
+        
+        $events = [];
+        foreach ($appointments as $appointment) {
+
+            $appointmentDateTime = DateTime::createFromFormat('Y-m-d h:i A', $appointment->appointment_date . ' ' . $appointment->appointment_time);
+    
+            // Calculate the end time by adding a fixed duration (e.g., 1 hour)
+            $endDateTime = clone $appointmentDateTime;
+            $endDateTime->modify('+1 hour'); // Add exactly 1 hour
+            
+            $events[] = [
+                'id' => ucwords($appointment->id),      // Format the end date and time
+                'title' => ucwords($appointment->appointment_type), // Replace with the field containing the event title
+                'start' => $appointmentDateTime->format('Y-m-d H:i:s'),  // Format the start date and time
+                'end' => $endDateTime->format('Y-m-d H:i:s'),      // Format the end date and time
+                'status' => ucwords($appointment->status),      // Format the end date and time
+            ];
+        }
+
+        return response()->json($events);
+    }
+
+    public function calendarConfirmedAppointment(Request $request)
+    {
+        $profile = auth()->user();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+        $appointment = Appointment::findOrFail($request->input('appointment_id'));
+        dd($appointment);
+        $appointment->status = 'confirmed';
+        $appointment->doctor_id = $doctor->account_id;
+        $appointment->save();
+
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
+        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is confirmed.';
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'appointment confirmation',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+        ]);
+
+        return redirect()->route('doctor.appointment.calendar')->with('success', 'Appointment Confirmed successfully.');
     }
     public function patientList()
     {

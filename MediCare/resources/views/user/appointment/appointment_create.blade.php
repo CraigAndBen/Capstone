@@ -69,7 +69,7 @@
                                 </div>
 
 
-                                <div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                                <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false"
                                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                                         <div class="modal-content">
@@ -251,69 +251,35 @@
                                                     data-bs-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="modal fade" id="eventModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="eventModalLabel">
-                                    <div class="modal-dialog" role="document">
+                                <div class="modal fade" id="infoModal" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="eventModalLabel">Create Event</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor Appointment
+                                                </h3>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="" method="POST">
-                                                    @csrf
-                                                    <div class="form-group">
-                                                        <label for="eventDate">Event Date:</label>
-                                                        <input type="text" class="form-control" id="eventDate"
-                                                            name="event_date" readonly>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="eventName">Event Name:</label>
-                                                        <input type="text" class="form-control" id="eventName"
-                                                            name="event_name">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="eventDescription">Event Description:</label>
-                                                        <textarea class="form-control" id="eventDescription" name="event_description"></textarea>
-                                                    </div>
-                                                    <button type="button" class="btn btn-danger"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Create Event</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="eventDetailsModalLabel">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="eventDetailsModalLabel">Event Details</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <h4 id="eventName"></h4>
-                                                <button type="button" class="btn btn-danger"
-                                                data-bs-dismiss="modal">Close</button>
-                                                <p><strong>Event Date:</strong> <span id="eventStartDate"></span></p>
-                                                <p><strong>Event Description:</strong> <span id="eventDescription"></span>
+                                                <h4 id="eventName" class="pb-3"></h4>
+                                                <p><strong>Appointment Start:</strong> <span id="eventStartDate"></span></p>
+                                                <p><strong>Appointment End:</strong> <span id="eventEndDate"></span>
+                                                <p><strong>Appointment Status:</strong> <span id="status"></span>
                                                 </p>
                                             </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -329,47 +295,11 @@
 
 @section('scripts')
     <script>
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var calendarEl = document.getElementById('calendar');
-        //     var calendar = new FullCalendar.Calendar(calendarEl, {
-        //         initialView: 'dayGridMonth',
-        //         events: '/user/appointment/event',
-        //         dateClick: function(info) {
-        //             var clickedDate = moment(info
-        //                 .date); // Convert to moment object for easier comparison
-
-        //             // Check if the clicked date is a Saturday or Sunday
-        //             if (clickedDate.day() === 0 || clickedDate.day() === 6) {
-        //                 return; // Do nothing if it's a Saturday or Sunday
-        //             }
-
-        //             // Check if the clicked date is before the current date
-        //             if (clickedDate.isSameOrBefore(moment(), 'day')) {
-        //                 return; // Do nothing if it's a past date
-        //             }
-        //             $('#appointment_date').val(info.dateStr); // Set clicked date to hidden input
-        //             $('#appointment_date').text(info.dateStr); // Update clicked date in modal
-        //             $('#myModal').modal('show'); // Open Bootstrap modal
-        //         }
-        //     });
-        //     calendar.render();
-        // });
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: [{
-                        title: 'Meeting with Client',
-                        start: '2023-09-28T12:30:00',
-                        end: '2023-09-28T13:30:00',
-                    },
-                    {
-                        title: 'Team Lunch',
-                        start: '2023-09-28T12:30:00',
-                        end: '2023-09-28T13:30:00',
-                    },
-                    // Add more sample events here
-                ],
+                events: '/user/appointment/event',
                 dateClick: function(info) {
                     var clickedDate = moment(info.date);
 
@@ -399,13 +329,13 @@
 
             function openEventModal(date) {
                 // Example: Open a modal for event creation and set the date
-                $('#eventModal').modal('show');
-                $('#eventDate').val(date);
+                $('#createModal').modal('show');
+                $('#appointment_date').val(date);
             }
 
             function displayEventDetails(event) {
                 // Example: Display event details in a modal
-                $('#eventDetailsModal').modal('show');
+                $('#infoModal').modal('show');
                 displayEventInfo(event);
             }
 
@@ -414,6 +344,7 @@
                 $('#eventName').text(event.title);
                 $('#eventStartDate').text(moment(event.start).format('LLLL'));
                 $('#eventEndDate').text(moment(event.end).format('LLLL'));
+                $('#status').text(event.extendedProps.status);
             }
         });
     </script>

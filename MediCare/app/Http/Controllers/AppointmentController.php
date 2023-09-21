@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
+use DateInterval;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Doctor;
@@ -53,13 +55,22 @@ class AppointmentController extends Controller
     public function appointmentEvents(){
 
         $user = Auth::user();
-        $appointments = Appointment::where('account_id', $user->id)->where('status','confirmed')->get(); // Replace with your own query to fetch the event data
+        $appointments = Appointment::where('account_id', $user->id)->get(); // Replace with your own query to fetch the event data
 
         $events = [];
         foreach ($appointments as $appointment) {
+
+            $appointmentDateTime = DateTime::createFromFormat('Y-m-d h:i A', $appointment->appointment_date . ' ' . $appointment->appointment_time);
+    
+            // Calculate the end time by adding a fixed duration (e.g., 1 hour)
+            $endDateTime = clone $appointmentDateTime;
+            $endDateTime->modify('+1 hour'); // Add exactly 1 hour
+            
             $events[] = [
                 'title' => ucwords($appointment->appointment_type), // Replace with the field containing the event title
-                'start' => $appointment->appointment_date,  // Replace with the field containing the event date
+                'start' => $appointmentDateTime->format('Y-m-d H:i:s'),  // Format the start date and time
+                'end' => $endDateTime->format('Y-m-d H:i:s'),      // Format the end date and time
+                'status' => ucwords($appointment->status),      // Format the end date and time
             ];
         }
 
@@ -83,6 +94,8 @@ class AppointmentController extends Controller
             '3:30 PM',
             '4:00 PM',
         ];
+
+        dd($request);
 
         $request->validate([
             'first_name' => 'required|string|max:255',
