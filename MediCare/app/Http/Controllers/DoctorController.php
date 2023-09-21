@@ -76,28 +76,7 @@ class DoctorController extends Controller
             $appointmentCounts[] = $monthlyAppointments->where('month', $month)->pluck('count')->first() ?? 0;
         }
 
-        foreach ($appointments as $appointment) {
 
-            if (strtotime($appointment->appointment_date) < strtotime($currentDate)) {
-
-                $appoint = Appointment::findOrFail($appointment->id);
-
-                $appoint->status = 'unavailable';
-                $appoint->save();
-
-                $currentTime = Carbon::now()->toTimeString();
-                $currentDate = Carbon::now()->toDateString();
-                $message = ' Your appointment that has a type of ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable.';
-
-                Notification::create([
-                    'account_id' => $appointment->account_id,
-                    'title' => 'Appointment Unavailable',
-                    'message' => $message,
-                    'date' => $currentDate,
-                    'time' => $currentTime,
-                ]);
-            }
-        }
 
         return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth', 'patientCount', 'limitCurrentMonthAppointments', 'months', 'appointmentCounts', 'appointmentCount', 'currentDate', 'currentTime'));
     }
