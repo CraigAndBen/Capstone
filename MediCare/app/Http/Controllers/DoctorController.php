@@ -694,15 +694,15 @@ class DoctorController extends Controller
         return view('doctor.appointment.appointment_calendar', compact('profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
-    public function appointmentEvents(){
-
+    public function appointmentEvents()
+    {
         $user = Auth::user();
         $info = Doctor::where('account_id', $user->id)->first();
         $appointments = Appointment::where('specialties', $info->specialties)
         ->where('doctor_id', $user->id)
         ->orWhereNull('doctor_id')
         ->get(); // Replace with your own query to fetch the event data
-        
+
         $events = [];
         foreach ($appointments as $appointment) {
 
@@ -713,7 +713,7 @@ class DoctorController extends Controller
             $endDateTime->modify('+1 hour'); // Add exactly 1 hour
             
             $events[] = [
-                'id' => ucwords($appointment->id),      // Format the end date and time
+                'appointment_id' => $appointment->id,      
                 'title' => ucwords($appointment->appointment_type), // Replace with the field containing the event title
                 'start' => $appointmentDateTime->format('Y-m-d H:i:s'),  // Format the start date and time
                 'end' => $endDateTime->format('Y-m-d H:i:s'),      // Format the end date and time
@@ -729,7 +729,7 @@ class DoctorController extends Controller
         $profile = auth()->user();
         $doctor = Doctor::where('account_id', $profile->id)->first();
         $appointment = Appointment::findOrFail($request->input('appointment_id'));
-        dd($appointment);
+
         $appointment->status = 'confirmed';
         $appointment->doctor_id = $doctor->account_id;
         $appointment->save();

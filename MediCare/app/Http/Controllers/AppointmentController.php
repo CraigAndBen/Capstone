@@ -95,8 +95,6 @@ class AppointmentController extends Controller
             '4:00 PM',
         ];
 
-        dd($request);
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',

@@ -263,10 +263,10 @@
                             <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
                                     Demographics</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.admitted') }}">Admitted Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" <li class="pc-item"><a class="pc-link"
-                                        href="{{ route('admin.demographics.outpatient') }}">Outpatient
-                                        Demographics</a></li>
+                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
+                            </li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
                         </ul>

@@ -104,17 +104,20 @@
                                                     Appointment
                                                 </h3>
                                             </div>
-                                            <form action="{{ route('doctor.appointment.calendar.confirm') }}" method="POST">
+
+                                            <div class="modal-body">
+                                                <h4 id="eventName" class="pb-3"></h4>
+                                                <p><strong>Appointment Start:</strong> <span
+                                                        id="confirmEventStartDate"></span>
+                                                </p>
+                                                <p><strong>Appointment End:</strong> <span id="confirmEventEndDate"></span>
+                                                <p><strong>Appointment Status:</strong> <span id="confirmStatus"></span>
+                                                </p>
+                                            </div>
+                                            <form action="{{ route('doctor.appointment.calendar.confirm') }}"
+                                                method="POST">
                                                 @csrf
-                                                <div class="modal-body">
-                                                    <h4 id="eventName" class="pb-3"></h4>
-                                                    <input type="hidden" name="appointment_id" id="id">
-                                                    <p><strong>Appointment Start:</strong> <span id="confirmEventStartDate"></span>
-                                                    </p>
-                                                    <p><strong>Appointment End:</strong> <span id="confirmEventEndDate"></span>
-                                                    <p><strong>Appointment Status:</strong> <span id="confirmStatus"></span>
-                                                    </p>
-                                                </div>
+                                                <input type="hidden" name="appointment_id" id="id">
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-success">Confirm</button>
                                                     <button type="button" class="btn btn-danger"
@@ -202,8 +205,7 @@
                 }
 
                 function displayConfirmInfo(event) {
-                    // Example: Populate and display event details
-                    $('#id').text(event.extendedProps.id);
+                    $('#id').val(event.extendedProps.appointment_id);
                     $('#confirmEventName').text(event.title);
                     $('#confirmEventStartDate').text(moment(event.start).format('LLLL'));
                     $('#confirmEventEndDate').text(moment(event.end).format('LLLL'));

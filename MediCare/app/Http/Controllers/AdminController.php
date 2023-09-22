@@ -1465,22 +1465,33 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
-            ->selectRaw('COUNT(*) as total_occurrences')
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy('diagnosis', 'month')
-            ->orderByDesc('total_occurrences')
-            ->get();
-
-        $diagnosesWithOccurrences = Patient::select('diagnosis')
+        $admittedDiagnoses = Patient::select('diagnosis')
             ->selectRaw('COUNT(*) as total_occurrences')
             ->whereYear('admitted_date', $currentYear)
             ->groupBy('diagnosis')
-            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
-            ->take(5) // Limit the result to the top 5 diagnoses
             ->get();
 
-        $diagnosisCount = $diagnosesWithOccurrences->count();
+        $dateDiagnoses = Patient::select('diagnosis')
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('date', $currentYear)
+            ->groupBy('diagnosis')
+            ->get();
+
+        // Merge the two collections and sort them by total_occurrences in descending order
+        $mergedDiagnoses = $admittedDiagnoses->concat($dateDiagnoses);
+
+        $rankedDiagnosis = $mergedDiagnoses->groupBy('diagnosis')
+            ->map(function ($group) {
+                $firstItem = $group->first();
+                return [
+                    'diagnosis' => $firstItem['diagnosis'],
+                    'total_occurrences' => $group->sum('total_occurrences'),
+                ];
+            })
+            ->sortByDesc('total_occurrences')
+            ->values();
+
+        $diagnosisCount = $rankedDiagnosis->count();
 
         $limitDiagnosis = $rankedDiagnosis->take(5);
 
@@ -1508,7 +1519,7 @@ class AdminController extends Controller
             ->pluck('diagnosis')
             ->toArray();
 
-        return view('admin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'countUniqueYears', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'currentTime', 'currentDate'));
+        return view('admin.trend.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'countUniqueYears', 'rankedDiagnosis', 'currentTime', 'currentDate'));
     }
 
     public function diagnoseTrendSearch(Request $request)
@@ -1527,22 +1538,33 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $rankedDiagnosis = Patient::select('diagnosis')
+        $admittedDiagnoses = Patient::select('diagnosis')
             ->selectRaw('COUNT(*) as total_occurrences')
             ->whereYear('admitted_date', $currentYear)
             ->groupBy('diagnosis')
-            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
             ->get();
 
-        $diagnosesWithOccurrences = Patient::select('diagnosis')
+        $dateDiagnoses = Patient::select('diagnosis')
             ->selectRaw('COUNT(*) as total_occurrences')
-            ->whereYear('admitted_date', $currentYear)
+            ->whereYear('date', $currentYear)
             ->groupBy('diagnosis')
-            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
-            ->take(5) // Limit the result to the top 5 diagnoses
             ->get();
 
-        $diagnosisCount = $diagnosesWithOccurrences->count();
+        // Merge the two collections and sort them by total_occurrences in descending order
+        $mergedDiagnoses = $admittedDiagnoses->concat($dateDiagnoses);
+
+        $rankedDiagnosis = $mergedDiagnoses->groupBy('diagnosis')
+            ->map(function ($group) {
+                $firstItem = $group->first();
+                return [
+                    'diagnosis' => $firstItem['diagnosis'],
+                    'total_occurrences' => $group->sum('total_occurrences'),
+                ];
+            })
+            ->sortByDesc('total_occurrences')
+            ->values();
+
+        $diagnosisCount = $rankedDiagnosis->count();
 
         $limitDiagnosis = $rankedDiagnosis->take(5);
 
@@ -1606,20 +1628,21 @@ class AdminController extends Controller
             ];
         }
 
-        // Initialize an array to store the monthly trend data
+        // Initialize variables
+        $currentMonth = null;
+        $monthlyCount = 0;
         $monthlyTrendData = [];
 
         // Loop through the patient data to calculate the monthly trend
-        $currentMonth = null;
-        $monthlyCount = 0;
         foreach ($patients as $patient) {
             $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
             $outpatientDate = Carbon::parse($patient->date); // Convert to Carbon object
 
-            $month = $admittedDate->format('F');
-            $anotherMonth = $outpatientDate->format('F');
+            $admittedMonth = $admittedDate->format('F');
+            $outpatientMonth = $outpatientDate->format('F');
 
-            if ($month !== $currentMonth || $anotherMonth !== $currentMonth) {
+            // Check if the admitted month is different from the current month
+            if ($admittedMonth !== $currentMonth) {
                 // Save the count for the previous month
                 if ($currentMonth !== null) {
                     $monthlyTrendData[] = [
@@ -1629,8 +1652,19 @@ class AdminController extends Controller
                 }
 
                 // Reset the count for the current month
-                $currentMonth = $month;
+                $currentMonth = $admittedMonth;
                 $monthlyCount = 1;
+            } else {
+                $monthlyCount++;
+            }
+
+            // Check if the outpatient month is different from the admitted month
+            if ($outpatientMonth !== $admittedMonth) {
+                // Save the count for the outpatient month
+                $monthlyTrendData[] = [
+                    'month' => $outpatientMonth,
+                    'count' => 1,
+                ];
             } else {
                 $monthlyCount++;
             }
@@ -1644,7 +1678,7 @@ class AdminController extends Controller
             ];
         }
 
-        return view('admin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis', 'currentTime', 'currentDate', 'diagnosesWithOccurrences'));
+        return view('admin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis', 'currentTime', 'currentDate'));
     }
 
 

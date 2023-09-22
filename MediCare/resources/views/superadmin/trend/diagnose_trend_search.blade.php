@@ -41,14 +41,14 @@
                                 </div>
                                 <div class="col-md-8">
                                     <ul class="list-group list-group-flush mt-3">
-                                        @foreach ($diagnosesWithOccurrences as $diagnosis)
+                                        @foreach ($limitDiagnosis as $diagnosis)
                                             <li class="list-group-item px-0">
                                                 <div class="row align-items-start">
                                                     <div class="col">
-                                                        <h5 class="mb-0">{{ $diagnosis->diagnosis }}</h5>
+                                                        <h5 class="mb-0">{{ $diagnosis['diagnosis'] }}</h5>
                                                     </div>
                                                     <div class="col-auto">
-                                                        <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
+                                                        <h5 class="mb-0">{{ $diagnosis['total_occurrences'] }}<span
                                                                 class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
                                                                     class="ti ti-chevron-up text-success"></i></span></h5>
                                                     </div>
@@ -71,11 +71,11 @@
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option>Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
-                                                @if ($diagnose->diagnosis == $specificDiagnosis)
-                                                    <option value="{{ $diagnose->diagnosis }}" selected>
-                                                        {{ $diagnose->diagnosis }}</option>
+                                                @if ($diagnose['diagnosis'] == $specificDiagnosis)
+                                                    <option value="{{ $diagnose['diagnosis'] }}" selected>
+                                                        {{ $diagnose['diagnosis'] }}</option>
                                                 @else
-                                                    <option value="{{ $diagnose->diagnosis }}">{{ $diagnose->diagnosis }}
+                                                    <option value="{{ $diagnose['diagnosis'] }}">{{ $diagnose['diagnosis'] }}
                                                     </option>
                                                 @endif
                                             @endforeach
