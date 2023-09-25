@@ -56,8 +56,7 @@
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
 
-            <a href="/user/dashboard" class="logo me-auto"><img src="{{ asset('logo.jpg') }}" alt=""
-                    class="" style="max-width: 200px; max-height: 130px"></a>
+          <a href="/" class="logo me-auto"><img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 100%; max-height: 100px"></a>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -97,7 +96,7 @@
             </nav><!-- .navbar -->
 
             <a href={{ route('user.show.appointment') }} class="appointment-btn scrollto "><span
-                    class="d-none d-md-inline">Make An Appointment</span> </a>
+                    class="d-none d-md-inline"></span>Make An Appointment</a>
         </div>
     </header><!-- End Header -->
 

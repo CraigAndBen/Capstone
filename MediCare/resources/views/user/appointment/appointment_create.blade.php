@@ -64,8 +64,8 @@
                                         {{ session('info') }}
                                     </div>
                                 @endif
-                                <div class="m-5 p-3">
-                                    <div id="calendar"></div>
+                                <div class="mb-3">
+                                    <div id="calendar" style="max-height: 700px; max-width: 100%"></div>
                                 </div>
 
 
@@ -262,12 +262,14 @@
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
                                             <div class="modal-header d-flex justify-content-center bg-primary">
-                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor Appointment
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
+                                                    Appointment
                                                 </h3>
                                             </div>
                                             <div class="modal-body">
                                                 <h4 id="eventName" class="pb-3"></h4>
-                                                <p><strong>Appointment Start:</strong> <span id="eventStartDate"></span></p>
+                                                <p><strong>Appointment Start:</strong> <span id="eventStartDate"></span>
+                                                </p>
                                                 <p><strong>Appointment End:</strong> <span id="eventEndDate"></span>
                                                 <p><strong>Appointment Status:</strong> <span id="status"></span>
                                                 </p>
