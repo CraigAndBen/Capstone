@@ -1068,26 +1068,6 @@ class SuperAdminController extends Controller
         }
     }
 
-    public function updateAdminStatus(Request $request)
-    {
-
-        $user = User::findOrFail($request->input('user_id'));
-
-        if ($request->input('status') === 'active') {
-
-            $user->status = 'inactive';
-            $user->save();
-
-            return redirect()->route('superadmin.admin')->with('info', 'User status updated to inactive.');
-        } else {
-
-            $user->status = 'active';
-            $user->save();
-
-            return redirect()->route('superadmin.admin')->with('info', 'User status updated to active.');
-        }
-    }
-
     public function updateAdminPassword(Request $request)
     {
         $request->validate([
@@ -1428,7 +1408,498 @@ class SuperAdminController extends Controller
         return view('superadmin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
+    // Supply Officer
+    public function supplyOfficer()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $users = User::where('role', 'supply_officer')->get();
 
+        return view('superadmin.account.supply_officer', compact('users', 'profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
+    }
+
+    public function createSupplyOfficer(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::create([
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->password),
+            'role' => 'supply_officer',
+        ]);
+
+        return back()->with('success', 'User added sucessfully.');
+    }
+
+    public function updateSupplyOfficerInfo(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+        $info = admin::where('account_id', $request->user_id)->first();
+
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+        ];
+
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+
+        // Check if any changes were made to the form data
+        if ($userChange == true) {
+
+            if ($request->input('email') !== $user->email) {
+
+                $request->validate([
+                    'email' => 'required|string|email|max:255|unique:users,email,',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+            }
+
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+
+        }
+    }
+
+    public function updateSupplyOfficerPassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->back()->with('info', 'Current password is incorrect.');
+
+        } else {
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->back()->with('info', "Password doesn't change.");
+            } else {
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Password updated successfull.');
+            }
+
+        }
+
+    }
+
+    // Staff
+    public function Staff()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $users = User::where('role', 'staff')->get();
+
+        return view('superadmin.account.staff', compact('users', 'profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
+    }
+
+    public function createStaff(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::create([
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->password),
+            'role' => 'staff',
+        ]);
+
+        return back()->with('success', 'User added sucessfully.');
+    }
+
+    public function updateStaffInfo(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+        $info = admin::where('account_id', $request->user_id)->first();
+
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+        ];
+
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+
+        // Check if any changes were made to the form data
+        if ($userChange == true) {
+
+            if ($request->input('email') !== $user->email) {
+
+                $request->validate([
+                    'email' => 'required|string|email|max:255|unique:users,email,',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+            }
+
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+
+        }
+    }
+
+    public function updateStaffPassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->back()->with('info', 'Current password is incorrect.');
+
+        } else {
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->back()->with('info', "Password doesn't change.");
+            } else {
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Password updated successfull.');
+            }
+
+        }
+
+    }
+
+
+    // Cashier
+    public function Cashier()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $users = User::where('role', 'cashier')->get();
+
+        return view('superadmin.account.cashier', compact('users', 'profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
+    }
+
+    public function createCashier(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::create([
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->password),
+            'role' => 'cashier',
+        ]);
+
+        return back()->with('success', 'User added sucessfully.');
+    }
+
+    public function updateCashierInfo(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+        $info = admin::where('account_id', $request->user_id)->first();
+
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+        ];
+
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+
+        // Check if any changes were made to the form data
+        if ($userChange == true) {
+
+            if ($request->input('email') !== $user->email) {
+
+                $request->validate([
+                    'email' => 'required|string|email|max:255|unique:users,email,',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+            }
+
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+
+        }
+    }
+
+    public function updateCashierPassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->back()->with('info', 'Current password is incorrect.');
+
+        } else {
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->back()->with('info', "Password doesn't change.");
+            } else {
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Password updated successfull.');
+            }
+
+        }
+
+    }
+
+    // Cashier
+    public function Pharmacist()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $users = User::where('role', 'pharmacist')->get();
+
+        return view('superadmin.account.pharmacist', compact('users', 'profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
+    }
+
+    public function createPharmacist(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::create([
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->password),
+            'role' => 'pharmacist',
+        ]);
+
+        return back()->with('success', 'User added sucessfully.');
+    }
+
+    public function updatePharmacistInfo(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+        $info = admin::where('account_id', $request->user_id)->first();
+
+        $userUpdatedData = [
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+        ];
+
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+
+        // Check if any changes were made to the form data
+        if ($userChange == true) {
+
+            if ($request->input('email') !== $user->email) {
+
+                $request->validate([
+                    'email' => 'required|string|email|max:255|unique:users,email,',
+                ]);
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+
+            } else {
+
+                $user->first_name = $request->input('first_name');
+                $user->last_name = $request->input('last_name');
+                $user->middle_name = $request->input('middle_name');
+                $user->email = $request->input('email');
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
+            }
+
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+
+        }
+    }
+
+    public function updatePharmacistPassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+
+            return redirect()->back()->with('info', 'Current password is incorrect.');
+
+        } else {
+
+            if (Hash::check($request->input('password'), $user->password)) {
+
+                return redirect()->back()->with('info', "Password doesn't change.");
+            } else {
+                $user->password = Hash::make($request->input('password'));
+
+                $user->save();
+
+                return redirect()->back()->with('success', 'Password updated successfull.');
+            }
+
+        }
+
+    }
 
     public function genderDemo()
     {

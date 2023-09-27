@@ -36,6 +36,14 @@ class UserSeeder extends Seeder
                 'role' => 'super_admin',
                 'status' => 'activated',
             ],
+            [
+                'first_name' => 'Supply Officer',
+                'last_name' => 'Supply Officer',
+                'email' => 'supply_officer@sample.com',
+                'password' => Hash::make('111'),
+                'role' => 'supply_officer',
+                'status' => 'activated',
+            ],
             
         ]);
     }

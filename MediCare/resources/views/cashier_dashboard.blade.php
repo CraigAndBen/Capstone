@@ -3,14 +3,14 @@
 <!-- [Head] start -->
 
 <head>
-    <title> MediCare | Admin Dashboard </title>
+    <title> MediCare | Cashier Dashboard </title>
     <!-- [Meta] -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
+    <!-- [Favicon] icon -->
     <link href="{{ asset('logo.jpg') }}" rel="icon">
-
     <!-- [Google Font] Family -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
         id="main-font-link" />
@@ -23,7 +23,6 @@
     <link rel="stylesheet" href="{{ asset('admin_assets/css/style-preset.css') }}" id="preset-style-link" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <!-- [Head] end -->
@@ -43,7 +42,7 @@
     <header class="pc-header">
         <div class="m-header mt-3">
 
-            <a href="{{ route('admin.dashboard') }}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
+            <a href="{{ route('cashier.dashboard') }}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
                     alt="" class="" style="max-width: 150px; max-height: 90px"></a>
             <!-- ======= Menu collapse Icon ===== -->
         </div>
@@ -62,7 +61,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
+                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -90,7 +89,7 @@
                                         </div>
                                         @foreach ($limitNotifications as $notification)
                                             <a class="list-group-item list-group-item-action"
-                                                href="{{ route('admin.notification') }}">
+                                                href="{{ route('cashier.notification') }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0">
                                                         <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
@@ -114,7 +113,7 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="text-center py-2">
-                                    <a href="{{ route('admin.notification') }}" class="btn btn-primary">Show all</a>
+                                    <a href="{{ route('cashier.notification') }}" class="btn btn-primary">Show all</a>
                                 </div>
                             @else
                                 <div class="dropdown-header">
@@ -160,12 +159,11 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Hi, Good Day! <span
-                                        class="small text-muted">{{ ucwords($profile->first_name) }}</span>
+                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
                                 </h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
-                                    <a href="{{ route('admin.profile') }}" class="dropdown-item">
+                                    <a href="{{ route('cashier.profile') }}" class="dropdown-item">
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
@@ -173,7 +171,7 @@
                                         <i class="ti ti-user"></i>
                                         <span>Social Profile</span>
                                     </a>
-                                    <a href="{{ route('admin.logout') }}" class="dropdown-item">
+                                    <a href="{{ route('cashier.logout') }}" class="dropdown-item">
                                         <i class="ti ti-logout"></i>
                                         <span>Logout</span>
                                     </a>
@@ -191,7 +189,7 @@
         <div class="navbar-wrapper">
             <div class="m-header">
                 <div class="mt-3">
-                    <a href="{{ route('admin.dashboard') }}" class="logo me-auto"><img
+                    <a href="{{ route('cashier.dashboard') }}" class="logo me-auto"><img
                             src="{{ asset('logo.jpg') }}" alt="" class=""
                             style="max-width: 150px; max-height: 90px"></a>
                 </div>
@@ -204,84 +202,34 @@
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('admin.dashboard') }}" class="pc-link"><span class="pc-micon"></span><span
+                        <a href="{{ route('cashier.dashboard') }}" class="pc-link"><span class="pc-micon"></span><span
                                 class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
+                        <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Update Account</span><span class="pc-arrow"><i
+                                class="pc-mtext">Profile Update</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.profile') }}">Update
+                            <li class="pc-item"><a class="pc-link" href="{{ route('cashier.profile') }}">Update
                                     Profile</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.profile.password') }}">Update Password</a></li>
+                                    href="{{ route('cashier.profile.password') }}">Update Profile Password</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Notification
-                                List</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.notification') }}">Notification List</a></li>
-                        </ul>
-                    </li>
-                    <li class="pc-item pc-caption">
-                        <label>Patient</label>
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
+                                class="pc-mtext">Notification List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.patient') }}">Patient</a>
-                            </li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.patient.admitted') }}">Patient Admitted</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.patient.outpatient') }}">Outpatient</a></li>
-                        </ul>
-                    </li>
-                    <li class="pc-item pc-caption">
-                        <label>Demographics</label>
-                        <i class="ti ti-apps"></i>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient Demographics</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
-                                    Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
-                            </li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
-                        </ul>
-                    </li>
-                    <li class="pc-item pc-caption">
-                        <label>Trend</label>
-                        <i class="ti ti-apps"></i>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Diagnose Trend</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('cashier.notification') }}">Notification</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -290,77 +238,29 @@
     </nav>
     <!-- [ Sidebar Menu ] end -->
 
-
-
     <!-- [ Main Content ] start -->
     <div class="pc-container">
         <div class="pc-content">
             <!-- [ Main Content ] start -->
             <div class="row">
+
                 <!-- [ sample-page ] start -->
-
-                <div class="col-xl-6 col-md-12 mt-4">
+                <div class="col-sm-12 mt-3">
                     <div class="card">
+                        <div class="card-header py-3 ">
+                            <h3>Welcome Back! {{ucwords($profile->first_name)}} {{ucwords($profile->last_name)}}</h3>
+                        </div>
                         <div class="card-body">
-                            @if ($patientCount)
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col">
-                                        <small>Total Admitted Patient This Year</small>
-                                        <h3>{{ $patientCount }}</h3>
-                                    </div>
-                                </div>
-                                <canvas id="patientChart" width="100%" height="85"></canvas>
-                            @else
-                                <div class="text-center">
-                                    <h3>No Patient Yet.</h3>
-                                </div>
-                            @endif
+                            <div class="container" style="height: 600px">
+                                <a href="#" class="d-flex justify-content-center mt-5">
+                                    <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 400px; max-height: 230px">
+                                  </a>
+                            </div>
                         </div>
                     </div>
+                    <!-- [ sample-page ] end -->
                 </div>
-
-                <div class="col-xl-6 col-md-12 mt-4">
-                    <div class="card">
-                        <div class="card-body">
-                            @if ($diagnosisCount)
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col">
-                                        <h5>Patient Diagnosis This Year</h5>
-                                    </div>
-                                    <div class="col-auto"> </div>
-                                </div>
-                                <canvas id="diagnosisChart"></canvas>
-
-                                <ul class="list-group list-group-flush mt-3">
-                                    @foreach ($diagnosesWithOccurrences as $diagnosis)
-                                        <li class="list-group-item px-0">
-                                            <div class="row align-items-start">
-                                                <div class="col">
-                                                    <h5 class="mb-0">{{ ucwords($diagnosis->diagnosis) }}</h5>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
-                                                            class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
-                                                                class="ti ti-chevron-up text-success"></i></span></h5>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                                <div class="text-center my-3">
-                                    <a href="{{ route('admin.demographics.diagnose') }}" class="btn btn-primary">View
-                                        all</a>
-                                </div>
-                            @else
-                                <div class="text-center my-3">
-                                    <h3>No Diagnosis Yet.</h3>
-                                </div>
-                            @endif
-
-                        </div>
-                    </div>
-                </div>
-                <!-- [ sample-page ] end -->
+                <!-- [ Main Content ] end -->
             </div>
             <!-- [ Main Content ] end -->
         </div>
@@ -368,18 +268,21 @@
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col my-1">
-                    <p class="m-0">Copyright &copy; <a>MediCare</a></p>
+                    <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/"
+                            target="_blank">Codedthemes</a></p>
                 </div>
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item">Home</li>
-                        <li class="list-inline-item">Privacy Policy</li>
-                        <li class="list-inline-item">Contact us</li>
+                        <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
+                        <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/"
+                                target="_blank">Privacy Policy</a></li>
+                        <li class="list-inline-item"><a href="https://codedthemes.com/contact/"
+                                target="_blank">Contact us</a></li>
                     </ul>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </footer>
     <!-- Required Js -->
@@ -392,91 +295,10 @@
 
     <!-- [Page Specific JS] start -->
     <!-- Apex Chart -->
-    <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script>
+    {{-- <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script> --}}
     <!-- [Page Specific JS] end -->
 </body>
 <!-- [Body] end -->
-<script>
-    // PHP array to JavaScript variables
-    const patientMonths = @json($patientsByMonth->pluck('month'));
-    const patientCounts = @json($patientsByMonth->pluck('count'));
-
-    // Create an array for all months
-    const allMonths = [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November', 'December'
-    ];
-
-    // Initialize an array to store counts for each month
-    const monthCounts = Array.from({
-        length: 12
-    }, () => 0);
-
-    // Fill in the counts for the corresponding months
-    for (let i = 0; i < patientMonths.length; i++) {
-        const monthIndex = allMonths.indexOf(patientMonths[i]);
-        if (monthIndex !== -1) {
-            monthCounts[monthIndex] = patientCounts[i];
-        }
-    }
-
-    var ctx = document.getElementById('patientChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: allMonths,
-            datasets: [{
-                label: 'Admitted Patient',
-                data: monthCounts,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    var labels = [];
-    var data = [];
-    @for ($month = 1; $month <= 12; $month++)
-        @php
-            $monthData = $rankedDiagnosis->firstWhere('month', $month);
-        @endphp
-        labels.push('{{ \Carbon\Carbon::createFromDate(null, $month, 1)->format('F') }}');
-        data.push({{ $monthData ? $monthData->total_occurrences : 0 }});
-    @endfor
-
-    // Get the chart context and create the line chart
-    var ctx = document.getElementById('diagnosisChart').getContext('2d');
-    var lineChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Rank 1 Diagnosis',
-                data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 1,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
 
 </html>

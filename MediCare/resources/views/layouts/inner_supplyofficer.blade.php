@@ -3,7 +3,7 @@
 <!-- [Head] start -->
 
 <head>
-    <title> MediCare | Nurse Dashboard </title>
+    <title>MediCare | Supply Officer Dashboard</title>
     <!-- [Meta] -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -11,6 +11,7 @@
 
     <!-- [Favicon] icon -->
     <link href="{{ asset('logo.jpg') }}" rel="icon">
+
     <!-- [Google Font] Family -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
         id="main-font-link" />
@@ -21,28 +22,26 @@
     <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="{{ asset('admin_assets/css/style.css') }}" id="main-style-link" />
     <link rel="stylesheet" href="{{ asset('admin_assets/css/style-preset.css') }}" id="preset-style-link" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
 
 <body>
-
     <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
         <div class="loader-track">
             <div class="loader-fill"></div>
         </div>
     </div>
-
     <!-- [ Pre-loader ] End -->
     <!-- [ Header Topbar ] start -->
     <header class="pc-header">
         <div class="m-header mt-3">
-
-            <a href="{{ route('nurse.dashboard') }}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
+            <a href="{{ route('supply_officer.dashboard') }}" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
                     alt="" class="" style="max-width: 150px; max-height: 90px"></a>
             <!-- ======= Menu collapse Icon ===== -->
         </div>
@@ -54,6 +53,7 @@
                         <a href="#" class="pc-head-link head-link-primary ms-0" id="mobile-collapse">
                             <i class="ti ti-menu-2"></i>
                         </a>
+                    </li>
                 </ul>
             </div>
             <!-- [Mobile Media Block end] -->
@@ -89,7 +89,7 @@
                                         </div>
                                         @foreach ($limitNotifications as $notification)
                                             <a class="list-group-item list-group-item-action"
-                                                href="{{ route('nurse.notification') }}">
+                                                href="{{ route('supply_officer.notification') }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0">
                                                         <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="text-center py-2">
-                                    <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                    <a href="{{ route('supply_officer.notification') }}" class="btn btn-primary">Show all</a>
                                 </div>
                             @else
                                 <div class="dropdown-header">
@@ -163,7 +163,7 @@
                                 </h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
-                                    <a href="{{ route('nurse.profile') }}" class="dropdown-item">
+                                    <a href="{{ route('supply_officer.profile') }}" class="dropdown-item">
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
@@ -171,7 +171,7 @@
                                         <i class="ti ti-user"></i>
                                         <span>Social Profile</span>
                                     </a>
-                                    <a href="{{ route('nurse.logout') }}" class="dropdown-item">
+                                    <a href="{{ route('supply_officer.logout') }}" class="dropdown-item">
                                         <i class="ti ti-logout"></i>
                                         <span>Logout</span>
                                     </a>
@@ -189,20 +189,18 @@
         <div class="navbar-wrapper">
             <div class="m-header">
                 <div class="mt-3">
-                    <a href="{{ route('nurse.dashboard') }}" class="logo me-auto"><img
-                            src="{{ asset('logo.jpg') }}" alt="" class=""
-                            style="max-width: 150px; max-height: 90px"></a>
+                    <a href="/supply_officer/dashboard" class="logo me-auto"><img src="{{ asset('logo.jpg') }}"
+                            alt="" class="" style="max-width: 150px; max-height: 90px"></a>
                 </div>
-
             </div>
             <div class="navbar-content">
                 <ul class="pc-navbar">
                     <li class="pc-item pc-caption">
-                        <label>Dashboard</label>
+                        <label>Home</label>
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('nurse.dashboard') }}" class="pc-link"><span class="pc-micon"></span><span
+                        <a href="{{ route('supply_officer.dashboard') }}" class="pc-link"><span
                                 class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
@@ -214,10 +212,10 @@
                                 class="pc-mtext">Profile Update</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.profile') }}">Update
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.profile') }}">Update
                                     Profile</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('nurse.profile.password') }}">Update Profile Password</a></li>
+                                    href="{{ route('supply_officer.profile.password') }}">Update Profile Password</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -229,19 +227,8 @@
                                 class="pc-mtext">Notification List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.notification') }}">Notification</a></li>
-                        </ul>
-                    </li>
-                    <li class="pc-item pc-caption">
-                        <label>Patient</label>
-                        <i class="ti ti-apps"></i>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('nurse.patient') }}">Admitted Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.notification') }}">Notification</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -250,51 +237,22 @@
     </nav>
     <!-- [ Sidebar Menu ] end -->
 
-    <!-- [ Main Content ] start -->
-    <div class="pc-container">
-        <div class="pc-content">
-            <!-- [ Main Content ] start -->
-            <div class="row">
-
-                <!-- [ sample-page ] start -->
-                <div class="col-sm-12 mt-3">
-                    <div class="card">
-                        <div class="card-header py-3 ">
-                            <h3>Welcome Back! {{ucwords($profile->first_name)}} {{ucwords($profile->last_name)}}</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="container" style="height: 600px">
-                                <a href="#" class="d-flex justify-content-center mt-5">
-                                    <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 400px; max-height: 230px">
-                                  </a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- [ sample-page ] end -->
-                </div>
-                <!-- [ Main Content ] end -->
-            </div>
-            <!-- [ Main Content ] end -->
-        </div>
-    </div>
+    @yield('content')
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
             {{-- <div class="row">
-                <div class="col my-1">
-                    <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/"
-                            target="_blank">Codedthemes</a></p>
-                </div>
-                <div class="col-auto my-1">
-                    <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/"
-                                target="_blank">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a href="https://codedthemes.com/contact/"
-                                target="_blank">Contact us</a></li>
-                    </ul>
-                </div>
-            </div> --}}
+          <div class="col my-1">
+            <p class="m-0">Copyright &copy; <a href="https://codedthemes.com/" target="_blank">Codedthemes</a></p>
+          </div>
+          <div class="col-auto my-1">
+            <ul class="list-inline footer-link mb-0">
+              <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
+              <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+              <li class="list-inline-item"><a href="https://codedthemes.com/contact/" target="_blank">Contact us</a></li>
+            </ul>
+          </div>
+        </div> --}}
         </div>
     </footer>
     <!-- Required Js -->
@@ -304,13 +262,17 @@
     <script src="{{ asset('admin_assets/js/config.js') }}"></script>
     <script src="{{ asset('admin_assets/js/pcoded.js') }}"></script>
 
-
-    <!-- [Page Specific JS] start -->
-    <!-- Apex Chart -->
-    {{-- <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script> --}}
-    <!-- [Page Specific JS] end -->
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+    integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- [Body] end -->
+@yield('scripts')
 
 </html>

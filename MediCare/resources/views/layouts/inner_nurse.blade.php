@@ -89,7 +89,7 @@
                                         </div>
                                         @foreach ($limitNotifications as $notification)
                                             <a class="list-group-item list-group-item-action"
-                                                href="{{ route('doctor.appointment') }}">
+                                                href="{{ route('nurse.notification') }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0">
                                                         <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
@@ -200,7 +200,7 @@
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('superadmin.dashboard') }}" class="pc-link"><span
+                        <a href="{{ route('nurse.dashboard') }}" class="pc-link"><span
                                 class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">

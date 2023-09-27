@@ -2,8 +2,13 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\CashierController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\NurseController;
+use App\Http\Controllers\PharmacistController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\SupplyOFficer;
+use App\Http\Controllers\SupplyOfficerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
@@ -78,7 +83,6 @@ Route::middleware(['auth', 'role:nurse'])->group(function () {
 });
 
 // Doctor
-
 Route::middleware(['auth', 'role:doctor'])->group(function () {
 
     // Dashboard
@@ -123,7 +127,6 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
 });
 
 // Admin
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Dashboard
@@ -186,6 +189,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 });
 
+// Super Admin
 Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
     Route::get('/super_admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
@@ -230,6 +234,30 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/super_admin/admin/update', [SuperAdminController::class, 'updateAdminInfo'])->name('superadmin.update.admin');
     Route::post('/super_admin/admin/update/status', [SuperAdminController::class, 'updateAdminStatus'])->name('superadmin.admin.update.status');
     Route::post('/super_admin/admin/update/password', [SuperAdminController::class, 'updateAdminPassword'])->name('superadmin.admin.password.update');
+
+    // Supply Officer
+    Route::get('/super_admin/supply_officer', [SuperAdminController::class, 'supplyOfficer'])->name('superadmin.supply_officer');
+    Route::post('/super_admin/supply_officer/create', [SuperAdminController::class, 'createSupplyOfficer'])->name('superadmin.store.supply_officer');
+    Route::post('/super_admin/supply_officer/update', [SuperAdminController::class, 'updateSupplyOfficerInfo'])->name('superadmin.update.supply_officer');
+    Route::post('/super_admin/supply_officer/update/password', [SuperAdminController::class, 'updateSupplyOfficerPassword'])->name('superadmin.supply_officer.password.update');
+
+    // Staff
+    Route::get('/super_admin/staff', [SuperAdminController::class, 'staff'])->name('superadmin.staff');
+    Route::post('/super_admin/staff/create', [SuperAdminController::class, 'createStaff'])->name('superadmin.store.staff');
+    Route::post('/super_admin/staff/update', [SuperAdminController::class, 'updateStaff'])->name('superadmin.update.staff');
+    Route::post('/super_admin/staff/update/password', [SuperAdminController::class, 'updateStaffPassword'])->name('superadmin.staff.password.update');
+
+    // Cashier
+    Route::get('/super_admin/cashier', [SuperAdminController::class, 'cashier'])->name('superadmin.cashier');
+    Route::post('/super_admin/cashier/create', [SuperAdminController::class, 'createCashier'])->name('superadmin.store.cashier');
+    Route::post('/super_admin/cashier/update', [SuperAdminController::class, 'updateCashier'])->name('superadmin.update.cashier');
+    Route::post('/super_admin/cashier/update/password', [SuperAdminController::class, 'updateCashierPassword'])->name('superadmin.cashier.password.update');
+
+    // Pharmacist
+    Route::get('/super_admin/pharmacist', [SuperAdminController::class, 'pharmacist'])->name('superadmin.pharmacist');
+    Route::post('/super_admin/pharmacist/create', [SuperAdminController::class, 'createPharmacist'])->name('superadmin.store.pharmacist');
+    Route::post('/super_admin/pharmacist/update', [SuperAdminController::class, 'updatePharmacist'])->name('superadmin.update.pharmacist');
+    Route::post('/super_admin/pharmacist/update/password', [SuperAdminController::class, 'updatePharmacistPassword'])->name('superadmin.pharmacist.password.update');
 
     // Patient
     Route::get('/superadmin/patient', [SuperAdminController::class, 'patientList'])->name('superadmin.patient');
@@ -278,4 +306,88 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
     // Super Admin Logout
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
+});
+
+//Supply Officer
+Route::middleware(['auth', 'role:supply_officer'])->group(function () {
+
+    // Dashboard
+    Route::get('/supply_officer/dashboard', [SupplyOfficerController::class, 'dashboard'])->name('supply_officer.dashboard');
+
+    // Profile
+    Route::get('/supply_officer/profile', [SupplyOfficerController::class, 'profile'])->name('supply_officer.profile');
+    Route::get('/supply_officer/profile/password', [SupplyOfficerController::class, 'passwordProfile'])->name('supply_officer.profile.password');
+    Route::post('/supply_officer/profile/update', [SupplyOfficerController::class, 'profileUpdate'])->name('supply_officer.profile.update');
+    Route::post('/supply_officer/profile/update/password', [SupplyOfficerController::class, 'updatePassword'])->name('supply_officer.password.update');
+
+    // Notification
+    Route::get('/supply_officer/notification', [SupplyOfficerController::class, 'notification'])->name('supply_officer.notification');
+    Route::post('/supply_officer/notification/read', [SupplyOfficerController::class, 'notificationRead'])->name('supply_officer.notification.read');
+
+    // Logout
+    Route::get('/supply_officer/logout', [SupplyOfficerController::class, 'supplyOfficerLogout'])->name('supply_officer.logout');
+
+});
+
+// Staff
+Route::middleware(['auth', 'role:staff'])->group(function () {
+
+    // Dashboard
+    Route::get('/staff/dashboard', [StaffController::class, 'dashboard'])->name('staff.dashboard');
+
+    // Profile
+    Route::get('/staff/profile', [StaffController::class, 'profile'])->name('staff.profile');
+    Route::get('/staff/profile/password', [StaffController::class, 'passwordProfile'])->name('staff.profile.password');
+    Route::post('/staff/profile/update', [StaffController::class, 'profileUpdate'])->name('staff.profile.update');
+    Route::post('/staff/profile/update/password', [StaffController::class, 'updatePassword'])->name('staff.password.update');
+
+    // Notification
+    Route::get('/staff/notification', [StaffController::class, 'notification'])->name('staff.notification');
+    Route::post('/staff/notification/read', [StaffController::class, 'notificationRead'])->name('staff.notification.read');
+
+    // Logout
+    Route::get('/staff/logout', [StaffController::class, 'staffOfficerLogout'])->name('staff.logout');
+
+});
+
+// Pharmacist
+Route::middleware(['auth', 'role:pharmacist'])->group(function () {
+
+    // Dashboard
+    Route::get('/pharmacist/dashboard', [PharmacistController::class, 'dashboard'])->name('pharmacist.dashboard');
+
+    // Profile
+    Route::get('/pharmacist/profile', [PharmacistController::class, 'profile'])->name('pharmacist.profile');
+    Route::get('/pharmacist/profile/password', [PharmacistController::class, 'passwordProfile'])->name('pharmacist.profile.password');
+    Route::post('/pharmacist/profile/update', [PharmacistController::class, 'profileUpdate'])->name('pharmacist.profile.update');
+    Route::post('/pharmacist/profile/update/password', [PharmacistController::class, 'updatePassword'])->name('pharmacist.password.update');
+
+    // Notification
+    Route::get('/pharmacist/notification', [PharmacistController::class, 'notification'])->name('pharmacist.notification');
+    Route::post('/pharmacist/notification/read', [PharmacistController::class, 'notificationRead'])->name('pharmacist.notification.read');
+
+    // Logout
+    Route::get('/pharmacist/logout', [PharmacistController::class, 'pharmacistLogout'])->name('pharmacist.logout');
+
+});
+
+// Cashier
+Route::middleware(['auth', 'role:cashier'])->group(function () {
+
+    // Dashboard
+    Route::get('/cashier/dashboard', [CashierController::class, 'dashboard'])->name('cashier.dashboard');
+
+    // Profile
+    Route::get('/cashier/profile', [CashierController::class, 'profile'])->name('cashier.profile');
+    Route::get('/cashier/profile/password', [CashierController::class, 'passwordProfile'])->name('cashier.profile.password');
+    Route::post('/cashier/profile/update', [CashierController::class, 'profileUpdate'])->name('cashier.profile.update');
+    Route::post('/cashier/profile/update/password', [CashierController::class, 'updatePassword'])->name('cashier.password.update');
+
+    // Notification
+    Route::get('/cashier/notification', [CashierController::class, 'notification'])->name('cashier.notification');
+    Route::post('/cashier/notification/read', [CashierController::class, 'notificationRead'])->name('cashier.notification.read');
+
+    // Logout
+    Route::get('/cashier/logout', [CashierController::class, 'cashierOfficerLogout'])->name('cashier.logout');
+
 });

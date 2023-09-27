@@ -27,6 +27,14 @@ class Role
                 return redirect('/admin/dashboard');
             } elseif ($exact_role === 'super_admin'){
                 return redirect('/super_admin/dashboard');
+            } elseif ($exact_role === 'supply_officer'){
+                return redirect('/supply_officer/dashboard');
+            } elseif ($exact_role === 'staff'){
+                return redirect('/staff/dashboard');
+            } elseif ($exact_role === 'pharmacist'){
+                return redirect('/pharmacist/dashboard');
+            } elseif ($exact_role === 'cashier'){
+                return redirect('/cashier/dashboard');
             } 
         }
         return $next($request);

@@ -3,7 +3,7 @@
 <!-- [Head] start -->
 
 <head>
-    <title> MediCare | Doctor Dashboard </title>
+    <title> MediCare | Super Admin Dashboard </title>
     <!-- [Meta] -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -91,7 +91,7 @@
                                         </div>
                                         @foreach ($limitNotifications as $notification)
                                             <a class="list-group-item list-group-item-action"
-                                                href="{{ route('doctor.appointment') }}">
+                                                href="{{ route('superadmin.notification') }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0">
                                                         <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="text-center py-2">
-                                    <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                    <a href="{{ route('superadmin.notification') }}" class="btn btn-primary">Show all</a>
                                 </div>
                             @else
                                 <div class="dropdown-header">
@@ -264,6 +264,14 @@
                                     Account</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User
                                     Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.supply_officer') }}">Supply Officer
+                                        Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.staff') }}">Staff
+                                            Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.cashier') }}">Cashier
+                                                Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.pharmacist') }}">Pharmacist
+                                                    Account</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
