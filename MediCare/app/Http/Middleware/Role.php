@@ -16,6 +16,7 @@ class Role
     public function handle(Request $request, Closure $next, $role): Response
     {
         $exact_role = $request->user()->role;
+
         if($request->user()->role !== $role){
             if($exact_role === 'user'){
                 return redirect('/user/dashboard');
@@ -35,8 +36,9 @@ class Role
                 return redirect('/pharmacist/dashboard');
             } elseif ($exact_role === 'cashier'){
                 return redirect('/cashier/dashboard');
-            } 
+            }
         }
+
         return $next($request);
     }
 }

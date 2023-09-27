@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Product;
 use Illuminate\View\View;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -178,6 +179,21 @@ class PharmacistController extends Controller
             return redirect()->route('pharmacist.notification');
         }
 
+    }
+
+    public function product()
+    {        
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $products = Product::all();
+
+        return view('pharmacist.product.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
     }
 
     public function pharmacistLogout(Request $request): RedirectResponse

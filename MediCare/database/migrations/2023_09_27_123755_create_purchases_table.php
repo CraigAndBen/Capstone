@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('super_admins', function (Blueprint $table) {
+        Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->smallInteger('account_id')->nullable();
-            $table->enum('access_level', ['half_access','full_access'])->default('full_access');
+            $table->unsignedBigInteger('product_id');
+            $table->integer('quantity');
+            $table->decimal('price', 10, 2);
+	        $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('super_admins');
+        Schema::dropIfExists('purchases');
     }
 };

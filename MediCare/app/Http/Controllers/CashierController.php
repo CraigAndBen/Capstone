@@ -180,6 +180,20 @@ class CashierController extends Controller
 
     }
 
+    public function order()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        return view('cashier.order.order', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
+    }
+
     public function cashierOfficerLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

@@ -324,6 +324,23 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/notification', [SupplyOfficerController::class, 'notification'])->name('supply_officer.notification');
     Route::post('/supply_officer/notification/read', [SupplyOfficerController::class, 'notificationRead'])->name('supply_officer.notification.read');
 
+    // Inventory
+    Route::get('/supply_officer/product', [SupplyOfficerController::class, 'productList'])->name('supply_officer.product');
+    Route::post('/supply_officer/product/create', [SupplyOfficerController::class, 'productStore'])->name('supply_officer.product.create');
+    Route::get('/supply_officer/product_details/{id}', [SupplyOfficerController::class, 'productdetail'])->name('supply_officer.product.details');
+    Route::post('/supply_officer/product/{id}', [SupplyOfficerController::class, 'Productupdate'])->name('supply_officer.product.update');
+    Route::get('/supply_officer/product/delete/{id}', [SupplyOfficerController::class, 'productdelete'])->name('supply_officer.product.delete');
+    Route::get('/supply_officer/category', [SupplyOfficerController::class, 'categoryList'])->name('supply_officer.category');
+    Route::post('/supply_officer/category/create', [SupplyOfficerController::class, 'categoryStore'])->name('supply_officer.category.create');
+    Route::post('/supply_officer/category/{id}', [SupplyOfficerController::class, 'categoryupdate'])->name('supply_officer.category.update');
+    Route::get('/supply_officer/category{id}', [SupplyOfficerController::class, 'categorydelete'])->name('supply_officer.category.delete');
+
+    // Request
+    Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');
+
+
+
+
     // Logout
     Route::get('/supply_officer/logout', [SupplyOfficerController::class, 'supplyOfficerLogout'])->name('supply_officer.logout');
 
@@ -344,6 +361,11 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
     // Notification
     Route::get('/staff/notification', [StaffController::class, 'notification'])->name('staff.notification');
     Route::post('/staff/notification/read', [StaffController::class, 'notificationRead'])->name('staff.notification.read');
+
+    //Request
+    Route::get('/staff/product', [StaffController::class, 'product'])->name('staff.product');
+    Route::get('/staff/request_form', [StaffController::class, 'requestformindex'])->name('staff.request_form');
+    Route::post('/staff/request', [StaffController::class, 'requeststore'])->name('staff.request');
 
     // Logout
     Route::get('/staff/logout', [StaffController::class, 'staffOfficerLogout'])->name('staff.logout');
@@ -366,6 +388,9 @@ Route::middleware(['auth', 'role:pharmacist'])->group(function () {
     Route::get('/pharmacist/notification', [PharmacistController::class, 'notification'])->name('pharmacist.notification');
     Route::post('/pharmacist/notification/read', [PharmacistController::class, 'notificationRead'])->name('pharmacist.notification.read');
 
+    //Pharmacist
+    Route::get('/pharmacist/product', [PharmacistController::class, 'product'])->name('pharmacist.product');
+
     // Logout
     Route::get('/pharmacist/logout', [PharmacistController::class, 'pharmacistLogout'])->name('pharmacist.logout');
 
@@ -386,6 +411,9 @@ Route::middleware(['auth', 'role:cashier'])->group(function () {
     // Notification
     Route::get('/cashier/notification', [CashierController::class, 'notification'])->name('cashier.notification');
     Route::post('/cashier/notification/read', [CashierController::class, 'notificationRead'])->name('cashier.notification.read');
+
+    //Pharmacist
+    Route::get('/cashier/product', [CashierController::class, 'order'])->name('cashier.order');
 
     // Logout
     Route::get('/cashier/logout', [CashierController::class, 'cashierOfficerLogout'])->name('cashier.logout');
