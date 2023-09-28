@@ -185,19 +185,40 @@ class StaffController extends Controller
 
     public function product()
     {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
         $products = Product::with('category')->get();
         $categories = Category::with('products')->get();
 
-        return view('main', compact('products', 'categories'));
+        return view('staff.request.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
+        
+
+       
     }
 
     /** Request Form**/
 
-    public function requestform()
+    public function requestformindex()
     {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
         $products = Product::all();
 
-        return view('main.request_form', compact('products'));
+        return view('staff.request.request', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
     }
     public function requeststore(Request $request)
     {
@@ -219,9 +240,9 @@ class StaffController extends Controller
 
             $prod_requests->save();   
         
-            return redirect('/main/request_form')->with('status', 'Request Sent');
+            return redirect('/staff/request_form')->with('status', 'Request Sent');
         } else {
-            return redirect('/main/request_form')->with('error', 'Not enough stock available');
+            return redirect('/staff/request_form')->with('error', 'Not enough stock available');
         }
     }
 

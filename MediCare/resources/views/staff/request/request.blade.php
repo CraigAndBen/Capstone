@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Notification List</h5>
+                                <h5 class="m-b-10">Request</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('staff.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('staff.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Notification List</li>
+                                <li class="breadcrumb-item" aria-current="page">Request</li>
                             </ul>
                         </div>
                     </div>
@@ -24,10 +24,6 @@
             </div>
             <!-- [ breadcrumb ] end -->
 
-
-            <div class="d-flex mb-4 justify-content-start">
-                <a href="{{ route('main.page') }}" type="button" class="btn btn-primary">Back</a>
-            </div>
             <div class="row">
                 @if (session('status'))
                     <div class="alert alert-success">{{ session('status') }}</div>
@@ -44,7 +40,7 @@
                             <div class="container">
                                 <div class="row justify-content-start">
                                     <div class="col-md-12">
-                                        <form method="POST" action="{{ route('request') }}">
+                                        <form method="POST" action="{{ route('staff.request') }}">
                                             @csrf
                                             <div class="row">
                                                 <div class="form-group col-md-4">

@@ -241,7 +241,7 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('staff.product') }}">Product</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('staff.request_form') }}">Product</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('staff.request_form') }}">Request Form</a></li>
                         </ul>
                     </li>
                 </ul>

@@ -330,6 +330,7 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/product_details/{id}', [SupplyOfficerController::class, 'productdetail'])->name('supply_officer.product.details');
     Route::post('/supply_officer/product/{id}', [SupplyOfficerController::class, 'Productupdate'])->name('supply_officer.product.update');
     Route::get('/supply_officer/product/delete/{id}', [SupplyOfficerController::class, 'productdelete'])->name('supply_officer.product.delete');
+    Route::get('/supply_officer/inventory/expiring_soon',[SupplyOfficerController::class, 'expirationproduct'])->name('supply_officer.product.expiration');
     Route::get('/supply_officer/category', [SupplyOfficerController::class, 'categoryList'])->name('supply_officer.category');
     Route::post('/supply_officer/category/create', [SupplyOfficerController::class, 'categoryStore'])->name('supply_officer.category.create');
     Route::post('/supply_officer/category/{id}', [SupplyOfficerController::class, 'categoryupdate'])->name('supply_officer.category.update');
@@ -337,7 +338,7 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
 
     // Product Demo
     Route::get('/supply_officer/demo/productdemo', [SupplyOfficerController::class, 'productDemo'])->name('supply_officer.product.demo');
-    Route::get('/supply_officer/demo/productdemo/search', [SupplyOfficerController::class, 'productdemoSearch'])->name('supply_officer.product.demo.search');
+    Route::get('/supply_officer/demo/productdemo_search', [SupplyOfficerController::class, 'productdemoSearch'])->name('supply_officer.product.demo.search');
 
     // Request
     Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');

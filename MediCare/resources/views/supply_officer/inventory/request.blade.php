@@ -14,8 +14,8 @@
                                 <h5 class="m-b-10">Request List</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
+                                <li class="breadcrumb-item"><a href="{{ route('staff.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('staff.dashboard') }}">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item" aria-current="page">Request List</li>
                             </ul>
@@ -109,7 +109,7 @@
                                         <h2 class="modal-title text-light" id="myModalLabel">Request</h2>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="POST" action="{{ route('request') }}">
+                                        <form method="POST" action="{{ route('staff.request') }}">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="mb-3">
@@ -178,22 +178,4 @@
         </div>
 
 
-    @endsection
-
-    @section('scripts')
-        <script>
-            $(document).ready(function() {
-
-                $(".p_name").select2({
-                    width: '100%',
-                    placeholder: 'Choose Product',
-                    tags: true
-                });
-                $(".brand").select2({
-                    width: '100%',
-                    placeholder: 'Select Brand',
-                    tags: true
-                });
-            });
-        </script>
     @endsection

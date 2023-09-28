@@ -254,15 +254,26 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Analytics</label>
+                        <label>Analytics Report</label>
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Product</span><span class="pc-arrow"><i
+                                class="pc-mtext">Analytics</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Product Stock Analytics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Product Stock</a></li>
+                            <li class="pc-item"><a class="pc-link" href="">Sales</a></li> 
+                            <li class="pc-item"><a class="pc-link" href="">Request</a></li>                 
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Expiry</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.expiration') }}">Expiring Product</a></li>
+                                           
                         </ul>
                     </li>
                 </ul>
