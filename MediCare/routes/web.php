@@ -335,6 +335,10 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::post('/supply_officer/category/{id}', [SupplyOfficerController::class, 'categoryupdate'])->name('supply_officer.category.update');
     Route::get('/supply_officer/category{id}', [SupplyOfficerController::class, 'categorydelete'])->name('supply_officer.category.delete');
 
+    // Product Demo
+    Route::get('/supply_officer/demo/productdemo', [SupplyOfficerController::class, 'productDemo'])->name('supply_officer.product.demo');
+    Route::get('/supply_officer/demo/productdemo/search', [SupplyOfficerController::class, 'productdemoSearch'])->name('supply_officer.product.demo.search');
+
     // Request
     Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');
 
