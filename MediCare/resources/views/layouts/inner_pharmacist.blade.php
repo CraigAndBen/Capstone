@@ -243,6 +243,10 @@
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('pharmacist.product') }}">Product List</a></li>
                         </ul>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('pharmacist.product.purchase') }}">Purchase</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

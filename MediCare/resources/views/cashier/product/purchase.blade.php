@@ -1,4 +1,4 @@
-@extends('layouts.inner_pharmacist')
+@extends('layouts.inner_cashier')
 
 @section('content')
 
@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Product List</h5>
+                                <h5 class="m-b-10">Purchase List</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('pharmacist.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('pharmacist.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Product List List</li>
+                                <li class="breadcrumb-item"><a href="{{ route('cashier.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('cashier.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item" aria-current="page">Purchase</li>
                             </ul>
                         </div>
                     </div>
@@ -32,18 +32,10 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Product List</h1>
+                            <h1>Purchase </h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
-
-                                <div class="d-flex justify-content-end">
-                                    <div class="m-1">
-                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
-                                            Product</button>
-                                    </div>
-                                </div>
-                                <hr>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -69,7 +61,97 @@
                                     </div>
                                 @endif
 
-                                @if ($products_price->isEmpty())
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h2>Cart Items</h2>
+                                        @if ($cart)
+                                            @if (count($cart) > 0)
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product Name</th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                            <th>Total Price</th>
+                                                            <th>Action</th> <!-- Add a new column for the "Clear" button -->
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($cart as $key => $item)
+                                                            <!-- Use $key to identify each item -->
+                                                            <tr>
+                                                                <td>{{ $item['name'] }}</td>
+                                                                <td>${{ $item['price'] }}</td>
+                                                                <td>{{ $item['quantity'] }}</td>
+                                                                <td>${{ $item['price'] * $item['quantity'] }}</td>
+                                                                <td>
+                                                                    <form method="POST"
+                                                                        action="{{ route('cashier.product.purchase.remove', ['key' => $key]) }}">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger btn-sm">Clear</button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                                <p>Total:
+                                                    ${{ array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart)) }}
+                                                </p>
+                                                <form method="POST" action="{{ route('cashier.product.purchase.receipt') }}">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="amount">Amount Paid</label>
+                                                                <input type="number" name="amount" id="amount" class="form-control"
+                                                                    min="1" value="1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 mt-4">
+                                                            <button type="submit" class="btn btn-success">Preview Receipt</button>
+                                                        </div>
+                                                    </div>
+
+ 
+                                                </form>
+                                            @else
+                                                <p>Your cart is empty.</p>
+                                            @endif
+                                        @else
+                                            <p>Your cart is empty.</p>
+                                        @endif
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h1>Cashier Form</h1>
+                                        <form method="POST" action="{{ route('cashier.product.purchase.add') }}">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="product_id">Select a Product</label>
+                                                <select name="product_id" id="product_id" class="form-control">
+                                                    @foreach ($products as $product)
+                                                        @foreach ($prices as $price)
+                                                            @if ($price->product_id == $product->id)
+                                                                <option value="{{ $product->id }}">{{ $product->p_name }}
+                                                                    - ₱{{ $price->price }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="quantity">Quantity</label>
+                                                <input type="number" name="quantity" id="quantity" class="form-control"
+                                                    min="1" value="1">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Add Product</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {{-- @if ($products_price->isEmpty())
                                     <div class="alert alert-info">
                                         <span class="fa fa-check-circle"></span> No Product Yet.
                                     </div>
@@ -135,7 +217,7 @@
                                     {{-- <div class="d-flex justify-content-center my-3">
                                         {{ $products_price->links('pagination::bootstrap-4') }}
                                     </div> --}}
-                                @endif
+                                {{-- @endif --}} --
                             </div>
                         </div>
                     </div>
@@ -237,28 +319,29 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
                                 </div>
                                 <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <select class="form-control p-3" id="product_id" name="product_id" disabled>
-                                                        <option>Select Product</option>
-                                                        @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}">
-                                                                {{ ucwords($product->p_name) }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="hidden" id="id" name="id">
-                                                    <input type="number" name="price" class="form-control"
-                                                        id="price" placeholder="Price" disabled/>
-                                                    <label for="floatingInput">Price</label>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <select class="form-control p-3" id="product_id" name="product_id"
+                                                    disabled>
+                                                    <option>Select Product</option>
+                                                    @foreach ($products as $product)
+                                                        <option value="{{ $product->id }}">
+                                                            {{ ucwords($product->p_name) }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="hidden" id="id" name="id">
+                                                <input type="number" name="price" class="form-control" id="price"
+                                                    placeholder="Price" disabled />
+                                                <label for="floatingInput">Price</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

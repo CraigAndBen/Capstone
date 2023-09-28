@@ -240,8 +240,11 @@
                                 class="pc-mtext">Order</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('cashier.product.purchase.list') }}">Order Transaction</a></li>
+                        </ul>
+                        <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('cashier.order') }}">Order Transaction</a></li>
+                                    href="{{ route('cashier.product.purchase') }}">Purchase</a></li>
                         </ul>
                     </li>
                 </ul>

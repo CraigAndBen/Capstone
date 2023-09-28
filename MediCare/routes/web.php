@@ -390,6 +390,15 @@ Route::middleware(['auth', 'role:pharmacist'])->group(function () {
 
     //Pharmacist
     Route::get('/pharmacist/product', [PharmacistController::class, 'product'])->name('pharmacist.product');
+    Route::post('/pharmacist/product/create', [PharmacistController::class, 'productCreate'])->name('pharmacist.product.create');
+    Route::post('/pharmacist/product/update', [PharmacistController::class, 'productUpdate'])->name('pharmacist.product.update');
+    Route::delete('/pharmacist/product/delete/{id}', [PharmacistController::class, 'productDelete'])->name('pharmacist.product.delete');
+    Route::get('/pharmacist/product/purchase', [PharmacistController::class, 'purchase'])->name('pharmacist.product.purchase');
+    Route::post('/pharmacist/product/purchase/add', [PharmacistController::class, 'purchaseAdd'])->name('pharmacist.product.purchase.add');
+    Route::post('/pharmacist/product/purchase/confirm', [PharmacistController::class, 'purchaseConfirm'])->name('pharmacist.product.purchase.confirm');
+    Route::delete('/pharmacist/product/purchase/remove/{key}', [PharmacistController::class, 'removeProduct'])->name('pharmacist.product.purchase.remove');
+    Route::post('/pharmacist/product/purchase/receipt', [PharmacistController::class, 'receipt'])->name('pharmacist.product.purchase.receipt');
+
 
     // Logout
     Route::get('/pharmacist/logout', [PharmacistController::class, 'pharmacistLogout'])->name('pharmacist.logout');
@@ -412,8 +421,13 @@ Route::middleware(['auth', 'role:cashier'])->group(function () {
     Route::get('/cashier/notification', [CashierController::class, 'notification'])->name('cashier.notification');
     Route::post('/cashier/notification/read', [CashierController::class, 'notificationRead'])->name('cashier.notification.read');
 
-    //Pharmacist
-    Route::get('/cashier/product', [CashierController::class, 'order'])->name('cashier.order');
+    // Purchase
+    Route::get('/cashier/product/purchase.list', [CashierController::class, 'purchaseList'])->name('cashier.product.purchase.list');
+    Route::get('/cashier/product/purchase', [CashierController::class, 'purchase'])->name('cashier.product.purchase');
+    Route::post('/cashier/product/purchase/add', [CashierController::class, 'purchaseAdd'])->name('cashier.product.purchase.add');
+    Route::post('/cashier/product/purchase/confirm', [CashierController::class, 'purchaseConfirm'])->name('cashier.product.purchase.confirm');
+    Route::delete('/cashier/product/purchase/remove/{key}', [CashierController::class, 'removeProduct'])->name('cashier.product.purchase.remove');
+    Route::post('/cashier/product/purchase/receipt', [CashierController::class, 'receipt'])->name('cashier.product.purchase.receipt');
 
     // Logout
     Route::get('/cashier/logout', [CashierController::class, 'cashierOfficerLogout'])->name('cashier.logout');
