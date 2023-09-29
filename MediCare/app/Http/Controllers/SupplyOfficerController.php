@@ -153,38 +153,6 @@ class SupplyOfficerController extends Controller
         }
     }
 
-    public function notification()
-    {
-
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        return view('supply_officer.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
-
-    }
-
-    public function notificationRead(Request $request)
-    {
-
-        $notification = Notification::findOrFail($request->input('id'));
-
-        if ($notification->is_read == 0) {
-            $notification->is_read = 1;
-            $notification->save();
-
-            return redirect()->route('supply_officer.notification');
-        } else {
-            return redirect()->route('supply_officer.notification');
-        }
-
-    }
-
     public function productList()
     {
         $profile = Auth::user();
@@ -282,7 +250,7 @@ class SupplyOfficerController extends Controller
 
     }
 
-    public function productexpiration()
+    public function expirationproduct()
     {
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);

@@ -219,19 +219,6 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Notification</label>
-                        <i class="ti ti-apps"></i>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Notification List</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('pharmacist.notification') }}">Notification</a></li>
-                        </ul>
-                    </li>
-                    <li class="pc-item pc-caption">
                         <label>Transaction</label>
                         <i class="ti ti-apps"></i>
                     </li>
@@ -242,10 +229,6 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('pharmacist.product') }}">Product List</a></li>
-                        </ul>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('pharmacist.product.purchase') }}">Purchase</a></li>
                         </ul>
                     </li>
                 </ul>

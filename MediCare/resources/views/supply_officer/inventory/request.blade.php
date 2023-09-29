@@ -33,7 +33,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Product List</h1>
+                            <h1>Request List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -70,9 +70,9 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
-                                                <th>Name</th>
-                                                <th>Department</th>
+                                                <th style="text-align: center">#</th>
+                                                <th style="text-align: center">Name</th>
+                                                <th style="text-align: center">Department</th>
                                             </tr>
                                         </thead>
 
@@ -82,9 +82,9 @@
                                             @endphp
                                             @foreach ($requests as $request)
                                                 <tr data-toggle="modal" data-target="#viewModal{{ $request->id }}">
-                                                    <td>{{ $counter++ }}</td>
-                                                    <td>{{ $request->name_requester }}</td>
-                                                    <td>{{ $request->department }}</td>
+                                                    <td style="text-align: center">{{ $counter++ }}</td>
+                                                    <td style="text-align: center">{{ $request->name_requester }}</td>
+                                                    <td style="text-align: center">{{ $request->department }}</td>
                                                 </tr>
                                             @endforeach
 

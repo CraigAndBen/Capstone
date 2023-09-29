@@ -11,13 +11,13 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Product List</h5>
+                                <h5 class="m-b-10">Product Details</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item" aria-current="page">Product List</li>
+                                <li class="breadcrumb-item" aria-current="page">Product Details</li>
                             </ul>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Product List</h1>
+                            <h1>Product Details</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">

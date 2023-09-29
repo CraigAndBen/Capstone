@@ -151,38 +151,7 @@ class StaffController extends Controller
         }
     }
 
-    public function notification()
-    {
-
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        return view('staff.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
-
-    }
-
-    public function notificationRead(Request $request)
-    {
-
-        $notification = Notification::findOrFail($request->input('id'));
-
-        if ($notification->is_read == 0) {
-            $notification->is_read = 1;
-            $notification->save();
-
-            return redirect()->route('staff.notification');
-        } else {
-            return redirect()->route('staff.notification');
-        }
-
-    }
-
+    
     public function product()
     {
         $profile = Auth::user();

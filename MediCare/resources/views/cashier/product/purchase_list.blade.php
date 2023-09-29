@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Product List</h5>
+                                <h5 class="m-b-10">Purchase Transaction</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('cashier.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('cashier.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Product List List</li>
+                                <li class="breadcrumb-item" aria-current="page">Purchase Transaction</li>
                             </ul>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Product List</h1>
+                            <h1>Purchase Transaction</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -116,7 +116,7 @@
                     </div>
 
 
-                    {{-- Update modal --}}
+                    {{-- View modal --}}
                     <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
@@ -174,7 +174,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- End Update Modal --}}
+                    {{-- End View Modal --}}
 
 
                     <!-- [ sample-page ] end -->
