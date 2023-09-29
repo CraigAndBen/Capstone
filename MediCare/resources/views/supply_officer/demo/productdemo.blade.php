@@ -1,8 +1,9 @@
-@extends('layouts.inner_supplyofficer')
+@extends('layouts.inner_demo')
 
 @section('content')
     <!-- [ Main Content ] start -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <div class="pc-container pb-3">
         <div class="pc-content ">
             <!-- [ breadcrumb ] start -->
@@ -32,43 +33,43 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Product Demographics</h1>
+                            <h2>Product Demographics</h2>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <strong>Whoops!</strong> There were some problems with your input. Please fix the
-                                following errors: <br>
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                                <div class="alert alert-danger">
+                                    <strong>Whoops!</strong> There were some problems with your input. Please fix the
+                                    following errors: <br>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                <span class="fa fa-check-circle"></span> {{ session('success') }}
-                            </div>
-                        @endif
+                            @if (session('success'))
+                                <div class="alert alert-success">
+                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
+                                </div>
+                            @endif
 
-                        @if (session('info'))
-                            <div class="alert alert-info">
-                                {{ session('info') }}
-                            </div>
-                        @endif
+                            @if (session('info'))
+                                <div class="alert alert-info">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
                             <div class="row">
                                 <div class="col-md-2">
 
                                 </div>
                                 <div class="col-md-4">
-                                    <form action="{{ route('superadmin.demographics.diagnose.search') }}" method="GET">
+                                    <form action="{{ route('supply_officer.product.demo.search') }}" method="GET">
                                         @csrf
-                                        <select class="form-control p-3" id="diagnose" name="diagnose">
-                                            <option value="">Select Diagnose</option>
+                                        <select class="form-control p-3" name="product" id="product">
+                                            <option value="">Select Product</option>
                                             @foreach ($products as $product)
-                                                <option value="{{ $product->id }}">{{ ucwords($product->p_name) }}</option>
+                                                <option value="{{ $product->id }}">{{ $product->p_name }}</option>
                                             @endforeach
                                         </select>
                                 </div>
@@ -90,18 +91,15 @@
                         <hr>
                         <div class="container">
                             <div class="alert alert-success">
-                                Select Diagnose and number of years to analyze first.
+                                Select Product and Year First.
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- [ sample-page ] end -->
+                    <!-- [ sample-page ] end -->
+                </div>
+                <!-- [ Main Content ] end -->
             </div>
-            <!-- [ Main Content ] end -->
         </div>
-    </div>
-@endsection
-@section('scripts')
-@endsection
+    @endsection
 

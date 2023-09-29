@@ -1,4 +1,4 @@
-@extends('layouts.inner_supplyofficero')
+@extends('layouts.inner_demo')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -14,8 +14,8 @@
                                 <h5 class="m-b-10">Product Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.page') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.page') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item" aria-current="page">Product Demographics</li>
                             </ul>
                         </div>
