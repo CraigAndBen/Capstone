@@ -56,9 +56,14 @@
                                 @endif
 
                                 @if (session('info'))
-                                    <div class="alert alert-info">
-                                        {{ session('info') }}
+                                    <div class="alert alert-warning">
+                                        <span class="fa fa-xmark-circle"></span> {{ session('info') }}
                                     </div>
+                                @endif
+                                @if (session('error'))
+                                <div class="alert alert-danger">
+                                    <span class="fa fa-xmark-circle"></span> {{ session('error') }}
+                                </div>
                                 @endif
 
                                 <div class="row">
@@ -81,9 +86,9 @@
                                                             <!-- Use $key to identify each item -->
                                                             <tr>
                                                                 <td>{{ $item['name'] }}</td>
-                                                                <td>${{ $item['price'] }}</td>
+                                                                <td>₱{{ $item['price'] }}</td>
                                                                 <td>{{ $item['quantity'] }}</td>
-                                                                <td>${{ $item['price'] * $item['quantity'] }}</td>
+                                                                <td>₱{{ $item['price'] * $item['quantity'] }}</td>
                                                                 <td>
                                                                     <form method="POST"
                                                                         action="{{ route('cashier.product.purchase.remove', ['key' => $key]) }}">
@@ -98,7 +103,7 @@
                                                     </tbody>
                                                 </table>
                                                 <p>Total:
-                                                    ${{ array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart)) }}
+                                                    ₱{{ array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart)) }}
                                                 </p>
                                                 <form method="POST" action="{{ route('cashier.product.purchase.receipt') }}">
                                                     @csrf
@@ -144,80 +149,16 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="quantity">Quantity</label>
+                                                <i class="bi bi-info-circle-fill" data-toggle="tooltip" data-placement="left" 
+                                                    title="Available Stock:{{$product->stock}}"></i>
                                                 <input type="number" name="quantity" id="quantity" class="form-control"
-                                                    min="1" value="1">
+                                                    min="1" value="1"> 
                                             </div>
+
                                             <button type="submit" class="btn btn-primary">Add Product</button>
-                                        </form>
+                                        </form> 
                                     </div>
                                 </div>
-                                {{-- @if ($products_price->isEmpty())
-                                    <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Product Yet.
-                                    </div>
-                                @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>Product Name</th>
-                                                <th>Category Name</th>
-                                                <th>Price</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($products as $product)
-                                                <tr>
-                                                    @foreach ($categories as $category)
-                                                        @if ($product->category_id == $category->id)
-                                                            <td>{{ ucwords($product->p_name) }}</td>
-                                                            <td>{{ ucwords($category->category_name) }}</td>
-                                                            @foreach ($products_price as $price)
-                                                                @if ($price->product_id == $product->id)
-                                                                    <td>{{ ucwords($price->price) }}</td>
-                                                                    <td class="text-center">
-                                                                        <div class="dropdown">
-                                                                            <button class="btn btn-primary dropdown-toggle"
-                                                                                type="button" data-toggle="dropdown">
-                                                                                Actions
-                                                                            </button>
-                                                                            <div class="dropdown-menu">
-                                                                                <a class="dropdown-item btn btn-primary"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#updateModal"
-                                                                                    data-id="{{ json_encode($price->id) }}"
-                                                                                    data-product-price="{{ json_encode($price->price) }}"
-                                                                                    data-product-name="{{ json_encode($product->id) }}">Update</a>
-
-                                                                                <a class="dropdown-item btn btn-primary"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#viewModal"
-                                                                                    data-id="{{ json_encode($price->id) }}"
-                                                                                    data-product-price="{{ json_encode($price->price) }}"
-                                                                                    data-product-name="{{ json_encode($product->id) }}"">View</a>
-                                                                                <form method="POST" action="{{ route('pharmacist.product.delete', ['id' => $price->id]) }}">
-                                                                                        @csrf
-                                                                                        @method('DELETE')
-                                                                                    
-                                                                                        <button type="submit" class="btn btn-danger dropdown-item ">Delete</button>
-                                                                                    </form>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                @endif
-                                                            @endforeach
-                                                        @else
-                                                        @endif
-                                                    @endforeach
-                                                </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
-                                    {{-- <div class="d-flex justify-content-center my-3">
-                                        {{ $products_price->links('pagination::bootstrap-4') }}
-                                    </div> --}}
-                                {{-- @endif --}} --
                             </div>
                         </div>
                     </div>
@@ -388,6 +329,13 @@
                     modal.find('#product_id').val(product_name);
                     modal.find('#price').val(product_price);
                 });
+
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                });
             });
+
+           
+
         </script>
     @endsection

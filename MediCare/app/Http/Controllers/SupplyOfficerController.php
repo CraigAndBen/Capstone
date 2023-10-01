@@ -266,13 +266,12 @@ class SupplyOfficerController extends Controller
         $currentDate = Carbon::now();
 
         // Calculate the date one month from the current date
-        $oneMonthFromNow = $currentDate->copy()->addMonth();
+        $twoMonthsFromNow = $currentDate->copy()->addMonths(2);
 
-        // Retrieve products with expiration dates within the date range
-        $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $oneMonthFromNow)
-            ->get();
+        // Retrieve products with expiration dates exactly two months from now
+        $products = Product::whereDate('expiration', $twoMonthsFromNow)->get();
 
+           
         // Display the list of products
         return view('supply_officer.inventory.expiring_soon', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
 

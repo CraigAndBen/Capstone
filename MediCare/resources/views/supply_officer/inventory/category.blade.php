@@ -183,7 +183,6 @@
                                                         <select class="form-control p-3 category_n" name="category_name">
                                                             <option value="{{ $category->category_name }}">
                                                                 {{ $category->category_name }}</option>
-                                                            <!-- Add other category name options if needed -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -193,7 +192,6 @@
                                                         <select class="form-control p-3 category_c" name="category_code">
                                                             <option value="{{ $category->category_code }}">
                                                                 {{ $category->category_code }}</option>
-                                                            <!-- Add other category code options if needed -->
                                                         </select>
                                                     </div>
                                                 </div>

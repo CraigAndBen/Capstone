@@ -229,6 +229,16 @@ class CashierController extends Controller
         $product = Product::find($request->product_id);
         $price = Product_price::where('product_id', $request->product_id)->first();
 
+         // Check if the requested quantity exceeds available stock
+            if ($product->stock < $request->quantity) {
+                $remainingStock = $product->stock;
+                return redirect()->route('cashier.product.purchase')->with('error', "Insufficient stock for this product. Available stock: $remainingStock");
+            }
+
+            // Reduce the stock of the product
+            $product->stock -= $request->input('quantity');
+            $product->save(); // Save the updated stock
+
         // Get the existing cart items from the session or initialize an empty array
         $cart = $request->session()->get('cart', []);
 
@@ -298,7 +308,7 @@ class CashierController extends Controller
         $change = $amount - $totalPrice;
 
         if ($change < 0) {
-            return redirect()->route('cashier.product.purchase')->with('info', 'insufficient Amount');
+            return redirect()->route('cashier.product.purchase')->with('info', 'Insufficient Amount');
         }
 
         return view('cashier.product.receipt', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'cart', 'reference', 'totalPrice', 'amount', 'change'));
