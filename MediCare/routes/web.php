@@ -319,6 +319,10 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/profile/password', [SupplyOfficerController::class, 'passwordProfile'])->name('supply_officer.profile.password');
     Route::post('/supply_officer/profile/update', [SupplyOfficerController::class, 'profileUpdate'])->name('supply_officer.profile.update');
     Route::post('/supply_officer/profile/update/password', [SupplyOfficerController::class, 'updatePassword'])->name('supply_officer.password.update');
+
+    // Notification
+    Route::get('/supply_officer/notification', [SupplyOfficerController::class, 'notification'])->name('supply_officer.notification');
+    Route::post('/supply_officer/notification/read', [SupplyOfficerController::class, 'notificationRead'])->name('supply_officer.notification.read');
     
     // Inventory
     Route::get('/supply_officer/product', [SupplyOfficerController::class, 'productList'])->name('supply_officer.product');

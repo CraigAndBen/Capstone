@@ -70,7 +70,7 @@
                             aria-expanded="false">
                             <i class="ti ti-bell"></i>
                         </a>
-                        {{-- <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+                        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                             @if ($count > 0)
                                 <div class="dropdown-header">
                                     <h5>All Notification <span
@@ -89,7 +89,7 @@
                                         </div>
                                         @foreach ($limitNotifications as $notification)
                                             <a class="list-group-item list-group-item-action"
-                                                href="{{ route('doctor.appointment') }}">
+                                                href="{{ route('supply_officer.notification') }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0">
                                                         <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="text-center py-2">
-                                    <a href="{{ route('nurse.notification') }}" class="btn btn-primary">Show all</a>
+                                    <a href="{{ route('supply_officer.notification') }}" class="btn btn-primary">Show all</a>
                                 </div>
                             @else
                                 <div class="dropdown-header">
@@ -144,7 +144,7 @@
                                     </div>
                                 </div>
                             @endif
-                        </div> --}}
+                        </div>
                     </li>
                     <li class="dropdown pc-h-item header-user-profile">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
@@ -158,11 +158,11 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                {{-- <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span> --}}
+                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
                                 </h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
-                                    {{-- <a href="{{ route('nurse.profile') }}" class="dropdown-item"> --}}
+                                    <a href="{{ route('supply_officer.profile') }}" class="dropdown-item">
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
@@ -170,7 +170,7 @@
                                         <i class="ti ti-user"></i>
                                         <span>Social Profile</span>
                                     </a>
-                                    {{-- <a href="{{ route('nurse.logout') }}" class="dropdown-item"> --}}
+                                    <a href="{{ route('supply_officer.logout') }}" class="dropdown-item">
                                         <i class="ti ti-logout"></i>
                                         <span>Logout</span>
                                     </a>
@@ -215,6 +215,18 @@
                                     Profile</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.profile.password') }}">Update Profile Password</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-caption">
+                        <label>Notification</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Notification List</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.notification') }}">Notification</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">

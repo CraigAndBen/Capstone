@@ -20,7 +20,7 @@ class SupplyOfficerController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;
@@ -302,7 +302,6 @@ class SupplyOfficerController extends Controller
         // Retrieve products with expiration dates exactly two months from now
         $products = Product::whereDate('expiration', $twoMonthsFromNow)->get();
 
-           
         // Display the list of products
         return view('supply_officer.inventory.expiring_soon', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
 
@@ -411,6 +410,15 @@ class SupplyOfficerController extends Controller
 
     public function productdemoSearch(Request $request)
     {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        
         $request->validate([
             'product' => 'required',
             'year' => 'required',
@@ -471,7 +479,7 @@ class SupplyOfficerController extends Controller
 
         
     
-        return view('supply_officer.demo.productdemo_search', compact('products', 'uniqueYears', 'productData', 'selectedProduct', 'selectedYear', 'totalStockAdded', 'isCurrentYear', 'totalRequestedProducts', 'totalPurchasedProducts', 'remainingStock'));
+        return view('supply_officer.demo.productdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate','products', 'uniqueYears', 'productData', 'selectedProduct', 'selectedYear', 'totalStockAdded', 'isCurrentYear', 'totalRequestedProducts', 'totalPurchasedProducts', 'remainingStock'));
     }
     
 
