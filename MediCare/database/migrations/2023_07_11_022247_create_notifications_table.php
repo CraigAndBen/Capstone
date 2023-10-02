@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('is_read')->default(false);
             $table->string('specialties')->nullable();
             $table->string('diagnose')->nullable();
-            $table->enum('type', ['user','nurse','doctor','admin',''])->default('');
+            $table->enum('type', ['user','nurse','doctor','admin','supply_officer',''])->default('');
             $table->timestamps();
         });
     }

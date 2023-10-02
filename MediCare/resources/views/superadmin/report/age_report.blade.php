@@ -100,6 +100,7 @@
 
             </div>
         </div>
+    
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>

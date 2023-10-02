@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Product;
 use Closure;
 use Carbon\Carbon;
 use App\Models\Patient;
@@ -37,7 +38,7 @@ class DiagnoseAlert
             ->pluck('diagnosis')
             ->toArray();
 
-        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->get();
 
         foreach ($diagnoseData as $diagnose) {
 
@@ -58,34 +59,50 @@ class DiagnoseAlert
                     $currentTime = Carbon::now()->toTimeString();
                     $currentDate = Carbon::now()->toDateString();
                     $title = "$diagnose yearly alert";
-                    $message = "The diagnose: $diagnose is rising from $currentYear to previous year: $year->year";
+                    $message = "The diagnose: $diagnose is rising from $currentYear to previous year: $year->year, The recommended medicine are:";
 
                     if ($notifications->isEmpty()) {
-                    // Create a new notification if no notifications exist
+
+                        $products = Product::where(function ($query) use ($diagnose) {
+                            $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
+                        })->get();
+    
+                        foreach ($products as $products) {
+                            $message .= $products->p_name;
+                        }
 
                         Notification::create([
                             'title' => $title,
                             'message' => $message,
                             'date' => $currentDate,
                             'time' => $currentTime,
-                            'type' => 'admin',
+                            'type' => 'supply_officer',
                             'diagnose' => $diagnose,
                         ]);
 
                     } else {
                         foreach ($notifications as $notification) {
 
-                            $notificationDate =  Carbon::parse($notification->date);
+                            $notificationDate = Carbon::parse($notification->date);
                             $year = $notificationDate->year;
-                            
+
                             if (($notification->title != $title && $year != $currentYear) || ($notification->title == $title && $year != $currentYear)) {
-                                // Create a new notification if conditions are met
+
+                                // Create a new notification if conditions are met'
+                                $products = Product::where(function ($query) use ($diagnose) {
+                                    $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
+                                })->get();
+            
+                                foreach ($products as $products) {
+                                    $message .= $products->p_name;
+                                }
+
                                 Notification::create([
                                     'title' => $title,
                                     'message' => $message,
                                     'date' => $currentDate,
                                     'time' => $currentTime,
-                                    'type' => 'admin',
+                                    'type' => 'supply_officer',
                                     'diagnose' => $diagnose,
                                 ]);
                             }
@@ -125,37 +142,57 @@ class DiagnoseAlert
             // Compare the highest count with the current month count
             if ($currentMonthCount > $highestCount) {
 
+
+
                 $currentTime = Carbon::now()->toTimeString();
                 $currentDate = Carbon::now()->toDateString();
 
                 $title = "$diagnose monthly alert";
-                $message = "The diagnose: $diagnose is rising from previous month: $highestMonth";
+                $message = "The diagnose: $diagnose is rising from previous month: $highestMonth, The recommended medicine are: ";
 
                 if ($notifications->isEmpty()) {
                     // Create a new notification if no notifications exist
+
+                    $products = Product::where(function ($query) use ($diagnose) {
+                        $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
+                    })->get();
+
+                    foreach ($products as $products) {
+                        $message .= $products->p_name;
+                    }
+
                     Notification::create([
                         'title' => $title,
                         'message' => $message,
                         'date' => $currentDate,
                         'time' => $currentTime,
-                        'type' => 'admin',
+                        'type' => 'supply_officer',
                         'diagnose' => $diagnose,
                     ]);
 
                 } else {
                     foreach ($notifications as $notification) {
 
-                        $notificationDate =  Carbon::parse($notification->date);
+                        $notificationDate = Carbon::parse($notification->date);
                         $month = $notificationDate->month;
 
                         if (($notification->title != $title && $month != $currentMonth) || ($notification->title == $title && $month != $currentMonth)) {
                             // Create a new notification if conditions are met
+
+                            $products = Product::where(function ($query) use ($diagnose) {
+                                $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
+                            })->get();
+        
+                            foreach ($products as $products) {
+                                $message .= $products->p_name;
+                            }
+
                             Notification::create([
                                 'title' => $title,
                                 'message' => $message,
                                 'date' => $currentDate,
                                 'time' => $currentTime,
-                                'type' => 'admin',
+                                'type' => 'supply_officer',
                                 'diagnose' => $diagnose,
                             ]);
                         }

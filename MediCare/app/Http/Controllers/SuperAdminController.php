@@ -16,11 +16,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rules\Password;
-use App\Http\Requests\ProfileUpdateRequest;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Phpml\Math\Statistic\Mean;
+use Phpml\Math\Statistic\StandardDeviation;
+use Phpml\Math\Statistic\Median;
+use Phpml\Math\Statistic\Variance;
 
 class SuperAdminController extends Controller
 {
@@ -1936,6 +1936,8 @@ class SuperAdminController extends Controller
         $genderCountsByMonth = [];
         $totalMaleCount = 0;
         $totalFemaleCount = 0;
+        $maleCounts = [];
+        $femaleCounts = [];
 
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
@@ -1962,11 +1964,14 @@ class SuperAdminController extends Controller
                 'male' => $maleCount,
                 'female' => $femaleCount,
             ];
+
+            // Add counts to arrays for additional statistics
+            $maleCounts[] = $maleCount;
+            $femaleCounts[] = $femaleCount;
         }
 
+
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
-
-
 
         return view('superadmin.patient-demo.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
     }
@@ -2061,6 +2066,8 @@ class SuperAdminController extends Controller
         $genderCountsByMonth = [];
         $totalMaleCount = 0;
         $totalFemaleCount = 0;
+        $maleCounts = [];
+        $femaleCounts = [];
 
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
@@ -2078,12 +2085,19 @@ class SuperAdminController extends Controller
             $maleCount = $patients->where('gender', 'male')->count();
             $femaleCount = $patients->where('gender', 'female')->count();
 
+            $totalMaleCount += $maleCount;
+            $totalFemaleCount += $femaleCount;
+
             // Store the gender counts for the current month in the array
             $genderCountsByMonth[] = [
                 'month' => $startDate->format('F'),
                 'male' => $maleCount,
                 'female' => $femaleCount,
             ];
+
+            // Add counts to arrays for additional statistics
+            $maleCounts[] = $maleCount;
+            $femaleCounts[] = $femaleCount;
         }
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
@@ -2348,7 +2362,7 @@ class SuperAdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
 
-        return view('superadmin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount'));
+        return view('superadmin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount', 'ageGroupsByMonth'));
 
     }
 
@@ -3434,5 +3448,34 @@ class SuperAdminController extends Controller
 
         return false;
 
+    }
+
+    private function calculateMedian($array)
+    {
+        sort($array);
+        $count = count($array);
+        $middle = floor($count / 2);
+
+        if ($count % 2 == 0) {
+            // If the count of elements is even, average the two middle values
+            $median = ($array[$middle - 1] + $array[$middle]) / 2;
+        } else {
+            // If the count of elements is odd, take the middle value
+            $median = $array[$middle];
+        }
+
+        return $median;
+    }
+
+    // Custom function to format numbers
+    private function formatNumber($number)
+    {
+        if ($number == intval($number)) {
+            // If the number is an integer, don't display decimal places
+            return number_format($number);
+        } else {
+            // Display the number with 3 decimal places
+            return number_format($number, 3);
+        }
     }
 }
