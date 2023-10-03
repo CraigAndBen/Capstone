@@ -546,6 +546,19 @@ class AdminController extends Controller
         return view('admin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
+    public function patientReport(Request $request)
+    {
+        $patient = Patient::where('id', $request->input('patient_id'))->first();
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $doctor = User::where('id',$patient->physician)->first();
+
+        return view('admin.report.patient_report', compact('patient', 'currentTime', 'currentDate','doctor'));
+    }
+
     public function notification()
     {
 
