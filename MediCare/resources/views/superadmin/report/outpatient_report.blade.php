@@ -39,24 +39,26 @@
             </div>
 
         </div>
-        <div style="height: 80px"></div>
+
         <div class="row justify-content-center">
-            <div class="col-7">
+            <div class="col-8 text-center">
+                <h3><i>Outpatient Bar Graph</i></h3>
+                <br>
                 <canvas id="admitPatientDemographicsChart"></canvas>
             </div>
             <div class="col-1">
 
             </div>
         </div>
-
-        <div class="page-break my-5"></div>
-        <div style="height: 100px"></div>
+        <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
             <div class="col-1">
 
             </div>
-            <div class="col-9">
+            <div class="col-8 text-center">
+                <h3><i>Outpatient Table</i></h3>
+                <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead class="bg-primary text-light text-center">
                         <tr>

@@ -45,10 +45,10 @@
                                             <li class="list-group-item px-0">
                                                 <div class="row align-items-start">
                                                     <div class="col">
-                                                        <h5 class="mb-0">{{ $diagnosis['diagnosis'] }}</h5>
+                                                        <h5 class="mb-0">{{ ucwords($diagnosis['diagnosis']) }}</h5>
                                                     </div>
                                                     <div class="col-auto">
-                                                        <h5 class="mb-0">{{ $diagnosis['total_occurrences'] }}<span
+                                                        <h5 class="mb-0">{{ ucwords($diagnosis['total_occurrences']) }}<span
                                                                 class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
                                                                     class="ti ti-chevron-up text-success"></i></span></h5>
                                                     </div>
@@ -73,9 +73,10 @@
                                             @foreach ($rankedDiagnosis as $diagnose)
                                                 @if ($diagnose['diagnosis'] == $specificDiagnosis)
                                                     <option value="{{ $diagnose['diagnosis'] }}" selected>
-                                                        {{ $diagnose['diagnosis'] }}</option>
+                                                        {{ ucwords($diagnose['diagnosis']) }}</option>
                                                 @else
-                                                    <option value="{{ $diagnose['diagnosis'] }}">{{ $diagnose['diagnosis'] }}
+                                                    <option value="{{ $diagnose['diagnosis'] }}">
+                                                        {{ ucwords($diagnose['diagnosis']) }}
                                                     </option>
                                                 @endif
                                             @endforeach
@@ -101,7 +102,7 @@
                             </div>
                             <!-- Create the bar graph for yearly trend -->
                             <div class="my-3">
-                                <h3>Yearly Trend - <i>{{ $specificDiagnosis }}</i></h3>
+                                <h3>Yearly Trend - <i>{{ ucwords($specificDiagnosis) }}</i></h3>
                             </div>
                             <hr>
                             <canvas id="yearlyTrendChart" width="100%" height="35"></canvas>
@@ -110,7 +111,7 @@
                         <div class="row p-3">
                             <!-- Create the bar graph for yearly trend -->
                             <div class="my-3">
-                                <h3>Monthly Trend - <i>{{ $specificDiagnosis }}</i></h3>
+                                <h3>Monthly Trend - <i>{{ ucwords($specificDiagnosis) }}</i></h3>
                             </div>
                             <hr>
                             <canvas id="monthlyTrendChart" width="100%" height="35"></canvas>
@@ -127,94 +128,74 @@
 
 @section('scripts')
     <script>
-        // Prepare data for the line graph
-        var years = {!! json_encode(array_column($yearlyTrendData, 'year')) !!};
-        var counts = {!! json_encode(array_column($yearlyTrendData, 'count')) !!};
+        // Get the data passed from the controller
+        var years = @json($years);
+        var admittedCounts = @json($admittedYearCounts);
+        var outpatientCounts = @json($outpatientYearCounts);
 
-        // Get the chart context and create the line graph
+        // Create a chart using Chart.js
         var ctx = document.getElementById('yearlyTrendChart').getContext('2d');
-        var yearlyTrendChart = new Chart(ctx, {
-            type: 'line',
+        var chart = new Chart(ctx, {
+            type: 'line', // Use a line chart for yearly trend
             data: {
                 labels: years,
                 datasets: [{
-                    label: 'Yearly Trend',
-                    data: counts,
-                    fill: true, // Fill area under the line
-                    borderColor: 'rgba(75, 192, 192, 1)', // Teal
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Teal with opacity
-                    borderWidth: 2,
-                    pointRadius: 5, // Increase point size for data points
-                    pointBackgroundColor: 'rgba(75, 192, 192, 1)', // Teal
-                    pointBorderColor: '#fff', // White
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 7, // Increase point size on hover
-                }]
+                        label: 'Admitted',
+                        data: admittedCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false // Ensure the line chart is not filled
+                    },
+                    {
+                        label: 'Outpatient',
+                        data: outpatientCounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: false // Ensure the line chart is not filled
+                    }
+                ]
             },
             options: {
-                responsive: true,
                 scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                        }
-                    },
                     y: {
-                        beginAtZero: true,
-                        suggestedMax: Math.max(...counts) + 2, // Adjust y-axis upper limit
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false, // Hide legend
+                        beginAtZero: true
                     }
                 }
             }
         });
+        // Get the data passed from the controller
+        var months = @json($months);
+        var admittedCounts = @json($admittedMonthCounts);
+        var outpatientCounts = @json($outpatientMonthCounts);
 
+        // Create a chart using Chart.js
         var ctx = document.getElementById('monthlyTrendChart').getContext('2d');
-
-        var monthlyData = @json($monthlyTrendData);
-
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-            'November', 'December'
-        ];
-        var monthlyCounts = Array.from({
-            length: 12
-        }, (_, i) => {
-            var monthData = monthlyData.find(item => item.month === months[i]);
-            return monthData ? monthData.count : 0;
-        });
-
-        var monthlyTrendChart = new Chart(ctx, {
-            type: 'bar',
+        var chart = new Chart(ctx, {
+            type: 'line', // Change chart type to line
             data: {
                 labels: months,
                 datasets: [{
-                    label: 'Monthly Trend',
-                    data: monthlyCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                    borderWidth: 1,
-                }]
+                        label: 'Admitted',
+                        data: admittedCounts,
+                        borderColor: 'rgba(75, 192, 192, 1)', // Remove backgroundColor
+                        borderWidth: 2, // Increase borderWidth for lines
+                        fill: false // Do not fill the area under the line
+                    },
+                    {
+                        label: 'Outpatient',
+                        data: outpatientCounts,
+                        borderColor: 'rgba(255, 99, 132, 1)', // Remove backgroundColor
+                        borderWidth: 2, // Increase borderWidth for lines
+                        fill: false // Do not fill the area under the line
+                    }
+                ]
             },
             options: {
-                responsive: true,
                 scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                        },
-                        title: {
-                            display: true,
-                            text: 'Month'
-                        }
-                    },
                     y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Count'
-                        }
+                        beginAtZero: true
                     }
                 }
             }

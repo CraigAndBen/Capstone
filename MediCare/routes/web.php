@@ -270,6 +270,8 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/superadmin/patient/store', [SuperAdminController::class, 'patientStore'])->name('superadmin.patient.store');
     Route::post('/superadmin/outpatient/store', [SuperAdminController::class, 'outpatientStore'])->name('superadmin.outpatient.store');
     Route::post('/superadmin/patient/update', [SuperAdminController::class, 'patientUpdate'])->name('superadmin.patient.update');
+    Route::get('/superadmin/patient/report', [SuperAdminController::class, 'patientReport'])->name('superadmin.patient.report');
+
 
     // Demographics
     // Gender

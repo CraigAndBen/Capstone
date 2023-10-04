@@ -39,9 +39,11 @@
             </div>
 
         </div>
-        <div style="height: 80px"></div>
+
         <div class="row justify-content-center">
-            <div class="col-7">
+            <div class="col-8 text-center">
+                <h3><i>{{ucwords($specificDiagnosis)}} Line Graph</i></h3>
+                <br>
                 <canvas id="diagnosePatientDemographicsChart"></canvas>
             </div>
             <div class="col-1">
@@ -49,19 +51,20 @@
             </div>
         </div>
 
-        <div class="page-break my-5"></div>
-        <div style="height: 100px"></div>
+        <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
             <div class="col-1">
 
             </div>
-            <div class="col-9">
+            <div class="col-8 text-center">
+                <h3><i>{{ucwords($specificDiagnosis)}} Table</i></h3>
+                <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead>
                         <tr>
                             <th>Month</th>
-                            <th>{{ucwords($diagnose)}} Count</th>
+                            <th>{{ucwords($specificDiagnosis)}} Count</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -112,7 +115,7 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: {!!json_encode(ucwords($diagnose))!!},
+                    label: {!!json_encode(ucwords($specificDiagnosis))!!},
                     data: diagnosePatientCounts,
                     fill: false,
                     borderColor: 'rgba(54, 162, 235, 0.7)', // Blue

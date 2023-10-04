@@ -25,7 +25,7 @@
 @section('content')
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
-            <div class="col-7 my-4">
+            <div class="col-8 my-4">
                 <h5>Report Type: <i><b>Yearly Trend Analytics Report</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
@@ -39,9 +39,11 @@
             </div>
 
         </div>
-        <div style="height: 80px"></div>
+        
         <div class="row justify-content-center">
-            <div class="col-7">
+            <div class="col-8 text-center">
+                <h3><i>{{ucwords($specificDiagnosis)}} Yearly Trend Line Graph</i></h3>
+                <br>
                 <canvas id="yearlyTrendChart"></canvas>
             </div>
             <div class="col-1">
@@ -50,36 +52,48 @@
         </div>
 
         <div class="page-break my-5"></div>
-        <div style="height: 100px"></div>
+        <div style="height: 80px"></div>
 
         <div class="row justify-content-center">
             <div class="col-1">
 
             </div>
-            <div class="col-9">
+            <div class="col-9 text-center">
+                <h3><i>{{ucwords($specificDiagnosis)}} Yearly Trend Table</i></h3>
+                <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th>{{$specificDiagnosis}} Count</th>
+                            <th>Admitted</th>
+                            <th>Outpatient</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                            $totalCount = 0;
+                            $totalAdmitted = 0;
+                            $totalOutpatient = 0;
                         @endphp
-                        @foreach ($yearlyTrendData as $trend)
+
+                        @foreach ($years as $key => $year)
                             <tr>
-                                <td>{{ $trend['year'] }}</td>
-                                <td>{{ $trend['count'] }}</td>
+                                <td>{{ $year }}</td>
+                                <td>{{ $admittedYearCounts[$key] }}</td>
+                                <td>{{ $outpatientYearCounts[$key] }}</td>
+                                <td>{{ $admittedYearCounts[$key] + $outpatientYearCounts[$key] }}</td>
                             </tr>
                             @php
-                                $totalCount += $trend['count'];
+                                $totalAdmitted += $admittedYearCounts[$key];
+                                $totalOutpatient += $outpatientYearCounts[$key];
                             @endphp
                         @endforeach
+
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>{{ $totalCount }}</strong></td>
+                            <td><strong>{{ $totalAdmitted }}</strong></td>
+                            <td><strong>{{ $totalOutpatient }}</strong></td>
+                            <td><strong>{{ $totalAdmitted + $totalOutpatient }}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -109,9 +123,10 @@
             </div>
 
         </div>
-        <div style="height: 80px"></div>
         <div class="row justify-content-center">
-            <div class="col-7">
+            <div class="col-8 text-center">
+                <h3><i>{{ucwords($specificDiagnosis)}} Monthly Trend Table</i></h3>
+                <br>
                 <canvas id="monthlyTrendChart"></canvas>
             </div>
             <div class="col-1">
@@ -120,39 +135,48 @@
         </div>
 
         <div class="page-break my-5"></div>
-        <div style="height: 100px"></div>
+        <div style="height: 80px"></div>
 
         <div class="row justify-content-center">
             <div class="col-1">
 
             </div>
-            <div class="col-9">
+            <div class="col-9 text-center">
+                <h3><i>{{ucwords($specificDiagnosis)}} Monthly Trend Table</i></h3>
+                <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead>
                         <tr>
                             <th>Month</th>
-                            <th>{{$specificDiagnosis}} Count</th>
+                            <th>Admitted</th>
+                            <th>Outpatient</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                            $allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                            $totalCount = 0;
+                            $totalAdmitted = 0;
+                            $totalOutpatient = 0;
                         @endphp
-                        @foreach ($allMonths as $monthName)
-                            @php
-                                $trendData = collect($monthlyTrendData)->firstWhere('month', $monthName);
-                                $count = $trendData ? $trendData['count'] : 0;
-                                $totalCount += $count;
-                            @endphp
+
+                        @foreach ($months as $key => $month)
                             <tr>
-                                <td>{{ $monthName }}</td>
-                                <td>{{ $count }}</td>
+                                <td>{{ $month }}</td>
+                                <td>{{ $admittedMonthCounts[$key] }}</td>
+                                <td>{{ $outpatientMonthCounts[$key] }}</td>
+                                <td>{{ $admittedMonthCounts[$key] + $outpatientMonthCounts[$key] }}</td>
                             </tr>
+                            @php
+                                $totalAdmitted += $admittedMonthCounts[$key];
+                                $totalOutpatient += $outpatientMonthCounts[$key];
+                            @endphp
                         @endforeach
+
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>{{ $totalCount }}</strong></td>
+                            <td><strong>{{ $totalAdmitted }}</strong></td>
+                            <td><strong>{{ $totalOutpatient }}</strong></td>
+                            <td><strong>{{ $totalAdmitted + $totalOutpatient }}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -181,103 +205,74 @@
                 window.print();
             });
         });
-        // Prepare data for the line graph
-        var years = {!! json_encode(array_column($yearlyTrendData, 'year')) !!};
-        var counts = {!! json_encode(array_column($yearlyTrendData, 'count')) !!};
+        // Get the data passed from the controller
+        var years = @json($years);
+        var admittedCounts = @json($admittedYearCounts);
+        var outpatientCounts = @json($outpatientYearCounts);
 
-        // Get the chart context and create the line graph
+        // Create a chart using Chart.js
         var ctx = document.getElementById('yearlyTrendChart').getContext('2d');
-        var yearlyTrendChart = new Chart(ctx, {
-            type: 'line',
+        var chart = new Chart(ctx, {
+            type: 'line', // Use a line chart for yearly trend
             data: {
                 labels: years,
                 datasets: [{
-                    label: 'Yearly Trend',
-                    data: counts,
-                    fill: true, // Fill area under the line
-                    borderColor: 'rgba(75, 192, 192, 1)', // Teal
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Teal with opacity
-                    borderWidth: 2,
-                    pointRadius: 5, // Increase point size for data points
-                    pointBackgroundColor: 'rgba(75, 192, 192, 1)', // Teal
-                    pointBorderColor: '#fff', // White
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 7, // Increase point size on hover
-                }]
+                        label: 'Admitted',
+                        data: admittedCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false // Ensure the line chart is not filled
+                    },
+                    {
+                        label: 'Outpatient',
+                        data: outpatientCounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: false // Ensure the line chart is not filled
+                    }
+                ]
             },
             options: {
-                responsive: true,
                 scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                        },
-                        title: {
-                            display: true,
-                            text: 'Years'
-                        }
-                    },
                     y: {
-                        beginAtZero: true,
-                        suggestedMax: Math.max(...counts) + 2, // Adjust y-axis upper limit
-                        title: {
-                            display: true,
-                            text: 'Diagnose Count'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false, // Hide legend
+                        beginAtZero: true
                     }
                 }
             }
         });
-    </script>
-    <script>
+        // Get the data passed from the controller
+        var months = @json($months);
+        var admittedCounts = @json($admittedMonthCounts);
+        var outpatientCounts = @json($outpatientMonthCounts);
+
+        // Create a chart using Chart.js
         var ctx = document.getElementById('monthlyTrendChart').getContext('2d');
-
-        var monthlyData = @json($monthlyTrendData);
-
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-            'November', 'December'
-        ];
-        var monthlyCounts = Array.from({
-            length: 12
-        }, (_, i) => {
-            var monthData = monthlyData.find(item => item.month === months[i]);
-            return monthData ? monthData.count : 0;
-        });
-
-        var monthlyTrendChart = new Chart(ctx, {
-            type: 'bar',
+        var chart = new Chart(ctx, {
+            type: 'line', // Change chart type to line
             data: {
                 labels: months,
                 datasets: [{
-                    label: 'Monthly Trend',
-                    data: monthlyCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                    borderWidth: 1,
-                }]
+                        label: 'Admitted',
+                        data: admittedCounts,
+                        borderColor: 'rgba(75, 192, 192, 1)', // Remove backgroundColor
+                        borderWidth: 2, // Increase borderWidth for lines
+                        fill: false // Do not fill the area under the line
+                    },
+                    {
+                        label: 'Outpatient',
+                        data: outpatientCounts,
+                        borderColor: 'rgba(255, 99, 132, 1)', // Remove backgroundColor
+                        borderWidth: 2, // Increase borderWidth for lines
+                        fill: false // Do not fill the area under the line
+                    }
+                ]
             },
             options: {
-                responsive: true,
                 scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                        },
-                        title: {
-                            display: true,
-                            text: 'Month'
-                        }
-                    },
                     y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Count'
-                        }
+                        beginAtZero: true
                     }
                 }
             }

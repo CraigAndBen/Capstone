@@ -17,10 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Phpml\Math\Statistic\Mean;
-use Phpml\Math\Statistic\StandardDeviation;
-use Phpml\Math\Statistic\Median;
-use Phpml\Math\Statistic\Variance;
 
 class SuperAdminController extends Controller
 {
@@ -2633,6 +2629,21 @@ class SuperAdminController extends Controller
 
     }
 
+
+    public function patientReport(Request $request)
+    {
+        $profile = auth()->user();
+        $patient = Patient::where('id', $request->input('patient_id'))->first();
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $doctor = User::where('id', $patient->physician)->first();
+
+        return view('superadmin.report.patient_report', compact('patient', 'currentTime', 'currentDate', 'doctor', 'profile'));
+    }
+
     public function diagnoseDemo()
     {
         $profile = auth()->user();
@@ -2737,7 +2748,7 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate'));
+        return view('superadmin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate','specificDiagnosis'));
     }
 
     public function diagnoseReport(Request $request)
@@ -2788,7 +2799,7 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'diagnose'));
+        return view('superadmin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'specificDiagnosis'));
     }
 
     public function appointmentDemo()
@@ -3092,97 +3103,104 @@ class SuperAdminController extends Controller
         $patients = Patient::where('diagnosis', $specificDiagnosis)
             ->get();
 
-        // Initialize an array to store the yearly trend data
-        $yearlyTrendData = [];
+        $admittedYearData = DB::table('patients')
+            ->select(DB::raw('YEAR(admitted_date) as year'), DB::raw('COUNT(*) as count'))
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('YEAR(admitted_date)'))
+            ->get();
 
-        // Loop through the patient data to calculate the yearly trend
-        $currentYear = null;
-        $yearlyCount = 0;
+        $outpatientYearData = DB::table('patients')
+            ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('YEAR(date)'))
+            ->get();
 
-        foreach ($patients as $patient) {
-            $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
-            $outpatientDate = Carbon::parse($patient->date); // Convert to Carbon object
+        // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+        $admittedMonthData = DB::table('patients')
+            ->select(DB::raw('MONTH(admitted_date) as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('admitted_date', $currentYear)
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('MONTH(admitted_date)'))
+            ->get();
 
-            $year = $admittedDate->format('Y');
-            $anotherYear = $outpatientDate->format('Y');
+        $outpatientMonthData = DB::table('patients')
+            ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('date', $currentYear)
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('MONTH(date)'))
+            ->get();
 
-            if ($year !== $currentYear || $anotherYear !== $currentYear) {
-                // Save the count for the previous year
-                if ($currentYear !== null) {
-                    $yearlyTrendData[] = [
-                        'year' => $currentYear,
-                        'count' => $yearlyCount,
-                    ];
-                }
+        // Create an array of years
+        $years = [];
+        $admittedYearCounts = [];
+        $outpatientYearCounts = [];
 
-                // Reset the count for the current year
-                $currentYear = $year;
-                $yearlyCount = 1;
-            } else {
-                $yearlyCount++;
+        // Initialize counts for each year
+        foreach (range(date('Y') - 10, date('Y')) as $year) {
+            $years[] = $year;
+            $admittedYearCounts[] = 0;
+            $outpatientYearCounts[] = 0;
+        }
+
+        // Fill in the data for the available years
+        foreach ($admittedYearData as $admitted) {
+            $yearIndex = array_search($admitted->year, $years);
+            if ($yearIndex !== false) {
+                $admittedYearCounts[$yearIndex] = $admitted->count;
             }
         }
 
-        // Save the count for the last year
-        if ($currentYear !== null) {
-            $yearlyTrendData[] = [
-                'year' => $currentYear,
-                'count' => $yearlyCount,
+        foreach ($outpatientYearData as $outpatient) {
+            $yearIndex = array_search($outpatient->year, $years);
+            if ($yearIndex !== false) {
+                $outpatientYearCounts[$yearIndex] = $outpatient->count;
+            }
+        }
+
+        // Create an array with all months in the year
+        $allMonths = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ];
+
+        // Initialize the combined data with zero counts for all months
+        $combinedData = [];
+
+        foreach ($allMonths as $month) {
+            $combinedData[$month] = [
+                'admitted_count' => 0,
+                'outpatient_count' => 0,
             ];
         }
 
-        // Initialize variables
-        $currentMonth = null;
-        $monthlyCount = 0;
-        $monthlyTrendData = [];
-
-        // Loop through the patient data to calculate the monthly trend
-        foreach ($patients as $patient) {
-            $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
-            $outpatientDate = Carbon::parse($patient->date); // Convert to Carbon object
-
-            $admittedMonth = $admittedDate->format('F');
-            $outpatientMonth = $outpatientDate->format('F');
-
-            // Check if the admitted month is different from the current month
-            if ($admittedMonth !== $currentMonth) {
-                // Save the count for the previous month
-                if ($currentMonth !== null) {
-                    $monthlyTrendData[] = [
-                        'month' => $currentMonth,
-                        'count' => $monthlyCount,
-                    ];
-                }
-
-                // Reset the count for the current month
-                $currentMonth = $admittedMonth;
-                $monthlyCount = 1;
-            } else {
-                $monthlyCount++;
-            }
-
-            // Check if the outpatient month is different from the admitted month
-            if ($outpatientMonth !== $admittedMonth) {
-                // Save the count for the outpatient month
-                $monthlyTrendData[] = [
-                    'month' => $outpatientMonth,
-                    'count' => 1,
-                ];
-            } else {
-                $monthlyCount++;
-            }
+        // Fill in the data for the available months
+        foreach ($admittedMonthData as $admitted) {
+            $month = date('F', mktime(0, 0, 0, $admitted->month, 1));
+            $combinedData[$month]['admitted_count'] = $admitted->count;
         }
 
-        // Save the count for the last month
-        if ($currentMonth !== null) {
-            $monthlyTrendData[] = [
-                'month' => $currentMonth,
-                'count' => $monthlyCount,
-            ];
+        foreach ($outpatientMonthData as $outpatient) {
+            $month = date('F', mktime(0, 0, 0, $outpatient->month, 1));
+            $combinedData[$month]['outpatient_count'] = $outpatient->count;
         }
 
+        // Prepare the data for the chart
+        $months = array_keys($combinedData);
+        $admittedMonthCounts = array_column($combinedData, 'admitted_count');
+        $outpatientMonthCounts = array_column($combinedData, 'outpatient_count');
 
-        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'monthlyTrendData', 'specificDiagnosis', 'yearlyTrendData', 'rankedDiagnosis', 'currentTime', 'currentDate'));
+
+        return view('superadmin.trend.diagnose_trend_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'years', 'admittedYearCounts', 'outpatientYearCounts', 'specificDiagnosis', 'months', 'admittedMonthCounts', 'outpatientMonthCounts', 'rankedDiagnosis', 'currentTime', 'currentDate'));
     }
 
     public function diagnoseTrendReport(Request $request)
@@ -3225,49 +3243,61 @@ class SuperAdminController extends Controller
             ->orderBy('admitted_date')
             ->get();
 
-        // Initialize an array to store the yearly trend data
-        $yearlyTrendData = [];
+        $admittedYearData = DB::table('patients')
+            ->select(DB::raw('YEAR(admitted_date) as year'), DB::raw('COUNT(*) as count'))
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('YEAR(admitted_date)'))
+            ->get();
 
-        // Loop through the patient data to calculate the yearly trend
-        $currentYear = null;
-        $yearlyCount = 0;
+        $outpatientYearData = DB::table('patients')
+            ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('YEAR(date)'))
+            ->get();
 
-        foreach ($patients as $patient) {
-            $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
-            $outpatientDate = Carbon::parse($patient->date); // Convert to Carbon object
+        // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+        $admittedMonthData = DB::table('patients')
+            ->select(DB::raw('MONTH(admitted_date) as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('admitted_date', $currentYear)
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('MONTH(admitted_date)'))
+            ->get();
 
-            $year = $admittedDate->format('Y');
-            $anotherYear = $outpatientDate->format('Y');
+        $outpatientMonthData = DB::table('patients')
+            ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('date', $currentYear)
+            ->where('diagnosis', $specificDiagnosis)
+            ->groupBy(DB::raw('MONTH(date)'))
+            ->get();
 
-            if ($year !== $currentYear || $anotherYear !== $currentYear) {
-                // Save the count for the previous year
-                if ($currentYear !== null) {
-                    $yearlyTrendData[] = [
-                        'year' => $currentYear,
-                        'count' => $yearlyCount,
-                    ];
-                }
+        // Create an array of years
+        $years = [];
+        $admittedYearCounts = [];
+        $outpatientYearCounts = [];
 
-                // Reset the count for the current year
-                $currentYear = $year;
-                $yearlyCount = 1;
-            } else {
-                $yearlyCount++;
+        // Initialize counts for each year
+        foreach (range(date('Y') - 10, date('Y')) as $year) {
+            $years[] = $year;
+            $admittedYearCounts[] = 0;
+            $outpatientYearCounts[] = 0;
+        }
+
+        // Fill in the data for the available years
+        foreach ($admittedYearData as $admitted) {
+            $yearIndex = array_search($admitted->year, $years);
+            if ($yearIndex !== false) {
+                $admittedYearCounts[$yearIndex] = $admitted->count;
             }
         }
 
-        // Save the count for the last year
-        if ($currentYear !== null) {
-            $yearlyTrendData[] = [
-                'year' => $currentYear,
-                'count' => $yearlyCount,
-            ];
+        foreach ($outpatientYearData as $outpatient) {
+            $yearIndex = array_search($outpatient->year, $years);
+            if ($yearIndex !== false) {
+                $outpatientYearCounts[$yearIndex] = $outpatient->count;
+            }
         }
 
-        // Initialize an array to store the monthly trend data
-        $monthlyTrendData = [];
-
-        // Create an array with all month names
+        // Create an array with all months in the year
         $allMonths = [
             'January',
             'February',
@@ -3280,52 +3310,36 @@ class SuperAdminController extends Controller
             'September',
             'October',
             'November',
-            'December'
+            'December',
         ];
 
-        // Initialize counts for all months to 0
-        $monthlyCounts = array_fill_keys($allMonths, 0);
+        // Initialize the combined data with zero counts for all months
+        $combinedData = [];
 
-        // Loop through the patient data to calculate the monthly trend
-        $currentMonth = null;
-        $monthlyCount = 0;
-        foreach ($patients as $patient) {
-            $admittedDate = Carbon::parse($patient->admitted_date); // Convert to Carbon object
-            $outpatientDate = Carbon::parse($patient->date); // Convert to Carbon object
-
-            $month = $admittedDate->format('F');
-            $anotherMonth = $outpatientDate->format('F');
-
-            // Increment the counts for the relevant months
-            $monthlyCounts[$month]++;
-            $monthlyCounts[$anotherMonth]++;
-
-            if ($month !== $currentMonth || $anotherMonth !== $currentMonth) {
-                // Save the count for the previous month
-                if ($currentMonth !== null) {
-                    $monthlyTrendData[] = [
-                        'month' => $currentMonth,
-                        'count' => $monthlyCount,
-                    ];
-                }
-
-                // Reset the count for the current month
-                $currentMonth = $month;
-                $monthlyCount = 1;
-            } else {
-                $monthlyCount++;
-            }
-        }
-
-        // Save the count for the last month
-        if ($currentMonth !== null) {
-            $monthlyTrendData[] = [
-                'month' => $currentMonth,
-                'count' => $monthlyCount,
+        foreach ($allMonths as $month) {
+            $combinedData[$month] = [
+                'admitted_count' => 0,
+                'outpatient_count' => 0,
             ];
         }
 
-        return view('superadmin.report.diagnose_trend_report', compact('yearlyTrendData', 'monthlyTrendData', 'year', 'currentTime', 'currentDate', 'specificDiagnosis'));
+        // Fill in the data for the available months
+        foreach ($admittedMonthData as $admitted) {
+            $month = date('F', mktime(0, 0, 0, $admitted->month, 1));
+            $combinedData[$month]['admitted_count'] = $admitted->count;
+        }
+
+        foreach ($outpatientMonthData as $outpatient) {
+            $month = date('F', mktime(0, 0, 0, $outpatient->month, 1));
+            $combinedData[$month]['outpatient_count'] = $outpatient->count;
+        }
+
+        // Prepare the data for the chart
+        $months = array_keys($combinedData);
+        $admittedMonthCounts = array_column($combinedData, 'admitted_count');
+        $outpatientMonthCounts = array_column($combinedData, 'outpatient_count');
+
+        return view('superadmin.report.diagnose_trend_report', compact('years','admittedYearCounts','outpatientYearCounts', 'months','admittedMonthCounts', 'outpatientMonthCounts', 'currentTime', 'currentDate', 'specificDiagnosis','year'));
     }
 
     public function notification()
@@ -3448,34 +3462,5 @@ class SuperAdminController extends Controller
 
         return false;
 
-    }
-
-    private function calculateMedian($array)
-    {
-        sort($array);
-        $count = count($array);
-        $middle = floor($count / 2);
-
-        if ($count % 2 == 0) {
-            // If the count of elements is even, average the two middle values
-            $median = ($array[$middle - 1] + $array[$middle]) / 2;
-        } else {
-            // If the count of elements is odd, take the middle value
-            $median = $array[$middle];
-        }
-
-        return $median;
-    }
-
-    // Custom function to format numbers
-    private function formatNumber($number)
-    {
-        if ($number == intval($number)) {
-            // If the number is an integer, don't display decimal places
-            return number_format($number);
-        } else {
-            // Display the number with 3 decimal places
-            return number_format($number, 3);
-        }
     }
 }

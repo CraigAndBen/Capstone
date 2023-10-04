@@ -46,7 +46,7 @@
                                         <li class="list-group-item px-0">
                                             <div class="row align-items-start">
                                                 <div class="col">
-                                                    <h5 class="mb-0">{{$diagnosis['diagnosis']}}</h5>
+                                                    <h5 class="mb-0">{{ucwords($diagnosis['diagnosis'])}}</h5>
                                                 </div>
                                                 <div class="col-auto">
                                                     <h5 class="mb-0">{{$diagnosis['total_occurrences']}}<span
@@ -72,7 +72,7 @@
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option>Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
-                                                <option value="{{ $diagnose['diagnosis'] }}">{{ $diagnose['diagnosis'] }}</option>
+                                                <option value="{{ $diagnose['diagnosis'] }}">{{ ucwords($diagnose['diagnosis']) }}</option>
                                             @endforeach
                                         </select>
                                 </div>

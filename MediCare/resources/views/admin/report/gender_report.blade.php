@@ -39,9 +39,16 @@
             </div>
 
         </div>
-        <div style="height: 80px"></div>
         <div class="row justify-content-center">
-            <div class="col-7">
+            <h3><i>Gender Bar Graph</i></h3>
+            <br>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-1">
+
+            </div>
+            <div class="col-7 text-center">
+
                 <canvas id="genderDemographicsChart"></canvas>
             </div>
             <div class="col-1">
@@ -49,14 +56,15 @@
             </div>
         </div>
 
-        <div class="page-break my-5"></div>
-        <div style="height: 100px"></div>
+        <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
             <div class="col-1">
 
             </div>
-            <div class="col-9">
+            <div class="col-9 text-center">
+                <h3><i>Gender Table</i></h3>
+                <br>
                 <table class="table table table-bordered table-sm text-center">
                     <thead class="bg-primary text-light text-center">
                         <tr>

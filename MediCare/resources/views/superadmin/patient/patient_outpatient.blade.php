@@ -174,6 +174,11 @@
                                                                     data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
                                                                     data-guardian-email="{{ json_encode($patient->guardian_email) }}"
                                                                     data-medication="{{ json_encode($patient->medication) }}">View</a>
+                                                                    <form action="{{route('superadmin.patient.report')}}" method="GET">
+                                                                        @csrf
+                                                                        <input type="hidden" name="patient_id" id="patient_id" value="{{$patient->id}}">
+                                                                        <button type="submit" class="dropdown-item btn btn-primary">Generate Report</button>
+                                                                    </form>
                                                             </div>
                                                         </div>
                                                     </td>

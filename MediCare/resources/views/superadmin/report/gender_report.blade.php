@@ -40,25 +40,30 @@
 
         </div>
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
-                <h3><i>Gender Bar Graph</i></h3>
-                <br>
+            <h3><i>Gender Bar Graph</i></h3>
+            <br>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-1">
+
+            </div>
+            <div class="col-7 text-center">
+
                 <canvas id="genderDemographicsChart"></canvas>
             </div>
             <div class="col-1">
 
             </div>
         </div>
-        
-        <div class="page-break"></div>
-        <div class="row my-5"></div>
+
+        <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
             <div class="col-1">
 
             </div>
             <div class="col-9 text-center">
-                <h3><i>Gender Count Table</i></h3>
+                <h3><i>Gender Table</i></h3>
                 <br>
                 <table class="table table table-bordered table-sm text-center">
                     <thead class="bg-primary text-light text-center">
@@ -74,7 +79,7 @@
                             $totalMaleCount = 0;
                             $totalFemaleCount = 0;
                         @endphp
-
+                
                         @foreach ($genderCountsByMonth as $data)
                             <tr>
                                 <td>{{ $data['month'] }}</td>
@@ -87,7 +92,7 @@
                                 $totalFemaleCount += $data['female'];
                             @endphp
                         @endforeach
-
+                
                         <tr>
                             <td>Total</td>
                             <td>{{ $totalMaleCount }}</td>
@@ -96,14 +101,12 @@
                         </tr>
                     </tbody>
                 </table>
-
+                
             </div>
             <div class="col-1">
 
             </div>
         </div>
-
-
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
