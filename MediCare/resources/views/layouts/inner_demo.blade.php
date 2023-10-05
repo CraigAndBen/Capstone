@@ -260,7 +260,7 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
-                            <li class="pc-item"><a class="pc-link" href="">Sales</a></li> 
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sales.demo') }}">Sales</a></li> 
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>                 
                         </ul>
                     </li>

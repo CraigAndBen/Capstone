@@ -140,8 +140,8 @@
                                                     @foreach ($products as $product)
                                                         @foreach ($prices as $price)
                                                             @if ($price->product_id == $product->id)
-                                                                <option value="{{ $product->id }}">{{ $product->p_name }}
-                                                                    - ₱{{ $price->price }}</option>
+                                                                <option value="{{ $product->id }}" data-stock="{{ $product->stock }}">
+                                                                    {{ $product->p_name }} - ₱{{ $price->price }}</option>
                                                             @endif
                                                         @endforeach
                                                     @endforeach
@@ -150,7 +150,7 @@
                                             <div class="form-group">
                                                 <label for="quantity">Quantity</label>
                                                 <i class="bi bi-info-circle-fill" data-toggle="tooltip" data-placement="left" 
-                                                    title="Available Stock:{{$product->stock}}"></i>
+                                                     id="stock-tooltip" data-delay="{ 'show': 100, 'hide': 100 }"></i>
                                                 <input type="number" name="quantity" id="quantity" class="form-control"
                                                     min="1" value="1"> 
                                             </div>
@@ -329,13 +329,28 @@
                     modal.find('#product_id').val(product_name);
                     modal.find('#price').val(product_price);
                 });
-
-                $(function () {
-                    $('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                // Define a function to update the stock information in the tooltip
+                function updateStockTooltip() {
+                    var productId = $("#product_id").val();
+                    var selectedOption = $("#product_id option:selected");
+                    var stock = selectedOption.data("stock");
+                    var stockInfo = "Available Stock: " + stock;
+        
+                    // Set the stock information as the tooltip title
+                    $("#stock-tooltip").attr("title", stockInfo);
+                }
+        
+                // Initialize the updateStockTooltip function on page load
+                updateStockTooltip();
+        
+                // Call the updateStockTooltip function whenever the product selection changes
+                $("#product_id").on("change", function() {
+                    updateStockTooltip();
                 });
             });
-
-           
-
-        </script>
+        </script>   
     @endsection

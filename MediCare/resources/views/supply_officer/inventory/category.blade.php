@@ -72,11 +72,17 @@
                                         <span class="fa fa-check-circle"></span> No Notification Yet.
                                     </div>
                                 @else
+                                <div class="row justify-content-end">
+                                    <div class="form-group col-sm-4">
+                                        <input type="text" id="categorySearch" class="form-control"
+                                            placeholder="Search Product">
+                                    </div>
+                                </div>
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th class="text-center">Category Name</th>
-                                                <th class="text-center">Category code</th>
+                                                <th class="text-center">Category Code</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -232,6 +238,31 @@
                     tags: true
                 });
 
+            });
+        </script>
+         <script>
+            $(document).ready(function() {
+                $('#categorySearch').on('keyup', function() {
+                    var searchText = $(this).val().toLowerCase();
+                    filterRequests(searchText);
+                });
+    
+                function filterRequests(searchText) {
+                    var rows = document.querySelectorAll("table tbody tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        var categoryName = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
+                        var categoryCode = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
+    
+                        if (
+                            categoryName.includes(searchText) ||
+                            categoryCode.includes(searchText) 
+                        ) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                }
             });
         </script>
     @endsection

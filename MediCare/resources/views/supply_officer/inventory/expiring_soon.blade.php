@@ -31,88 +31,100 @@
 
                 <!-- [ sample-page ] start -->
                 <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Expiring Products</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="container">
-                            <div class="row mb-3 justify-content-end">
-                                <div class="col-md-2">
-                                    <input type="date" id="startDate" class="form-control" placeholder="Start Date">
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="date" id="endDate" class="form-control" placeholder="End Date">
-                                </div>
-                                <div class="col-md-2">
-                                    <button id="filterByDate" class="btn btn-primary">Search</button>
-                                </div>
-                            </div>
-                            
-                               
-                            
-                        @if ($products->count() > 0)
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: center">#</th>
-                                        <th style="text-align: center">Product Name</th>
-                                        <th style="text-align: center">Stock</th>
-                                        <th style="text-align: center">Brand</th>
-                                        <th style="text-align: center">Category</th>
-                                        <th style="text-align: center">Expiration Date</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @php
-                                    $counter = 1;
-                                @endphp
-                                    @foreach ($products as $product)
-                                        <tr>
-                                            <td style="text-align: center">{{ $counter++ }}</td>
-                                            <td style="text-align: center">{{ $product->p_name }}</td>
-                                            <td style="text-align: center">{{ $product->stock }}</td>
-                                            <td style="text-align: center">{{ $product->brand }}</td>
-                                            <td style="text-align: center">{{ $product->category->category_name }}</td>
-                                            <td style="text-align: center">{{ $product->expiration }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @else
-                            <p>No expiring products found.</p>
-                        @endif
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Expiring Products</h3>
                         </div>
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row justify-content-end">
+                                    
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="start">Start</label>
+                                            <input type="date" id="startDate" class="form-control"
+                                                placeholder="Start Date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="end">End</label>
+                                            <input type="date" id="endDate" class="form-control"
+                                                placeholder="End Date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mt-4">
+                                        <div class="form-group">
+                                            <button id="filterByDate" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                @if ($products->count() > 0)
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center">#</th>
+                                                <th style="text-align: center">Product Name</th>
+                                                <th style="text-align: center">Stock</th>
+                                                <th style="text-align: center">Brand</th>
+                                                <th style="text-align: center">Category</th>
+                                                <th style="text-align: center">Expiration Date</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @php
+                                                $counter = 1;
+                                            @endphp
+                                            @foreach ($products as $product)
+                                                <tr>
+                                                    <td style="text-align: center">{{ $counter++ }}</td>
+                                                    <td style="text-align: center">{{ $product->p_name }}</td>
+                                                    <td style="text-align: center">{{ $product->stock }}</td>
+                                                    <td style="text-align: center">{{ $product->brand }}</td>
+                                                    <td style="text-align: center">{{ $product->category->category_name }}
+                                                    </td>
+                                                    <td style="text-align: center">{{ $product->expiration }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <p>No expiring products found.</p>
+                                @endif
+                            </div>
+                        </div>
+
                     </div>
-
+                    <!-- [ Main Content ] end -->
                 </div>
-                <!-- [ Main Content ] end -->
             </div>
-        </div>
 
 
-    @endsection
-    @section('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#filterByDate').on('click', function() {
-                    var startDate = $('#startDate').val();
-                    var endDate = $('#endDate').val();
-                    filterByDateRange(startDate, endDate);
-                });
+        @endsection
+        @section('scripts')
+            <script>
+                $(document).ready(function() {
+                    $('#filterByDate').on('click', function() {
+                        var startDate = $('#startDate').val();
+                        var endDate = $('#endDate').val();
+                        filterByDateRange(startDate, endDate);
+                    });
 
-                function filterByDateRange(startDate, endDate) {
-                    var rows = document.querySelectorAll("table tbody tr");
-                    for (var i = 0; i < rows.length; i++) {
-                        var rowDate = rows[i].querySelector("td:nth-child(6)").textContent.trim();
-                        if (rowDate >= startDate && rowDate <= endDate) {
-                            rows[i].style.display = "";
-                        } else {
-                            rows[i].style.display = "none";
+                    function filterByDateRange(startDate, endDate) {
+                        var rows = document.querySelectorAll("table tbody tr");
+                        for (var i = 0; i < rows.length; i++) {
+                            var rowDate = rows[i].querySelector("td:nth-child(6)").textContent.trim();
+                            if (rowDate >= startDate && rowDate <= endDate) {
+                                rows[i].style.display = "";
+                            } else {
+                                rows[i].style.display = "none";
+                            }
                         }
                     }
-                }
-            });
-        </script>
-    @endsection
+                });
+            </script>
+        @endsection

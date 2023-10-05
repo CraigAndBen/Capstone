@@ -2,6 +2,7 @@
 
 @section('content')
     <!-- [ Main Content ] start -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <div class="pc-container pb-3">
         <div class="pc-content ">
@@ -11,13 +12,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Inventory Demographics</h5>
-                            </div>
+                                Sales </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item" aria-current="page">Inventory Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Sales Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Inventory Demographics</h2>
+                            <h2>Sales Demographics</h2>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -60,34 +60,36 @@
                                 </div>
                             @endif
                             <div class="row justify-content-center">
-                                <div class="col-md-2">
-
-                                </div>
-                                <div class="col-md-4">
-                                    <form action="{{ route('supply_officer.inventory.demo.search') }}" method="GET">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3">
+                                    <form action="{{ route('supply_officer.request.demo.search') }}" method="GET">
                                         @csrf
-                                        <select class="form-control p-3" name="select" id="select">
-                                            <option value="">Select</option>
-                                            <option value="Category">Category</option>
-                                            <option value="Brand">Brand</option>
-
-                                        </select>
+                                        <div class="form-group">
+                                            <label for="from">From</label>
+                                            <input type="date" class="form-control" name="date" id="from">
+                                        </div>
                                 </div>
-                                <div class="col-md-2 mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="to">To</label>
+                                        <input type="date" class="form-control" name="date" id="to">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-2 mt-4">
+                                    <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Select</button>
                                 </div>
                             </div>
-
                             </form>
+
+                            
                         </div>
                         <hr>
-                        <div class="row justify-content-end">
-                        <div class="col-md-2 mt-2">
-                            <button type="button" class="btn btn-success" id="generateReport">Generate Report</button>
-                        </div>
-                    </div>
-                        <div class="row mb-5 p-3">
-                            <canvas id="productChart" width="100%" height="40"></canvas>
+                        <div class="container">
+                            <div class="alert alert-success">
+                                Select Date Range and Most Request.
+                            </div>
                         </div>
                     </div>
 
@@ -96,36 +98,4 @@
                 <!-- [ Main Content ] end -->
             </div>
         </div>
-    @endsection
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    @section('scripts')
-        @if (isset($chartData))
-            <script>
-                var ctx = document.getElementById('productChart').getContext('2d');
-                var productData = @json($chartData);
-                
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: productData.map(data => data.label), // Use 'label' instead of 'category'
-                        datasets: [{
-                            label: 'Count',
-                            data: productData.map(data => data.count),
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            </script>
-
-        @endif
     @endsection

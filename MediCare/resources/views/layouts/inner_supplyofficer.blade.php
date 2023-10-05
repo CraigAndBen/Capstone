@@ -270,7 +270,7 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
-                            <li class="pc-item"><a class="pc-link" href="">Sales</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sales.demo') }}">Sales</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>
                         </ul>
                     </li>
@@ -318,6 +318,7 @@
 
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <!-- [Body] end -->
 @yield('scripts')
 

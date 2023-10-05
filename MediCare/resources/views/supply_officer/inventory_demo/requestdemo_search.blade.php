@@ -66,13 +66,13 @@
                                         @csrf
                                         <div class="form-group">
                                             <label for="from">From</label>
-                                            <input type="date" class="form-control" name="date" id="from">
+                                            <input type="date" class="form-control" name="start" id="from">
                                         </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="to">To</label>
-                                        <input type="date" class="form-control" name="date" id="to">
+                                        <input type="date" class="form-control" name="end" id="to">
                                     </div>
                                 </div>
                                 <div class="col-md-3">

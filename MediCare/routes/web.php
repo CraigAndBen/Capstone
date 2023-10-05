@@ -348,6 +348,11 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     //Request Demo
     Route::get('/supply_officer/inventory_demo/requestdemo', [SupplyOfficerController::class, 'requestDemo'])->name('supply_officer.request.demo');
     Route::get('/supply_officer/inventory_demo/requestdemo_search', [SupplyOfficerController::class, 'requestdemoSearch'])->name('supply_officer.request.demo.search');
+
+    //Sales Demo
+    Route::get('/supply_officer/inventory_demo/salesdemo', [SupplyOfficerController::class, 'salesDemo'])->name('supply_officer.sales.demo');
+    Route::get('/supply_officer/inventory_demo/salesdemo_search', [SupplyOfficerController::class, 'salesdemoSearch'])->name('supply_officer.sales.demo.search');
+
     // Request
     Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');
 

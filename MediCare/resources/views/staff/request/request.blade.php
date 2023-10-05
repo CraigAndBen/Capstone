@@ -71,12 +71,14 @@
                                                     <select class="form-control" name="product_id" id="product_id">
                                                         <option selected disabled>Select a Product</option>
                                                         @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}"
-                                                                {{ isset($_GET['p_name']) && $_GET['p_name'] == $product->p_name ? 'selected' : '' }}>
-                                                                {{ $product->p_name }}</option>
+                                                            @if ($product->status == 'Available')
+                                                                <option value="{{ $product->id }}"
+                                                                    {{ isset($_GET['p_name']) && $_GET['p_name'] == $product->p_name ? 'selected' : '' }}>
+                                                                    {{ $product->p_name }}</option>
+                                                            @endif
                                                         @endforeach
                                                     </select>
-                                                </div>
+                                                </div>                                                
                                                 <div class="form-group col-md-4">
                                                     <label for="brand">Brand</label>
                                                     <select class="brand form-control" name="brand" id="brand">
@@ -137,19 +139,22 @@
                     modal.find('#is_read').val(is_read);
                 });
             });
+        </script>
+        <script>
             $(document).ready(function() {
 
-$(".n_requester").select2({
-    width: '100%',
-    placeholder: 'Choose Product',
-    tags: true
-});
-$(".dept").select2({
-    width: '100%',
-    placeholder: 'Select Brand',
-    tags: true
-});
-});
+            $(".n_requester").select2({
+                width: '100%',
+                height: '80%',
+                placeholder: 'Choose Product',
+                tags: true
+            });
+            $(".dept").select2({
+                width: '100%',
+                placeholder: 'Select Brand',
+                tags: true
+            });
+            });
         </script>
     @endsection
    

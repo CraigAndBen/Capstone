@@ -163,7 +163,7 @@ class StaffController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $products = Product::with('category')->get();
+        $products = Product::with('category')->paginate(8);
         $categories = Category::with('products')->get();
 
         return view('staff.request.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));

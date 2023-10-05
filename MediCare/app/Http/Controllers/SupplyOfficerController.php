@@ -194,7 +194,7 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $products = Product::with('category')->paginate(5);
+        $products = Product::with('category')->paginate(8);
         $categories = Category::with('products')->get();
 
         return view('supply_officer.inventory.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
@@ -478,10 +478,67 @@ class SupplyOfficerController extends Controller
         return view('supply_officer.inventory_demo.requestdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
     }
 
-    public function requestDemoSearch(Request $request)
+public function requestDemoSearch(Request $request)
 {
- 
 
+$profile = Auth::user();
+$notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+$limitNotifications = $notifications->take(5);
+$count = $notifications->count();
+$currentDate = date('Y-m-d');
+$currentDateTime = Carbon::now();
+$currentDateTime->setTimezone('Asia/Manila');
+$currentTime = $currentDateTime->format('h:i A');
+
+
+$fromDate = Carbon::parse($request->input('start'));
+$toDate = Carbon::parse($request->input('end'));
+$selectedOption = $request->input('select');
+
+// Query your database to get the most requested products or departments based on the selected date range and category
+if ($selectedOption === 'Product') {
+    // Get the most requested products
+    $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+        ->whereBetween('requests.date', [$fromDate, $toDate])
+        ->groupBy('requests.product_id', 'products.p_name') // Group by product name
+        ->selectRaw('products.p_name as label, COUNT(*) as data')
+        ->orderByDesc('data')
+        ->get();
+        
+} elseif ($selectedOption === 'Department') {
+    // Get the most requested departments
+    $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
+        ->groupBy('department')
+        ->selectRaw('department as label, COUNT(*) as data')
+        ->orderByDesc('data')
+        ->get();
+} else {
+    // Invalid selection, handle accordingly
+    return redirect()->back()->with('info', 'Invalid selection.');
+}
+
+
+// Prepare the data for the chart
+
+$chartData = [
+    
+    'labels' => $result->pluck('label'),
+    'data' => $result->pluck('data'),
+];
+
+
+
+// Return the view with the chart data
+return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData'));
+}
+
+
+    
+
+//Salaes Demo
+
+public function salesDemo()
+{
     $profile = Auth::user();
     $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
     $limitNotifications = $notifications->take(5);
@@ -490,53 +547,12 @@ class SupplyOfficerController extends Controller
     $currentDateTime = Carbon::now();
     $currentDateTime->setTimezone('Asia/Manila');
     $currentTime = $currentDateTime->format('h:i A');
+
+    $requests = Purchase::all();
    
 
-    $fromDate = Carbon::parse($request->input('from'))->startOfDay();
-    $toDate = Carbon::parse($request->input('to'))->endOfDay();
-    $selectedOption = $request->input('select');
-
-    // Query your database to get the most requested products or departments based on the selected date range and category
-    if ($selectedOption === 'Product') {
-        // Get the most requested products
-        $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
-            ->whereBetween('requests.date', [$fromDate, $toDate])
-            ->groupBy('requests.product_id', 'products.p_name') // Group by product name
-            ->selectRaw('products.p_name as label, COUNT(*) as data')
-            ->orderByDesc('data')
-            ->get();
-            
-    } elseif ($selectedOption === 'Department') {
-        // Get the most requested departments
-        $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
-            ->groupBy('department')
-            ->selectRaw('department as label, COUNT(*) as data')
-            ->orderByDesc('data')
-            ->get();
-    } else {
-        // Invalid selection, handle accordingly
-        return redirect()->back()->with('info', 'Invalid selection.');
-    }
-  
-
-    // Prepare the data for the chart
-    
-    $chartData = [
-        
-        'labels' => $result->pluck('label'),
-        'data' => $result->pluck('data'),
-    ];
-
-
-
-    // Return the view with the chart data
-    return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData'));
+    return view('supply_officer.inventory_demo.salesdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
 }
-
-
-    
-
-
     public function supplyOfficerLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

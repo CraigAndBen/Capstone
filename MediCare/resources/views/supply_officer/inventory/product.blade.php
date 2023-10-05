@@ -73,6 +73,12 @@
                                         <span class="fa fa-check-circle"></span> No Product Yet.
                                     </div>
                                 @else
+                                    <div class="row justify-content-end">
+                                        <div class="form-group col-sm-4">
+                                            <input type="text" id="productSearch" class="form-control"
+                                                placeholder="Search Product">
+                                        </div>
+                                    </div>
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
@@ -160,8 +166,7 @@
                                                         <option></option>
                                                         <option value="Pfizer">Pfizer</option>
                                                         <option value="3M">3M</option>
-                                                        <option value="Becton, Dickinson and Company">Becton,
-                                                            Dickinson and Company</option>
+                                                        <option value="Becton, Dickinson and Company">BD</option>
                                                         <option value="Cintas">Cintas</option>
                                                     </select>
                                                 </div>
@@ -375,6 +380,39 @@
                     placeholder: 'Select Brand',
                     tags: true
                 });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#productSearch').on('keyup', function() {
+                    var searchText = $(this).val().toLowerCase();
+                    filterRequests(searchText);
+                });
+    
+                function filterRequests(searchText) {
+                    var rows = document.querySelectorAll("table tbody tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        var productName = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
+                        var category = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
+                        var stock = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
+                        var brand = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
+                        var expiration = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
+                        var status = rows[i].querySelector("td:nth-child(6)").textContent.toLowerCase();
+    
+                        if (
+                            productName.includes(searchText) ||
+                            category.includes(searchText) ||
+                            stock.includes(searchText) ||
+                            brand.includes(searchText) ||
+                            expiration.includes(searchText) ||
+                            status.includes(searchText)
+                        ) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                }
             });
         </script>
     @endsection

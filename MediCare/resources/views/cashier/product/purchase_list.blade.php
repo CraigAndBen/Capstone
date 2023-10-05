@@ -66,6 +66,12 @@
                                         <span class="fa fa-check-circle"></span> No Notification Yet.
                                     </div>
                                 @else
+                                <div class="row justify-content-end">
+                                    <div class="form-group col-sm-4">
+                                        <input type="text" id="purchase_detailsSearch" class="form-control"
+                                            placeholder="Search Purchase Details">
+                                    </div>
+                                </div>
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
@@ -207,6 +213,38 @@
                     modal.find('#amount').val(amount);
                     modal.find('#change').val(change);
                 });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#purchase_detailsSearch').on('keyup', function() {
+                    var searchText = $(this).val().toLowerCase();
+                    filterRequests(searchText);
+                });
+    
+                function filterRequests(searchText) {
+                    var rows = document.querySelectorAll("table tbody tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        var reference = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
+                        var totalquantity = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
+                        var totalPrice = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
+                        var amount = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
+                        var change = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
+                       
+    
+                        if (
+                            reference.includes(searchText) ||
+                            totalquantity.includes(searchText) ||
+                            totalPrice.includes(searchText) ||
+                            amount.includes(searchText) ||
+                            change.includes(searchText) 
+                        ) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                }
             });
         </script>
     @endsection

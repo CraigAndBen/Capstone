@@ -307,6 +307,9 @@ class CashierController extends Controller
         $reference = mt_rand($min, $max);
         $change = $amount - $totalPrice;
 
+        // Increment the reference number by 1
+        $reference += 1;
+
         if ($change < 0) {
             return redirect()->route('cashier.product.purchase')->with('info', 'Insufficient Amount');
         }
