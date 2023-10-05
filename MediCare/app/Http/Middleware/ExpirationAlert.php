@@ -23,49 +23,47 @@ class ExpirationAlert
         $date = Carbon::now();
         $currentMonth = Carbon::now()->month;
 
-
-
         $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->get();
 
         // Calculate the date one month from the current date
-        $oneMonthFromNow = $date->copy()->addMonth();
+        $oneMonthFromNow = Carbon::now()->addMonth();
 
         // Retrieve products with expiration dates exactly one month from now
-        $products = Product::whereDate('expiration', $oneMonthFromNow)->get();
+        // $products = Product::whereDate('expiration', $oneMonthFromNow)->get();
+
+        $products = Product::all();
 
         foreach ($products as $product) {
             $title = 'Expiration Alert';
-            $message = "This product: $product->p_name will expire: $product->expiration";
+            $expirationDate = Carbon::parse($product->expiration);
 
-            if ($notifications->isEmpty()) {
-                Notification::create([
-                    'title' => $title,
-                    'message' => $message,
-                    'date' => $currentDate,
-                    'time' => $currentTime,
-                    'type' => 'supply_officer',
-                ]);
-    
-            } else {
-                foreach ($notifications as $notification) {
-
-                    $notificationDate = Carbon::parse($notification->date);
-                    $month = $notificationDate->month;
-
-                    if ($notification->title != $title && $month != $currentMonth){
-                        // Create a new notification if conditions are met
-                   
-                        Notification::create([
-                            'title' => $title,
-                            'message' => $message,
-                            'date' => $currentDate,
-                            'time' => $currentTime,
-                            'type' => 'supply_officer',
-                        ]);
-                    }
-                }
-    
+            if ($expirationDate->isPast()) {
+                $message = "This product: $product->p_name is expired.";
+            } elseif ($expirationDate->isToday()) {
+                $message = "This product: $product->p_name expires today.";
+            } elseif ($expirationDate->lte($oneMonthFromNow)) {
+                $message = "This product: $product->p_name will expire within one month.";
             }
+            foreach ($notifications as $notification) {
+                $notificationDate = Carbon::parse($notification->date);
+                $month = $notificationDate->month;
+
+                // Check if a notification with the same title and message exists
+                $existingNotification = Notification::where('title', $title)
+                    ->where('message', $message)
+                    ->first();
+
+                if (!$existingNotification) {
+                    Notification::create([
+                        'title' => $title,
+                        'message' => $message,
+                        'date' => $currentDate,
+                        'time' => $currentTime,
+                        'type' => 'supply_officer',
+                    ]);
+                }
+            }
+
         }
 
         return $next($request);

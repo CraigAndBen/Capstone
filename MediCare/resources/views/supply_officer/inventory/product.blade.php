@@ -39,8 +39,11 @@
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
+                                    <div class="col"></div>
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#createModal">Add product</button>
+                                    <a href="{{route('supply_officer.product.report')}}" class="btn btn-success">Generate Report</a>
+
                                 </div>
                           
 

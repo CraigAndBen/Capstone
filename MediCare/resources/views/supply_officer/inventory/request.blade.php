@@ -35,6 +35,13 @@
                         <div class="card-body">
                             <div class="container">
 
+                                
+                                <div class="d-flex mb-3 justify-content-end">
+                                    <div class="col"></div>
+                                    <a href="{{route('supply_officer.request.list.report')}}" class="btn btn-success">Generate Report</a>
+
+                                </div>
+
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the

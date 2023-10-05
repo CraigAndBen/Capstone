@@ -93,7 +93,7 @@
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('supply_officer.inventory.demo') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('supply_officer.inventory') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>

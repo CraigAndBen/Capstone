@@ -36,6 +36,14 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
+                                
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <a href="{{ route('cashier.purchase.report') }}"
+                                            class="btn btn-success">Generate Report</a>
+
+                                    </div>
+                                </div>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">

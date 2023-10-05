@@ -40,7 +40,10 @@
                                 <div class="d-flex justify-content-end">
                                     <div class="m-1">
                                         <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
-                                             Price</button>
+                                            Price</button>
+                                        <a href="{{ route('pharmacist.product.report') }}"
+                                            class="btn btn-success">Generate Report</a>
+
                                     </div>
                                 </div>
                                 <hr>
@@ -113,12 +116,14 @@
                                                                                     data-id="{{ json_encode($price->id) }}"
                                                                                     data-product-price="{{ json_encode($price->price) }}"
                                                                                     data-product-name="{{ json_encode($product->id) }}"">View</a>
-                                                                                <form method="POST" action="{{ route('pharmacist.product.delete', ['id' => $price->id]) }}">
-                                                                                        @csrf
-                                                                                        @method('DELETE')
-                                                                                    
-                                                                                        <button type="submit" class="btn btn-danger dropdown-item ">Delete</button>
-                                                                                    </form>
+                                                                                <form method="POST"
+                                                                                    action="{{ route('pharmacist.product.delete', ['id' => $price->id]) }}">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-danger dropdown-item ">Delete</button>
+                                                                                </form>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -237,28 +242,29 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
                                 </div>
                                 <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <select class="form-control p-3" id="product_id" name="product_id" disabled>
-                                                        <option>Select Product</option>
-                                                        @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}">
-                                                                {{ ucwords($product->p_name) }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="hidden" id="id" name="id">
-                                                    <input type="number" name="price" class="form-control"
-                                                        id="price" placeholder="Price" disabled/>
-                                                    <label for="floatingInput">Price</label>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <select class="form-control p-3" id="product_id" name="product_id"
+                                                    disabled>
+                                                    <option>Select Product</option>
+                                                    @foreach ($products as $product)
+                                                        <option value="{{ $product->id }}">
+                                                            {{ ucwords($product->p_name) }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating mb-3">
+                                                <input type="hidden" id="id" name="id">
+                                                <input type="number" name="price" class="form-control" id="price"
+                                                    placeholder="Price" disabled />
+                                                <label for="floatingInput">Price</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

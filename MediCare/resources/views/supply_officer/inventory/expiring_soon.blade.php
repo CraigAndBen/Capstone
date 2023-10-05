@@ -37,6 +37,13 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
+
+                                <div class="d-flex mb-3 justify-content-end">
+                                    <div class="col"></div>
+                                    <a href="{{route('supply_officer.product.expiry.report')}}" class="btn btn-success">Generate Report</a>
+
+                                </div>
+
                                 <div class="row justify-content-end">
                                     
                                     <div class="col-md-2">

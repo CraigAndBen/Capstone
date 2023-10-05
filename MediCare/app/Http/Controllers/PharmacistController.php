@@ -170,6 +170,19 @@ class PharmacistController extends Controller
 
         return view('pharmacist.product.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories', 'products_price'));
     }
+    
+    public function productReport()
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $products_price = Product_price::whereNotNull('price')->get();
+        $products = Product::all();
+        $categories = Category::where('category_name', 'pharmaceutical')->get();
+
+        return view('pharmacist.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories', 'products_price'));
+    }
 
     public function productCreate(Request $request)
     {

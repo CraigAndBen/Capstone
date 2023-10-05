@@ -199,6 +199,17 @@ class CashierController extends Controller
         return view('cashier.product.purchase_list', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'purchases'));
     }
 
+    public function purchaseReport()
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $purchases = Purchase_detail::all(); // Retrieve products from your database
+
+        return view('cashier.report.purchase_report', compact('currentTime', 'currentDate', 'purchases'));
+    }
+
     public function purchase()
     {
         $profile = Auth::user();
