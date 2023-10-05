@@ -66,7 +66,7 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('superadmin.trend.diagnose.search') }}" method="POST">
+                                    <form action="{{ route('superadmin.trend.diagnose.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option>Select Diagnose</option>

@@ -115,7 +115,8 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="text-center py-2">
-                                    <a href="{{ route('superadmin.notification') }}" class="btn btn-primary">Show all</a>
+                                    <a href="{{ route('superadmin.notification') }}" class="btn btn-primary">Show
+                                        all</a>
                                 </div>
                             @else
                                 <div class="dropdown-header">
@@ -264,14 +265,16 @@
                                     Account</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User
                                     Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.supply_officer') }}">Supply Officer
-                                        Account</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.supply_officer') }}">Supply Officer
+                                    Account</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.staff') }}">Staff
-                                            Account</a></li>
+                                    Account</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.cashier') }}">Cashier
-                                                Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.pharmacist') }}">Pharmacist
-                                                    Account</a></li>
+                                    Account</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.pharmacist') }}">Pharmacist
+                                    Account</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -387,7 +390,7 @@
                                                 <!-- Use align-items-center for vertical alignment -->
                                                 <div class="col">
                                                     <h6 class="mb-0"> <!-- Use h6 for smaller text -->
-                                                        {{ $diagnosis->diagnosis }}
+                                                        {{ ucwords($diagnosis->diagnosis) }}
                                                     </h6>
                                                 </div>
                                                 <div class="col-auto">
@@ -403,7 +406,8 @@
                                     @endforeach
                                 </ul>
                                 <div class="text-center">
-                                    <a href="#!" class="btn btn-primary">View all</a>
+                                    <a href="{{ route('superadmin.demographics.diagnose') }}"
+                                        class="btn btn-primary">View all</a>
                                 </div>
                             @else
                                 <div class="text-center">
@@ -443,7 +447,7 @@
                 <div class="col-xl-6 col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            @if ($appointmentCount)
+                            @if ($rolesCount)
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
                                         <small>Total Users</small>
@@ -624,10 +628,13 @@
             }
         }
     });
-
+</script>
+<script>
     var ctx = document.getElementById('userRolesChart').getContext('2d');
     var labels = @json($usersLabels);
     var data = @json($usersData);
+
+    console.log('yow');
 
     new Chart(ctx, {
         type: 'pie',

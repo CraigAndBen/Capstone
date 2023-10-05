@@ -26,7 +26,7 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Admitted Patient Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>Appointment Analytics Report</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
@@ -41,7 +41,7 @@
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-7 text-center">
+            <div class="col-8 text-center">
                 <h3><i>Appointment Bar Graph</i></h3>
                 <br>
                 <canvas id="admitPatientDemographicsChart"></canvas>
@@ -58,7 +58,9 @@
             <div class="col-1">
 
             </div>
-            <div class="col-9">
+            <div class="col-8 text-center">
+                <h3><i>Appointment Table</i></h3>
+                <br>
                 <table class="table table-bordered table-sm">
                     <thead class="bg-primary text-light text-center">
                         <tr>

@@ -101,8 +101,10 @@ class SuperAdminController extends Controller
 
         foreach ($rolesData as $role) {
             if ($role->role !== 'super_admin') {
+                $string = $role->role;
+                $modified_string = str_replace("_", " ", $string);
                 $capitalizedRole = ucfirst($role->role);
-                $usersLabels[] = $role->role;
+                $usersLabels[] = ucwords($modified_string);
                 $usersData[] = $role->count;
             }
         }
@@ -2748,7 +2750,7 @@ class SuperAdminController extends Controller
             ];
         }
 
-        return view('superadmin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate','specificDiagnosis'));
+        return view('superadmin.patient-demo.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate', 'specificDiagnosis'));
     }
 
     public function diagnoseReport(Request $request)
@@ -3339,7 +3341,7 @@ class SuperAdminController extends Controller
         $admittedMonthCounts = array_column($combinedData, 'admitted_count');
         $outpatientMonthCounts = array_column($combinedData, 'outpatient_count');
 
-        return view('superadmin.report.diagnose_trend_report', compact('years','admittedYearCounts','outpatientYearCounts', 'months','admittedMonthCounts', 'outpatientMonthCounts', 'currentTime', 'currentDate', 'specificDiagnosis','year'));
+        return view('superadmin.report.diagnose_trend_report', compact('years', 'admittedYearCounts', 'outpatientYearCounts', 'months', 'admittedMonthCounts', 'outpatientMonthCounts', 'currentTime', 'currentDate', 'specificDiagnosis', 'year'));
     }
 
     public function notification()

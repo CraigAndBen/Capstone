@@ -109,24 +109,6 @@
                                                                             data-target="#updatePasswordModal"
                                                                             data-user-id="{{ json_encode($user->id) }}">Update
                                                                             Password</a>
-                                                                        {{-- 
-                                                                    <form
-                                                                        action="{{ route('superadmin.user.update.status') }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <input type="hidden" name="user_id"
-                                                                            value="{{ $user->id }}">
-                                                                        <input type="hidden" name="status"
-                                                                            value="{{ $user->status }}">
-                                                                        @if ($user->status === 'active')
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Deactivate</button>
-                                                                        @else
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Activate</button>
-                                                                        @endif
-                                                                    </form> --}}
-
                                                                         <a class="dropdown-item btn btn-primary"
                                                                             data-toggle="modal" data-target="#viewModal"
                                                                             data-first-name="{{ json_encode($user->first_name) }}"
