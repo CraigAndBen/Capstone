@@ -113,6 +113,8 @@
                                                         @if ($patient->physician == $doctor->id)
                                                             <td>Dr. {{ ucwords($doctor->first_name) }}
                                                                 {{ ucwords($doctor->last_name) }}</td>
+                                                        @else
+                                                            <td>NA</td>
                                                         @endif
                                                     @endforeach
                                                     <td>{{ ucwords($patient->admitted_date) }}</td>

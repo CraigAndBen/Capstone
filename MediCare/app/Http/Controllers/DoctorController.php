@@ -660,7 +660,8 @@ class DoctorController extends Controller
         return view('doctor.appointment.done_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
-    public function appointmentCalendar(){
+    public function appointmentCalendar()
+    {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
         $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
@@ -690,7 +691,7 @@ class DoctorController extends Controller
             '4:00',
         ];
 
-        
+
         return view('doctor.appointment.appointment_calendar', compact('profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
@@ -699,25 +700,29 @@ class DoctorController extends Controller
         $user = Auth::user();
         $info = Doctor::where('account_id', $user->id)->first();
         $appointments = Appointment::where('specialties', $info->specialties)
-        ->where('doctor_id', $user->id)
-        ->orWhereNull('doctor_id')
-        ->get(); // Replace with your own query to fetch the event data
+            ->where('doctor_id', $user->id)
+            ->orWhereNull('doctor_id')
+            ->get(); // Replace with your own query to fetch the event data
 
         $events = [];
         foreach ($appointments as $appointment) {
 
             $appointmentDateTime = DateTime::createFromFormat('Y-m-d h:i A', $appointment->appointment_date . ' ' . $appointment->appointment_time);
-    
+
             // Calculate the end time by adding a fixed duration (e.g., 1 hour)
             $endDateTime = clone $appointmentDateTime;
             $endDateTime->modify('+1 hour'); // Add exactly 1 hour
-            
+
             $events[] = [
-                'appointment_id' => $appointment->id,      
-                'title' => ucwords($appointment->appointment_type), // Replace with the field containing the event title
-                'start' => $appointmentDateTime->format('Y-m-d H:i:s'),  // Format the start date and time
-                'end' => $endDateTime->format('Y-m-d H:i:s'),      // Format the end date and time
-                'status' => ucwords($appointment->status),      // Format the end date and time
+                'appointment_id' => $appointment->id,
+                'title' => ucwords($appointment->appointment_type),
+                // Replace with the field containing the event title
+                'start' => $appointmentDateTime->format('Y-m-d H:i:s'),
+                // Format the start date and time
+                'end' => $endDateTime->format('Y-m-d H:i:s'),
+                // Format the end date and time
+                'status' => ucwords($appointment->status),
+                // Format the end date and time
             ];
         }
 
@@ -902,6 +907,19 @@ class DoctorController extends Controller
             return redirect()->back()->with('info', 'No changes were made.');
         }
     }
+    public function appointmentReport(Request $request)
+    {
+        $profile = auth()->user();
+        $appointment = Appointment::where('id', $request->input('appointment_id'))->first();
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $doctor = User::where('id', $appointment->doctor_id)->first();
+
+        return view('doctor.report.appointment_report', compact('appointment', 'currentTime', 'currentDate', 'doctor', 'profile'));
+    }
 
     public function notification()
     {
@@ -937,6 +955,37 @@ class DoctorController extends Controller
 
     }
 
+    public function deleteNotification(Request $request)
+    {
+        $notification = Notification::where('id', $request->input('id'))->first();
+        $notification->delete();
+
+        return redirect()->back()->with('success', 'Notification deleted successfully');
+    }
+
+    public function deleteNotificationAll(Request $request)
+    {
+        $profile = auth()->user();
+        $info = Doctor::where('account_id', $profile->id)->first();
+        $notifications = Notification::where('specialties',$info->specialties)->get(); // Split the string into an array using a delimiter (e.g., comma)
+
+        if($notifications->isEmpty()){
+            return redirect()->back()->with('info', 'No notification to delete.');
+            
+        } else {
+
+            foreach ($notifications as $notification) {
+                $notification->delete();
+            }
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        }
+    }
+
+    public function deleteAllNotification(Request $request)
+    {
+
+    }
     private function hasChanges($info, $updatedData)
     {
         foreach ($updatedData as $key => $value) {

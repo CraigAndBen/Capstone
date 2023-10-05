@@ -15,7 +15,8 @@
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
+                                </li>
                                 <li class="breadcrumb-item" aria-current="page">Notification List</li>
                             </ul>
                         </div>
@@ -36,7 +37,15 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
-
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <form action="{{ route('supply_officer.notification.delete.all') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Delete All</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -101,6 +110,14 @@
                                                                     data-date="{{ json_encode($notification->date) }}"
                                                                     data-time="{{ json_encode($notification->time) }}"
                                                                     data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
+                                                                <form method="POST"
+                                                                    action="{{ route('supply_officer.notification.delete') }}">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $notification->id }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Delete</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </td>

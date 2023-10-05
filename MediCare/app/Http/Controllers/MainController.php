@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Request_Form;
 use Illuminate\Http\Request;
 
 class MainController extends Controller

@@ -270,7 +270,11 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
+<<<<<<< Updated upstream
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sales.demo') }}">Sales</a></li>
+=======
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sale.demo')}}">Sales</a></li>
+>>>>>>> Stashed changes
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>
                         </ul>
                     </li>

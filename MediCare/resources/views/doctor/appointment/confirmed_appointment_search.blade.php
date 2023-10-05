@@ -39,7 +39,8 @@
 
                                 <div class="d-flex justify-content-end m-4">
                                     <div class="m-1">
-                                        <a href="{{ route('doctor.appointment.confirmed') }}" class="btn btn-success">Show All</a>
+                                        <a href="{{ route('doctor.appointment.confirmed') }}" class="btn btn-success">Show
+                                            All</a>
                                     </div>
                                 </div>
 
@@ -145,6 +146,15 @@
                                                                         value="{{ $appointment->status }}">
                                                                     <button type="submit"
                                                                         class="dropdown-item btn btn-primary">Done</button>
+                                                                </form>
+                                                                <form action="{{ route('doctor.appointment.report') }}"
+                                                                    method="GET">
+                                                                    @csrf
+                                                                    <input type="hidden" name="appointment_id"
+                                                                        id="appointment_id" value="{{ $appointment->id }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Generate
+                                                                        Report</button>
                                                                 </form>
                                                             </div>
                                                         </div>

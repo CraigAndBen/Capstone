@@ -43,7 +43,8 @@
                                             Outpatient</button>
                                     </div>
                                     <div class="m-1">
-                                        <a href="{{route('superadmin.patient.outpatient')}}" class="btn btn-success">Show All</a>
+                                        <a href="{{ route('superadmin.patient.outpatient') }}" class="btn btn-success">Show
+                                            All</a>
                                     </div>
                                 </div>
                                 <hr>
@@ -77,7 +78,6 @@
                                         <span class="fa fa-check-circle"></span> No Patient Exist.
                                     </div>
                                 @else
-
                                     <form action="{{ route('superadmin.patient.outpatient.search') }}" method="GET">
                                         @csrf
                                         <div class="row">
@@ -94,7 +94,7 @@
                                                 <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
                                     </form>
-                                    
+
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
@@ -116,6 +116,8 @@
                                                         @if ($patient->physician == $doctor->id)
                                                             <td>Dr. {{ ucwords($doctor->first_name) }}
                                                                 {{ ucwords($doctor->last_name) }}</td>
+                                                        @else
+                                                            <td>NA</td>
                                                         @endif
                                                     @endforeach
                                                     <td>{{ ucwords($patient->date) }}</td>
@@ -177,11 +179,15 @@
                                                                     data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
                                                                     data-guardian-email="{{ json_encode($patient->guardian_email) }}"
                                                                     data-medication="{{ json_encode($patient->medication) }}">View</a>
-                                                                    <form action="{{route('superadmin.patient.report')}}" method="GET">
-                                                                        @csrf
-                                                                        <input type="hidden" name="patient_id" id="patient_id" value="{{$patient->id}}">
-                                                                        <button type="submit" class="dropdown-item btn btn-primary">Generate Report</button>
-                                                                    </form>
+                                                                <form action="{{ route('superadmin.patient.report') }}"
+                                                                    method="GET">
+                                                                    @csrf
+                                                                    <input type="hidden" name="patient_id"
+                                                                        id="patient_id" value="{{ $patient->id }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Generate
+                                                                        Report</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </td>

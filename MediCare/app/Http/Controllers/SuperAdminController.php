@@ -82,6 +82,7 @@ class SuperAdminController extends Controller
             ->get();
 
         $appointmentByYear = DB::table('appointments')
+            ->where('status', 'done')
             ->whereYear('appointment_date', $currentYear)
             ->get();
 
@@ -3348,7 +3349,10 @@ class SuperAdminController extends Controller
     {
 
         $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(10);
+        $notifications = Notification::where('type', $profile->role)
+        ->orWhere('type', 'admin')
+        ->orWhere('type', 'supply_officer')
+        ->orderBy('date', 'desc')->paginate(10);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
@@ -3449,6 +3453,94 @@ class SuperAdminController extends Controller
         } else {
             return redirect()->route('superadmin.notification');
         }
+
+    }
+
+    public function deleteNotification(Request $request)
+    {
+        $notification = Notification::where('id', $request->input('id'))->first();
+        $notification->delete();
+
+        return redirect()->back()->with('success', 'Notification deleted successfully');
+    }
+
+    public function deleteNotificationAll(Request $request)
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)
+        ->orWhere('type','admin')
+        ->orWhere('type','supply_officer')
+        ->get(); // Split the string into an array using a delimiter (e.g., comma)
+
+        if($notifications->isEmpty()){
+            return redirect()->back()->with('info', 'No notification to delete.');
+            
+        } else {
+
+            foreach ($notifications as $notification) {
+                $notification->delete();
+            }
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        }
+    }
+
+    public function deleteUser(Request $request)
+    {
+         // Find the user by ID
+         $user = User::where('id', $request->input('id'))->first();
+
+        if($user->role === 'doctor'){
+
+            $info = Doctor::where('account_id',$user->id);
+            $user->delete();
+            $info->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+
+        } elseif ($user->role === 'nurse'){
+
+            $info = Nurse::where('account_id',$user->id);
+            $user->delete();
+            $info->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        } elseif ($user->role === 'user'){
+
+            $info = User_info::where('account_id',$user->id);
+            $user->delete();
+            $info->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        } elseif ($user->role === 'admin'){
+
+            $user->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+
+        } elseif ($user->role === 'supply_officer'){
+            
+            $user->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        } elseif ($user->role === 'staff'){
+            
+            $user->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        } elseif ($user->role === 'cashier'){
+            
+            $user->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        } elseif ($user->role === 'pharmacist'){
+            
+            $user->delete();
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        }
+
+         return redirect()->back()->with('Error', 'User deleted unsucessful.');
 
     }
 

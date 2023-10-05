@@ -122,23 +122,6 @@
                                                                             data-user-id="{{ json_encode($user->id) }}">Update
                                                                             Password</a>
 
-                                                                        {{-- <form
-                                                                            action="{{ route('superadmin.nurse.update.status') }}"
-                                                                            method="POST">
-                                                                            @csrf
-                                                                            <input type="hidden" name="user_id"
-                                                                                value="{{ $user->id }}">
-                                                                            <input type="hidden" name="status"
-                                                                                value="{{ $user->status }}">
-                                                                            @if ($user->status == 'activated')
-                                                                                <button type="submit"
-                                                                                    class="dropdown-item btn btn-primary">Deactivate</button>
-                                                                            @else
-                                                                                <button type="submit"
-                                                                                    class="dropdown-item btn btn-primary">Activate</button>
-                                                                            @endif
-                                                                        </form> --}}
-
                                                                         <a class="dropdown-item btn btn-primary"
                                                                             data-toggle="modal" data-target="#viewModal"
                                                                             data-first-name="{{ json_encode($user->first_name) }}"
@@ -157,6 +140,11 @@
                                                                             data-phone="{{ json_encode($nurse->phone) }}"
                                                                             data-email="{{ json_encode($user->email) }}">View
                                                                             Profile</a>
+                                                                            <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
+                                                                                @csrf
+                                                                                <input type="hidden" name="id" value="{{$user->id}}">
+                                                                                <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
+                                                                            </form>
                                                                     @endif
                                                                 @endforeach
                                                             </div>

@@ -37,7 +37,15 @@
                         <div class="card-body">
                             <div class="container">
 
-
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <form action="{{ route('doctor.notification.delete.all') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Delete All</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -102,7 +110,16 @@
                                                                     data-date="{{ json_encode($notification->date) }}"
                                                                     data-time="{{ json_encode($notification->time) }}"
                                                                     data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
+                                                                <form method="POST"
+                                                                    action="{{ route('doctor.notification.delete') }}">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $notification->id }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Delete</button>
+                                                                </form>
                                                             </div>
+
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -179,6 +196,33 @@
                     modal.find('#time').text(time);
                     modal.find('#is_read').val(is_read);
                 });
+            });
+
+            document.getElementById('delete-selected').addEventListener('click', function() {
+                const selectedIds = [];
+                const checkboxes = document.querySelectorAll('.notification-checkbox:checked');
+                checkboxes.forEach(function(checkbox) {
+                    selectedIds.push(checkbox.value);
+                });
+
+                // Send the selectedIds array to your delete action via AJAX
+                axios.post('{{ route('superadmin.delete') }}', {
+                        selectedIds
+                    })
+                    .then(function(response) {
+                        // Handle the response from the server
+                        if (response.data.success) {
+                            // Reload the page or update the UI as needed
+                            window.location.reload(); // Example: Reload the page
+                        } else {
+                            // Handle errors or display a message
+                            console.error('Delete failed');
+                        }
+                    })
+                    .catch(function(error) {
+                        // Handle errors
+                        console.error(error);
+                    });
             });
         </script>
     @endsection

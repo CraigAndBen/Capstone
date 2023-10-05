@@ -36,7 +36,15 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
-
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <form action="{{ route('superadmin.notification.delete.all') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Delete All</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -101,6 +109,14 @@
                                                                     data-date="{{ json_encode($notification->date) }}"
                                                                     data-time="{{ json_encode($notification->time) }}"
                                                                     data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
+                                                                <form method="POST"
+                                                                    action="{{ route('superadmin.notification.delete') }}">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $notification->id }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Delete</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -109,7 +125,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                        {{ $notifications->links('pagination::bootstrap-4') }}
                                     </div>
                                 @endif
                             </div>

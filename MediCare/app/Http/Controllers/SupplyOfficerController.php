@@ -169,6 +169,32 @@ class SupplyOfficerController extends Controller
 
     }
 
+    public function deleteNotification(Request $request)
+    {
+        $notification = Notification::where('id', $request->input('id'))->first();
+        $notification->delete();
+
+        return redirect()->back()->with('success', 'Notification deleted successfully');
+    }
+
+    public function deleteNotificationAll(Request $request)
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type',$profile->role)->get(); // Split the string into an array using a delimiter (e.g., comma)
+
+        if($notifications->isEmpty()){
+            return redirect()->back()->with('info', 'No notification to delete.');
+            
+        } else {
+
+            foreach ($notifications as $notification) {
+                $notification->delete();
+            }
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        }
+    }
+
     public function notificationRead(Request $request)
     {
 
@@ -291,7 +317,7 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-  
+
         $categories = Product::paginate(5);
 
         $currentDate = Carbon::now();
@@ -399,20 +425,19 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
 
         $products = Product::all();
-       
+
 
         return view('supply_officer.inventory_demo.inventorydemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
     }
 
     public function inventorydemoSearch(Request $request)
     {
-    
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();   
+        $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
@@ -434,13 +459,13 @@ class SupplyOfficerController extends Controller
                     'count' => $item->count,
                 ];
             }
-            
+
         } elseif ($selectedOption === 'Brand') {
 
             $data = Product::select('brand', DB::raw('COUNT(*) as count'))
                 ->groupBy('brand')
                 ->orderByDesc('count')
-                ->get();    
+                ->get();
 
             $chartTitle = 'Brand Data';
 
@@ -452,15 +477,87 @@ class SupplyOfficerController extends Controller
                 ];
             }
         } else {
-            
+
             // Handle other options or show an error message if needed
             return redirect()->back()->with('error', 'Invalid selection.');
         }
 
-            return view('supply_officer.inventory_demo.inventorydemo_search', compact('profile', 'notifications', 'limitNotifications', 'count',
-            'currentTime', 'currentDate','chartData', 'chartTitle'));
+        return view(
+            'supply_officer.inventory_demo.inventorydemo_search',
+            compact(
+                'profile',
+                'notifications',
+                'limitNotifications',
+                'count',
+                'currentTime',
+                'currentDate',
+                'chartData',
+                'chartTitle',
+                'selectedOption'
+            )
+        );
     }
-    
+
+    public function inventoryReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $selectedOption = $request->input('select');
+        $chartData = [];
+
+        if ($selectedOption === 'Category') {
+            $data = Product::join('categories', 'products.category_id', '=', 'categories.id')
+                ->select('categories.category_name', DB::raw('COUNT(*) as count'))
+                ->groupBy('categories.category_name')
+                ->orderByDesc('count')
+                ->get();
+            $chartTitle = 'Category Data';
+
+            // Transform data into chart format
+            foreach ($data as $item) {
+                $chartData[] = [
+                    'label' => $item->category_name,
+                    'count' => $item->count,
+                ];
+            }
+
+        } elseif ($selectedOption === 'Brand') {
+
+            $data = Product::select('brand', DB::raw('COUNT(*) as count'))
+                ->groupBy('brand')
+                ->orderByDesc('count')
+                ->get();
+
+            $chartTitle = 'Brand Data';
+
+            // Transform data into chart format
+            foreach ($data as $item) {
+                $chartData[] = [
+                    'label' => $item->brand,
+                    'count' => $item->count,
+                ];
+            }
+        } else {
+
+            // Handle other options or show an error message if needed
+            return redirect()->back()->with('error', 'Invalid selection.');
+        }
+
+        return view(
+            'supply_officer.report.inventory_report',
+            compact(
+                'currentTime',
+                'currentDate',
+                'chartData',
+                'chartTitle',
+                'selectedOption'
+            )
+        );
+    }
+
     public function requestDemo()
     {
         $profile = Auth::user();
@@ -473,11 +570,12 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
 
         $requests = Request_Form::all();
-       
+
 
         return view('supply_officer.inventory_demo.requestdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
     }
 
+<<<<<<< Updated upstream
 public function requestDemoSearch(Request $request)
 {
 
@@ -553,6 +651,235 @@ public function salesDemo()
 
     return view('supply_officer.inventory_demo.salesdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
 }
+=======
+    public function requestDemoSearch(Request $request)
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("F j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("F j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Query your database to get the most requested products or departments based on the selected date range and category
+        if ($selectedOption === 'Product') {
+            // Get the most requested products
+            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+                ->whereBetween('requests.date', [$fromDate, $toDate])
+                ->groupBy('requests.product_id', 'products.p_name') // Group by product name
+                ->selectRaw('products.p_name as label, COUNT(*) as data')
+                ->orderByDesc('data')
+                ->get();
+
+        } elseif ($selectedOption === 'Department') {
+            // Get the most requested departments
+            $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
+                ->groupBy('department')
+                ->selectRaw('department as label, COUNT(*) as data')
+                ->orderByDesc('data')
+                ->get();
+        } else {
+            // Invalid selection, handle accordingly
+            return redirect()->back()->with('info', 'Invalid selection.');
+        }
+
+
+        // Prepare the data for the chart
+
+        $chartData = [
+
+            'labels' => $result->pluck('label'),
+            'data' => $result->pluck('data'),
+        ];
+
+        // Return the view with the chart data
+        return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData', 'range','selectedOption','fromDate','toDate'));
+    }
+
+    public function requestReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("F j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("F j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Query your database to get the most requested products or departments based on the selected date range and category
+        if ($selectedOption === 'Product') {
+            // Get the most requested products
+            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+                ->whereBetween('requests.date', [$fromDate, $toDate])
+                ->groupBy('requests.product_id', 'products.p_name') // Group by product name
+                ->selectRaw('products.p_name as label, COUNT(*) as data')
+                ->orderByDesc('data')
+                ->get();
+
+        } elseif ($selectedOption === 'Department') {
+            // Get the most requested departments
+            $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
+                ->groupBy('department')
+                ->selectRaw('department as label, COUNT(*) as data')
+                ->orderByDesc('data')
+                ->get();
+        } else {
+            // Invalid selection, handle accordingly
+            return redirect()->back()->with('info', 'Invalid selection.');
+        }
+
+        $chartData = [
+
+            'labels' => $result->pluck('label'),
+            'data' => $result->pluck('data'),
+        ];
+
+        // Return the view with the chart data
+        return view('supply_officer.report.request_report', compact('currentTime', 'currentDate', 'chartData','range','result'));
+    }
+
+
+
+    public function saleDemo()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $requests = Request_Form::all();
+
+
+        return view('supply_officer.inventory_demo.saledemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
+    }
+
+    public function saleDemoSearch(Request $request)
+    {
+
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("F j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("F j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId); // Fetch product info from the products table
+
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+
+                foreach ($dateRange as $date) {
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereDate('created_at', $date)
+                        ->sum('quantity');
+
+                    $salesData[$productName][] = $quantity;
+                }
+            }
+        }
+
+
+        return view('supply_officer.inventory_demo.saledemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'fromDate', 'toDate', 'selectedOption'));
+    }
+
+    public function saleReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("F j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("F j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId); // Fetch product info from the products table
+
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+
+                foreach ($dateRange as $date) {
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereDate('created_at', $date)
+                        ->sum('quantity');
+
+                    $salesData[$productName][] = $quantity;
+                }
+            }
+        }
+
+
+        return view('supply_officer.report.sale_report', compact('currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'products'));
+    }
+
+>>>>>>> Stashed changes
     public function supplyOfficerLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

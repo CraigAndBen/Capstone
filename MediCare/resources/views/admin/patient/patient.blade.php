@@ -118,6 +118,8 @@
                                                         @if ($patient->physician == $doctor->id)
                                                             <td>Dr. {{ ucwords($doctor->first_name) }}
                                                                 {{ ucwords($doctor->last_name) }}</td>
+                                                        @else
+                                                            <td>NA</td>
                                                         @endif
                                                     @endforeach
                                                     @if ($patient->type == 'outpatient')
@@ -180,11 +182,15 @@
                                                                         data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
                                                                         data-guardian-email="{{ json_encode($patient->guardian_email) }}"
                                                                         data-medication="{{ json_encode($patient->medication) }}">View</a>
-                                                                        <form action="{{route('admin.patient.report')}}" method="GET">
-                                                                            @csrf
-                                                                            <input type="hidden" name="patient_id" id="patient_id" value="{{$patient->id}}">
-                                                                            <button type="submit" class="dropdown-item btn btn-primary">Generate Report</button>
-                                                                        </form>
+                                                                    <form action="{{ route('admin.patient.report') }}"
+                                                                        method="GET">
+                                                                        @csrf
+                                                                        <input type="hidden" name="patient_id"
+                                                                            id="patient_id" value="{{ $patient->id }}">
+                                                                        <button type="submit"
+                                                                            class="dropdown-item btn btn-primary">Generate
+                                                                            Report</button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -253,10 +259,14 @@
                                                                         data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
                                                                         data-guardian-email="{{ json_encode($patient->guardian_email) }}"
                                                                         data-medication="{{ json_encode($patient->medication) }}">View</a>
-                                                                    <form action="{{route('admin.patient.report')}}" method="GET">
+                                                                    <form action="{{ route('admin.patient.report') }}"
+                                                                        method="GET">
                                                                         @csrf
-                                                                        <input type="hidden" name="patient_id" id="patient_id" value="{{$patient->id}}">
-                                                                        <button type="submit" class="dropdown-item btn btn-primary">Generate Report</button>
+                                                                        <input type="hidden" name="patient_id"
+                                                                            id="patient_id" value="{{ $patient->id }}">
+                                                                        <button type="submit"
+                                                                            class="dropdown-item btn btn-primary">Generate
+                                                                            Report</button>
                                                                     </form>
 
                                                                 </div>
@@ -1099,8 +1109,9 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
-                                                    <input type="date" name="guardian_birthdate" class="form-control"
-                                                        id="guardian_birthdate" placeholder="Guardian Birthdate" />
+                                                    <input type="date" name="guardian_birthdate"
+                                                        class="form-control" id="guardian_birthdate"
+                                                        placeholder="Guardian Birthdate" />
                                                     <label for="floatingInput">Guardian Birthdate</label>
                                                 </div>
                                             </div>

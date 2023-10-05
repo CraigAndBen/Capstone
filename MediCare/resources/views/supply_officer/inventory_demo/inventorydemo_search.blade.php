@@ -82,10 +82,14 @@
                         </div>
                         <hr>
                         <div class="row justify-content-end">
-                        <div class="col-md-2 mt-2">
-                            <button type="button" class="btn btn-success" id="generateReport">Generate Report</button>
+                            <div class="col-md-2 mt-2">
+                                <form action="{{ route('supply_officer.inventory.report') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="select" id="select" value="{{ $selectedOption }}">
+                                    <button type="submit" class="btn btn-success">Generate Report</button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
                         <div class="row mb-5 p-3">
                             <canvas id="productChart" width="100%" height="40"></canvas>
                         </div>
@@ -104,7 +108,7 @@
             <script>
                 var ctx = document.getElementById('productChart').getContext('2d');
                 var productData = @json($chartData);
-                
+
                 new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -126,6 +130,5 @@
                     }
                 });
             </script>
-
         @endif
     @endsection

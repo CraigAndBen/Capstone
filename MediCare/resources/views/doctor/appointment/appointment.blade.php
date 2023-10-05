@@ -146,6 +146,15 @@
                                                                             class="dropdown-item btn btn-primary">Confirm</button>
                                                                     </form>
                                                                 @endif
+                                                                <form action="{{ route('doctor.appointment.report') }}"
+                                                                    method="GET">
+                                                                    @csrf
+                                                                    <input type="hidden" name="appointment_id" id="appointment_id"
+                                                                        value="{{ $appointment->id }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Generate
+                                                                        Report</button>
+                                                                </form>
 
                                                             </div>
                                                         </div>

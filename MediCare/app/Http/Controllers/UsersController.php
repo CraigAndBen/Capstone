@@ -62,6 +62,33 @@ class UsersController extends Controller
         return redirect()->route('user.notification')->with('success', 'Notification message deleted successfully.');
     }
 
+    public function deleteNotification(Request $request)
+    {
+        $notification = Notification::where('id', $request->input('id'))->first();
+        $notification->delete();
+
+        return redirect()->back()->with('success', 'Notification deleted successfully');
+    }
+
+    public function deleteNotificationAll(Request $request)
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('account_id',$profile->id)->get(); // Split the string into an array using a delimiter (e.g., comma)
+
+        if($notifications->isEmpty()){
+            return redirect()->back()->with('info', 'No notification to delete.');
+            
+        } else {
+
+            foreach ($notifications as $notification) {
+                $notification->delete();
+            }
+
+            return redirect()->back()->with('success', 'User deleted successfully');
+        }
+
+    }
+
     public function userLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

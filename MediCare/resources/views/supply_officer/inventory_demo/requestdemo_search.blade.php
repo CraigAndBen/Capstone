@@ -87,60 +87,68 @@
                                 </div>
                                 <div class="col-md-2 mt-4">
                                     <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Select</button>
+                                        <button type="submit" class="btn btn-primary">Select</button>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="row justify-content-end">
+                                <div class="col-md-2 mt-2">
+
                                 </div>
                             </div>
-                            </form>
+                            <div class="row justify-content-end">
+                                <div class="col-md-2 mt-2">
+                                    <form action="{{ route('supply_officer.request.report') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="select" id="select" value="{{ $selectedOption }}">
+                                        <input type="hidden" name="start" id="start" value="{{ $fromDate }}">
+                                        <input type="hidden" name="end" id="end" value="{{ $toDate }}">
+                                        <button type="submit" class="btn btn-success">Generate Report</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row mb-5 p-3">
+                                <canvas id="requestChart" width="100%" height="40"></canvas>
+                            </div>
                         </div>
-                        <hr>
-                        <div class="row justify-content-end">
-                        <div class="col-md-2 mt-2">
-                            
-                        </div>
-                    </div>
-                        <div class="row mb-5 p-3">
-                            <canvas id="requestChart" width="100%" height="40"></canvas>
-                        </div>
-                    </div>
 
-                    <!-- [ sample-page ] end -->
+                        <!-- [ sample-page ] end -->
+                    </div>
+                    <!-- [ Main Content ] end -->
                 </div>
-                <!-- [ Main Content ] end -->
             </div>
-        </div>
-    @endsection
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    @section('scripts')
-    @if(isset($chartData))
-   
-    <script>
-        var ctx = document.getElementById('requestChart').getContext('2d');
-        var chartData = @json($chartData);
-        console.log(chartData);
+        @endsection
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        @section('scripts')
+            @if (isset($chartData))
+                <script>
+                    var ctx = document.getElementById('requestChart').getContext('2d');
+                    var chartData = @json($chartData);
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: chartData.labels,
 
-        new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: chartData.labels,
-        
-        datasets: [{
-            label: 'Request Count',
-            data: chartData.data, // Ensure this points to the data array
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-    
-    
-});
-    </script>
-    @endif
-@endsection 
+                            datasets: [{
+                                label: @json($range),
+                                data: chartData.data, // Ensure this points to the data array
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+
+
+                    });
+                </script>
+            @endif
+        @endsection

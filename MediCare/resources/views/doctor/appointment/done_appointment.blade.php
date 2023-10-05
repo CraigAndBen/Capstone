@@ -67,24 +67,24 @@
                                         <span class="fa fa-check-circle"></span> No Done Appointment Yet.
                                     </div>
                                 @else
-                                <form action="{{ route('doctor.done.appointment.search') }}" method="POST">
-                                    @csrf
-                                    <div class="row d-flex justify-content-center">
-                                        <div class="col-md-2">
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="floatingInput search" placeholder="Search" name="search" />
-                                                <label for="floatingInput">Search</label>
+                                    <form action="{{ route('doctor.done.appointment.search') }}" method="POST">
+                                        @csrf
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control ml-2"
+                                                        id="floatingInput search" placeholder="Search" name="search" />
+                                                    <label for="floatingInput">Search</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 mt-2">
+                                                <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 mt-2">
-                                            <button type="submit" class="btn btn-primary">Search</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                
+                                    </form>
+
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
@@ -132,6 +132,15 @@
                                                                     data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                     data-reason="{{ json_encode($appointment->reason) }}">View</a>
                                                             </div>
+                                                            <form action="{{ route('doctor.appointment.report') }}"
+                                                                method="GET">
+                                                                @csrf
+                                                                <input type="hidden" name="appointment_id"
+                                                                    id="appointment_id" value="{{ $appointment->id }}">
+                                                                <button type="submit"
+                                                                    class="dropdown-item btn btn-primary">Generate
+                                                                    Report</button>
+                                                            </form>
                                                         </div>
                                                     </td>
                                                 </tr>

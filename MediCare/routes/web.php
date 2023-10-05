@@ -47,7 +47,8 @@ Route::post('/user/appointment/delete', [AppointmentController::class, 'deleteAp
 // User Notification
 Route::get('/user/notification', [UsersController::class, 'notification'])->name('user.notification');
 Route::post('/user/notification/read', [UsersController::class, 'notificationRead'])->name('user.notification.read');
-Route::post('/user/notification/delete', [UsersController::class, 'notificationDelete'])->name('user.notification.delete');
+Route::post('/user/notification/delete', [UsersController::class, 'deleteNotification'])->name('user.notification.delete');
+Route::post('/user/notification/delete/all', [UsersController::class, 'deleteNotificationAll'])->name('user.notification.delete.all');
 
 //profile
 Route::get('/user/profile', [ProfileController::class, 'profile'])->name('user.profile');
@@ -108,6 +109,8 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::get('/doctor/appointment/calendar', [DoctorController::class, 'appointmentCalendar'])->name('doctor.appointment.calendar');
     Route::get('/doctor/appointment/calendar/events', [DoctorController::class, 'appointmentEvents'])->name('doctor.appointment.calendar.events');
     Route::post('/doctor/appointment/calendar/confirm', [DoctorController::class, 'calendarConfirmedAppointment'])->name('doctor.appointment.calendar.confirm');
+    Route::get('/doctor/appointment/report', [DoctorController::class, 'appointmentReport'])->name('doctor.appointment.report');
+
 
     // Patient
     Route::get('/doctor/patient', [DoctorController::class, 'patientList'])->name('doctor.patient');
@@ -121,6 +124,8 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     // Doctor Notification
     Route::get('/doctor/notification', [DoctorController::class, 'notification'])->name('doctor.notification');
     Route::post('/doctor/notification/read', [DoctorController::class, 'notificationRead'])->name('doctor.notification.read');
+    Route::post('/doctor/notification/delete', [DoctorController::class, 'deleteNotification'])->name('doctor.notification.delete');
+    Route::post('/doctor/notification/delete/all', [DoctorController::class, 'deleteNotificationAll'])->name('doctor.notification.delete.all');
 
     // Logout
     Route::get('/doctor/logout', [DoctorController::class, 'doctorLogout'])->name('doctor.logout');
@@ -156,6 +161,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     //  Notification
     Route::get('/admin/notification', [AdminController::class, 'notification'])->name('admin.notification');
     Route::post('/admin/notification/read', [AdminController::class, 'notificationRead'])->name('admin.notification.read');
+    Route::post('/admin/notification/delete', [AdminController::class, 'deleteNotification'])->name('admin.notification.delete');
+    Route::post('/admin/notification/delete/all', [AdminController::class, 'deleteNotificationAll'])->name('admin.notification.delete.all');
 
     // Demographics
     // Gender
@@ -204,6 +211,8 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     // Notification
     Route::get('/superadmin/notification', [SuperAdminController::class, 'notification'])->name('superadmin.notification');
     Route::post('/superadmin/notification/read', [SuperAdminController::class, 'notificationRead'])->name('superadmin.notification.read');
+    Route::post('/superadmin/notification/delete', [SuperAdminController::class, 'deleteNotification'])->name('superadmin.notification.delete');
+    Route::post('/superadmin/notification/delete/all', [SuperAdminController::class, 'deleteNotificationAll'])->name('superadmin.notification.delete.all');
 
     // Appointment
     Route::get('/superadmin/appointment', [SuperAdminController::class, 'appointment'])->name('superadmin.appointment');
@@ -283,7 +292,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     //Admit
     Route::get('/superadmin/demographics/admitted', [SuperAdminController::class, 'admittedDemo'])->name('superadmin.demographics.admitted');
     Route::get('/superadmin/demogrpahics/admit/search', [SuperAdminController::class, 'admittedDemoSearch'])->name('superadmin.demographics.admitted.search');
-    //Admit
+    //Outpatient
     Route::get('/superadmin/demographics/outpatient', [SuperAdminController::class, 'outpatientDemo'])->name('superadmin.demographics.outpatient');
     Route::get('/superadmin/demogrpahics/outpatient/search', [SuperAdminController::class, 'outpatientDemoSearch'])->name('superadmin.demographics.outpatient.search');
     //Diagnose
@@ -307,6 +316,9 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/superadmin/diagnose/report', [SuperAdminController::class, 'diagnoseReport'])->name('superadmin.diagnose.report');
     Route::post('/superadmin/diagnose_trend/report', [SuperAdminController::class, 'diagnoseTrendReport'])->name('superadmin.diagnose.trend.report');
 
+    // Delete User
+    Route::post('/superadmin/account/delete', [SuperAdminController::class, 'deleteUser'])->name('superadmin.delete');
+
     // Super Admin Logout
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });
@@ -326,7 +338,9 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     // Notification
     Route::get('/supply_officer/notification', [SupplyOfficerController::class, 'notification'])->name('supply_officer.notification');
     Route::post('/supply_officer/notification/read', [SupplyOfficerController::class, 'notificationRead'])->name('supply_officer.notification.read');
-    
+    Route::post('/supply_officer/notification/delete', [SupplyOfficerController::class, 'deleteNotification'])->name('supply_officer.notification.delete');
+    Route::post('/supply_officer/notification/delete/all', [SupplyOfficerController::class, 'deleteNotificationAll'])->name('supply_officer.notification.delete.all');
+
     // Inventory
     Route::get('/supply_officer/product', [SupplyOfficerController::class, 'productList'])->name('supply_officer.product');
     Route::post('/supply_officer/product/create', [SupplyOfficerController::class, 'productStore'])->name('supply_officer.product.create');
@@ -339,7 +353,7 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/category{id}', [SupplyOfficerController::class, 'categorydelete'])->name('supply_officer.category.delete');
 
     //Expiration
-    Route::get('/supply_officer/product/expiring_soon',[SupplyOfficerController::class, 'expirationproduct'])->name('supply_officer.product.expiration');
+    Route::get('/supply_officer/product/expiring_soon', [SupplyOfficerController::class, 'expirationproduct'])->name('supply_officer.product.expiration');
 
     // Inventory Demo
     Route::get('/supply_officer/inventory_demo/inventorydemo', [SupplyOfficerController::class, 'inventoryDemo'])->name('supply_officer.inventory.demo');
@@ -349,15 +363,23 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/inventory_demo/requestdemo', [SupplyOfficerController::class, 'requestDemo'])->name('supply_officer.request.demo');
     Route::get('/supply_officer/inventory_demo/requestdemo_search', [SupplyOfficerController::class, 'requestdemoSearch'])->name('supply_officer.request.demo.search');
 
+<<<<<<< Updated upstream
     //Sales Demo
     Route::get('/supply_officer/inventory_demo/salesdemo', [SupplyOfficerController::class, 'salesDemo'])->name('supply_officer.sales.demo');
     Route::get('/supply_officer/inventory_demo/salesdemo_search', [SupplyOfficerController::class, 'salesdemoSearch'])->name('supply_officer.sales.demo.search');
+=======
+    //Sale Demo
+    Route::get('/supply_officer/inventory_demo/saledemo', [SupplyOfficerController::class, 'saleDemo'])->name('supply_officer.sale.demo');
+    Route::get('/supply_officer/inventory_demo/saledemo_search', [SupplyOfficerController::class, 'saledemoSearch'])->name('supply_officer.sale.demo.search');
+>>>>>>> Stashed changes
 
     // Request
     Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');
 
-
-
+    // Report
+    Route::post('/supply_officer/inventorydemo/report', [SupplyOfficerController::class, 'inventoryReport'])->name('supply_officer.inventory.report');
+    Route::post('/supply_officer/saledemo/report', [SupplyOfficerController::class, 'saleReport'])->name('supply_officer.sale.report');
+    Route::post('/supply_officer/requestdemo/report', [SupplyOfficerController::class, 'requestReport'])->name('supply_officer.request.report');
 
     // Logout
     Route::get('/supply_officer/logout', [SupplyOfficerController::class, 'supplyOfficerLogout'])->name('supply_officer.logout');

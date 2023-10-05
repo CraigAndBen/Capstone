@@ -117,6 +117,11 @@
                                                                             data-access-level="{{ json_encode($admin->access_level) }}"
                                                                             data-email="{{ json_encode($user->email) }}">View
                                                                             Profile</a>
+                                                                            <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
+                                                                                @csrf
+                                                                                <input type="hidden" name="id" value="{{$user->id}}">
+                                                                                <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
+                                                                            </form>
                                                                     @endif
                                                                 @endforeach
                                                             </div>

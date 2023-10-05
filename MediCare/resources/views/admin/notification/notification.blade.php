@@ -37,6 +37,15 @@
                         <div class="card-body">
                             <div class="container">
 
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <form action="{{ route('admin.notification.delete.all') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Delete All</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -73,7 +82,7 @@
                                                 <th>Title</th>
                                                 <th>Message</th>
                                                 <th>Status</th>
-                                                <th>Action</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
@@ -102,6 +111,14 @@
                                                                     data-date="{{ json_encode($notification->date) }}"
                                                                     data-time="{{ json_encode($notification->time) }}"
                                                                     data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
+                                                                <form method="POST"
+                                                                    action="{{ route('admin.notification.delete') }}">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $notification->id }}">
+                                                                    <button type="submit"
+                                                                        class="dropdown-item btn btn-primary">Delete</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </td>
