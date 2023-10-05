@@ -681,24 +681,7 @@ class SupplyOfficerController extends Controller
         return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData'));
     }
 
-    //Salaes Demo
-    public function salesDemo()
-    {
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $requests = Purchase::all();
-
-
-        return view('supply_officer.inventory_demo.salesdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
-    }
-
+    //Request
     public function requestReport(Request $request)
     {
         $currentDate = date('Y-m-d');
@@ -744,23 +727,25 @@ class SupplyOfficerController extends Controller
         // Return the view with the chart data
         return view('supply_officer.report.request_report', compact('currentTime', 'currentDate', 'chartData', 'range', 'result'));
     }
-    public function saleDemo()
-    {
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
 
-        $requests = Request_Form::all();
-
-
-        return view('supply_officer.inventory_demo.saledemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
-    }
-
+     //Salaes Demo
+     public function salesDemo()
+     {
+         $profile = Auth::user();
+         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+         $limitNotifications = $notifications->take(5);
+         $count = $notifications->count();
+         $currentDate = date('Y-m-d');
+         $currentDateTime = Carbon::now();
+         $currentDateTime->setTimezone('Asia/Manila');
+         $currentTime = $currentDateTime->format('h:i A');
+ 
+         $requests = Purchase::all();
+ 
+ 
+         return view('supply_officer.inventory_demo.salesdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
+     }
+ 
     public function saleDemoSearch(Request $request)
     {
 
