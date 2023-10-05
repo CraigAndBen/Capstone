@@ -1,7 +1,6 @@
 @extends('layouts.inner_staff')
 
 @section('content')
-
     <!-- [ Main Content ] start -->
     <div class="pc-container pb-3">
         <div class="pc-content ">
@@ -45,8 +44,7 @@
                                             <div class="row">
                                                 <div class="form-group col-md-4">
                                                     <label>Name of Requester</label>
-                                                    <select id="name_requester" name="name_requester"
-                                                        class="form-control">
+                                                    <select id="name_requester" name="name_requester" class="form-control n_requester">
                                                         <option selected disabled>Choose...</option>
                                                         <option value="Angela">Angela</option>
                                                         <option value="Arjay">Arjay</option>
@@ -55,7 +53,7 @@
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="department">Department</label>
-                                                    <select id="department" name="department"class="form-control ">
+                                                    <select id="department" name="department"class="form-control dept">
                                                         <option selected disabled>Choose...</option>
                                                         <option value="CSR">CSR</option>
                                                         <option value="Pharmacy">Pharmacy</option>
@@ -63,8 +61,8 @@
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label>Date</label>
-                                                    <input type="date" class="form-control" id="date"
-                                                        name="date">
+                                                    <input type="date" class="form-control" id="date" name="date"
+                                                        value="{{ isset($_GET['date']) ? $_GET['date'] : '' }}">
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -73,7 +71,8 @@
                                                     <select class="form-control" name="product_id" id="product_id">
                                                         <option selected disabled>Select a Product</option>
                                                         @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}">
+                                                            <option value="{{ $product->id }}"
+                                                                {{ isset($_GET['p_name']) && $_GET['p_name'] == $product->p_name ? 'selected' : '' }}>
                                                                 {{ $product->p_name }}</option>
                                                         @endforeach
                                                     </select>
@@ -82,12 +81,20 @@
                                                     <label for="brand">Brand</label>
                                                     <select class="brand form-control" name="brand" id="brand">
                                                         <option selected disabled>Select Brand</option>
-                                                        <option value="Pfizer">Pfizer</option>
-                                                        <option value="3M">3M</option>
-                                                        <option value="Becton, Dickinson and Company">Becton, Dickinson
+                                                        <option value="Pfizer"
+                                                            {{ isset($_GET['brand']) && $_GET['brand'] == 'Pfizer' ? 'selected' : '' }}>
+                                                            Pfizer</option>
+                                                        <option value="3M"
+                                                            {{ isset($_GET['brand']) && $_GET['brand'] == '3M' ? 'selected' : '' }}>
+                                                            3M</option>
+                                                        <option value="Becton, Dickinson and Company"
+                                                            {{ isset($_GET['brand']) && $_GET['brand'] == 'Becton, Dickinson and Company' ? 'selected' : '' }}>
+                                                            Becton, Dickinson
                                                             and
                                                             Company</option>
-                                                        <option value="Cintas">Cintas</option>
+                                                        <option value="Cintas"
+                                                            {{ isset($_GET['brand']) && $_GET['brand'] == 'Cintas' ? 'selected' : '' }}>
+                                                            Cintas</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-md-4">
@@ -106,8 +113,6 @@
                 </div>
             </div>
         </div>
-
-
     @endsection
 
     @section('scripts')
@@ -132,5 +137,19 @@
                     modal.find('#is_read').val(is_read);
                 });
             });
+            $(document).ready(function() {
+
+$(".n_requester").select2({
+    width: '100%',
+    placeholder: 'Choose Product',
+    tags: true
+});
+$(".dept").select2({
+    width: '100%',
+    placeholder: 'Select Brand',
+    tags: true
+});
+});
         </script>
     @endsection
+   

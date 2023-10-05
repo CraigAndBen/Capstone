@@ -12,12 +12,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Product Demographics</h5>
-                            </div>
+                                Request </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Product Demographics</li>
+                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item" aria-current="page">Request Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Product Demographics</h2>
+                            <h2>Request Demographics</h2>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -59,39 +59,45 @@
                                     {{ session('info') }}
                                 </div>
                             @endif
-                            <div class="row">
-                                <div class="col-md-2">
-
-                                </div>
-                                <div class="col-md-4">
-                                    <form action="{{ route('supply_officer.product.demo.search') }}" method="GET">
+                            <div class="row justify-content-center">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3">
+                                    <form action="{{ route('supply_officer.request.demo.search') }}" method="GET">
                                         @csrf
-                                        <select class="form-control p-3" name="product" id="product">
-                                            <option value="">Select Product</option>
-                                            @foreach ($products as $product)
-                                                <option value="{{ $product->id }}">{{ $product->p_name }}</option>
-                                            @endforeach
+                                        <div class="form-group">
+                                            <label for="from">From</label>
+                                            <input type="date" class="form-control" name="date" id="from">
+                                        </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="to">To</label>
+                                        <input type="date" class="form-control" name="date" id="to">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="select">Most request</label>
+                                        <select class="form-control" name="select" id="select">
+                                            <option value="">Select</option>
+                                            <option value="Product">Product</option>
+                                            <option value="Department">Department</option>
                                         </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <select class="form-control p-3" id="year" name="year">
-                                        <option value="">Select Year</option>
-                                        @foreach ($uniqueYears as $year)
-                                            <option value="{{ $year }}">{{ $year }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-2 mt-2">
+                                <div class="col-md-2 mt-4">
+                                    <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Select</button>
                                 </div>
                             </div>
-
                             </form>
+
+                            
                         </div>
                         <hr>
                         <div class="container">
                             <div class="alert alert-success">
-                                Select Product and Year First.
+                                Select Date Range and Most Request.
                             </div>
                         </div>
                     </div>
@@ -102,4 +108,3 @@
             </div>
         </div>
     @endsection
-

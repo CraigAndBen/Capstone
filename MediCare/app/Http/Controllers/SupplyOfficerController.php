@@ -297,10 +297,12 @@ class SupplyOfficerController extends Controller
         $currentDate = Carbon::now();
 
         // Calculate the date one month from the current date
-        $twoMonthsFromNow = $currentDate->copy()->addMonths(2);
+        $oneMonthFromNow = $currentDate->copy()->addMonth();
 
-        // Retrieve products with expiration dates exactly two months from now
-        $products = Product::whereDate('expiration', $twoMonthsFromNow)->get();
+        // Retrieve products with expiration dates within the date range
+        $products = Product::where('expiration', '>', $currentDate)
+            ->where('expiration', '<=', $oneMonthFromNow)
+            ->get();
 
         // Display the list of products
         return view('supply_officer.inventory.expiring_soon', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
@@ -385,7 +387,7 @@ class SupplyOfficerController extends Controller
 
     }
 
-    public function productDemo()
+    public function inventoryDemo()
     {
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
@@ -397,91 +399,143 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
 
         $products = Product::all();
-        // Retrieve the unique years from the "admitted" column
-        $uniqueYears = Product::select(DB::raw('YEAR(created_at) as year'))
-            ->distinct()
-            ->get()
-            ->pluck('year')
-            ->toArray();
+       
 
-
-        return view('supply_officer.demo.productdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'uniqueYears'));
+        return view('supply_officer.inventory_demo.inventorydemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
     }
 
-    public function productdemoSearch(Request $request)
+    public function inventorydemoSearch(Request $request)
     {
+    
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
+        $currentDateTime = Carbon::now();   
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        
-        $request->validate([
-            'product' => 'required',
-            'year' => 'required',
-        ]);
-    
-        // Retrieve the selected product
-        $selectedProduct = Product::find($request->input('product'));
-        $selectedYear = $request->input('year');
-    
-        // Get the current month and year
-        $currentMonth = Carbon::now()->month;
-        $currentYear = Carbon::now()->year;
-    
-        // Check if the selected year is the current year
-        $isCurrentYear = ($selectedYear == $currentYear);
-    
-        // Fetch data for the selected product, grouped by month for the selected year
-        $productCounts = Product::selectRaw('MONTH(created_at) as month, SUM(stock) as total_stock_added')
-            ->where('id', $selectedProduct->id)
-            ->whereYear('created_at', $selectedYear)
-            ->groupBy('month')
-            ->get();
-    
-        // Calculate the total stock added for the current month or set it to zero if it's not the current year
-        $totalStockAdded = $isCurrentYear ? $productCounts->where('month', $currentMonth)->sum('total_stock_added') : 0;
-    
-        // Calculate the total quantity of requested products for the selected product
-        $totalRequestedProducts = Request_Form::where('product_id', $selectedProduct->id)
-            ->sum('quantity');
-    
-        // Calculate the total quantity of purchased products for the selected product
-        $totalPurchasedProducts = Purchase::where('product_id', $selectedProduct->id)
-            ->sum('quantity');
-    
-        // Calculate the remaining stock in inventory for the selected product
-        $remainingStock = $totalStockAdded - $totalRequestedProducts - $totalPurchasedProducts;
-    
-        // Retrieve all products, unique years for dropdowns, and the product count for the chart
-        $products = Product::all();
-        $uniqueYears = Product::select(DB::raw('YEAR(created_at) as year'))
-            ->distinct()
-            ->get()
-            ->pluck('year')
-            ->toArray();
-    
-        // Create an array to hold data for all months of the current year
-        $months = range(1, 12);
-        $productData = [];
-    
-        // Fill in the counts for each month
-        foreach ($months as $month) {
-            $monthStockAdded = $productCounts->where('month', $month)->first();
-            $productData[] = [
-                'month' => $month,
-                'total_count' => $monthStockAdded ? $monthStockAdded->total_stock_added : 0,
-            ];
+
+        $selectedOption = $request->input('select');
+        $chartData = [];
+
+        if ($selectedOption === 'Category') {
+            $data = Product::join('categories', 'products.category_id', '=', 'categories.id')
+                ->select('categories.category_name', DB::raw('COUNT(*) as count'))
+                ->groupBy('categories.category_name')
+                ->orderByDesc('count')
+                ->get();
+            $chartTitle = 'Category Data';
+
+            // Transform data into chart format
+            foreach ($data as $item) {
+                $chartData[] = [
+                    'label' => $item->category_name,
+                    'count' => $item->count,
+                ];
+            }
+            
+        } elseif ($selectedOption === 'Brand') {
+
+            $data = Product::select('brand', DB::raw('COUNT(*) as count'))
+                ->groupBy('brand')
+                ->orderByDesc('count')
+                ->get();    
+
+            $chartTitle = 'Brand Data';
+
+            // Transform data into chart format
+            foreach ($data as $item) {
+                $chartData[] = [
+                    'label' => $item->brand,
+                    'count' => $item->count,
+                ];
+            }
+        } else {
+            
+            // Handle other options or show an error message if needed
+            return redirect()->back()->with('error', 'Invalid selection.');
         }
 
-        
-    
-        return view('supply_officer.demo.productdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate','products', 'uniqueYears', 'productData', 'selectedProduct', 'selectedYear', 'totalStockAdded', 'isCurrentYear', 'totalRequestedProducts', 'totalPurchasedProducts', 'remainingStock'));
+            return view('supply_officer.inventory_demo.inventorydemo_search', compact('profile', 'notifications', 'limitNotifications', 'count',
+            'currentTime', 'currentDate','chartData', 'chartTitle'));
     }
     
+    public function requestDemo()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $requests = Request_Form::all();
+       
+
+        return view('supply_officer.inventory_demo.requestdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
+    }
+
+    public function requestDemoSearch(Request $request)
+{
+ 
+
+    $profile = Auth::user();
+    $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+    $limitNotifications = $notifications->take(5);
+    $count = $notifications->count();
+    $currentDate = date('Y-m-d');
+    $currentDateTime = Carbon::now();
+    $currentDateTime->setTimezone('Asia/Manila');
+    $currentTime = $currentDateTime->format('h:i A');
+   
+
+    $fromDate = Carbon::parse($request->input('from'))->startOfDay();
+    $toDate = Carbon::parse($request->input('to'))->endOfDay();
+    $selectedOption = $request->input('select');
+
+    // Query your database to get the most requested products or departments based on the selected date range and category
+    if ($selectedOption === 'Product') {
+        // Get the most requested products
+        $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+            ->whereBetween('requests.date', [$fromDate, $toDate])
+            ->groupBy('requests.product_id', 'products.p_name') // Group by product name
+            ->selectRaw('products.p_name as label, COUNT(*) as data')
+            ->orderByDesc('data')
+            ->get();
+            
+    } elseif ($selectedOption === 'Department') {
+        // Get the most requested departments
+        $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
+            ->groupBy('department')
+            ->selectRaw('department as label, COUNT(*) as data')
+            ->orderByDesc('data')
+            ->get();
+    } else {
+        // Invalid selection, handle accordingly
+        return redirect()->back()->with('info', 'Invalid selection.');
+    }
+  
+
+    // Prepare the data for the chart
+    
+    $chartData = [
+        
+        'labels' => $result->pluck('label'),
+        'data' => $result->pluck('data'),
+    ];
+
+
+
+    // Return the view with the chart data
+    return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData'));
+}
+
+
+    
+
 
     public function supplyOfficerLogout(Request $request): RedirectResponse
     {

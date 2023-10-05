@@ -42,6 +42,7 @@
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#createModal">Add product</button>
                                 </div>
+                          
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">

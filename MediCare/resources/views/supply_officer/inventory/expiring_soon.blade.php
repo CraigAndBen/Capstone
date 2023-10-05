@@ -37,11 +37,25 @@
                     </div>
                     <div class="card-body">
                         <div class="container">
+                            <div class="row mb-3 justify-content-end">
+                                <div class="col-md-2">
+                                    <input type="date" id="startDate" class="form-control" placeholder="Start Date">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="date" id="endDate" class="form-control" placeholder="End Date">
+                                </div>
+                                <div class="col-md-2">
+                                    <button id="filterByDate" class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                            
+                               
                             
                         @if ($products->count() > 0)
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                        <th style="text-align: center">#</th>
                                         <th style="text-align: center">Product Name</th>
                                         <th style="text-align: center">Stock</th>
                                         <th style="text-align: center">Brand</th>
@@ -51,8 +65,12 @@
                                 </thead>
 
                                 <tbody>
+                                    @php
+                                    $counter = 1;
+                                @endphp
                                     @foreach ($products as $product)
                                         <tr>
+                                            <td style="text-align: center">{{ $counter++ }}</td>
                                             <td style="text-align: center">{{ $product->p_name }}</td>
                                             <td style="text-align: center">{{ $product->stock }}</td>
                                             <td style="text-align: center">{{ $product->brand }}</td>
@@ -75,5 +93,26 @@
 
 
     @endsection
+    @section('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#filterByDate').on('click', function() {
+                    var startDate = $('#startDate').val();
+                    var endDate = $('#endDate').val();
+                    filterByDateRange(startDate, endDate);
+                });
 
-  
+                function filterByDateRange(startDate, endDate) {
+                    var rows = document.querySelectorAll("table tbody tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        var rowDate = rows[i].querySelector("td:nth-child(6)").textContent.trim();
+                        if (rowDate >= startDate && rowDate <= endDate) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                }
+            });
+        </script>
+    @endsection

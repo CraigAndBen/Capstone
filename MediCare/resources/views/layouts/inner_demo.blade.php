@@ -259,9 +259,9 @@
                                 class="pc-mtext">Analytics</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Product Stock</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
                             <li class="pc-item"><a class="pc-link" href="">Sales</a></li> 
-                            <li class="pc-item"><a class="pc-link" href="">Request</a></li>                 
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>                 
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">

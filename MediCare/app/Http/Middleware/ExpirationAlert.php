@@ -28,10 +28,10 @@ class ExpirationAlert
         $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->get();
 
         // Calculate the date one month from the current date
-        $twoMonthsFromNow = $date->copy()->addMonths(2);
+        $oneMonthFromNow = $date->copy()->addMonth();
 
-        // Retrieve products with expiration dates exactly two months from now
-        $products = Product::whereDate('expiration', $twoMonthsFromNow)->get();
+        // Retrieve products with expiration dates exactly one month from now
+        $products = Product::whereDate('expiration', $oneMonthFromNow)->get();
 
         foreach ($products as $product) {
             $title = 'Expiration Alert';
@@ -48,13 +48,13 @@ class ExpirationAlert
     
             } else {
                 foreach ($notifications as $notification) {
-    
+
                     $notificationDate = Carbon::parse($notification->date);
                     $month = $notificationDate->month;
 
                     if ($notification->title != $title && $month != $currentMonth){
                         // Create a new notification if conditions are met
-                        dd($product);
+                   
                         Notification::create([
                             'title' => $title,
                             'message' => $message,

@@ -27,6 +27,7 @@
                                                     <th class="text-center" scope="col">Quantity</th>
                                                     <th class="text-center" scope="col">Expiration Date</th>
                                                     <th class="text-center" scope="col">Status</th>
+                                                    <th class="text-center" scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -42,6 +43,9 @@
                                                                 {{ $product->status }}
                                                             </span>
                                                         </td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-info btn-sm" onclick="redirectToRequestForm('{{ $product->p_name }}', '{{ $product->brand }}', '{{ $product->date }}')">Request</button>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -52,3 +56,27 @@
 
                             <!-- [ Main Content ] end -->
                         @endsection
+                        @section('scripts')
+                        <script>
+                            function redirectToRequestForm(productName, brand, expirationDate) {
+                                // Construct the URL with query parameters using the route function
+                                const url = "{{ route('staff.request_form') }}";
+                                const encodedProductName = encodeURIComponent(productName);
+                                const encodedBrand = encodeURIComponent(brand);
+                        
+                                // Get the current date in the user's timezone
+                                const currentDate = new Date();
+                                const offset = currentDate.getTimezoneOffset();
+                                currentDate.setMinutes(currentDate.getMinutes() - offset);
+                        
+                                // Format the date as YYYY-MM-DD
+                                const formattedDate = currentDate.toISOString().split('T')[0];
+                                const encodedDate = encodeURIComponent(formattedDate);
+                        
+                                const redirectUrl = `${url}?p_name=${encodedProductName}&brand=${encodedBrand}&date=${encodedDate}`;
+                        
+                                // Redirect to the request form view with filled input fields
+                                window.location.href = redirectUrl;
+                            }
+                        </script>
+                    @endsection

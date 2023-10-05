@@ -341,10 +341,13 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     //Expiration
     Route::get('/supply_officer/product/expiring_soon',[SupplyOfficerController::class, 'expirationproduct'])->name('supply_officer.product.expiration');
 
-    // Product Demo
-    Route::get('/supply_officer/demo/productdemo', [SupplyOfficerController::class, 'productDemo'])->name('supply_officer.product.demo');
-    Route::get('/supply_officer/demo/productdemo_search', [SupplyOfficerController::class, 'productdemoSearch'])->name('supply_officer.product.demo.search');
+    // Inventory Demo
+    Route::get('/supply_officer/inventory_demo/inventorydemo', [SupplyOfficerController::class, 'inventoryDemo'])->name('supply_officer.inventory.demo');
+    Route::get('/supply_officer/inventory_demo/inventorydemo_search', [SupplyOfficerController::class, 'inventorydemoSearch'])->name('supply_officer.inventory.demo.search');
 
+    //Request Demo
+    Route::get('/supply_officer/inventory_demo/requestdemo', [SupplyOfficerController::class, 'requestDemo'])->name('supply_officer.request.demo');
+    Route::get('/supply_officer/inventory_demo/requestdemo_search', [SupplyOfficerController::class, 'requestdemoSearch'])->name('supply_officer.request.demo.search');
     // Request
     Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');
 

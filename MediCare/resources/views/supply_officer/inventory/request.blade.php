@@ -1,7 +1,6 @@
 @extends('layouts.inner_supplyofficer')
 
 @section('content')
-
     <!-- [ Main Content ] start -->
     <div class="pc-container pb-3">
         <div class="pc-content ">
@@ -24,17 +23,15 @@
                 </div>
             </div>
             <!-- [ breadcrumb ] end -->
-
-
             <!-- [ Main Content ] start -->
             <div class="row">
-
                 <!-- [ sample-page ] start -->
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
                             <h1>Request List</h1>
                         </div>
+
                         <div class="card-body">
                             <div class="container">
 
@@ -67,28 +64,39 @@
                                         <span class="fa fa-check-circle"></span> No Request Yet.
                                     </div>
                                 @else
+                                <div class="row justify-content-end">
+                                    <div class="form-group col-sm-4">
+                                        <input type="text" id="requestSearch" class="form-control"
+                                            placeholder="Search Requests">
+                                    </div>
+                                </div>
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center">#</th>
-                                                <th style="text-align: center">Name</th>
+                                                <th style="text-align: center">Name Of Requester</th>
                                                 <th style="text-align: center">Department</th>
+                                                <th style="text-align: center">Date</th>
+                                                <th style="text-align: center">Product Name</th>
+                                                <th style="text-align: center">Brand</th>
+                                                <th style="text-align: center">Quantity</th>
                                             </tr>
                                         </thead>
-
                                         <tbody>
                                             @php
                                                 $counter = 1;
                                             @endphp
                                             @foreach ($requests as $request)
-                                                <tr data-toggle="modal" data-target="#viewModal{{ $request->id }}">
+                                                <tr>
                                                     <td style="text-align: center">{{ $counter++ }}</td>
                                                     <td style="text-align: center">{{ $request->name_requester }}</td>
                                                     <td style="text-align: center">{{ $request->department }}</td>
+                                                    <td style="text-align: center">{{ $request->date }}</td>
+                                                    <td style="text-align: center">{{ $request->product->p_name }}</td>
+                                                    <td style="text-align: center">{{ $request->brand }}</td>
+                                                    <td style="text-align: center">{{ $request->quantity }}</td>
                                                 </tr>
                                             @endforeach
-
-
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-center my-3">
@@ -98,84 +106,44 @@
                             </div>
                         </div>
                     </div>
-
-                    {{-- View modal --}}
-                    @foreach ($requests as $request)
-                        <div class="modal fade" id="viewModal{{ $request->id }}" tabindex="-1" role="dialog"
-                            aria-labelledby="myModalLabel">
-                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary">
-                                        <h2 class="modal-title text-light" id="myModalLabel">Request</h2>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="{{ route('staff.request') }}">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="name_of_requester">Name of requester</label>
-                                                        <input type="text" class="form-control" id="name_requester"
-                                                            name="name_requester" value="{{ $request->name_requester }}"
-                                                            readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="department">Department</label>
-                                                        <input type="text" class="form-control" id="department"
-                                                            name="department" value="{{ $request->department }}" readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="date">Date</label>
-                                                        <input type="text" class="form-control" id="date"
-                                                            name="date" value="{{ $request->date }}" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="product_name">Product Name</label>
-                                                        <input type="text" class="form-control" id="product_id"
-                                                            name="product_id[]" value="{{ $request->product->p_name }}"
-                                                            readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="brand">Brand</label>
-                                                        <input type="text" class="form-control" id="brand"
-                                                            name="brand[]" value="{{ $request->brand }}" readonly>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label for="qantity"> Quantity</label>
-                                                        <input type="text" class="form-control" id="quantity"
-                                                            name="quantity[]" value="{{ $request->quantity }}" readonly>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    <div class="modal-footer">
-
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                    {{-- End View Modal --}}
                     <!-- [ sample-page ] end -->
                 </div>
                 <!-- [ Main Content ] end -->
             </div>
         </div>
+    @endsection
+    @section('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#requestSearch').on('keyup', function() {
+                    var searchText = $(this).val().toLowerCase();
+                    filterRequests(searchText);
+                });
 
+                function filterRequests(searchText) {
+                    var rows = document.querySelectorAll("table tbody tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        var requestName = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
+                        var department = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
+                        var date = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
+                        var productName = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
+                        var brand = rows[i].querySelector("td:nth-child(6)").textContent.toLowerCase();
+                        var quantity = rows[i].querySelector("td:nth-child(7)").textContent.toLowerCase();
 
+                        if (
+                            requestName.includes(searchText) ||
+                            department.includes(searchText) ||
+                            date.includes(searchText) ||
+                            productName.includes(searchText) ||
+                            brand.includes(searchText) ||
+                            quantity.includes(searchText)
+                        ) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
+                        }
+                    }
+                }
+            });
+        </script>
     @endsection

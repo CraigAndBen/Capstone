@@ -40,7 +40,7 @@
                                 <div class="d-flex justify-content-end">
                                     <div class="m-1">
                                         <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
-                                            Product</button>
+                                             Price</button>
                                     </div>
                                 </div>
                                 <hr>
@@ -92,7 +92,7 @@
                                                             <td>{{ ucwords($category->category_name) }}</td>
                                                             @foreach ($products_price as $price)
                                                                 @if ($price->product_id == $product->id)
-                                                                    <td>{{ ucwords($price->price) }}</td>
+                                                                    <td>₱{{ ucwords($price->price) }}</td>
                                                                     <td class="text-center">
                                                                         <div class="dropdown">
                                                                             <button class="btn btn-primary dropdown-toggle"

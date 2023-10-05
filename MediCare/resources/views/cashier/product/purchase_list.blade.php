@@ -82,9 +82,9 @@
                                                 <tr class="p-3">
                                                     <td>{{ $purchase->reference }}</td>
                                                     <td>{{ $purchase->total_quantity }}</td>
-                                                    <td>{{ $purchase->total_price }}</td>
-                                                    <td>{{ $purchase->amount }}</td>
-                                                    <td>{{ $purchase->change }}</td>
+                                                    <td>₱{{ $purchase->total_price }}</td>
+                                                    <td>₱{{ $purchase->amount }}</td>
+                                                    <td>₱{{ $purchase->change }}</td> 
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
