@@ -143,17 +143,17 @@
         <script>
             $(document).ready(function() {
 
-            $(".n_requester").select2({
-                width: '100%',
-                height: '80%',
-                placeholder: 'Choose Product',
-                tags: true
-            });
-            $(".dept").select2({
-                width: '100%',
-                placeholder: 'Select Brand',
-                tags: true
-            });
+                $(".n_requester").select2({
+                    width: '100%',
+                    height: '80%',
+                    placeholder: 'Choose Product',
+                    tags: true
+                });
+                $(".dept").select2({
+                    width: '100%',
+                    placeholder: 'Select Brand',
+                    tags: true
+                });
             });
         </script>
     @endsection

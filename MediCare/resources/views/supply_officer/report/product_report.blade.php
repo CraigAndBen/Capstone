@@ -61,8 +61,6 @@
                                 @foreach ($categories as $category)
                                     @if ($category->id === $product->category_id)
                                         <td>{{ $category->category_name }}</td>
-                                    @else
-                                        <td>NA</td>
                                     @endif
                                 @endforeach
                                 <td>{{ $product->stock }}</td>

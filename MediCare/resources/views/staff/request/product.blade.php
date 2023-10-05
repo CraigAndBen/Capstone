@@ -17,57 +17,53 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
-                                <div class="card-body">
-                                    <div class="container">
-                                        <div class="row justify-content-end">
-                                            <div class="form-group col-sm-4">
-                                                <input type="text" id="stockSearch" class="form-control"
-                                                    placeholder="Search Product">
-                                            </div>
-                                        </div>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center" scope="col">Product Name</th>
-                                                    <th class="text-center"scope="col">Category</th>
-                                                    <th class="text-center"scope="col">Brand</th>
-                                                    <th class="text-center" scope="col">Quantity</th>
-                                                    <th class="text-center" scope="col">Exp Date</th>
-                                                    <th class="text-center" scope="col">Status</th>
-                                                    <th class="text-center" scope="col">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($products as $product)
-                                                    <tr>
-                                                        <td class="text-center">{{ $product->p_name }}</td>
-                                                        <td class="text-center">{{ $product->category->category_name }}</td>
-                                                        <td class="text-center">{{ $product->brand }}</td>
-                                                        <td class="text-center">{{ $product->stock }}</td>
-                                                        <td class="text-center">{{ $product->expiration }}</td>
-                                                        <td class="text-center">
-                                                            <span
-                                                                class="badge  {{ $product->status === 'Unavailable' ? 'bg-danger' : 'bg-success' }} text-lg">
-                                                                {{ $product->status }}
-                                                            </span>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            @if ($product->status == 'Available')
-                                                            <button class="btn btn-info btn-sm"
-                                                                onclick="redirectToRequestForm('{{ $product->p_name }}', 
-                                                                '{{ $product->brand }}', '{{ $product->date }}')">Request</button>
-                                                        @else
-                                                            <button class="btn btn-info btn-sm" disabled>Unavailable</button>
-                                                        @endif
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        <div class="d-flex justify-content-center my-3">
-                                            {{ $products->links('pagination::bootstrap-4') }}
-                                        </div>
+                                <div class="row justify-content-end">
+                                    <div class="form-group col-sm-4">
+                                        <input type="text" id="stockSearch" class="form-control"
+                                            placeholder="Search Product">
                                     </div>
+                                </div>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" scope="col">Product Name</th>
+                                            <th class="text-center"scope="col">Category</th>
+                                            <th class="text-center"scope="col">Brand</th>
+                                            <th class="text-center" scope="col">Quantity</th>
+                                            <th class="text-center" scope="col">Exp Date</th>
+                                            <th class="text-center" scope="col">Status</th>
+                                            <th class="text-center" scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($products as $product)
+                                            <tr>
+                                                <td class="text-center">{{ $product->p_name }}</td>
+                                                <td class="text-center">{{ $product->category->category_name }}</td>
+                                                <td class="text-center">{{ $product->brand }}</td>
+                                                <td class="text-center">{{ $product->stock }}</td>
+                                                <td class="text-center">{{ $product->expiration }}</td>
+                                                <td class="text-center">
+                                                    <span
+                                                        class="badge  {{ $product->status === 'Unavailable' ? 'bg-danger' : 'bg-success' }} text-lg">
+                                                        {{ $product->status }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($product->status == 'Available')
+                                                        <button class="btn btn-info btn-sm"
+                                                            onclick="redirectToRequestForm('{{ $product->p_name }}', 
+                                                                '{{ $product->brand }}', '{{ $product->date }}')">Request</button>
+                                                    @else
+                                                        <button class="btn btn-info btn-sm" disabled>Unavailable</button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="d-flex justify-content-center my-3">
+                                    {{ $products->links('pagination::bootstrap-4') }}
                                 </div>
                             </div>
 
