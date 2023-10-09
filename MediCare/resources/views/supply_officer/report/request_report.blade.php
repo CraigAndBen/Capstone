@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: portrait;
         }
 
         .page-break {
@@ -96,39 +96,38 @@
 @endsection
 @section('scripts')
     @if (isset($chartData))
-        <script>
-            var ctx = document.getElementById('requestChart').getContext('2d');
-            var chartData = @json($chartData);
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: chartData.labels,
+    <script>
+        var ctx = document.getElementById('requestChart').getContext('2d');
+        var chartData = @json($chartData);
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
 
-                    datasets: [{
-                        label: @json($range),
-                        data: chartData.data, // Ensure this points to the data array
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                datasets: [{
+                    label: @json($range),
+                    data: chartData.data, // Ensure this points to the data array
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
-
-
-            });
-            $(document).ready(function() {
+            }
+        });
+        $(document).ready(function() {
                 // Attach a click event handler to the button
                 $("#printButton").click(function() {
                     // Call the window.print() function to open the print dialog
                     window.print();
                 });
             });
-        </script>
+    </script>
+    
     @endif
 @endsection

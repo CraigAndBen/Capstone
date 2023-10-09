@@ -107,51 +107,53 @@
         @endsection
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         @section('scripts')
-            <script>
-                // Get the PHP data from the PHP variables
-                var dateRange = <?php echo json_encode($dateRange); ?>;
-                var salesData = <?php echo json_encode($salesData); ?>;
-
-                // Create an array to store datasets
-                var datasets = [];
-
-                // Create a dataset for each product
-                for (var productName in salesData) {
-                    datasets.push({
-                        label: productName,
-                        data: salesData[productName],
-                        borderColor: getRandomColor(),
-                        borderWidth: 2,
-                        fill: false
-                    });
-                }
-
-                // Create a chart using Chart.js
-                var ctx = document.getElementById('salesGraph').getContext('2d');
-                var salesGraph = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: dateRange,
-                        datasets: datasets
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+        <script>
+            // Get the PHP data from the PHP variables
+            var dateRange = <?php echo json_encode($dateRange); ?>;
+            var salesData = <?php echo json_encode($salesData); ?>;
+        
+            // Define an array of static colors
+            var staticColors = [
+                'rgba(75, 192, 192, 0.7)', // Color for the first dataset
+                'rgba(255, 99, 132, 0.7)', // Color for the second dataset
+                'rgba(255, 205, 86, 0.7)', // Color for the third dataset
+                // Add more colors as needed
+            ];
+        
+            // Create an array to store datasets
+            var datasets = [];
+        
+            // Create a dataset for each product
+            var i = 0; // Index to select colors from staticColors array
+            for (var productName in salesData) {
+                datasets.push({
+                    label: productName,
+                    data: salesData[productName],
+                    backgroundColor: staticColors[i % staticColors.length], // Get a color from the array
+                    borderColor: staticColors[i % staticColors.length], // Use the same color for the border
+                    borderWidth: 2,
+                    fill: false
+                });
+                i++; // Increment the index to cycle through colors
+            }
+        
+            // Create a chart using Chart.js
+            var ctx = document.getElementById('salesGraph').getContext('2d');
+            var salesGraph = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dateRange,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
-                });
-
-                // Function to generate random colors for chart lines
-                function getRandomColor() {
-                    var letters = '0123456789ABCDEF';
-                    var color = '#';
-                    for (var i = 0; i < 6; i++) {
-                        color += letters[Math.floor(Math.random() * 16)];
-                    }
-                    return color;
                 }
-            </script>
+            });
+        </script>
+        
         @endsection

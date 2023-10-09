@@ -153,6 +153,118 @@ class PharmacistController extends Controller
         }
     }
 
+    //Medicine Inventory
+    public function medicine()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        
+        $products = Product::with('category')->paginate(8);
+        $categories = Category::where('category_name', 'pharmaceutical')->get();
+    
+        return view('pharmacist.product.inventory_medicine', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
+    }
+
+    public function medicineStore(Request $request)
+    {
+        // Validation rules
+        $request->validate([
+            'p_name' => 'required|string|max:255',
+            'category_id' => 'required|integer',
+            'stock' => 'required|integer',
+            'brand' => 'required|string|max:255',
+            'expiration' => 'required|date',
+            'description' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
+        ]);
+
+        // Find an existing product by name
+        $existingProduct = Product::where('p_name', $request->input('p_name'))->first();
+
+        if ($existingProduct) {
+            // If the product exists, update its stock by adding the new stock quantity
+            $existingProduct->stock += $request->input('stock');
+            $existingProduct->save();
+
+            return redirect()->back()->with('success', 'Product Stock Updated.');
+        } else {
+            // If the product doesn't exist, create a new one
+
+            $products = new Product();
+            $products->p_name = $request->input('p_name');
+            $products->category_id = $request->input('category_id');
+            $products->stock = $request->input('stock');
+            $products->brand = $request->input('brand');
+            $products->expiration = $request->input('expiration');
+            $products->description = $request->input('description');
+            $products->status = $request->input('status');
+
+            $products->save();
+
+            return redirect()->back()->with('success', 'Data Saved');
+        }
+
+    }
+
+    public function medicineDetail($id)
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $product = Product::find($id);
+
+        return view('pharmacist.product.medicine_details', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'product'));
+    }
+
+    public function medicineUpdate(Request $request, $id)
+    {
+        $products = Product::find($id);
+        $categories = Category::all();
+
+        if (!$products) {
+            return redirect()->back()->with('error', 'Product not found');
+        }
+
+        $products->update($request->all());
+
+        return redirect()->back()->with('success', 'Product updated successfully');
+    }
+
+    public function medicineDelete($id)
+    {
+        $products = Product::find($id);
+        $products->requests()->delete();
+        $products->delete();
+
+        return redirect()->back()->with('success', 'Product Deleted.');
+
+    }
+
+    public function medicineReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $today = Carbon::now();
+        $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
+        
+        $products = Product::orderBy('expiration', 'asc')->get();
+        $categories = Category::all();
+
+        return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
+    }
 
     public function product()
     {

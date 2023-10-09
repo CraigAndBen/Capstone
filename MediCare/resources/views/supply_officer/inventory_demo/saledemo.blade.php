@@ -87,7 +87,7 @@
                             <hr>
                             <div class="container">
                                 <div class="alert alert-success">
-                                    Select Date Range and Most Request.
+                                    Select Date Range.
                                 </div>
                             </div>
                         </div>

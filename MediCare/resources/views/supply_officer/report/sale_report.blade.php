@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: portrait;
         }
 
         .page-break {
@@ -41,7 +41,7 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Inventory Bar Graph</i></h3>
+                <h3><i>Sale Bar Graph</i></h3>
                 <br>
                 <canvas id="salesGraph"></canvas>
             </div>
@@ -93,52 +93,53 @@
     </div>
 @endsection
 @section('scripts')
-    <script>
-        // Get the PHP data from the PHP variables
-        var dateRange = <?php echo json_encode($dateRange); ?>;
-        var salesData = <?php echo json_encode($salesData); ?>;
+<script>
+    // Get the PHP data from the PHP variables
+    var dateRange = <?php echo json_encode($dateRange); ?>;
+    var salesData = <?php echo json_encode($salesData); ?>;
 
-        // Create an array to store datasets
-        var datasets = [];
+    // Define an array of static colors
+    var staticColors = [
+        'rgba(75, 192, 192, 0.7)', // Color for the first dataset
+        'rgba(255, 99, 132, 0.7)', // Color for the second dataset
+        'rgba(255, 205, 86, 0.7)', // Color for the third dataset
+        // Add more colors as needed
+    ];
 
-        // Create a dataset for each product
-        for (var productName in salesData) {
-            datasets.push({
-                label: productName,
-                data: salesData[productName],
-                borderColor: getRandomColor(),
-                borderWidth: 2,
-                fill: false
-            });
-        }
+    // Create an array to store datasets
+    var datasets = [];
 
-        // Create a chart using Chart.js
-        var ctx = document.getElementById('salesGraph').getContext('2d');
-        var salesGraph = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dateRange,
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    // Create a dataset for each product
+    var i = 0; // Index to select colors from staticColors array
+    for (var productName in salesData) {
+        datasets.push({
+            label: productName,
+            data: salesData[productName],
+            backgroundColor: staticColors[i % staticColors.length], // Get a color from the array
+            borderColor: staticColors[i % staticColors.length], // Use the same color for the border
+            borderWidth: 2,
+            fill: false
+        });
+        i++; // Increment the index to cycle through colors
+    }
+
+    // Create a chart using Chart.js
+    var ctx = document.getElementById('salesGraph').getContext('2d');
+    var salesGraph = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dateRange,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
-
-        // Function to generate random colors for chart lines
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
         }
+    });
 
         $(document).ready(function() {
             // Attach a click event handler to the button

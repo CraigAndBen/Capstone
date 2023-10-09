@@ -19,53 +19,92 @@ class ExpirationAlert
     public function handle(Request $request, Closure $next): Response
     {
         $currentTime = Carbon::now()->toTimeString();
-        $currentDate = date('F j, Y');
-        $date = Carbon::now();
+        $currentDate = date('M j, Y');
         $currentMonth = Carbon::now()->month;
-
+    
+        $processedNotifications = []; // Array to keep track of processed notifications
+    
         $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->get();
-
+    
         // Calculate the date one month from the current date
-        $oneMonthFromNow = Carbon::now()->addMonth();
-
-        // Retrieve products with expiration dates exactly one month from now
-        // $products = Product::whereDate('expiration', $oneMonthFromNow)->get();
-
-        $products = Product::all();
-
-        foreach ($products as $product) {
+        $twoMonthsFromNow = Carbon::now()->addMonths(2)->format('Y-m-d');
+    
+        // Retrieve products with expiration dates exactly two months from now
+        $productsToExpire = Product::whereDate('expiration', $twoMonthsFromNow)->get();
+    
+        foreach ($productsToExpire as $product) {
             $title = 'Expiration Alert';
-            $expirationDate = Carbon::parse($product->expiration);
-
-            if ($expirationDate->isPast()) {
-                $message = "This product: $product->p_name is expired.";
-            } elseif ($expirationDate->isToday()) {
-                $message = "This product: $product->p_name expires today.";
-            } elseif ($expirationDate->lte($oneMonthFromNow)) {
-                $message = "This product: $product->p_name will expire within one month.";
+            $message = "Product: $product->p_name will expire on: $product->expiration";
+    
+            // Check if a similar notification has been processed in this request
+            if (in_array("$title:$currentMonth", $processedNotifications)) {
+                continue;
             }
+    
+            // Check if a similar notification already exists in the database
+            $notificationExists = false;
+    
             foreach ($notifications as $notification) {
-                $notificationDate = Carbon::parse($notification->date);
-                $month = $notificationDate->month;
-
-                // Check if a notification with the same title and message exists
-                $existingNotification = Notification::where('title', $title)
-                    ->where('message', $message)
-                    ->first();
-
-                if (!$existingNotification) {
-                    Notification::create([
-                        'title' => $title,
-                        'message' => $message,
-                        'date' => $currentDate,
-                        'time' => $currentTime,
-                        'type' => 'supply_officer',
-                    ]);
+                if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
+                    $notificationExists = true;
+                    break;
                 }
             }
-
+    
+            if (!$notificationExists) {
+                // Create a new notification
+                Notification::create([
+                    'title' => $title,
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                    'type' => 'supply_officer',
+                ]);
+            }
+    
+            // Add this notification to the processed notifications array
+            $processedNotifications[] = "$title:$currentMonth";
         }
-
+    
+        // Get products with stock below 100
+        $lowStockProducts = Product::where('stock', '<', 100)->get();
+    
+        foreach ($lowStockProducts as $product) {
+            $title = 'Low Stock Alert';
+            $message = "Product: $product->p_name has low stock. Remaining stock: $product->stock";
+    
+            // Check if a similar notification has been processed in this request
+            if (in_array("$title:$currentMonth", $processedNotifications)) {
+                continue;
+            }
+    
+            // Check if a similar notification already exists in the database
+            $notificationExists = false;
+    
+            foreach ($notifications as $notification) {
+                if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
+                    $notificationExists = true;
+                    break;
+                }
+            }
+    
+            if (!$notificationExists) {
+                // Create a new notification
+                Notification::create([
+                    'title' => $title,
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                    'type' => 'supply_officer',
+                ]);
+            }
+    
+            // Add this notification to the processed notifications array
+            $processedNotifications[] = "$title:$currentMonth";
+        }
+    
         return $next($request);
     }
+    
+
 }

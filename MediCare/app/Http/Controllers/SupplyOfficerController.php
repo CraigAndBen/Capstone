@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product_price;
 use App\Models\Purchase;
 use Carbon\Carbon;
 use App\Models\Product;
@@ -629,7 +630,6 @@ class SupplyOfficerController extends Controller
 
     public function requestDemoSearch(Request $request)
     {
-
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
@@ -639,10 +639,12 @@ class SupplyOfficerController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-
-        $fromDate = Carbon::parse($request->input('start'));
-        $toDate = Carbon::parse($request->input('end'));
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("F j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("F j, Y", strtotime($toDate));
         $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
 
         // Query your database to get the most requested products or departments based on the selected date range and category
         if ($selectedOption === 'Product') {
@@ -675,10 +677,8 @@ class SupplyOfficerController extends Controller
             'data' => $result->pluck('data'),
         ];
 
-
-
         // Return the view with the chart data
-        return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData'));
+        return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData', 'range','selectedOption','fromDate','toDate'));
     }
 
     //Request
@@ -729,7 +729,7 @@ class SupplyOfficerController extends Controller
     }
 
      //Salaes Demo
-     public function salesDemo()
+     public function saleDemo()
      {
          $profile = Auth::user();
          $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
@@ -743,12 +743,127 @@ class SupplyOfficerController extends Controller
          $requests = Purchase::all();
  
  
-         return view('supply_officer.inventory_demo.salesdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
+         return view('supply_officer.inventory_demo.saledemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
      }
  
-    public function saleDemoSearch(Request $request)
-    {
+     public function saleDemoSearch(Request $request)
+     {
+ 
+         $profile = Auth::user();
+         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+         $limitNotifications = $notifications->take(5);
+         $count = $notifications->count();
+         $currentDate = date('Y-m-d');
+         $currentDateTime = Carbon::now();
+         $currentDateTime->setTimezone('Asia/Manila');
+         $currentTime = $currentDateTime->format('h:i A');
+ 
+         $fromDate = $request->input('start');
+         $formattedFromDate = date("F j, Y", strtotime($fromDate));
+         $toDate = $request->input('end');
+         $formattedToDate = date("F j, Y", strtotime($toDate));
+         $selectedOption = $request->input('select');
+         $range = $formattedFromDate . " - " . $formattedToDate;
+ 
+         // Create an array to store the date range
+         $dateRange = [];
+         $currentDate = $fromDate;
+ 
+         while ($currentDate <= $toDate) {
+             $dateRange[] = $currentDate;
+             $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+         }
+ 
+         // Fetch data from the purchases table for each product on each day
+         $products = Purchase::select('product_id')
+             ->distinct()
+             ->get();
+ 
+         $salesData = [];
+ 
+         foreach ($products as $product) {
+             $productId = $product->product_id;
+             $productInfo = Product::find($productId); // Fetch product info from the products table
+ 
+             if ($productInfo) {
+                 $productName = $productInfo->p_name;
+                 $salesData[$productName] = [];
+ 
+                 foreach ($dateRange as $date) {
+                     $quantity = Purchase::where('product_id', $productId)
+                         ->whereDate('created_at', $date)
+                         ->sum('quantity');
+ 
+                     $salesData[$productName][] = $quantity;
+                 }
+             }
+         }
+ 
+ 
+         return view('supply_officer.inventory_demo.saledemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'fromDate', 'toDate', 'selectedOption'));
+     }
 
+     public function saleReport(Request $request)
+     {
+         $currentDate = date('Y-m-d');
+         $currentDateTime = Carbon::now();
+         $currentDateTime->setTimezone('Asia/Manila');
+         $currentTime = $currentDateTime->format('h:i A');
+ 
+         $fromDate = $request->input('start');
+         $formattedFromDate = date("F j, Y", strtotime($fromDate));
+         $toDate = $request->input('end');
+         $formattedToDate = date("F j, Y", strtotime($toDate));
+         $selectedOption = $request->input('select');
+         $range = $formattedFromDate . " - " . $formattedToDate;
+ 
+         // Create an array to store the date range
+         $dateRange = [];
+         $currentDate = $fromDate;
+ 
+         while ($currentDate <= $toDate) {
+             $dateRange[] = $currentDate;
+             $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+         }
+ 
+         // Fetch data from the purchases table for each product on each day
+         $products = Purchase::select('product_id')
+             ->distinct()
+             ->get();
+ 
+         $salesData = [];
+ 
+         foreach ($products as $product) {
+             $productId = $product->product_id;
+             $productInfo = Product::find($productId); // Fetch product info from the products table
+ 
+             if ($productInfo) {
+                 $productName = $productInfo->p_name;
+                 $salesData[$productName] = [];
+ 
+                 foreach ($dateRange as $date) {
+                     $quantity = Purchase::where('product_id', $productId)
+                         ->whereDate('created_at', $date)
+                         ->sum('quantity');
+ 
+                     $salesData[$productName][] = $quantity;
+                 }
+             }
+         }
+ 
+ 
+         return view('supply_officer.report.sale_report', compact(
+            'currentTime',
+            'currentDate',
+            'range', 
+            'dateRange', 
+            'salesData', 
+            'products'));
+     }
+
+     //Medicine Demo
+     public function medicineDemo()
+    {
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
@@ -758,102 +873,226 @@ class SupplyOfficerController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $fromDate = $request->input('start');
-        $formattedFromDate = date("F j, Y", strtotime($fromDate));
-        $toDate = $request->input('end');
-        $formattedToDate = date("F j, Y", strtotime($toDate));
-        $selectedOption = $request->input('select');
-        $range = $formattedFromDate . " - " . $formattedToDate;
+        // Fetch product prices from the product_price table
+        $productPrices = Product_price::all();
 
-        // Create an array to store the date range
-        $dateRange = [];
-        $currentDate = $fromDate;
+        // Define price range thresholds for categorization
+        $mostThreshold = 100; // Adjust as needed
+        $mediumThreshold = 50; // Adjust as needed
+        
 
-        while ($currentDate <= $toDate) {
-            $dateRange[] = $currentDate;
-            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-        }
+        // Initialize counts for each category
+        $mostValuedCount = 0;
+        $mediumValuedCount = 0;
+        $lowValuedCount = 0;
 
-        // Fetch data from the purchases table for each product on each day
-        $products = Purchase::select('product_id')
-            ->distinct()
-            ->get();
+        // Calculate the total count of products and initialize the percentages
+        $totalCount = count($productPrices);
+        $mostValuedPercentage = 0;
+        $mediumValuedPercentage = 0;
+        $lowValuedPercentage = 0;
 
-        $salesData = [];
-
-        foreach ($products as $product) {
-            $productId = $product->product_id;
-            $productInfo = Product::find($productId); // Fetch product info from the products table
-
-            if ($productInfo) {
-                $productName = $productInfo->p_name;
-                $salesData[$productName] = [];
-
-                foreach ($dateRange as $date) {
-                    $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at', $date)
-                        ->sum('quantity');
-
-                    $salesData[$productName][] = $quantity;
-                }
+        // Categorize product prices and count each category
+        foreach ($productPrices as $productPrice) {
+            if ($productPrice->price >= $mostThreshold) {
+                $mostValuedCount++;
+            } elseif ($productPrice->price >= $mediumThreshold) {
+                $mediumValuedCount++;
+            } else {
+                $lowValuedCount++;
             }
         }
 
+        // Calculate the percentages if there are products in the respective categories
+        if ($totalCount > 0) {
+            $mostValuedPercentage = round(($mostValuedCount / $totalCount) * 100);
+            $mediumValuedPercentage = round(($mediumValuedCount / $totalCount) * 100);
+            $lowValuedPercentage = round(($lowValuedCount / $totalCount) * 100);
+        }
 
-        return view('supply_officer.inventory_demo.saledemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'fromDate', 'toDate', 'selectedOption'));
+        return view('supply_officer.inventory_demo.medicinedemo', compact(
+            'profile',
+            'notifications',
+            'limitNotifications',
+            'count',
+            'currentTime',
+            'currentDate',
+            'productPrices',
+            'mostValuedPercentage',
+            'mediumValuedPercentage',
+            'lowValuedPercentage'
+        ));
     }
 
-    public function saleReport(Request $request)
+    public function medicineReport(Request $request)
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $fromDate = $request->input('start');
-        $formattedFromDate = date("F j, Y", strtotime($fromDate));
-        $toDate = $request->input('end');
-        $formattedToDate = date("F j, Y", strtotime($toDate));
         $selectedOption = $request->input('select');
-        $range = $formattedFromDate . " - " . $formattedToDate;
+        $chartData = [];
 
-        // Create an array to store the date range
-        $dateRange = [];
-        $currentDate = $fromDate;
+        // Fetch product prices from the product_price table
+        $productPrices = Product_price::all();
 
-        while ($currentDate <= $toDate) {
-            $dateRange[] = $currentDate;
-            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-        }
+        // Define price range thresholds for categorization
+        $mostThreshold = 100; // Adjust as needed
+        $mediumThreshold = 50; // Adjust as needed
+        
 
-        // Fetch data from the purchases table for each product on each day
-        $products = Purchase::select('product_id')
-            ->distinct()
-            ->get();
+        // Initialize counts for each category
+        $mostValuedCount = 0;
+        $mediumValuedCount = 0;
+        $lowValuedCount = 0;
 
-        $salesData = [];
+        // Calculate the total count of products and initialize the percentages
+        $totalCount = count($productPrices);
+        $mostValuedPercentage = 0;
+        $mediumValuedPercentage = 0;
+        $lowValuedPercentage = 0;
 
-        foreach ($products as $product) {
-            $productId = $product->product_id;
-            $productInfo = Product::find($productId); // Fetch product info from the products table
-
-            if ($productInfo) {
-                $productName = $productInfo->p_name;
-                $salesData[$productName] = [];
-
-                foreach ($dateRange as $date) {
-                    $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at', $date)
-                        ->sum('quantity');
-
-                    $salesData[$productName][] = $quantity;
-                }
+        // Categorize product prices and count each category
+        foreach ($productPrices as $productPrice) {
+            if ($productPrice->price >= $mostThreshold) {
+                $mostValuedCount++;
+            } elseif ($productPrice->price >= $mediumThreshold) {
+                $mediumValuedCount++;
+            } else {
+                $lowValuedCount++;
             }
         }
 
+        // Calculate the percentages if there are products in the respective categories
+        if ($totalCount > 0) {
+            $mostValuedPercentage = round(($mostValuedCount / $totalCount) * 100);
+            $mediumValuedPercentage = round(($mediumValuedCount / $totalCount) * 100);
+            $lowValuedPercentage = round(($lowValuedCount / $totalCount) * 100);
+        }
 
-        return view('supply_officer.report.sale_report', compact('currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'products'));
+        return view('supply_officer.report.medicines_report', compact(
+            'chartData',
+            'currentTime',
+            'currentDate',
+            'productPrices',
+            'mostValuedPercentage',
+            'mediumValuedPercentage',
+            'lowValuedPercentage'
+        ));
     }
+    public function productDemo()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+    
+        // Retrieve all products
+        $products = Product::all();
+    
+        // Initialize arrays to store categorized products
+        //Fast for request
+        //slow for purchase
+        $fastProducts = [];
+        $slowProducts = [];
+        $nonMovingProducts = [];
+    
+        // Categorize products based on request and sales and store them in arrays
+        foreach ($products as $product) {
+            $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+            $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+    
+            if ($totalRequestQuantity > 0) {
+                $fastProducts[] = $product;
+            } elseif ($totalSalesQuantity > 0) {
+                $slowProducts[] = $product;
+            } else {
+                $nonMovingProducts[] = $product;
+            }
+        }
+    
+        // Create an array with category names and counts
+        $categories = ['Fast', 'Slow', 'Non-Moving'];
+        $counts = [
+            'Fast' => count($fastProducts),
+            'Slow' => count($slowProducts),
+            'Non-Moving' => count($nonMovingProducts),
+        ];
+    
+        return view('supply_officer.inventory_demo.productdemo', compact(
+            'profile',
+            'notifications',
+            'limitNotifications',
+            'counts',
+            'currentTime',
+            'currentDate',
+            'categories',
+            'count',
+            'fastProducts',
+            'slowProducts',
+            'nonMovingProducts'
+        ));
+    }
+    
+    public function productsReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $selectedOption = $request->input('select');
+        $chartData = [];
+
+        // Retrieve all products
+    $products = Product::all();
+
+    // Initialize count variables for each category
+    $fastCount = 0;
+    $slowCount = 0;
+    $nonMovingCount = 0;
+
+    // Categorize products based on request and sales and update the count variables
+    foreach ($products as $product) {
+        $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+        $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+
+        if ($totalRequestQuantity > $totalSalesQuantity) {
+            $slowCount++;
+        } elseif ($totalSalesQuantity > 0) {
+            $fastCount++;
+        } else {
+            $nonMovingCount++;
+        }
+    }
+
+    // Create an array with category names and counts
+    $categories = ['Fast', 'Slow', 'Non-Moving'];
+    $counts = [
+        'Fast' => $fastCount,
+        'Slow' => $slowCount,
+        'Non-Moving' => $nonMovingCount,
+    ];
+
+    return view('supply_officer.report.products_report', compact(
+       
+        'currentTime',
+        'currentDate',
+        'categories',
+        'chartData',
+        'counts',
+        'fastCount',
+        'slowCount',
+        'nonMovingCount'
+
+    ));
+    }
+
     public function supplyOfficerLogout(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

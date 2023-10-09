@@ -260,8 +260,10 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sales.demo') }}">Sales</a></li> 
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>                 
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sale.demo') }}">Sales</a></li> 
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li> 
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.medicine.demo') }}">Medicine</a>
+                                <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Product</a></li></li>                   
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">

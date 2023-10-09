@@ -105,30 +105,59 @@
 
     @section('scripts')
         @if (isset($chartData))
-            <script>
-                var ctx = document.getElementById('productChart').getContext('2d');
-                var productData = @json($chartData);
-
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: productData.map(data => data.label), // Use 'label' instead of 'category'
-                        datasets: [{
-                            label: 'Count',
-                            data: productData.map(data => data.count),
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+        <script>
+            var ctx = document.getElementById('productChart').getContext('2d');
+            var productData = @json($chartData);
+        
+            // Define an array to store labels with both name and number
+            var labelsWithNamesAndNumbers = productData.map(data => `${data.label} (${data.count})`);
+        
+            // Dynamically generate an array of colors based on the number of data points
+            var colors = generateColors(productData.length);
+        
+            function generateColors(numColors) {
+                var colorsArray = [];
+                for (var i = 0; i < numColors; i++) {
+                    // You can use any method to generate colors dynamically, e.g., random colors
+                    var randomColor = 'rgba(' +
+                        Math.floor(Math.random() * 256) + ',' +
+                        Math.floor(Math.random() * 256) + ',' +
+                        Math.floor(Math.random() * 256) + ', 0.2)';
+                    colorsArray.push(randomColor);
+                }
+                return colorsArray;
+            }
+        
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labelsWithNamesAndNumbers, // Use labels with both name and number
+                    datasets: [{
+                        label: 'Data',
+                        data: productData.map(data => data.count),
+                        backgroundColor: colors, // Use the dynamically generated colors array
+                        borderColor: colors.map(color => color.replace('0.2', '1')), // Set border color with full opacity
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
+                }
+            });
+        
+            $(document).ready(function() {
+                // Attach a click event handler to the button
+                $("#printButton").click(function() {
+                    // Call the window.print() function to open the print dialog
+                    window.print();
                 });
-            </script>
+            });
+        </script>
+        
+        
         @endif
     @endsection

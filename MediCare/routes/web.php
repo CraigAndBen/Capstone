@@ -363,12 +363,18 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/inventory_demo/requestdemo', [SupplyOfficerController::class, 'requestDemo'])->name('supply_officer.request.demo');
     Route::get('/supply_officer/inventory_demo/requestdemo_search', [SupplyOfficerController::class, 'requestdemoSearch'])->name('supply_officer.request.demo.search');
 
-    Route::get('/supply_officer/inventory_demo/salesdemo', [SupplyOfficerController::class, 'salesDemo'])->name('supply_officer.sales.demo');
-    Route::get('/supply_officer/inventory_demo/salesdemo_search', [SupplyOfficerController::class, 'salesdemoSearch'])->name('supply_officer.sales.demo.search');
+    Route::get('/supply_officer/inventory_demo/saledemo', [SupplyOfficerController::class, 'saleDemo'])->name('supply_officer.sale.demo');
+    Route::get('/supply_officer/inventory_demo/saledemo_search', [SupplyOfficerController::class, 'salesdemoearch'])->name('supply_officer..demo.search');
     //Sale Demo
-    Route::get('/supply_officer/inventory_demo/salesdemo', [SupplyOfficerController::class, 'salesDemo'])->name('supply_officer.sales.demo');
-    Route::get('/supply_officer/inventory_demo/salesdemo_search', [SupplyOfficerController::class, 'saledemoSearch'])->name('supply_officer.sale.demo.search');
+    Route::get('/supply_officer/inventory_demo/saledemo', [SupplyOfficerController::class, 'saleDemo'])->name('supply_officer.sale.demo');
+    Route::get('/supply_officer/inventory_demo/saledemo_search', [SupplyOfficerController::class, 'saledemoSearch'])->name('supply_officer.sale.demo.search');
 
+    //Medicine Demo
+    Route::get('/supply_officer/inventory_demo/medicinedemo', [SupplyOfficerController::class, 'medicineDemo'])->name('supply_officer.medicine.demo');
+
+
+    //Product Demo
+    Route::get('/supply_officer/inventory_demo/productdemo', [SupplyOfficerController::class, 'productDemo'])->name('supply_officer.product.demo');
     // Request
     Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');
 
@@ -378,6 +384,8 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::post('/supply_officer/requestdemo/report', [SupplyOfficerController::class, 'requestReport'])->name('supply_officer.request.report');
     Route::get('/supply_officer/product/report', [SupplyOfficerController::class, 'productReport'])->name('supply_officer.product.report');
     Route::get('/supply_officer/product/list/report', [SupplyOfficerController::class, 'requestListReport'])->name('supply_officer.request.list.report');
+    Route::get('/supply_officer/medicines_report/report', [SupplyOfficerController::class, 'medicineReport'])->name('supply_officer.medicines.report');
+    Route::get('/supply_officer/products_report/report', [SupplyOfficerController::class, 'productsReport'])->name('supply_officer.products.report');
     Route::get('/supply_officer/expiry/report', [SupplyOfficerController::class, 'expiryReport'])->name('supply_officer.product.expiry.report');
 
     // Logout
@@ -422,12 +430,22 @@ Route::middleware(['auth', 'role:pharmacist'])->group(function () {
 
     //Pharmacist
     Route::get('/pharmacist/product', [PharmacistController::class, 'product'])->name('pharmacist.product');
+    
+    //Medicine Inventory
+    Route::get('/pharmacist/product/inventory_medicine', [PharmacistController::class, 'medicine'])->name('pharmacist.inventory');
+    Route::post('/pharmacist/product/createMedicine', [PharmacistController::class, 'medicineStore'])->name('pharmacist.medicine.create');
+    Route::get('/pharmacist/medicine_details/{id}', [PharmacistController::class, 'medicineDetail'])->name('pharmacist.medicine.details');
+    Route::post('/pharmacist/product/inventory_medicine/{id}', [PharmacistController::class, 'medicineUpdate'])->name('pharmacist.medicine.update');
+    Route::get('/pharmacist/inventory_medicine/delete/{id}', [PharmacistController::class, 'medicineDelete'])->name('pharmacist.medicine.delete');
+
+    //Price
     Route::post('/pharmacist/product/create', [PharmacistController::class, 'productCreate'])->name('pharmacist.product.create');
     Route::post('/pharmacist/product/update', [PharmacistController::class, 'productUpdate'])->name('pharmacist.product.update');
     Route::delete('/pharmacist/product/delete/{id}', [PharmacistController::class, 'productDelete'])->name('pharmacist.product.delete');
 
     // report
     Route::get('/pharmacist/product/report', [PharmacistController::class, 'productReport'])->name('pharmacist.product.report');
+    Route::get('/pharmacist/product/medicine_report', [PharmacistController::class, 'medicineReport'])->name('pharmacist.medicine.report');
 
 
 
