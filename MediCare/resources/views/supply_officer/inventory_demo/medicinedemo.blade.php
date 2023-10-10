@@ -36,7 +36,7 @@
                             <h2>Medicine Demographics</h2>
                         </div>
                         <div class="card-body">
-                            <h4>Prioritizes based on the value of the items and their importance.</h4>
+                            <h4>Prioritizes based on the value of the items and their importance</h4>
                             <div class="row justify-content-end">
                                 <div class="col-md-2 mt-2">
                                     <a href="{{ route('supply_officer.medicines.report') }}" class="btn btn-success">Generate

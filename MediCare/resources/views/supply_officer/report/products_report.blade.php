@@ -42,6 +42,7 @@
         <div class="row justify-content-center">
             <div class="col-8 text-center">
                 <h3><i>Product (FSN) Pie Graph</i></h3>
+                <h4>Segregates products based on their consumption rate</h4>
                 <div class="row mb-5 p-3  mx-auto">
                     <canvas id="productGraph"></canvas>
                 </div>
