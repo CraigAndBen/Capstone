@@ -455,7 +455,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-md-6 mx-auto"">
+                                    <div class="col-md-6 mx-auto">
                                         <canvas id="userRolesChart"></canvas>
                                     </div>
                                 </div>

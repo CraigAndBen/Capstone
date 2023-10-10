@@ -42,15 +42,14 @@
         <div class="row justify-content-center">
             <div class="col-8 text-center">
                 <h3><i>Product (FSN) Pie Graph</i></h3>
-                <br>
-                <canvas id="productGraph"></canvas>
+                <div class="row mb-5 p-3  mx-auto">
+                    <canvas id="productGraph"></canvas>
+                </div>
             </div>
             <div class="col-1">
 
             </div>
         </div>
-
-        <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
@@ -59,44 +58,64 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Label</th>
+                            <th>Classification</th>
+                            <th>Products</th>
                             <th>Count</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $total = 0; // Initialize total count
-                        @endphp
-
-                        @foreach ($chartData as $values)
+                        @foreach ($categories as $category)
                             <tr>
-                                <td>{{ $values['label'] }}</td>
-                                <td>{{ $values['count'] }}</td>
+                                <td>{{ $category }}</td>
+                                <td>
+                                    @if ($category === 'Fast')
+                                        @if (count($fastProducts) > 0)
+                                            <ul>
+                                                @foreach ($fastProducts as $product)
+                                                    <li>{{ $product }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            No products in this classification.
+                                        @endif
+                                    @elseif ($category === 'Slow')
+                                        @if (count($slowProducts) > 0)
+                                            <ul>
+                                                @foreach ($slowProducts as $product)
+                                                    <li>{{ $product }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            No products in this classification.
+                                        @endif
+                                    @elseif ($category === 'Non-Moving')
+                                        @if (count($nonMovingProducts) > 0)
+                                            <ul>
+                                                @foreach ($nonMovingProducts as $product)
+                                                    <li>{{ $product }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            No products in this classification.
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>{{ $counts[$category] }}</td>
                             </tr>
                         @endforeach
-                        <tr>
-                            <td><strong>Fast Moving Products</strong></td>
-                            <td>{!! $fastCount !!} </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Slow Moving Products</strong></td>
-                            <td>{!! $slowCount !!} </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Non-Moving Products</strong></td>
-                            <td>{!! $nonMovingCount !!} </td>
-                        </tr>
-                        
+                
                         @php
-                            $total = $fastCount + $slowCount + $nonMovingCount;
+                            $total = $counts['Fast'] + $counts['Slow'] + $counts['Non-Moving'];
                         @endphp
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>{{ $total }} </strong></td>
+                            <td><strong>Total Products Here</strong></td>
+                            <td><strong>{{ $total }}</strong></td>
                         </tr>
-
                     </tbody>
                 </table>
+                
+                
             </div>
             <div class="col-1">
 
@@ -135,24 +154,35 @@
         datasets: [{
             data: productCounts, // Use the product counts array
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 205, 86)',
-                'rgb(54, 162, 235)',
+                'rgb(255, 99, 132, 0.7)',
+                'rgb(255, 205, 86, 0.7)',
+                'rgb(54, 162, 235, 0.7)',
+            ],
+            borderColor: [
+                'rgb(255, 99, 132, 1)',
+                'rgb(255, 205, 86, 1)',
+                'rgb(54, 162, 235, 1)',
             ],
         }],
+        
     };
+   
 
     var myChart = new Chart(ctx, {
         type: 'pie', // Use pie chart type
         data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
     $(document).ready(function() {
-                // Attach a click event handler to the button
-                $("#printButton").click(function() {
-                    // Call the window.print() function to open the print dialog
-                    window.print();
-                });
+            // Attach a click event handler to the button
+            $("#printButton").click(function() {
+                // Call the window.print() function to open the print dialog
+                window.print();
             });
+        });
 </script>
 
 @endsection

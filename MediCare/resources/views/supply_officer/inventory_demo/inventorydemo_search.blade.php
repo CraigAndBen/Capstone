@@ -129,7 +129,7 @@
             }
         
             new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labelsWithNamesAndNumbers, // Use labels with both name and number
                     datasets: [{
@@ -137,13 +137,40 @@
                         data: productData.map(data => data.count),
                         backgroundColor: colors, // Use the dynamically generated colors array
                         borderColor: colors.map(color => color.replace('0.2', '1')), // Set border color with full opacity
-                        borderWidth: 1
+                        borderWidth: 2 // Increase the line thickness
                     }]
                 },
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            // Customize the y-axis scale options
+                            ticks: {
+                                beginAtZero: true,
+                                stepSize: 10, // Adjust the step size of y-axis ticks
+                                font: {
+                                    size: 12, // Set font size for y-axis labels
+                                }
+                            }
+                        },
+                        x: {
+                            // Customize the x-axis scale options
+                            ticks: {
+                                font: {
+                                    size: 12, // Set font size for x-axis labels
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true, // Display the legend
+                            position: 'top', // Position the legend at the top
+                            labels: {
+                                font: {
+                                    size: 12 // Set font size for legend labels
+                                }
+                            }
                         }
                     }
                 }

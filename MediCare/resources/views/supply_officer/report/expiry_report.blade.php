@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: portrait;
         }
 
         .page-break {
@@ -41,7 +41,7 @@
 
         <div class="row justify-content-center">
             <div class="col-10 text-center">
-                <h3><i>Expiration Table</i></h3>
+                <h3><i>Expiration Report</i></h3>
                 <br>
                 <table class="table table-hover">
                     <thead>

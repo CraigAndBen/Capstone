@@ -42,9 +42,46 @@
                                         Report</a>
                                 </div>
                             </div>
-                            <div class="row mb-5 p-3">
-                                <canvas id="productGraph" width="400" height="400"></canvas>
+                            <div class="row mb-5 p-3  mx-auto">
+                                <canvas id="productGraph" width="100%" height="50"></canvas>
                             </div>
+                            <p>
+                                <strong>Fast Moving</strong>
+                                @if (count($fastProducts) > 0)
+                                <ul>
+                                    @foreach ($fastProducts as $product)
+                                    <li>{{ $product }}</li>
+                                    @endforeach
+                                </ul>
+                                @else
+                                No products in this classification.
+                                @endif
+                            </p>
+                            <p>
+                                <strong>Slow Moving:</strong>
+                                @if (count($slowProducts) > 0)
+                                <ul>
+                                    @foreach ($slowProducts as $product)
+                                    <li>{{ $product }}</li>
+                                    @endforeach
+                                </ul>
+                                @else
+                                No products in this classification.
+                                @endif
+                            </p>
+                            <p>
+                                <strong>Non-Moving:</strong>
+                                @if (count($nonMovingProducts) > 0)
+                                <ul>
+                                    @foreach ($nonMovingProducts as $product)
+                                    <li>{{ $product }}</li>
+                                    @endforeach
+                                </ul>
+                                @else
+                                No products in this classification.
+                                @endif
+                            </p>
+                            
                         </div>
 
                         <!-- [ sample-page ] end -->
@@ -75,16 +112,27 @@
         datasets: [{
             data: productCounts, // Use the product counts array
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 205, 86)',
-                'rgb(54, 162, 235)',
+                'rgb(255, 99, 132, 0.7)',
+                'rgb(255, 205, 86, 0.7)',
+                'rgb(54, 162, 235, 0.7)',
+            ],
+            borderColor: [
+                'rgb(255, 99, 132, 1)',
+                'rgb(255, 205, 86, 1)',
+                'rgb(54, 162, 235, 1)',
             ],
         }],
+        
     };
+   
 
     var myChart = new Chart(ctx, {
         type: 'pie', // Use pie chart type
         data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 </script>
 

@@ -158,8 +158,8 @@ class SupplyOfficerController extends Controller
     {
 
         $profile = Auth::user();
-        $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
+        $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->paginate(10);
+        $limitNotifications = $notifications->take(10);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -221,7 +221,7 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $products = Product::with('category')->paginate(5);
+        $products = Product::with('category')->get();
         $categories = Category::with('products')->get();
 
         return view('supply_officer.inventory.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
@@ -339,11 +339,11 @@ class SupplyOfficerController extends Controller
         $currentDate = Carbon::now();
 
         // Calculate the date one month from the current date
-        $oneMonthFromNow = $currentDate->copy()->addMonth();
+        $threeFromNow = $currentDate->copy()->addMonths(3);
 
         // Retrieve products with expiration dates within the date range
         $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $oneMonthFromNow)
+            ->where('expiration', '<=', $threeFromNow)
             ->get();
 
         // Display the list of products
@@ -363,11 +363,12 @@ class SupplyOfficerController extends Controller
         $currentDate = Carbon::now();
 
         // Calculate the date one month from the current date
-        $oneMonthFromNow = $currentDate->copy()->addMonth();
+        $threeMonthFromNow = $currentDate->copy()->addMonths(3);
 
         // Retrieve products with expiration dates within the date range
         $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $oneMonthFromNow)
+            ->where('expiration', '<=', $threeMonthFromNow)
+            ->orderBy('expiration', 'asc')
             ->get();
 
         // Display the list of products
@@ -876,39 +877,37 @@ class SupplyOfficerController extends Controller
         // Fetch product prices from the product_price table
         $productPrices = Product_price::all();
 
+        $products = Product::all();
+
         // Define price range thresholds for categorization
         $mostThreshold = 100; // Adjust as needed
         $mediumThreshold = 50; // Adjust as needed
-        
 
-        // Initialize counts for each category
-        $mostValuedCount = 0;
-        $mediumValuedCount = 0;
-        $lowValuedCount = 0;
+        // Initialize arrays to store product names in each category
+        $mostValuedProducts = [];
+        $mediumValuedProducts = [];
+        $lowValuedProducts = [];
 
-        // Calculate the total count of products and initialize the percentages
-        $totalCount = count($productPrices);
-        $mostValuedPercentage = 0;
-        $mediumValuedPercentage = 0;
-        $lowValuedPercentage = 0;
-
-        // Categorize product prices and count each category
+        // Categorize product prices and collect product names
         foreach ($productPrices as $productPrice) {
             if ($productPrice->price >= $mostThreshold) {
-                $mostValuedCount++;
+                $mostValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
             } elseif ($productPrice->price >= $mediumThreshold) {
-                $mediumValuedCount++;
+                $mediumValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
             } else {
-                $lowValuedCount++;
+                $lowValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
             }
         }
 
-        // Calculate the percentages if there are products in the respective categories
-        if ($totalCount > 0) {
-            $mostValuedPercentage = round(($mostValuedCount / $totalCount) * 100);
-            $mediumValuedPercentage = round(($mediumValuedCount / $totalCount) * 100);
-            $lowValuedPercentage = round(($lowValuedCount / $totalCount) * 100);
-        }
+        // Calculate the percentages based on counts
+        $totalCount = count($productPrices);
+        $mostValuedCount = count($mostValuedProducts);
+        $mediumValuedCount = count($mediumValuedProducts);
+        $lowValuedCount = count($lowValuedProducts);
+
+        $mostValuedPercentage = ($totalCount > 0) ? round(($mostValuedCount / $totalCount) * 100) : 0;
+        $mediumValuedPercentage = ($totalCount > 0) ? round(($mediumValuedCount / $totalCount) * 100) : 0;
+        $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
 
         return view('supply_officer.inventory_demo.medicinedemo', compact(
             'profile',
@@ -918,9 +917,15 @@ class SupplyOfficerController extends Controller
             'currentTime',
             'currentDate',
             'productPrices',
+            'products',
             'mostValuedPercentage',
             'mediumValuedPercentage',
-            'lowValuedPercentage'
+            'lowValuedPercentage',
+            'mostThreshold',
+            'mediumThreshold',
+            'mostValuedProducts',
+            'mediumValuedProducts',
+            'lowValuedProducts'
         ));
     }
 
@@ -934,42 +939,40 @@ class SupplyOfficerController extends Controller
         $selectedOption = $request->input('select');
         $chartData = [];
 
-        // Fetch product prices from the product_price table
+         // Fetch product prices from the product_price table
         $productPrices = Product_price::all();
+
+        $products = Product::all();
 
         // Define price range thresholds for categorization
         $mostThreshold = 100; // Adjust as needed
         $mediumThreshold = 50; // Adjust as needed
-        
 
-        // Initialize counts for each category
-        $mostValuedCount = 0;
-        $mediumValuedCount = 0;
-        $lowValuedCount = 0;
+        // Initialize arrays to store product names in each category
+        $mostValuedProducts = [];
+        $mediumValuedProducts = [];
+        $lowValuedProducts = [];
 
-        // Calculate the total count of products and initialize the percentages
-        $totalCount = count($productPrices);
-        $mostValuedPercentage = 0;
-        $mediumValuedPercentage = 0;
-        $lowValuedPercentage = 0;
-
-        // Categorize product prices and count each category
+        // Categorize product prices and collect product names
         foreach ($productPrices as $productPrice) {
             if ($productPrice->price >= $mostThreshold) {
-                $mostValuedCount++;
+                $mostValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
             } elseif ($productPrice->price >= $mediumThreshold) {
-                $mediumValuedCount++;
+                $mediumValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
             } else {
-                $lowValuedCount++;
+                $lowValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
             }
         }
 
-        // Calculate the percentages if there are products in the respective categories
-        if ($totalCount > 0) {
-            $mostValuedPercentage = round(($mostValuedCount / $totalCount) * 100);
-            $mediumValuedPercentage = round(($mediumValuedCount / $totalCount) * 100);
-            $lowValuedPercentage = round(($lowValuedCount / $totalCount) * 100);
-        }
+        // Calculate the percentages based on counts
+        $totalCount = count($productPrices);
+        $mostValuedCount = count($mostValuedProducts);
+        $mediumValuedCount = count($mediumValuedProducts);
+        $lowValuedCount = count($lowValuedProducts);
+
+        $mostValuedPercentage = ($totalCount > 0) ? round(($mostValuedCount / $totalCount) * 100) : 0;
+        $mediumValuedPercentage = ($totalCount > 0) ? round(($mediumValuedCount / $totalCount) * 100) : 0;
+        $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
 
         return view('supply_officer.report.medicines_report', compact(
             'chartData',
@@ -978,66 +981,71 @@ class SupplyOfficerController extends Controller
             'productPrices',
             'mostValuedPercentage',
             'mediumValuedPercentage',
-            'lowValuedPercentage'
+            'lowValuedPercentage',
+            'mostThreshold',
+            'mediumThreshold',
+            'mostValuedProducts',
+            'mediumValuedProducts',
+            'lowValuedProducts'
         ));
     }
     public function productDemo()
-    {
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-    
-        // Retrieve all products
-        $products = Product::all();
-    
-        // Initialize arrays to store categorized products
-        //Fast for request
-        //slow for purchase
-        $fastProducts = [];
-        $slowProducts = [];
-        $nonMovingProducts = [];
-    
-        // Categorize products based on request and sales and store them in arrays
-        foreach ($products as $product) {
-            $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
-            $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
-    
-            if ($totalRequestQuantity > 0) {
-                $fastProducts[] = $product;
-            } elseif ($totalSalesQuantity > 0) {
-                $slowProducts[] = $product;
-            } else {
-                $nonMovingProducts[] = $product;
-            }
+{
+    $profile = Auth::user();
+    $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+    $limitNotifications = $notifications->take(5);
+    $count = $notifications->count();
+    $currentDate = date('Y-m-d');
+    $currentDateTime = Carbon::now();
+    $currentDateTime->setTimezone('Asia/Manila');
+    $currentTime = $currentDateTime->format('h:i A');
+
+    // Retrieve all products
+    $products = Product::all();
+
+    // Initialize arrays to store categorized products
+    $fastProducts = [];
+    $slowProducts = [];
+    $nonMovingProducts = [];
+
+    // Categorize products based on request and sales and store them in arrays
+    foreach ($products as $product) {
+        $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+        $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+
+        if ($totalRequestQuantity > 0) {
+            $fastProducts[] = $product->p_name;
+        } elseif ($totalSalesQuantity > 0) {
+            $slowProducts[] = $product->p_name;
+        } else {
+            $nonMovingProducts[] = $product->p_name;
         }
-    
-        // Create an array with category names and counts
-        $categories = ['Fast', 'Slow', 'Non-Moving'];
-        $counts = [
-            'Fast' => count($fastProducts),
-            'Slow' => count($slowProducts),
-            'Non-Moving' => count($nonMovingProducts),
-        ];
-    
-        return view('supply_officer.inventory_demo.productdemo', compact(
-            'profile',
-            'notifications',
-            'limitNotifications',
-            'counts',
-            'currentTime',
-            'currentDate',
-            'categories',
-            'count',
-            'fastProducts',
-            'slowProducts',
-            'nonMovingProducts'
-        ));
     }
+
+    // Create an array with category names and counts
+    $categories = ['Fast', 'Slow', 'Non-Moving'];
+    $counts = [
+        'Fast' => count($fastProducts),
+        'Slow' => count($slowProducts),
+        'Non-Moving' => count($nonMovingProducts),
+    ];
+
+    return view('supply_officer.inventory_demo.productdemo', compact(
+        'profile',
+        'notifications',
+        'limitNotifications',
+        'counts',
+        'currentTime',
+        'currentDate',
+        'categories',
+        'count',
+        'fastProducts',
+        'slowProducts',
+        'nonMovingProducts'
+    ));
+}
+
+    
     
     public function productsReport(Request $request)
     {
@@ -1050,47 +1058,45 @@ class SupplyOfficerController extends Controller
         $chartData = [];
 
         // Retrieve all products
-    $products = Product::all();
+        $products = Product::all();
 
-    // Initialize count variables for each category
-    $fastCount = 0;
-    $slowCount = 0;
-    $nonMovingCount = 0;
+        // Initialize arrays to store categorized products
+        $fastProducts = [];
+        $slowProducts = [];
+        $nonMovingProducts = [];
 
-    // Categorize products based on request and sales and update the count variables
-    foreach ($products as $product) {
-        $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
-        $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+        // Categorize products based on request and sales and store them in arrays
+        foreach ($products as $product) {
+            $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+            $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
 
-        if ($totalRequestQuantity > $totalSalesQuantity) {
-            $slowCount++;
-        } elseif ($totalSalesQuantity > 0) {
-            $fastCount++;
-        } else {
-            $nonMovingCount++;
+            if ($totalRequestQuantity > 0) {
+                $fastProducts[] = $product->p_name;
+            } elseif ($totalSalesQuantity > 0) {
+                $slowProducts[] = $product->p_name;
+            } else {
+                $nonMovingProducts[] = $product->p_name;
+            }
         }
-    }
 
-    // Create an array with category names and counts
-    $categories = ['Fast', 'Slow', 'Non-Moving'];
-    $counts = [
-        'Fast' => $fastCount,
-        'Slow' => $slowCount,
-        'Non-Moving' => $nonMovingCount,
-    ];
+        // Create an array with category names and counts
+        $categories = ['Fast', 'Slow', 'Non-Moving'];
+        $counts = [
+            'Fast' => count($fastProducts),
+            'Slow' => count($slowProducts),
+            'Non-Moving' => count($nonMovingProducts),
+        ];
 
-    return view('supply_officer.report.products_report', compact(
-       
-        'currentTime',
-        'currentDate',
-        'categories',
-        'chartData',
-        'counts',
-        'fastCount',
-        'slowCount',
-        'nonMovingCount'
+        return view('supply_officer.report.products_report', compact(
+            'counts',
+            'currentTime',
+            'currentDate',
+            'categories',
+            'fastProducts',
+            'slowProducts',
+            'nonMovingProducts'
 
-    ));
+        ));
     }
 
     public function supplyOfficerLogout(Request $request): RedirectResponse

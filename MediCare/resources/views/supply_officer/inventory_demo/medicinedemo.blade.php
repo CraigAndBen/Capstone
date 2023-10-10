@@ -36,6 +36,7 @@
                             <h2>Medicine Demographics</h2>
                         </div>
                         <div class="card-body">
+                            <h4>Prioritizes based on the value of the items and their importance.</h4>
                             <div class="row justify-content-end">
                                 <div class="col-md-2 mt-2">
                                     <a href="{{ route('supply_officer.medicines.report') }}" class="btn btn-success">Generate
@@ -43,9 +44,45 @@
                                 </div>
                             </div>
                             
-                            <div class="row mb-5 p-3">
-                                <canvas id="medicineGraph" width="50%" height="40"></canvas>
+                            <div class="row mb-5 p-3 mx-auto">
+                                <canvas id="medicineGraph" width="100%" height="50"></canvas>
                             </div>
+                           <p>
+                                <strong>Most Valued:</strong>
+                                @if (count($mostValuedProducts) > 0)
+                                    <ul>
+                                        @foreach ($mostValuedProducts as $product)
+                                            <li>{{ $product }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    No products in this classification.
+                                @endif
+                            </p>
+                            <p>
+                                <strong>Medium Valued:</strong>
+                                @if (count($mediumValuedProducts) > 0)
+                                    <ul>
+                                        @foreach ($mediumValuedProducts as $product)
+                                            <li>{{ $product }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    No products in this classification.
+                                @endif
+                            </p>
+                            <p>
+                                <strong>Low Valued:</strong>
+                                @if (count($lowValuedProducts) > 0)
+                                    <ul>
+                                        @foreach ($lowValuedProducts as $product)
+                                            <li>{{ $product }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    No products in this classification.
+                                @endif
+                            </p>
                         </div>
 
                         <!-- [ sample-page ] end -->
@@ -56,40 +93,41 @@
         @endsection
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @section('scripts')
-    <script>
-        var ctx = document.getElementById('medicineGraph').getContext('2d');
-        var medicineGraph = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: [
-                    'Most Valued ' + {{ $mostValuedPercentage }} + '%',
-                    'Medium Valued ' + {{ $mediumValuedPercentage }} + '%',
-                    'Low Valued ' + {{ $lowValuedPercentage }} + '%'
+<script>
+    var ctx = document.getElementById('medicineGraph').getContext('2d');
+    var medicineGraph = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: [
+                'Most Valued ' + {{ $mostValuedPercentage }} + '%',
+                'Medium Valued ' + {{ $mediumValuedPercentage }} + '%',
+                'Low Valued ' + {{ $lowValuedPercentage }} + '%'
+            ],
+            datasets: [{
+                data: [
+                    {{ $mostValuedPercentage }},
+                    {{ $mediumValuedPercentage }},
+                    {{ $lowValuedPercentage }}
                 ],
-                datasets: [{
-                    data: [
-                        {{ $mostValuedPercentage }},
-                        {{ $mediumValuedPercentage }},
-                        {{ $lowValuedPercentage }}
-                    ],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.7)', // Green for Most Valued
-                        'rgba(54, 162, 235, 0.7)', // Blue for Medium Valued
-                        'rgba(255, 99, 132, 0.7)'  // Red for Low Valued
-                    ],
-                    borderColor: [
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.7)', // Green for Most Valued
+                    'rgba(54, 162, 235, 0.7)', // Blue for Medium Valued
+                    'rgba(255, 99, 132, 0.7)'  // Red for Low Valued
+                ],
+                borderColor: [
                     'rgba(75, 192, 192, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 99, 132, 1)'
-                ],
-                }]
-            },
-            options: {
-                responsive: true,
-                
-            }
-        });
-    </script>
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+</script>
+
 
     
 @endsection

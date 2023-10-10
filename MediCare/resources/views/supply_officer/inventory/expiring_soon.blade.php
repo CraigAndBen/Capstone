@@ -45,17 +45,16 @@
                                 </div>
 
                                 <div class="row justify-content-end">
-                                    
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="start">Start</label>
+                                            <label for="startDate">Start</label>
                                             <input type="date" id="startDate" class="form-control"
                                                 placeholder="Start Date">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="end">End</label>
+                                            <label for="endDate">End</label>
                                             <input type="date" id="endDate" class="form-control"
                                                 placeholder="End Date">
                                         </div>

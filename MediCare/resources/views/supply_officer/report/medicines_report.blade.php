@@ -42,15 +42,14 @@
         <div class="row justify-content-center">
             <div class="col-8 text-center">
                 <h3><i>Medicine Pie Graph</i></h3>
-                <br>
-                <canvas id="medicineGraph"></canvas>
+                <div class="row mb-5 p-3 mx-auto">
+                    <canvas id="medicineGraph" style="width: 300px; height: 300px;"></canvas>
+                </div>  
             </div>
             <div class="col-1">
 
             </div>
         </div>
-
-        <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
@@ -60,6 +59,7 @@
                     <thead>
                         <tr>
                             <th>Label</th>
+                            <th>Products</th>
                             <th>Count</th>
                         </tr>
                     </thead>
@@ -67,36 +67,68 @@
                         @php
                             $total = 0; // Initialize total count
                         @endphp
-
+                
                         @foreach ($chartData as $value)
                             <tr>
                                 <td>{{ $value['label'] }}</td>
+                                <td>
+                                    @if ($value['label'] === 'Most Valued')
+                                        @foreach ($mostValuedProducts as $product)
+                                            {{ $product }}<br>
+                                        @endforeach
+                                    @elseif ($value['label'] === 'Medium Valued')
+                                        @foreach ($mediumValuedProducts as $product)
+                                            {{ $product }}<br>
+                                        @endforeach
+                                    @elseif ($value['label'] === 'Low Valued')
+                                        @foreach ($lowValuedProducts as $product)
+                                            {{ $product }}<br>
+                                        @endforeach
+                                    @endif
+                                </td>
                                 <td>{{ $value['count'] }}</td>
                             </tr>
                         @endforeach
                         <tr>
                             <td><strong>Most Valued</strong></td>
+                            <td>
+                                @foreach ($mostValuedProducts as $product)
+                                    {{ $product }}<br>
+                                @endforeach
+                            </td>
                             <td>{!! $mostValuedPercentage !!} %</td>
                         </tr>
                         <tr>
                             <td><strong>Medium Valued</strong></td>
+                            <td>
+                                @foreach ($mediumValuedProducts as $product)
+                                    {{ $product }}<br>
+                                @endforeach
+                            </td>
                             <td>{!! $mediumValuedPercentage !!} %</td>
                         </tr>
                         <tr>
                             <td><strong>Low Valued</strong></td>
+                            <td>
+                                @foreach ($lowValuedProducts as $product)
+                                    {{ $product }}<br>
+                                @endforeach
+                            </td>
                             <td>{!! $lowValuedPercentage !!} %</td>
                         </tr>
-                        
+                
                         @php
                             $total = $mostValuedPercentage + $mediumValuedPercentage + $lowValuedPercentage;
                         @endphp
                         <tr>
                             <td><strong>Total</strong></td>
+                            <td><strong>Total Products Here</strong></td>
                             <td><strong>{{ $total }}</strong></td>
                         </tr>
-
+                
                     </tbody>
                 </table>
+                
             </div>
             <div class="col-1">
 
@@ -145,15 +177,16 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false 
             
         }
     });
     $(document).ready(function() {
-                // Attach a click event handler to the button
-                $("#printButton").click(function() {
-                    // Call the window.print() function to open the print dialog
-                    window.print();
-                });
+            // Attach a click event handler to the button
+            $("#printButton").click(function() {
+                // Call the window.print() function to open the print dialog
+                window.print();
             });
+        });
 </script>
 @endsection
