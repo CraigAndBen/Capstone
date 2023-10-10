@@ -118,8 +118,6 @@
                                                         @if ($patient->physician == $doctor->id)
                                                             <td>Dr. {{ ucwords($doctor->first_name) }}
                                                                 {{ ucwords($doctor->last_name) }}</td>
-                                                        @else
-                                                            <td>NA</td>
                                                         @endif
                                                     @endforeach
                                                     @if ($patient->type == 'outpatient')
@@ -364,7 +362,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select Gender</option>
+                                                    <option value="">Select Gender</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
                                                     <option value="others">Others</option>
@@ -408,7 +406,7 @@
                                         <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
-                                                <option>Select physician</option>
+                                                <option value="">Select physician</option>
                                                 @foreach ($doctors as $doctor)
                                                     <option value="{{ $doctor->id }}">Dr.
                                                         {{ ucwords($doctor->first_name) }}
@@ -452,7 +450,7 @@
                                         </div>
                                         <div class="form-floating mb-3 ">
                                             <select class="form-control p-3" id="relationship" name="relationship">
-                                                <option>Select Relationship</option>
+                                                <option value="">Select Relationship</option>
                                                 <option value="parent">Parent</option>
                                                 <option value="legal guardian">Legal Guardian</option>
                                                 <option value="spouse">Spouse</option>
@@ -589,7 +587,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select Gender</option>
+                                                    <option value="">Select Gender</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
                                                     <option value="others">Others</option>
@@ -615,7 +613,7 @@
                                         <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
-                                                <option>Select physician</option>
+                                                <option value="">Select physician</option>
                                                 @foreach ($doctors as $doctor)
                                                     <option value="{{ $doctor->id }}">Dr.
                                                         {{ ucwords($doctor->first_name) }}
@@ -659,7 +657,7 @@
                                         </div>
                                         <div class="form-floating mb-3 ">
                                             <select class="form-control p-3" id="relationship" name="relationship">
-                                                <option>Select Relationship</option>
+                                                <option value="">Select Relationship</option>
                                                 <option value="parent">Parent</option>
                                                 <option value="legal guardian">Legal Guardian</option>
                                                 <option value="spouse">Spouse</option>
@@ -795,7 +793,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select Gender</option>
+                                                    <option value="">Select Gender</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
                                                     <option value="others">Others</option>
@@ -838,7 +836,7 @@
                                         <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
-                                                <option>Select physician</option>
+                                                <option value="">Select physician</option>
                                                 @foreach ($doctors as $doctor)
                                                     <option value="{{ $doctor->id }}">Dr.
                                                         {{ ucwords($doctor->first_name) }}
@@ -882,7 +880,7 @@
                                         </div>
                                         <div class="form-floating mb-3 ">
                                             <select class="form-control p-3" id="relationship" name="relationship">
-                                                <option>Select Relationship</option>
+                                                <option value="">Select Relationship</option>
                                                 <option value="parent">Parent</option>
                                                 <option value="legal guardian">Legal Guardian</option>
                                                 <option value="spouse">Spouse</option>
@@ -1014,7 +1012,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select Gender</option>
+                                                    <option value="">Select Gender</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
                                                     <option value="others">Others</option>
@@ -1040,7 +1038,7 @@
                                         <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
-                                                <option>Select physician</option>
+                                                <option value="">Select physician</option>
                                                 @foreach ($doctors as $doctor)
                                                     <option value="{{ $doctor->id }}">Dr.
                                                         {{ ucwords($doctor->first_name) }}
@@ -1084,7 +1082,7 @@
                                         </div>
                                         <div class="form-floating mb-3 ">
                                             <select class="form-control p-3" id="relationship" name="relationship">
-                                                <option>Select Relationship</option>
+                                                <option value="">Select Relationship</option>
                                                 <option value="parent">Parent</option>
                                                 <option value="legal guardian">Legal Guardian</option>
                                                 <option value="spouse">Spouse</option>

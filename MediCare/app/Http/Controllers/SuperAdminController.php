@@ -25,7 +25,9 @@ class SuperAdminController extends Controller
     public function dashboard()
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('type', 'admin')
+        ->orwhere('type', 'supply_officer')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;

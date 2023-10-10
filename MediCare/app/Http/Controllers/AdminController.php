@@ -540,6 +540,7 @@ class AdminController extends Controller
 
     public function patientReport(Request $request)
     {
+       
         $profile = auth()->user();
         $patient = Patient::where('id', $request->input('patient_id'))->first();
         $currentYear = Carbon::now()->year; // Get current year
@@ -548,7 +549,7 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $doctor = User::where('id', $patient->physician)->first();
-
+        
         return view('admin.report.patient_report', compact('patient', 'currentTime', 'currentDate', 'doctor', 'profile'));
     }
 
