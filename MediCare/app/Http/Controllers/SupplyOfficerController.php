@@ -338,7 +338,7 @@ class SupplyOfficerController extends Controller
 
         $currentDate = Carbon::now();
 
-        // Calculate the date one month from the current date
+        // Calculate the date three months from the current date
         $threeMonthsFromNow = $currentDate->copy()->addMonths(3);
 
         // Retrieve products with expiration dates within the date range
@@ -362,7 +362,7 @@ class SupplyOfficerController extends Controller
 
         $currentDate = Carbon::now();
 
-        // Calculate the date one month from the current date
+        // Calculate the date three months from the current date
         $threeMonthFromNow = $currentDate->copy()->addMonths(3);
 
         // Retrieve products with expiration dates within the date range
