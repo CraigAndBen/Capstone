@@ -165,7 +165,7 @@ class PharmacistController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         
-        $products = Product::with('category')->paginate(8);
+        $products = Product::with('category')->get();
         $categories = Category::where('category_name', 'pharmaceutical')->get();
     
         return view('pharmacist.product.inventory_medicine', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
