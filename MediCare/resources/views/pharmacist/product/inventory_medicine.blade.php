@@ -39,12 +39,12 @@
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
-                                    <div class="col"></div>
+                                    <div class="forn-group">
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#createMedicine">Add product</button>
                                     <a href="{{ route('pharmacist.medicine.report') }}" class="btn btn-success">Generate
                                         Report</a>
-
+                                    </div>
                                 </div>
 
 
@@ -126,9 +126,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $products->links('pagination::bootstrap-4') }}
-                                    </div>
+                                   
                                 @endif
                             </div>
                         </div>
@@ -395,37 +393,31 @@
                 });
             });
         </script>
-            <script>
-                $(document).ready(function() {
-                    $('#medicineSearch').on('keyup', function() {
-                        var searchText = $(this).val().toLowerCase();
-                        filterRequests(searchText);
-                    });
-
-                    function filterRequests(searchText) {
-                        var rows = document.querySelectorAll("table tbody tr");
-                        for (var i = 0; i < rows.length; i++) {
-                            var productName = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
-                            var category = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
-                            var stock = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
-                            var brand = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
-                            var expiration = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
-                            var status = rows[i].querySelector("td:nth-child(6)").textContent.toLowerCase();
-
-                            if (
-                                productName.includes(searchText) ||
-                                category.includes(searchText) ||
-                                stock.includes(searchText) ||
-                                brand.includes(searchText) ||
-                                expiration.includes(searchText) ||
-                                status.includes(searchText)
-                            ) {
-                                rows[i].style.display = "";
-                            } else {
-                                rows[i].style.display = "none";
-                            }
-                        }
-                    }
+        <script>
+            $(document).ready(function() {
+                $('#medicineSearch').on('keyup', function() {
+                    var searchText = $(this).val().toLowerCase();
+                    filterTable(searchText);
                 });
-            </script>
+
+                function filterTable(searchText) {
+                    var rows = document.querySelectorAll("table tbody tr");
+
+                    rows.forEach(function(row) {
+                        var visible = false;
+                        row.querySelectorAll("td").forEach(function(cell) {
+                            if (cell.textContent.toLowerCase().includes(searchText)) {
+                                visible = true;
+                            }
+                        });
+
+                        if (visible) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                }
+            });
+        </script>
     @endsection
