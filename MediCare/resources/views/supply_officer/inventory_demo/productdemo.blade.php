@@ -46,43 +46,44 @@
                             <div class="row mb-5 p-3  mx-auto">
                                 <canvas id="productGraph" width="100%" height="50"></canvas>
                             </div>
-                            <p>
-                                <strong>Fast Moving</strong>
-                                @if (count($fastProducts) > 0)
-                                <ul>
-                                    @foreach ($fastProducts as $product)
-                                    <li>{{ $product }}</li>
-                                    @endforeach
-                                </ul>
-                                @else
-                                No products in this classification.
-                                @endif
-                            </p>
-                            <p>
-                                <strong>Slow Moving:</strong>
-                                @if (count($slowProducts) > 0)
-                                <ul>
-                                    @foreach ($slowProducts as $product)
-                                    <li>{{ $product }}</li>
-                                    @endforeach
-                                </ul>
-                                @else
-                                No products in this classification.
-                                @endif
-                            </p>
-                            <p>
-                                <strong>Non-Moving:</strong>
-                                @if (count($nonMovingProducts) > 0)
-                                <ul>
-                                    @foreach ($nonMovingProducts as $product)
-                                    <li>{{ $product }}</li>
-                                    @endforeach
-                                </ul>
-                                @else
-                                No products in this classification.
-                                @endif
-                            </p>
-                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Fast Moving</strong>
+                                    @if (count($fastProducts) > 0)
+                                    <ul>
+                                        @foreach ($fastProducts as $product)
+                                        <li>{{ $product }}</li>
+                                        @endforeach
+                                    </ul>
+                                    @else
+                                    No products in this classification.
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Slow Moving</strong>
+                                    @if (count($slowProducts) > 0)
+                                    <ul>
+                                        @foreach ($slowProducts as $product)
+                                        <li>{{ $product }}</li>
+                                        @endforeach
+                                    </ul>
+                                    @else
+                                    No products in this classification.
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Non-Moving</strong>
+                                    @if (count($nonMovingProducts) > 0)
+                                    <ul>
+                                        @foreach ($nonMovingProducts as $product)
+                                        <li>{{ $product }}</li>
+                                        @endforeach
+                                    </ul>
+                                    @else
+                                    No products in this classification.
+                                    @endif
+                                </div>
+                            </div>    
                         </div>
 
                         <!-- [ sample-page ] end -->

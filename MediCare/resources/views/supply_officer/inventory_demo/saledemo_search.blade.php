@@ -140,7 +140,7 @@
             // Create a chart using Chart.js
             var ctx = document.getElementById('salesGraph').getContext('2d');
             var salesGraph = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: dateRange,
                     datasets: datasets

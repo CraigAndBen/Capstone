@@ -523,6 +523,129 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-6 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            @if ($totalCount)
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <small>Medicine Value</small>
+                                        <h6>Based on medicine product price</h6>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mx-auto">
+                                        <canvas id="medicineGraph"></canvas>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong style="font-size: 14px;">Most Valued:</strong>
+                                            @if (count($mostValuedProducts) > 0)
+                                                <ul style="font-size: 12px;">
+                                                    @foreach ($mostValuedProducts as $product)
+                                                        <li>{{ $product }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                No products in this classification.
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong style="font-size: 14px;">Medium Valued:</strong>
+                                            @if (count($mediumValuedProducts) > 0)
+                                                <ul style="font-size: 12px;">
+                                                    @foreach ($mediumValuedProducts as $product)
+                                                        <li>{{ $product }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                No products in this classification.
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong style="font-size: 14px;">Low Valued:</strong>
+                                            @if (count($lowValuedProducts) > 0)
+                                                <ul style="font-size: 12px;">
+                                                    @foreach ($lowValuedProducts as $product)
+                                                        <li>{{ $product }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                No products in this classification.
+                                            @endif
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            @else
+                                <div class="text-center">
+                                    <h3>No Medicine Yet.</h3>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            @if ($categories)
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col">
+                                        <small>Products Moving</small>
+                                        <h6>Consumption rate of products</h6>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mx-auto">
+                                        <canvas id="productGraph"></canvas>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong style="font-size: 14px;">Fast Moving</strong>
+                                            @if (count($fastProducts) > 0)
+                                            <ul style="font-size: 12px;">
+                                                @foreach ($fastProducts as $product)
+                                                <li>{{ $product }}</li>
+                                                @endforeach
+                                            </ul>
+                                            @else
+                                            No products in this classification.
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong style="font-size: 14px;">Slow Moving</strong>
+                                            @if (count($slowProducts) > 0)
+                                            <ul style="font-size: 12px;">
+                                                @foreach ($slowProducts as $product)
+                                                <li>{{ $product }}</li>
+                                                @endforeach
+                                            </ul>
+                                            @else
+                                            No products in this classification.
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong style="font-size: 14px;">Non-Moving</strong>
+                                            @if (count($nonMovingProducts) > 0)
+                                            <ul style="font-size: 12px;">
+                                                @foreach ($nonMovingProducts as $product)
+                                                <li>{{ $product }}</li>
+                                                @endforeach
+                                            </ul>
+                                            @else
+                                            No products in this classification.
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="text-center">
+                                    <h3>No Product Yet.</h3>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
 
                 <!-- [ sample-page ] end -->
             </div>
@@ -710,6 +833,83 @@
         options: {
             responsive: true,
             maintainAspectRatio: false // Allow the chart to resize based on the container
+        }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('medicineGraph').getContext('2d');
+    var medicineGraph = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: [
+                'Most Valued ' + {{ $mostValuedPercentage }} + '%',
+                'Medium Valued ' + {{ $mediumValuedPercentage }} + '%',
+                'Low Valued ' + {{ $lowValuedPercentage }} + '%'
+            ],
+            datasets: [{
+                data: [
+                    {{ $mostValuedPercentage }},
+                    {{ $mediumValuedPercentage }},
+                    {{ $lowValuedPercentage }}
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.7)', // Green for Most Valued
+                    'rgba(54, 162, 235, 0.7)', // Blue for Medium Valued
+                    'rgba(255, 99, 132, 0.7)'  // Red for Low Valued
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+</script>
+<script>
+    var categories = @json($categories);
+    var counts = @json($counts);
+
+    var ctx = document.getElementById('productGraph').getContext('2d');
+
+    // Get the product counts as an array
+    var productCounts = Object.values(counts);
+
+    // Create an array to store the labels with counts
+    var labelsWithCounts = [];
+    for (var i = 0; i < categories.length; i++) {
+        labelsWithCounts.push(categories[i] + ' (' + productCounts[i] + ')');
+    }
+
+    var chartData = {
+        labels: labelsWithCounts, // Use labels with counts
+        datasets: [{
+            data: productCounts, // Use the product counts array
+            backgroundColor: [
+                'rgb(255, 99, 132, 0.7)',
+                'rgb(255, 205, 86, 0.7)',
+                'rgb(54, 162, 235, 0.7)',
+            ],
+            borderColor: [
+                'rgb(255, 99, 132, 1)',
+                'rgb(255, 205, 86, 1)',
+                'rgb(54, 162, 235, 1)',
+            ],
+        }],
+        
+    };
+   
+
+    var myChart = new Chart(ctx, {
+        type: 'pie', // Use pie chart type
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 </script>

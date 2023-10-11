@@ -107,6 +107,71 @@ class SuperAdminController extends Controller
         $usersLabels = [];
         $usersData = [];
 
+        // Fetch product prices from the product_price table
+        $productPrices = Product_price::all();
+
+        $products = Product::all();
+
+        // Define price range thresholds for categorization
+        $mostThreshold = 100; // Adjust as needed
+        $mediumThreshold = 50; // Adjust as needed
+
+        // Initialize arrays to store product names in each category
+        $mostValuedProducts = [];
+        $mediumValuedProducts = [];
+        $lowValuedProducts = [];
+
+        // Categorize product prices and collect product names
+        foreach ($productPrices as $productPrice) {
+            if ($productPrice->price >= $mostThreshold) {
+                $mostValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
+            } elseif ($productPrice->price >= $mediumThreshold) {
+                $mediumValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
+            } else {
+                $lowValuedProducts[] = $productPrice->product->p_name; // Use product relationship to get the name
+            }
+        }
+
+        // Calculate the percentages based on counts
+        $totalCount = count($productPrices);
+        $mostValuedCount = count($mostValuedProducts);
+        $mediumValuedCount = count($mediumValuedProducts);
+        $lowValuedCount = count($lowValuedProducts);
+
+        $mostValuedPercentage = ($totalCount > 0) ? round(($mostValuedCount / $totalCount) * 100) : 0;
+        $mediumValuedPercentage = ($totalCount > 0) ? round(($mediumValuedCount / $totalCount) * 100) : 0;
+        $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
+
+         // Retrieve all products
+         $products = Product::all();
+
+         // Initialize arrays to store categorized products
+         $fastProducts = [];
+         $slowProducts = [];
+         $nonMovingProducts = [];
+ 
+         // Categorize products based on request and sales and store them in arrays
+         foreach ($products as $product) {
+             $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+             $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+ 
+             if ($totalRequestQuantity > 0) {
+                 $fastProducts[] = $product->p_name;
+             } elseif ($totalSalesQuantity > 0) {
+                 $slowProducts[] = $product->p_name;
+             } else {
+                 $nonMovingProducts[] = $product->p_name;
+             }
+         }
+ 
+         // Create an array with category names and counts
+         $categories = ['Fast', 'Slow', 'Non-Moving'];
+         $counts = [
+             'Fast' => count($fastProducts),
+             'Slow' => count($slowProducts),
+             'Non-Moving' => count($nonMovingProducts),
+         ];
+
         foreach ($rolesData as $role) {
             if ($role->role !== 'super_admin') {
                 $string = $role->role;
@@ -117,7 +182,7 @@ class SuperAdminController extends Controller
             }
         }
 
-        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'patientsByMonth', 'patientCount', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'rank1Diagnosis', 'diagnosisCount', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount'));
+        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'patientsByMonth', 'patientCount', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'rank1Diagnosis', 'diagnosisCount', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount', 'productPrices', 'mostValuedProducts', 'mediumValuedProducts', 'lowValuedProducts','totalCount', 'mostValuedPercentage', 'mediumValuedPercentage', 'lowValuedPercentage', 'categories', 'counts', 'fastProducts', 'slowProducts', 'nonMovingProducts'));
     }
 
     public function profile(Request $request): View

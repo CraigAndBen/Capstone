@@ -47,42 +47,45 @@
                             <div class="row mb-5 p-3 mx-auto">
                                 <canvas id="medicineGraph" width="100%" height="50"></canvas>
                             </div>
-                           <p>
-                                <strong>Most Valued:</strong>
-                                @if (count($mostValuedProducts) > 0)
-                                    <ul>
-                                        @foreach ($mostValuedProducts as $product)
-                                            <li>{{ $product }}</li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    No products in this classification.
-                                @endif
-                            </p>
-                            <p>
-                                <strong>Medium Valued:</strong>
-                                @if (count($mediumValuedProducts) > 0)
-                                    <ul>
-                                        @foreach ($mediumValuedProducts as $product)
-                                            <li>{{ $product }}</li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    No products in this classification.
-                                @endif
-                            </p>
-                            <p>
-                                <strong>Low Valued:</strong>
-                                @if (count($lowValuedProducts) > 0)
-                                    <ul>
-                                        @foreach ($lowValuedProducts as $product)
-                                            <li>{{ $product }}</li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    No products in this classification.
-                                @endif
-                            </p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Most Valued:</strong>
+                                    @if (count($mostValuedProducts) > 0)
+                                        <ul>
+                                            @foreach ($mostValuedProducts as $product)
+                                                <li>{{ $product }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        No products in this classification.
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Medium Valued:</strong>
+                                    @if (count($mediumValuedProducts) > 0)
+                                        <ul>
+                                            @foreach ($mediumValuedProducts as $product)
+                                                <li>{{ $product }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        No products in this classification.
+                                    @endif
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Low Valued:</strong>
+                                    @if (count($lowValuedProducts) > 0)
+                                        <ul>
+                                            @foreach ($lowValuedProducts as $product)
+                                                <li>{{ $product }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        No products in this classification.
+                                    @endif
+                                </div>
+                            </div>
+                            
                         </div>
 
                         <!-- [ sample-page ] end -->
