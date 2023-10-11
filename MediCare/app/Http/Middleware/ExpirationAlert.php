@@ -34,82 +34,58 @@ class ExpirationAlert
             $title = 'Expiration Alert';
             $message = "Product: $product->p_name will expire on: $product->expiration";
 
-            foreach ($products as $product) {
-                $title = 'Expiration Alert';
-                $expirationDate = Carbon::parse($product->expiration);
-                $message = '';
+            // Check if a similar notification already exists and if it's a new month
+            $notificationExists = false;
 
-                foreach ($notifications as $notification) {
-                    if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
-                        $notificationExists = true;
-                        break;
-                    }
-
-                    foreach ($notifications as $notification) {
-                        $notificationDate = Carbon::parse($notification->date);
-                        $month = $notificationDate->month;
-
-                        // Check if a notification with the same title and message exists
-                        $existingNotification = Notification::where('title', $title)
-                            ->where('message', $message)
-                            ->first();
-
-                        if (!$existingNotification) {
-                            Notification::create([
-                                'title' => $title,
-                                'message' => $message,
-                                'date' => $currentDate,
-                                'time' => $currentTime,
-                                'type' => 'supply_officer',
-                            ]);
-                        }
-                    }
-
-                }
-
-                if (!$notificationExists) {
-                    // Create a new notification
-                    Notification::create([
-                        'title' => $title,
-                        'message' => $message,
-                        'date' => $currentDate,
-                        'time' => $currentTime,
-                        'type' => 'supply_officer',
-                    ]);
+            foreach ($notifications as $notification) {
+                if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
+                    $notificationExists = true;
+                    break;
                 }
             }
 
-            // Get products with stock below 100
-            $lowStockProducts = Product::where('stock', '<', 100)->get();
-
-            foreach ($lowStockProducts as $product) {
-                $title = 'Low Stock Alert';
-                $message = "Product: $product->p_name has low stock. Remaining stock: $product->stock";
-
-                // Check if a similar notification already exists and if it's a new month
-                $notificationExists = false;
-
-                foreach ($notifications as $notification) {
-                    if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
-                        $notificationExists = true;
-                        break;
-                    }
-                }
-
-                if (!$notificationExists) {
-                    // Create a new notification
-                    Notification::create([
-                        'title' => $title,
-                        'message' => $message,
-                        'date' => $currentDate,
-                        'time' => $currentTime,
-                        'type' => 'supply_officer',
-                    ]);
-                }
+            if (!$notificationExists) {
+                // Create a new notification
+                Notification::create([
+                    'title' => $title,
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                    'type' => 'supply_officer',
+                ]);
             }
-
-            return $next($request);
         }
 
+        // Get products with stock below 100
+        $lowStockProducts = Product::where('stock', '<', 100)->get();
+
+        foreach ($lowStockProducts as $product) {
+            $title = 'Low Stock Alert';
+            $message = "Product: $product->p_name has low stock. Remaining stock: $product->stock";
+
+            // Check if a similar notification already exists and if it's a new month
+            $notificationExists = false;
+
+            foreach ($notifications as $notification) {
+                if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
+                    $notificationExists = true;
+                    break;
+                }
+            }
+
+            if (!$notificationExists) {
+                // Create a new notification
+                Notification::create([
+                    'title' => $title,
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                    'type' => 'supply_officer',
+                ]);
+            }
+        }
+
+        return $next($request);
     }
+
 }
