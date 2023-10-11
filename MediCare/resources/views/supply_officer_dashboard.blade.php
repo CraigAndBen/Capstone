@@ -61,7 +61,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -113,7 +113,8 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="text-center py-2">
-                                    <a href="{{ route('supply_officer.notification') }}" class="btn btn-primary">Show all</a>
+                                    <a href="{{ route('supply_officer.notification') }}" class="btn btn-primary">Show
+                                        all</a>
                                 </div>
                             @else
                                 <div class="dropdown-header">
@@ -202,8 +203,8 @@
                         <i class="ti ti-dashboard"></i>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('supply_officer.dashboard') }}" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Home</span></a>
+                        <a href="{{ route('supply_officer.dashboard') }}" class="pc-link"><span
+                                class="pc-micon"></span><span class="pc-mtext">Home</span></a>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Account Settings</label>
@@ -214,10 +215,12 @@
                                 class="pc-mtext">Profile Update</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.profile') }}">Update
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.profile') }}">Update
                                     Profile</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.profile.password') }}">Update Profile Password</a></li>
+                                    href="{{ route('supply_officer.profile.password') }}">Update Profile Password</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -229,7 +232,8 @@
                                 class="pc-mtext">Notification List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.notification') }}">Notification</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.notification') }}">Notification</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -241,8 +245,10 @@
                                 class="pc-mtext">Product</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product') }}">Product List</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.category') }}">Category List</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.product') }}">Product List</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.category') }}">Category List</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
@@ -250,7 +256,8 @@
                                 class="pc-mtext">Request</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request') }}">Request List</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.request') }}">Request List</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -262,11 +269,17 @@
                                 class="pc-mtext">Analytics</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{route('supply_officer.sale.demo')}}">Sales</a></li> 
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.medicine.demo') }}">Medicine</a>
-</li>                       <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Product</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.sale.demo') }}">Sales</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.request.demo') }}">Request</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.medicine.demo') }}">Medicine</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.product.demo') }}">Product</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
@@ -274,8 +287,9 @@
                                 class="pc-mtext">Expiry</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.expiration') }}">Expiring Product</a></li>
-                                           
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.product.expiration') }}">Expiring Product</a></li>
+
                         </ul>
                     </li>
                 </ul>
@@ -295,13 +309,15 @@
                 <div class="col-sm-12 mt-3">
                     <div class="card">
                         <div class="card-header py-3 ">
-                            <h3>Welcome Back! {{ucwords($profile->first_name)}} {{ucwords($profile->last_name)}}</h3>
+                            <h3>Welcome Back! {{ ucwords($profile->first_name) }} {{ ucwords($profile->last_name) }}
+                            </h3>
                         </div>
                         <div class="card-body">
                             <div class="container" style="height: 600px">
                                 <a href="#" class="d-flex justify-content-center mt-5">
-                                    <img src="{{asset('logo.jpg')}}" alt="" class="" style="max-width: 400px; max-height: 230px">
-                                  </a>
+                                    <img src="{{ asset('logo.jpg') }}" alt="" class=""
+                                        style="max-width: 400px; max-height: 230px">
+                                </a>
                             </div>
                         </div>
                     </div>

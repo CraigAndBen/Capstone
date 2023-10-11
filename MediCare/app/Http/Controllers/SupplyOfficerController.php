@@ -990,60 +990,60 @@ class SupplyOfficerController extends Controller
         ));
     }
     public function productDemo()
-{
-    $profile = Auth::user();
-    $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-    $limitNotifications = $notifications->take(5);
-    $count = $notifications->count();
-    $currentDate = date('Y-m-d');
-    $currentDateTime = Carbon::now();
-    $currentDateTime->setTimezone('Asia/Manila');
-    $currentTime = $currentDateTime->format('h:i A');
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-    // Retrieve all products
-    $products = Product::all();
+        // Retrieve all products
+        $products = Product::all();
 
-    // Initialize arrays to store categorized products
-    $fastProducts = [];
-    $slowProducts = [];
-    $nonMovingProducts = [];
+        // Initialize arrays to store categorized products
+        $fastProducts = [];
+        $slowProducts = [];
+        $nonMovingProducts = [];
 
-    // Categorize products based on request and sales and store them in arrays
-    foreach ($products as $product) {
-        $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
-        $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+        // Categorize products based on request and sales and store them in arrays
+        foreach ($products as $product) {
+            $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+            $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
 
-        if ($totalRequestQuantity > 0) {
-            $fastProducts[] = $product->p_name;
-        } elseif ($totalSalesQuantity > 0) {
-            $slowProducts[] = $product->p_name;
-        } else {
-            $nonMovingProducts[] = $product->p_name;
+            if ($totalRequestQuantity > 0) {
+                $fastProducts[] = $product->p_name;
+            } elseif ($totalSalesQuantity > 0) {
+                $slowProducts[] = $product->p_name;
+            } else {
+                $nonMovingProducts[] = $product->p_name;
+            }
         }
+
+        // Create an array with category names and counts
+        $categories = ['Fast', 'Slow', 'Non-Moving'];
+        $counts = [
+            'Fast' => count($fastProducts),
+            'Slow' => count($slowProducts),
+            'Non-Moving' => count($nonMovingProducts),
+        ];
+
+        return view('supply_officer.inventory_demo.productdemo', compact(
+            'profile',
+            'notifications',
+            'limitNotifications',
+            'counts',
+            'currentTime',
+            'currentDate',
+            'categories',
+            'count',
+            'fastProducts',
+            'slowProducts',
+            'nonMovingProducts'
+        ));
     }
-
-    // Create an array with category names and counts
-    $categories = ['Fast', 'Slow', 'Non-Moving'];
-    $counts = [
-        'Fast' => count($fastProducts),
-        'Slow' => count($slowProducts),
-        'Non-Moving' => count($nonMovingProducts),
-    ];
-
-    return view('supply_officer.inventory_demo.productdemo', compact(
-        'profile',
-        'notifications',
-        'limitNotifications',
-        'counts',
-        'currentTime',
-        'currentDate',
-        'categories',
-        'count',
-        'fastProducts',
-        'slowProducts',
-        'nonMovingProducts'
-    ));
-}
 
     
     

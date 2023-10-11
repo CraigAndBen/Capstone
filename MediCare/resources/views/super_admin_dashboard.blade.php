@@ -336,6 +336,62 @@
                                     href="{{ route('superadmin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
                         </ul>
                     </li>
+                    <li class="pc-item pc-caption">
+                        <label>Inventory</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Product</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.product') }}">Product List</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.category') }}">Category List</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Request</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.request') }}">Request List</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-caption">
+                        <label>Analytics Report</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Analytics</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.inventory.demo') }}">Inventory</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.sale.demo') }}">Sales</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.request.demo') }}">Request</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.medicine.demo') }}">Medicine</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.product.demo') }}">Product</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Expiry</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.product.expiration') }}">Expiring Product</a></li>
+
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -319,6 +319,53 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     // Delete User
     Route::post('/superadmin/account/delete', [SuperAdminController::class, 'deleteUser'])->name('superadmin.delete');
 
+    // Inventory
+    Route::get('/superadmin/product', [SuperAdminController::class, 'productList'])->name('superadmin.product');
+    Route::post('/superadmin/product/create', [SuperAdminController::class, 'productStore'])->name('superadmin.product.create');
+    Route::get('/superadmin/product_details/{id}', [SuperAdminController::class, 'productdetail'])->name('superadmin.product.details');
+    Route::post('/superadmin/product/{id}', [SuperAdminController::class, 'Productupdate'])->name('superadmin.product.update');
+    Route::get('/superadmin/product/delete/{id}', [SuperAdminController::class, 'productdelete'])->name('superadmin.product.delete');
+    Route::get('/superadmin/category', [SuperAdminController::class, 'categoryList'])->name('superadmin.category');
+    Route::post('/superadmin/category/create', [SuperAdminController::class, 'categoryStore'])->name('superadmin.category.create');
+    Route::post('/superadmin/category/{id}', [SuperAdminController::class, 'categoryupdate'])->name('superadmin.category.update');
+    Route::get('/superadmin/category{id}', [SuperAdminController::class, 'categorydelete'])->name('superadmin.category.delete');
+
+    //Expiration
+    Route::get('/superadmin/product/expiring_soon', [SuperAdminController::class, 'expirationproduct'])->name('superadmin.product.expiration');
+
+    // Inventory Demo
+    Route::get('/superadmin/inventory_demo/inventorydemo', [SuperAdminController::class, 'inventoryDemo'])->name('superadmin.inventory.demo');
+    Route::get('/superadmin/inventory_demo/inventorydemo_search', [SuperAdminController::class, 'inventorydemoSearch'])->name('superadmin.inventory.demo.search');
+
+    //Request Demo
+    Route::get('/superadmin/inventory_demo/requestdemo', [SuperAdminController::class, 'requestDemo'])->name('superadmin.request.demo');
+    Route::get('/superadmin/inventory_demo/requestdemo_search', [SuperAdminController::class, 'requestdemoSearch'])->name('superadmin.request.demo.search');
+
+    Route::get('/superadmin/inventory_demo/saledemo', [SuperAdminController::class, 'saleDemo'])->name('superadmin.sale.demo');
+    Route::get('/supply_officer/inventory_demo/saledemo_search', [SuperAdminController::class, 'salesdemoearch'])->name('superadmin..demo.search');
+    //Sale Demo
+    Route::get('/superadmin/inventory_demo/saledemo', [SuperAdminController::class, 'saleDemo'])->name('superadmin.sale.demo');
+    Route::get('/superadmin/inventory_demo/saledemo_search', [SuperAdminController::class, 'saledemoSearch'])->name('superadmin.sale.demo.search');
+
+    //Medicine Demo
+    Route::get('/superadmin/inventory_demo/medicinedemo', [SuperAdminController::class, 'medicineDemo'])->name('superadmin.medicine.demo');
+
+
+    //Product Demo
+    Route::get('/superadmin/inventory_demo/productdemo', [SuperAdminController::class, 'productDemo'])->name('superadmin.product.demo');
+    // Request
+    Route::get('/superadmin/request', [SuperAdminController::class, 'requestlist'])->name('superadmin.request');
+
+    // Report
+    Route::post('/superadmin/inventorydemo/report', [SuperAdminController::class, 'inventoryReport'])->name('superadmin.inventory.report');
+    Route::post('/superadmin/saledemo/report', [SuperAdminController::class, 'saleReport'])->name('superadmin.sale.report');
+    Route::post('/superadmin/requestdemo/report', [SuperAdminController::class, 'requestReport'])->name('superadmin.request.report');
+    Route::get('/superadmin/product/report', [SuperAdminController::class, 'productReport'])->name('superadmin.product.report');
+    Route::get('/superadmin/product/list/report', [SuperAdminController::class, 'requestListReport'])->name('superadmin.request.list.report');
+    Route::get('/superadmin/medicines_report/report', [SuperAdminController::class, 'medicineReport'])->name('superadmin.medicines.report');
+    Route::get('/superadmin/products_report/report', [SuperAdminController::class, 'productsReport'])->name('superadmin.products.report');
+    Route::get('/superadmin/expiry/report', [SuperAdminController::class, 'expiryReport'])->name('superadmin.product.expiry.report');
+
     // Super Admin Logout
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
 });
