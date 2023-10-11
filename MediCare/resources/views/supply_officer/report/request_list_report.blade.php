@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: portrait;
         }
 
         .page-break {

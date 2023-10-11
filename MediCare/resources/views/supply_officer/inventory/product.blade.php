@@ -143,6 +143,7 @@
                                                         <option value="Xanax ">Xanax </option>
                                                         <option value="Lipitor (Atorvastatin)">Lipitor
                                                             (Atorvastatin)</option>
+                                                        <option value="Amlorex Amplodipine 10 mg">Amlorex Amplodipine 10 mg</option>
                                                         <option value="3M N95 Respirator Masks">3M N95 Respirator
                                                             Masks</option>
                                                         <option value="Disposable Nitrile Gloves">Disposable Nitrile

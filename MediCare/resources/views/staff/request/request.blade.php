@@ -56,7 +56,11 @@
                                                     <select id="department" name="department"class="form-control dept">
                                                         <option selected disabled>Choose...</option>
                                                         <option value="CSR">CSR</option>
-                                                        <option value="Pharmacy">Pharmacy</option>
+                                                        <option value="ER">ER</option>
+                                                        <option value="OR">OR</option>
+                                                        <option value="Nursing Service (Private)">Nursing Service (Private)</option>
+                                                        <option value="Nursing Service (Ward)">Nursing Service (Ward)</option>
+                                                        <option value="Laboratory">Laboratory</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-md-4">

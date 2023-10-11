@@ -453,6 +453,7 @@ class SupplyOfficerController extends Controller
 
     }
 
+    
     public function requestListReport()
     {
         $currentDate = date('Y-m-d');

@@ -94,7 +94,7 @@
                                                 $counter = 1;
                                             @endphp
                                             @foreach ($requests as $request)
-                                                <tr>
+                                                <tr @if($request->date == now()->format('Y-m-d')) style="background-color: yellow" @endif>
                                                     <td style="text-align: center">{{ $counter++ }}</td>
                                                     <td style="text-align: center">{{ $request->name_requester }}</td>
                                                     <td style="text-align: center">{{ $request->department }}</td>
