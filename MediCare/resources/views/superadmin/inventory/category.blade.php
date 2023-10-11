@@ -15,7 +15,7 @@
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('supeadmin.dashboard') }}">Dashboard</a>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item" aria-current="page">Category List</li>
                             </ul>
@@ -120,7 +120,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Add category</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('supeadmin.category.create') }}">
+                                    <form method="POST" action="{{ route('superadmin.category.create') }}">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-6">
@@ -180,7 +180,7 @@
                                         {{ $category->id }}
                                     </div>
                                     <div class="modal-body">
-                                        <form method="POST" action="{{ route('supeadmin.category.update', $category->id) }}">
+                                        <form method="POST" action="{{ route('superadmin.category.update', $category->id) }}">
                                             @csrf
                                             <div class="row">
                                                 <div class="col-md-6">
