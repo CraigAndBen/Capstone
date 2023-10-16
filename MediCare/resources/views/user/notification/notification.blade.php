@@ -79,7 +79,7 @@
                                                 @foreach ($notifications as $notification)
                                                     <tr class="p-3">
                                                         <td>{{ ucwords($notification->title) }}</td>
-                                                        <td>{{ ucwords(Str::limit($notification->message, 30)) }}</td>
+                                                        <td>{{ Str::limit($notification->message, 30) }}</td>
                                                         @if ($notification->is_read == 0)
                                                             <td>Unread</td>
                                                         @else

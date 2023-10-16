@@ -32,7 +32,7 @@ class UsersController extends Controller
     public function notification(){
         
         $user = Auth::user();
-        $notifications = Notification::where('account_id', $user->id)->orderBy('created_at','desc')->paginate(10);
+        $notifications = Notification::where('account_id', $user->id)->where('type','user')->orderBy('created_at','desc')->paginate(5);
 
         return view('user.notification.notification', compact('notifications'));
 

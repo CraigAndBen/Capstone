@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Appointment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -23,41 +24,43 @@ class AppoitmentMonitor
         // Set the timezone to Asia/Manila
         date_default_timezone_set('Asia/Manila');
 
+        $twelveHoursAgo = Carbon::now('Asia/Manila')->subHours(12);
         $appointments = DB::table('appointments')
             ->where('status', 'pending')
+            ->where('appointment_date', '<', $twelveHoursAgo)
             ->get();
 
         foreach ($appointments as $appointment) {
+            $appoint = Appointment::findOrFail($appointment->id);
 
-            $dateToCombine = $appointment->appointment_date; // Format: YYYY-MM-DD
-            $timeToCombine = $appointment->appointment_time; // Format: H:i A
+            $appoint->status = 'unavailable';
+            $appoint->save();
 
-            // Create Carbon instances for date and time
-            $date = Carbon::parse($dateToCombine, 'Asia/Manila');
-            $time = Carbon::parse($timeToCombine, 'Asia/Manila');
+            $currentTime = Carbon::now()->toTimeString();
+            $currentDate = Carbon::now()->toDateString();
+            $user = User::where('id', $appointment->account_id)->first();
 
-            $combinedDateTime = $date->setTime($time->hour, $time->minute, $time->second);
-            $carbonDateTimeToCheck = Carbon::parse($combinedDateTime, 'Asia/Manila');
+            $message = ' Your appointment that has a type of ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable due to non-confirmation by the doctor within 12 hours.';
 
-            if ($carbonDateTimeToCheck->isPast()) {
+            Notification::create([
+                'account_id' => $appointment->account_id,
+                'title' => 'Appointment Unavailable',
+                'message' => $message,
+                'date' => $currentDate,
+                'time' => $currentTime,
+                'type' => 'user'
+            ]);
 
-                $appoint = Appointment::findOrFail($appointment->id);
+            $message = ucwords($user->first_name) . ' ' . ucwords($user->last_name) . ' appointment that has a type of ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable due to non-confirmation by the doctor within 12 hours.';
 
-                $appoint->status = 'unavailable';
-                $appoint->save();
-
-                $currentTime = Carbon::now()->toTimeString();
-                $currentDate = Carbon::now()->toDateString();
-                $message = ' Your appointment that has a type of ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is unavailable.';
-
-                Notification::create([
-                    'account_id' => $appointment->account_id,
-                    'title' => 'Appointment Unavailable',
-                    'message' => $message,
-                    'date' => $currentDate,
-                    'time' => $currentTime,
-                ]);
-            }
+            Notification::create([
+                'account_id' => $appointment->account_id,
+                'title' => 'Appointment Unavailable',
+                'message' => $message,
+                'date' => $currentDate,
+                'time' => $currentTime,
+                'type' => 'doctor'
+            ]);
         }
 
         return $next($request);

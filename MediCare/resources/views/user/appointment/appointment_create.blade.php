@@ -68,13 +68,13 @@
                                     <div id="calendar" style="max-height: 700px; max-width: 100%"></div>
                                 </div>
 
-
                                 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false"
                                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header bg-primary text-light">
-                                                <h3 class="modal-title" id="staticBackdropLabel">Create Doctor Appointment
+                                                <h3 class="modal-title" id="staticBackdropLabel">Create Doctor
+                                                    Appointment
                                                 </h3>
                                             </div>
                                             <div class="modal-body">
@@ -157,18 +157,17 @@
                                                         <div class="mb-3 col-md-6">
                                                             <select class="form-control  p-3" id="gender"
                                                                 name="gender">
-                                                                <option>Select Gender</option>
+                                                                <option value="">Select Gender</option>
                                                                 <option value="male">Male</option>
                                                                 <option value="female">Female</option>
-                                                                <option value="diagnostic appointment">Others</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <hr>
                                                     <div class="form-floating mb-3">
-                                                        <input type="number" class="form-control"
-                                                            id="floatingInput phone" name="phone"
-                                                            placeholder="Phone" />
+                                                        <input type="text" class="form-control"
+                                                            id="floatingInput phone" name="phone" placeholder="Phone"
+                                                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
                                                         <label for="floatingInput">Phone</label>
                                                     </div>
                                                     <hr>
@@ -184,7 +183,7 @@
                                                         <div class="form-floating mb-3">
                                                             <select class="form-control p-3" id="specialties"
                                                                 name="specialties">
-                                                                <option>Select Specialist</option>
+                                                                <option value="">Select Specialist</option>
                                                                 @foreach ($infos as $info)
                                                                     <option value="{{ $info->specialties }}">
                                                                         {{ $info->specialties }}
@@ -196,13 +195,16 @@
                                                     <hr>
                                                     <div class="row mt-4">
                                                         <div class="form-floating mb-3">
-                                                            <h5>Which procedure do you want to make an appointment for?</h5>
+                                                            <h5>Which procedure do you want to make an appointment for?
+                                                            </h5>
                                                             <select class="form-control  p-3" id="appointment_type"
                                                                 name="appointment_type">
                                                                 <option value="">Select a Type of Appointment
                                                                 </option>
-                                                                <option value="regular check-up">Regular Check-up</option>
-                                                                <option value="Follow-up appointment">Follow-up Appointment
+                                                                <option value="regular check-up">Regular Check-up
+                                                                </option>
+                                                                <option value="Follow-up appointment">Follow-up
+                                                                    Appointment
                                                                 </option>
                                                                 <option value="diagnostic appointment">Diagnostic
                                                                     Appointment
@@ -361,7 +363,7 @@
 
                     var currentDate = new Date();
                     var nextYearDate = new Date(currentDate.getFullYear() + 1, 0,
-                    1); // January 1st of next year
+                        1); // January 1st of next year
                     if (clickedDate.isAfter(nextYearDate)) {
                         return; // Do nothing if it's in the next year
                     }
@@ -417,7 +419,12 @@
                 $('#eventName').text(event.title);
                 $('#eventStartDate').text(moment(event.start).format('LLLL'));
                 $('#eventEndDate').text(moment(event.end).format('LLLL'));
-                $('#status').text(event.extendedProps.status);
+                console.log(event.extendedProps.status)
+                if (event.extendedProps.status == 'Pending') {
+                    $('#status').text('Waiting for confimation.');
+                } else {
+                    $('#status').text(event.extendedProps.status);
+                }
             }
 
             function displayHolidayInfo(event) {

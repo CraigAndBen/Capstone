@@ -61,10 +61,9 @@
                                         <table class="table table-bordered">
                                             <thead class="bg-primary text-light text-center">
                                                 <tr>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Specialties</th>
                                                     <th>Type</th>
+                                                    <th>Specialties</th>
+                                                    <th>Name</th>
                                                     <th>Date</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
@@ -74,13 +73,17 @@
                                             <tbody class="text-center">
                                                 @foreach ($appointments as $appointment)
                                                     <tr class="p-3">
-                                                        <td>{{ ucwords($appointment->first_name) }}</td>
-                                                        <td>{{ ucwords($appointment->last_name) }}</td>
-                                                        <td>{{ ucwords($appointment->specialties) }}</td>
                                                         <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                        <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                        <td>{{ ucwords($appointment->specialties) }}</td>
+                                                        <td>{{ ucwords($appointment->first_name) }} {{ ucwords($appointment->last_name) }}</td>
+                                                        <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}</td>
                                                         <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                                        <td>{{ ucwords($appointment->status) }}</td>
+                                                        @if ($appointment->status == 'pending')
+                                                            <td>Waiting for confirmation</td>
+                                                        @else
+                                                            <td>{{ ucwords($appointment->status) }}</td>
+                                                        @endif
+                                                        
                                                         <td class="text-center">
                                                             <div class="dropdown">
                                                                 <button class="btn btn-primary dropdown-toggle"
@@ -242,10 +245,9 @@
                             </div>
                             <div class="mb-3 col-md-6">
                                 <select class="form-control  p-3" id="gender" name="gender">
-                                    <option>Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="diagnostic appointment">Others</option>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
                                 </select>
                             </div>
                         </div>
@@ -277,7 +279,7 @@
                             <div class="form-floating mb-3">
                                 <h5>Which procedure do you want to make an appointment for?</h5>
                                 <select class="form-control  p-3" id="appointment_type" name="appointment_type">
-                                    <option>Select a Type of Appointment</option>
+                                    <option value="">Select a Type of Appointment</option>
                                     <option value="regular check-up">Regular Check-up</option>
                                     <option value="Follow-up appointment">Follow-up Appointment</option>
                                     <option value="diagnostic appointment">Diagnostic Appointment</option>
@@ -407,10 +409,9 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             <select class="form-control  p-3" id="gender" name="gender" disabled>
-                                <option>Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="diagnostic appointment">Others</option>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
                             </select>
                         </div>
                     </div>
@@ -442,7 +443,7 @@
                         <div class="form-floating mb-3">
                             <h5>Which procedure do you want to make an appointment for?</h5>
                             <select class="form-control  p-3" id="appointment_type" name="appointment_type" disabled>
-                                <option>Select a Type of Appointment</option>
+                                <option value="">Select a Type of Appointment</option>
                                 <option value="regular check-up">Regular Check-up</option>
                                 <option value="Follow-up appointment">Follow-up Appointment</option>
                                 <option value="diagnostic appointment">Diagnostic Appointment</option>

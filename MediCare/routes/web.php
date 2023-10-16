@@ -40,6 +40,7 @@ Route::get('/user/appointment/confirmed', [AppointmentController::class, 'confir
 
 Route::get('/user/appointment/done', [AppointmentController::class, 'doneAppointmentList'])->name('user.done.appointment');
 Route::get('/user/appointment/cancelled', [AppointmentController::class, 'cancelledAppointmentList'])->name('user.cancelled.appointment');
+Route::get('/user/appointment/unavailable', [AppointmentController::class, 'unavailableAppointmentList'])->name('user.unavailable.appointment');
 Route::post('/user/create/appointment', [AppointmentController::class, 'createAppointment'])->name('user.create.appointment');
 Route::post('/user/update/appointment', [AppointmentController::class, 'updateAppointment'])->name('user.update.appointment');
 Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAppointment'])->name('user.cancel.appointment');

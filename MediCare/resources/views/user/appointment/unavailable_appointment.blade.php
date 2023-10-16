@@ -6,10 +6,10 @@
         <div class="container" style="margin-top: 85px">
 
             <div class="d-flex justify-content-between align-items-center">
-                <h2><b>Confirmed Appointment</b></h2>
+                <h2><b>Unavailable Appointment</b></h2>
                 <ol>
                     <li><a href="user/dashboard">Home</a></li>
-                    <li>Confirmed Appointment</li>
+                    <li>Unavailable Appointment</li>
                 </ol>
             </div>
 
@@ -23,7 +23,7 @@
                     <div class="auth-form">
                         <div class="card my-3 shadow">
                             <div class="row m-4">
-                                <h2>Confirmed Appointment List</h2>
+                                <h2>Unavailable Appointment List</h2>
                             </div>
                             <hr>
                             <div class="card-body">
@@ -55,7 +55,7 @@
 
                                     @if ($appointments->isEmpty())
                                         <div class="alert alert-info">
-                                            No Confirmed Appointment Yet.
+                                            No Done Appointment Yet.
                                         </div>
                                     @else
                                         <table class="table table-bordered">
@@ -110,28 +110,11 @@
                                                                         data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                         data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                         data-reason="{{ json_encode($appointment->reason) }}">View</a>
-
-                                                                    @if ($appointment->status != 'cancelled')
-                                                                        <form
-                                                                            action="{{ route('user.cancel.appointment') }}"
-                                                                            method="POST">
-                                                                            @csrf
-                                                                            <input type="hidden" id="appointment_id"
-                                                                                name="appointment_id"
-                                                                                value="{{ $appointment->id }}">
-                                                                            <input type="hidden" id="status"
-                                                                                name="status"
-                                                                                value="{{ $appointment->status }}">
-                                                                            <button type="submit"
-                                                                                class="dropdown-item btn btn-primary">Cancel</button>
-                                                                        </form>
-                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
-
                                             </tbody>
                                         </table>
                                         <div class="d-flex justify-content-center my-3">
@@ -277,7 +260,7 @@
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 <select class="form-control  p-3" id="appointment_time" name="appointment_time" disabled>
-                                    <option>Select Time of Appointment</option>
+                                    <option value="">Select Time of Appointment</option>
                                     @foreach ($timeList as $time)
                                         <option value="{{ $time }}">{{ $time }}</option>
                                     @endforeach

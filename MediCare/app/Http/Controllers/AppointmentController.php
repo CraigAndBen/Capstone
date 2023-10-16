@@ -10,6 +10,7 @@ use App\Models\Doctor;
 use App\Models\Appointment;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
@@ -17,6 +18,7 @@ class AppointmentController extends Controller
     public function showAppointment()
     {
         $user = Auth::user();
+        // Retrieve all the appointments and group them by appointment time and specialties
 
         $timeList = [
             '8:30 AM',
@@ -214,10 +216,13 @@ class AppointmentController extends Controller
             }
 
             $time = implode(', ', $timeList);
+            $rawDate = $request->input('appointment_date');
+            $dateTime = new DateTime($rawDate);
+            $readableDate = $dateTime->format('F j, Y');
 
             return back()->with([
                 'data' => $timeList,
-                'info' => 'The current time are unavailable, please select from this date: ' . $request->input('appointment_date') . ' available time: ' . $time . '.',
+                'info' => 'The current time is unavailable. Please select a date from ' . $readableDate . ' and choose from the available times: ' . $time . '.',
             ]);
         }
 
@@ -247,19 +252,36 @@ class AppointmentController extends Controller
         $appointment = Appointment::latest()->first();
         $currentDate = Carbon::now()->toTimeString();
         $currentTime = Carbon::now()->toDateString();
-        $message = ' You have a new appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . '. ';
+        $rawDate = $request->input('appointment_date');
+        $dateTime = new DateTime($rawDate);
+        $readableDate = $dateTime->format('F j, Y');
+
+        $message = 'You successfully created new appointment with ' . $appointment->appointment_type . ' scheduled for ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
 
         Notification::create([
             'account_id' => $appointment->account_id,
-            'title' => 'appointment confirmation',
+            'title' => 'Appointment Created',
             'message' => $message,
             'date' => $currentDate,
             'time' => $currentTime,
+            'type' => 'user',
             'specialties' => $request->input('specialties'),
         ]);
 
-        return back()->with('success', 'Appointment created successfully that dated: ' . $request->input('appointment_date') . ' and timed: ' . $request->input('appointment_time'));
+        $message = 'You have a new appointment with ' . $appointment->appointment_type . ' scheduled for ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
 
+        Notification::create([
+            'title' => 'New Appointment',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
+            'specialties' => $request->input('specialties'),
+        ]);
+
+
+
+        return back()->with('success', 'Appointment created successfully for ' . $readableDate . ' at ' . $request->input('appointment_time'));
     }
 
     public function appointment()
@@ -363,6 +385,31 @@ class AppointmentController extends Controller
 
         return view('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList'));
     }
+
+    public function unavailableAppointmentList()
+    {
+
+        $timeList = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
+        ];
+
+        $user = Auth::user();
+        $infos = Doctor::all();
+        $appointments = Appointment::where('account_id', $user->id)->where('status', 'unavailable')->paginate(5);
+
+        return view('user.appointment.unavailable_appointment', compact('appointments', 'infos', 'timeList'));
+    }
     public function updateAppointment(Request $request)
     {
 
@@ -442,14 +489,44 @@ class AppointmentController extends Controller
     {
 
         $appointment = Appointment::findOrFail($request->input('appointment_id'));
+        $user = User::where('id', $appointment->account_id)->first();
 
-        if ($request->input('status') === 'pending') {
+        $appointment->status = 'cancelled';
+        $appointment->save();
 
-            $appointment->status = 'cancelled';
-            $appointment->save();
+        $currentDate = Carbon::now()->toTimeString();
+        $currentTime = Carbon::now()->toDateString();
+        $rawDate = $request->input('appointment_date');
+        $dateTime = new DateTime($rawDate);
+        $readableDate = $dateTime->format('F j, Y');
 
-            return redirect()->route('user.appointment')->with('info', 'Appoinment cancelled successfully.');
-        }
+        $message = 'You have successfully canceled your appointment for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'Appointment Cancelled',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'user',
+            'specialties' => $request->input('specialties'),
+        ]);
+
+        $message = ucwords($user->first_name) . ' ' . ucwords($user->last_name) . ' has canceled their appointment for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'Appointment Cancelled',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
+            'specialties' => $request->input('specialties'),
+        ]);
+
+        return redirect()->route('user.appointment')->with('info', 'Appoinment cancelled successfully.');
+
     }
 
     public function deleteAppointment(Request $request)

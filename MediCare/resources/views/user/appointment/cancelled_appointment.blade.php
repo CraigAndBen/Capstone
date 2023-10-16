@@ -61,10 +61,9 @@
                                         <table class="table table-bordered">
                                             <thead class="bg-primary text-light text-center">
                                                 <tr>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>Specialties</th>
                                                     <th>Type</th>
+                                                    <th>Specialties</th>
+                                                    <th>Name</th>
                                                     <th>Date</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
@@ -74,13 +73,18 @@
                                             <tbody class="text-center">
                                                 @foreach ($appointments as $appointment)
                                                     <tr class="p-3">
-                                                        <td>{{ ucwords($appointment->first_name) }}</td>
-                                                        <td>{{ ucwords($appointment->last_name) }}</td>
-                                                        <td>{{ ucwords($appointment->specialties) }}</td>
                                                         <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                        <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                        <td>{{ ucwords($appointment->specialties) }}</td>
+                                                        <td>{{ ucwords($appointment->first_name) }}
+                                                            {{ ucwords($appointment->last_name) }}</td>
+                                                        <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}
+                                                        </td>
                                                         <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                                        <td>{{ ucwords($appointment->status) }}</td>
+                                                        @if ($appointment->status == 'pending')
+                                                            <td>Waiting for confirmation</td>
+                                                        @else
+                                                            <td>{{ ucwords($appointment->status) }}</td>
+                                                        @endif
                                                         <td class="text-center">
                                                             <div class="dropdown">
                                                                 <button class="btn btn-primary dropdown-toggle"
@@ -106,12 +110,14 @@
                                                                         data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                         data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                         data-reason="{{ json_encode($appointment->reason) }}">View</a>
-                                                                        <form action="{{route('user.appointment.delete')}}" method="POST">
-                                                                            @csrf
-                                                                            <input type="hidden" name="id" value="{{$appointment->id}}">
-                                                                            <button class="dropdown-item btn btn-primary" type="submit"
-                                                                            >Delete</button>
-                                                                        </form>
+                                                                    <form action="{{ route('user.appointment.delete') }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        <input type="hidden" name="id"
+                                                                            value="{{ $appointment->id }}">
+                                                                        <button class="dropdown-item btn btn-primary"
+                                                                            type="submit">Delete</button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -121,7 +127,7 @@
                                             </tbody>
                                         </table>
                                         <div class="d-flex justify-content-center my-3">
-                                            {{ $apppointments->links('pagination::bootstrap-4') }}
+                                            {{ $appointments->links('pagination::bootstrap-4') }}
                                         </div>
                                     @endif
                                 </div>
@@ -208,10 +214,9 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             <select class="form-control  p-3" id="gender" name="gender" disabled>
-                                <option>Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="diagnostic appointment">Others</option>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
                             </select>
                         </div>
                     </div>

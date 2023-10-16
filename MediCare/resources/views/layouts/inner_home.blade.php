@@ -81,6 +81,7 @@
               <li><a href="{{route('user.confirmed.appointment')}}">Confirmed Appointment</a></li>
               <li><a href="{{route('user.done.appointment')}}">Done Appointment</a></li>
               <li><a href="{{route('user.cancelled.appointment')}}">Cancelled Appointment</a></li>
+              <li><a href="{{route('user.unavailable.appointment')}}">Unavailable Appointment</a></li>
             </li>
             </ul>
           </li>
