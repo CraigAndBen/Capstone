@@ -211,7 +211,7 @@
                                     <h2 class="modal-title text-light" id="myModalLabel">Adding Outpatient</h2>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="{{ route('admin.patient.store') }}">
+                                    <form method="POST" action="{{ route('admin.outpatient.store') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-4">

@@ -52,7 +52,8 @@ class AppointmentController extends Controller
         return view('user.appointment.appointment_create', compact('users', 'infos', 'timeList'))->with('events', json_encode($events));
     }
 
-    public function appointmentEvents(){
+    public function appointmentEvents()
+    {
 
         $user = Auth::user();
         $appointments = Appointment::where('account_id', $user->id)->get(); // Replace with your own query to fetch the event data
@@ -61,25 +62,107 @@ class AppointmentController extends Controller
         foreach ($appointments as $appointment) {
 
             $appointmentDateTime = DateTime::createFromFormat('Y-m-d h:i A', $appointment->appointment_date . ' ' . $appointment->appointment_time);
-    
+
             // Calculate the end time by adding a fixed duration (e.g., 1 hour)
             $endDateTime = clone $appointmentDateTime;
             $endDateTime->modify('+1 hour'); // Add exactly 1 hour
-            
+
             $events[] = [
-                'title' => ucwords($appointment->appointment_type), // Replace with the field containing the event title
-                'start' => $appointmentDateTime->format('Y-m-d H:i:s'),  // Format the start date and time
-                'end' => $endDateTime->format('Y-m-d H:i:s'),      // Format the end date and time
-                'status' => ucwords($appointment->status),      // Format the end date and time
+                'title' => ucwords($appointment->appointment_type),
+                // Replace with the field containing the event title
+                'start' => $appointmentDateTime->format('Y-m-d H:i:s'),
+                // Format the start date and time
+                'end' => $endDateTime->format('Y-m-d H:i:s'),
+                // Format the end date and time
+                'status' => ucwords($appointment->status),
+                // Format the end date and time
+                'type' => 'event',
             ];
         }
 
         return response()->json($events);
     }
 
+    public function holidayEvents()
+    {
+        $currentYear = date('Y'); // Get the current year
+        $staticHolidays = [
+            // Static holidays for the current year with date information
+            [
+                'title' => 'New Year',
+                'start' => $currentYear . '-01-01',
+                'end' => $currentYear . '-01-01',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Independence Day',
+                'start' => $currentYear . '-07-04',
+                'end' => $currentYear . '-07-04',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Christmas Day',
+                'start' => $currentYear . '-12-25',
+                'end' => $currentYear . '-12-25',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'All Saints Day',
+                'start' => $currentYear . '-11-01',
+                'end' => $currentYear . '-11-01',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Bonifacio Day',
+                'start' => $currentYear . '-11-30',
+                'end' => $currentYear . '-11-30',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Rizal Day',
+                'start' => $currentYear . '-12-30',
+                'end' => $currentYear . '-12-30',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Ninoy Aquino Day',
+                'start' => $currentYear . '-8-21',
+                'end' => $currentYear . '-8-21',
+                'type' => 'holiday',
+            ],
+
+        ];
+
+        // Initialize an array to store all holidays
+        $allHolidays = [];
+
+        // Define the number of years to generate holidays for (e.g., 1 year before, current year, and 1 year after)
+        $yearsToGenerate = 3; // You can adjust this as needed
+
+        // Loop through the past year, current year, and next year
+        for ($i = -$yearsToGenerate + 1; $i <= $yearsToGenerate; $i++) {
+            $year = $currentYear + $i;
+
+            // Loop through the static holidays and add them to the allHolidays array
+            foreach ($staticHolidays as $staticHoliday) {
+                // Clone the static holiday array
+                $holiday = $staticHoliday;
+
+                // Update the 'start' and 'end' dates with the current year
+                $holiday['start'] = $year . substr($holiday['start'], 4); // Replace the year portion
+                $holiday['end'] = $year . substr($holiday['end'], 4); // Replace the year portion
+
+                // Append the holiday to the allHolidays array
+                $allHolidays[] = $holiday;
+            }
+        }
+
+        return response()->json($allHolidays);
+
+    }
+
     public function createAppointment(Request $request)
     {
-
         $timeList = [
             '8:30 AM',
             '9:00 AM',
@@ -114,111 +197,68 @@ class AppointmentController extends Controller
             'check' => 'accepted',
         ]);
 
-        $appointments = Appointment::where('specialties', $request->input('specialties'))->whereNotIn('status', ['unavailable'])->get();
-        $count = $appointments->count();
+        $existingAppointments = Appointment::where('specialties', $request->input('specialties'))
+            ->where('appointment_date', $request->input('appointment_date'))
+            ->where('appointment_time', $request->input('appointment_time'))
+            ->whereNotIn('status', ['unavailable'])
+            ->get();
 
-        if ($count != 0) {
-            foreach ($appointments as $appointment) {
-                if ($appointment->appointment_date != $request->input('appointment_date') || $appointment->appointment_time != $request->input('appointment_time')) {
+        if ($existingAppointments->count() > 0) {
 
-                    $user = Auth::user();
+            $appoint_time = $existingAppointments->pluck('appointment_time');
 
-                    Appointment::create([
-                        'first_name' => $request->input('first_name'),
-                        'middle_name' => $request->input('middle_name'),
-                        'last_name' => $request->input('last_name'),
-                        'account_id' => $user->id,
-                        'street' => $request->input('street'),
-                        'gender' => $request->input('gender'),
-                        'brgy' => $request->input('brgy'),
-                        'city' => $request->input('city'),
-                        'province' => $request->input('province'),
-                        'specialties' => $request->input('specialties'),
-                        'birthdate' => $request->input('birthdate'),
-                        'email' => $request->input('email'),
-                        'phone' => $request->input('phone'),
-                        'appointment_type' => $request->input('appointment_type'),
-                        'appointment_date' => $request->input('appointment_date'),
-                        'appointment_time' => $request->input('appointment_time'),
-                        'reason' => $request->input('reason'),
-                        'status' => 'pending',
-                    ]);
-
-                    $appointment = Appointment::latest()->first();
-                    $currentDate = Carbon::now()->toTimeString();
-                    $currentTime = Carbon::now()->toDateString();
-                    $message = ' You have a new appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . '. ';
-
-                    Notification::create([
-                        'account_id' => $appointment->account_id,
-                        'title' => 'appointment confirmation',
-                        'message' => $message,
-                        'date' => $currentDate,
-                        'time' => $currentTime,
-                    ]);
-
-                    return back()->with('success', 'Appointment created successfully that dated: ' . $request->input('appointment_date') . ' and timed: ' . $request->input('appointment_time'));
-                }
-
-                $appoint = Appointment::where('appointment_date', $appointment->appointment_date)->get();
-
-                $appoint_time = $appoint->pluck('appointment_time');
-
-                foreach ($appoint_time as $time) {
-                    $timeList = array_filter($timeList, function ($value) use ($time) {
-                        return $value !== $time;
-                    });
-                }
-
-                $time = implode(', ', $timeList);
-
-                return back()->with([
-                    'data' => $timeList,
-                    'info' => 'The current time are unavailable, please select from this date: ' . $request->input('appointment_date') . ' available time: ' . $time . '.',
-                ]);
+            foreach ($appoint_time as $time) {
+                $timeList = array_filter($timeList, function ($value) use ($time) {
+                    return $value !== $time;
+                });
             }
-        } else {
-            $user = Auth::user();
 
-            Appointment::create([
-                'first_name' => $request->input('first_name'),
-                'middle_name' => $request->input('middle_name'),
-                'last_name' => $request->input('last_name'),
-                'account_id' => $user->id,
-                'street' => $request->input('street'),
-                'gender' => $request->input('gender'),
-                'brgy' => $request->input('brgy'),
-                'city' => $request->input('city'),
-                'province' => $request->input('province'),
-                'specialties' => $request->input('specialties'),
-                'birthdate' => $request->input('birthdate'),
-                'email' => $request->input('email'),
-                'phone' => $request->input('phone'),
-                'appointment_type' => $request->input('appointment_type'),
-                'appointment_date' => $request->input('appointment_date'),
-                'appointment_time' => $request->input('appointment_time'),
-                'reason' => $request->input('reason'),
-                'status' => 'pending',
+            $time = implode(', ', $timeList);
+
+            return back()->with([
+                'data' => $timeList,
+                'info' => 'The current time are unavailable, please select from this date: ' . $request->input('appointment_date') . ' available time: ' . $time . '.',
             ]);
-
-            $appointment = Appointment::latest()->first();
-            $currentDate = Carbon::now()->toTimeString();
-            $currentTime = Carbon::now()->toDateString();
-            $message = ' You have a new appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . '. ';
-
-            Notification::create([
-                'account_id' => $appointment->account_id,
-                'title' => 'Appointment Created',
-                'message' => $message,
-                'date' => $currentDate,
-                'time' => $currentTime,
-                'specialties' => $appointment->specialties,
-            ]);
-
-            return back()->with('success', 'Appointment created successfully that dated: ' . $request->input('appointment_date') . 'and timed:' . $request->input('appointment_time'));
         }
 
+        $user = Auth::user();
 
+        Appointment::create([
+            'first_name' => $request->input('first_name'),
+            'middle_name' => $request->input('middle_name'),
+            'last_name' => $request->input('last_name'),
+            'account_id' => $user->id,
+            'street' => $request->input('street'),
+            'gender' => $request->input('gender'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+            'specialties' => $request->input('specialties'),
+            'birthdate' => $request->input('birthdate'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'appointment_type' => $request->input('appointment_type'),
+            'appointment_date' => $request->input('appointment_date'),
+            'appointment_time' => $request->input('appointment_time'),
+            'reason' => $request->input('reason'),
+            'status' => 'pending',
+        ]);
+
+        $appointment = Appointment::latest()->first();
+        $currentDate = Carbon::now()->toTimeString();
+        $currentTime = Carbon::now()->toDateString();
+        $message = ' You have a new appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . '. ';
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'appointment confirmation',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'specialties' => $request->input('specialties'),
+        ]);
+
+        return back()->with('success', 'Appointment created successfully that dated: ' . $request->input('appointment_date') . ' and timed: ' . $request->input('appointment_time'));
 
     }
 

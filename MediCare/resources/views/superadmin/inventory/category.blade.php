@@ -95,7 +95,7 @@
                                                         <a type="icon" class="icon-trigger" data-toggle="modal"
                                                             data-target="#updateCategory{{ $category->id }}" href="">
                                                             <i class="bi bi-pencil-fill"></i></a>
-                                                        <a href="{{ url('/supply_officer/category' . $category->id) }}"><i
+                                                        <a href="{{ url('/superadmin/category' . $category->id) }}"><i
                                                                 class="bi bi-trash-fill"></i></a>
                                                     </td>
                                                 </tr>

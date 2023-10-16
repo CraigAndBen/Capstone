@@ -3883,7 +3883,7 @@ class SuperAdminController extends Controller
         }
 
         return view(
-            'supply_officer.inventory_demo.inventorydemo_search',
+            'superadmin.inventory_demo.inventorydemo_search',
             compact(
                 'profile',
                 'notifications',
@@ -3947,7 +3947,7 @@ class SuperAdminController extends Controller
         }
 
         return view(
-            'supply_officer.report.inventory_report',
+            'superadmin.report.inventory_report',
             compact(
                 'currentTime',
                 'currentDate',

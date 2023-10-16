@@ -158,8 +158,8 @@
                                                             <select class="form-control  p-3" id="gender"
                                                                 name="gender">
                                                                 <option>Select Gender</option>
-                                                                <option value="Male">Male</option>
-                                                                <option value="Female">Female</option>
+                                                                <option value="male">Male</option>
+                                                                <option value="female">Female</option>
                                                                 <option value="diagnostic appointment">Others</option>
                                                             </select>
                                                         </div>
@@ -282,6 +282,28 @@
                                     </div>
                                 </div>
 
+                                <div class="modal fade" id="holidayModal" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                                        <div class="modal-content">
+                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Holiday
+                                                </h3>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <h4 id="holidayName" class="pb-3"></h4>
+                                                <p><strong>Date:</strong> <span id="date"></span>
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -298,10 +320,32 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            var holidayDates = []; // Initialize an empty array
+
+            $.ajax({
+                url: '/user/appointment/holiday',
+                method: 'GET',
+                success: function(data) {
+                    holidayDates = data.map(function(event) {
+                        return event.start;
+                    });
+                },
+                error: function() {
+                    console.log('Failed to fetch holiday data from the server.');
+                }
+            });
+
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: '/user/appointment/event',
+                eventSources: [{
+                        url: '/user/appointment/event', // Your existing event source
+                    },
+                    {
+                        url: '/user/appointment/holiday', // New static holiday event source
+                    },
+                ],
+
                 dateClick: function(info) {
                     var clickedDate = moment(info.date);
 
@@ -315,18 +359,39 @@
                         return; // Do nothing if it's a past date
                     }
 
+                    var currentDate = new Date();
+                    var nextYearDate = new Date(currentDate.getFullYear() + 1, 0,
+                    1); // January 1st of next year
+                    if (clickedDate.isAfter(nextYearDate)) {
+                        return; // Do nothing if it's in the next year
+                    }
+
+                    var clickedDateString = clickedDate.format("YYYY-MM-DD");
+
+                    if (holidayDates.includes(clickedDateString)) {
+                        return; // Do nothing if it's a holiday
+                    }
+
                     // Open a modal for event creation and set the date
                     openEventModal(info.dateStr);
                 },
                 eventClick: function(info) {
-                    // Display event details in a modal
-                    displayEventDetails(info.event);
+                    if (info.event.extendedProps.type === 'holiday') {
+                        // This is a holiday event, you can perform specific actions
+                        // For example, show holiday-related information
+
+                        displayHolidayDetails(info.event);
+                    } else {
+                        // This is a regular event, display event details in a modal
+                        displayEventDetails(info.event);
+                    }
                 },
                 eventRender: function(info) {
                     // Customize the appearance of events (e.g., add custom CSS classes)
                     info.el.classList.add('custom-event');
                 }
             });
+
             calendar.render();
 
             function openEventModal(date) {
@@ -341,12 +406,24 @@
                 displayEventInfo(event);
             }
 
+            function displayHolidayDetails(event) {
+                // Example: Display event details in a modal
+                $('#holidayModal').modal('show');
+                displayHolidayInfo(event);
+            }
+
             function displayEventInfo(event) {
                 // Example: Populate and display event details
                 $('#eventName').text(event.title);
                 $('#eventStartDate').text(moment(event.start).format('LLLL'));
                 $('#eventEndDate').text(moment(event.end).format('LLLL'));
                 $('#status').text(event.extendedProps.status);
+            }
+
+            function displayHolidayInfo(event) {
+                // Example: Populate and display event details
+                $('#holidayName').text(event.title);
+                $('#date').text(moment(event.start).format('LLLL'));
             }
         });
     </script>
