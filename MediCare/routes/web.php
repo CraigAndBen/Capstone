@@ -109,7 +109,11 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::post('/doctor/confirmed/appointment/search', [DoctorController::class, 'confirmedAppointmentSearch'])->name('doctor.confimed.appointment.search');
     Route::post('/doctor/done/appointment/search', [DoctorController::class, 'doneAppointmentSearch'])->name('doctor.done.appointment.search');
     Route::get('/doctor/appointment/calendar', [DoctorController::class, 'appointmentCalendar'])->name('doctor.appointment.calendar');
-    Route::get('/doctor/appointment/calendar/events', [DoctorController::class, 'appointmentEvents'])->name('doctor.appointment.calendar.events');
+    Route::get('/doctor/appointment/calendar/event', [DoctorController::class, 'appointmentEvents'])->name('doctor.appointment.calendar.events');
+    Route::get('/doctor/appointment/calendar/holiday', [DoctorController::class, 'holidayEvents'])->name('doctor.appointment.holiday');
+    Route::get('/doctor/appointment/calendar/availability/dates', [DoctorController::class, 'availabilityDates'])->name('doctor.appointment.availability.date');
+    Route::post('/doctor/appointment/calendar/availability', [DoctorController::class, 'doctorAvailability'])->name('doctor.appointment.availability');
+    Route::post('/doctor/appointment/calendar/update/availability', [DoctorController::class, 'updateDoctorAvailability'])->name('doctor.appointment.update.availability');
     Route::post('/doctor/appointment/calendar/confirm', [DoctorController::class, 'calendarConfirmedAppointment'])->name('doctor.appointment.calendar.confirm');
     Route::get('/doctor/appointment/report', [DoctorController::class, 'appointmentReport'])->name('doctor.appointment.report');
 
@@ -479,7 +483,7 @@ Route::middleware(['auth', 'role:pharmacist'])->group(function () {
 
     //Pharmacist
     Route::get('/pharmacist/product', [PharmacistController::class, 'product'])->name('pharmacist.product');
-    
+
     //Medicine Inventory
     Route::get('/pharmacist/product/inventory_medicine', [PharmacistController::class, 'medicine'])->name('pharmacist.inventory');
     Route::post('/pharmacist/product/createMedicine', [PharmacistController::class, 'medicineStore'])->name('pharmacist.medicine.create');

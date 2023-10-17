@@ -10,6 +10,7 @@ use App\Models\Patient;
 use Illuminate\View\View;
 use App\Models\Appointment;
 use App\Models\Notification;
+use App\Models\Doctor_availabilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -729,6 +730,111 @@ class DoctorController extends Controller
         return response()->json($events);
     }
 
+    public function holidayEvents()
+    {
+        $currentYear = date('Y'); // Get the current year
+        $staticHolidays = [
+            // Static holidays for the current year with date information
+            [
+                'title' => 'New Year',
+                'start' => $currentYear . '-01-01',
+                'end' => $currentYear . '-01-01',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Independence Day',
+                'start' => $currentYear . '-07-04',
+                'end' => $currentYear . '-07-04',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Christmas Day',
+                'start' => $currentYear . '-12-25',
+                'end' => $currentYear . '-12-25',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'All Saints Day',
+                'start' => $currentYear . '-11-01',
+                'end' => $currentYear . '-11-01',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Bonifacio Day',
+                'start' => $currentYear . '-11-30',
+                'end' => $currentYear . '-11-30',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Rizal Day',
+                'start' => $currentYear . '-12-30',
+                'end' => $currentYear . '-12-30',
+                'type' => 'holiday',
+            ],
+            [
+                'title' => 'Ninoy Aquino Day',
+                'start' => $currentYear . '-8-21',
+                'end' => $currentYear . '-8-21',
+                'type' => 'holiday',
+            ],
+
+        ];
+
+        // Initialize an array to store all holidays
+        $allHolidays = [];
+
+        // Define the number of years to generate holidays for (e.g., 1 year before, current year, and 1 year after)
+        $yearsToGenerate = 3; // You can adjust this as needed
+
+        // Loop through the past year, current year, and next year
+        for ($i = -$yearsToGenerate + 1; $i <= $yearsToGenerate; $i++) {
+            $year = $currentYear + $i;
+
+            // Loop through the static holidays and add them to the allHolidays array
+            foreach ($staticHolidays as $staticHoliday) {
+                // Clone the static holiday array
+                $holiday = $staticHoliday;
+
+                // Update the 'start' and 'end' dates with the current year
+                $holiday['start'] = $year . substr($holiday['start'], 4); // Replace the year portion
+                $holiday['end'] = $year . substr($holiday['end'], 4); // Replace the year portion
+
+                // Append the holiday to the allHolidays array
+                $allHolidays[] = $holiday;
+            }
+        }
+
+        return response()->json($allHolidays);
+
+    }
+
+    public function availabilityDates()
+    {
+        $user = Auth::user();
+        $availabilities = Doctor_availabilities::where('doctor_id', $user->id)
+            ->get(); // Replace with your own query to fetch the event data
+
+        $events = [];
+
+        foreach ($availabilities as $available) 
+        {
+            $events[] = [
+                'availability_id' => $available->id,
+                'title' => ucwords($available->type),
+                // Replace with the field containing the event title
+                'start' => $available->date,
+                // Format the start date and time
+                'end' => $available->date,
+                'availability' => $available->type,
+                'reason' => $available->reason,
+                // Format the end date and time
+                'type' => 'availability'
+            ];
+        }
+
+        return response()->json($events);
+    }
+
     public function calendarConfirmedAppointment(Request $request)
     {
         $profile = auth()->user();
@@ -753,6 +859,79 @@ class DoctorController extends Controller
 
         return redirect()->route('doctor.appointment.calendar')->with('success', 'Appointment Confirmed successfully.');
     }
+
+    public function doctorAvailability(Request $request)
+    {
+        $request->validate([
+            'reason' => 'required|string|max:255',
+            'availabilityDate' => 'required|date',
+            'availability' => 'required|string|max:255',
+        ]);
+
+        $profile = auth()->user();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+        $availabilityDate = $request->availabilityDate;
+        $readableDate = date('F j, Y', strtotime($availabilityDate));
+
+        if ($request->availability == 'available') {
+
+            return redirect()->route('doctor.appointment.calendar')->with('info', "Your availability is doesn't change. ");
+
+        } else {
+
+            Doctor_availabilities::create([
+                'doctor_id' => $doctor->account_id,
+                'date' => $request->availabilityDate,
+                'reason' => $request->reason,
+                'type' => $request->availability,
+            ]);
+
+            return redirect()->route('doctor.appointment.calendar')->with('success', 'Your availability is now set to ' . $request->availability . ' on ' . $readableDate);
+        }
+    }
+
+    public function updateDoctorAvailability(Request $request)
+    {
+        $request->validate([
+            'reason' => 'required|string|max:255',
+            'availability' => 'required|string|max:255',
+        ]);
+
+        $profile = auth()->user();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+        $availability = Doctor_availabilities::where('doctor_id', $profile->id)->first();
+        $availabilityDate = $availability->date;
+        $readableDate = date('F j, Y', strtotime($availabilityDate));
+
+        $availabilitytUpdatedData = [
+            'type' => $request->input('availability'),
+            'reason' => $request->input('reason'),
+        ];
+
+        $availabilityChange = $this->hasChanges($availability, $availabilitytUpdatedData);
+
+        if ($availabilityChange == false) {
+
+            return redirect()->route('doctor.appointment.calendar')->with('info', "Your availability hasn't changed.");
+
+        } else { 
+
+            $availability->type = $request->input('availability');
+            $availability->reason = $request->input('reason');
+            $availability->save();
+
+  
+            if($availability->type == 'available'){
+
+                $availability = Doctor_availabilities::where('id', $availability->id)->first();
+                $availability->delete();
+
+            }
+
+            return redirect()->route('doctor.appointment.calendar')->with('success', 'Your availability is now set to ' . $request->availability . ' on ' . $readableDate);
+        }
+    }
+
     public function patientList()
     {
         $profile = auth()->user();
@@ -967,11 +1146,11 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties',$info->specialties)->get(); // Split the string into an array using a delimiter (e.g., comma)
+        $notifications = Notification::where('specialties', $info->specialties)->get(); // Split the string into an array using a delimiter (e.g., comma)
 
-        if($notifications->isEmpty()){
+        if ($notifications->isEmpty()) {
             return redirect()->back()->with('info', 'No notification to delete.');
-            
+
         } else {
 
             foreach ($notifications as $notification) {
@@ -992,7 +1171,7 @@ class DoctorController extends Controller
 
             if ($info->{$key} != $value) {
 
-                return $value;
+                return true;
             }
         }
 

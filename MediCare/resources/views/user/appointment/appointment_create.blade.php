@@ -165,10 +165,10 @@
                                                     </div>
                                                     <hr>
                                                     <div class="form-floating mb-3">
-                                                        <input type="text" class="form-control"
-                                                            id="floatingInput phone" name="phone" placeholder="Phone"
-                                                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
-                                                        <label for="floatingInput">Phone</label>
+                                                        <input type="text" class="form-control" id="phoneInput"
+                                                            name="phone" placeholder="Phone"
+                                                            oninput="formatPhoneNumber(this);" />
+                                                        <label for="phoneInput">Phone</label>
                                                     </div>
                                                     <hr>
                                                     <div class="form-floating mb-3">
@@ -240,11 +240,11 @@
                                                     <div class="d-flex mt-1 justify-content-between">
                                                         <div class="form-check">
                                                             <input class="form-check-input input-primary" type="checkbox"
-                                                                id="check" name="check" />
+                                                                id="check" name="check" checked />
                                                             <label class="form-check-label text-muted"
-                                                                for="customCheckc1">I
-                                                                agree to the
-                                                                terms and conditions</label>
+                                                                for="customCheckc1"><a href="" data-toggle="modal"
+                                                                    data-target="#terms">I agree to the terms and
+                                                                    conditions</a></label>
                                                         </div>
                                                     </div>
                                             </div>
@@ -301,6 +301,122 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-danger"
                                                     data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="terms" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-primary text-light">
+                                                <h3 class="modal-title" id="staticBackdropLabel">Terms and Conditions for
+                                                    Doctor Appointment</h3>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p> &nbsp;&nbsp;The doctor appointment booking service is designed to
+                                                    facilitate the
+                                                    process of scheduling appointments with healthcare providers and
+                                                    ensuring a seamless experience for both patients and medical
+                                                    professionals. By using this service, you are agreeing to abide by the
+                                                    following terms and conditions. It is essential to understand and
+                                                    acknowledge these terms before proceeding with appointment bookings.</p>
+
+
+                                                <p>1. <i>Use of the Service</i></p>
+
+                                                <p>&nbsp;&nbsp;Users of this service must be at least 18 years of age or
+                                                    older.
+                                                    Furthermore, users are expected to provide accurate and up-to-date
+                                                    personal information when booking appointments. This requirement ensures
+                                                    that healthcare providers have access to essential patient details for
+                                                    the purpose of delivering effective medical care.</p>
+
+                                                <p>2. <i>Appointment Booking</i></p>
+
+                                                <p>&nbsp;&nbsp;Our service operates as a platform for scheduling
+                                                    appointments with
+                                                    healthcare professionals. While we endeavor to provide a user-friendly
+                                                    and efficient service, we do not guarantee the availability of specific
+                                                    doctors or appointment times. Availability is subject to the discretion
+                                                    of the healthcare provider. Appointments may be rescheduled or canceled
+                                                    based on the healthcare provider's availability and professional
+                                                    judgment.</p>
+
+                                                <p>3. <i>Cancellation and Rescheduling</i></p>
+
+                                                <p>&nbsp;&nbsp;In the event that an appointment needs to be canceled or
+                                                    rescheduled, we
+                                                    request that users do so with reasonable notice. Late cancellations or
+                                                    no-shows can disrupt the healthcare provider's schedule and may result
+                                                    in additional charges or fees, as determined by the individual
+                                                    healthcare provider's policies.</p>
+
+                                                <p>4. <i>Fees and Payments</i></p>
+
+                                                <p>The terms of payment and applicable fees for appointments will be
+                                                    explicitly communicated at the time of booking. Users should be aware
+                                                    that payment for healthcare services rendered may be required, depending
+                                                    on the policies of the respective healthcare provider.</p>
+
+                                                <p>5. <i>Privacy and Data Security</i></p>
+
+                                                <p>&nbsp;&nbsp;The protection of your privacy is of utmost importance to us.
+                                                    Our
+                                                    service collects and stores personal data as part of the appointment
+                                                    booking process. For details on how your personal information is
+                                                    collected, used, and protected, please refer to our Privacy Policy,
+                                                    which outlines our commitment to safeguarding your data.</p>
+
+                                                <p>6. <i>Liability</i></p>
+
+                                                <p>&nbsp;&nbsp;It is crucial to recognize that our service acts solely as a
+                                                    booking
+                                                    platform and does not provide medical services. We are not responsible
+                                                    for the quality or outcomes of medical care provided by healthcare
+                                                    professionals. Users of the service should acknowledge that we are not
+                                                    liable for any damages, losses, or injuries that may occur as a result
+                                                    of using the service or the medical care provided by healthcare
+                                                    professionals.</p>
+
+                                                <p>7. <i>Changes to Terms and Conditions</i></p>
+
+                                                <p>&nbsp;&nbsp;Our terms and conditions may be updated from time to time.
+                                                    Any changes
+                                                    will be posted on our website, and users are encouraged to review these
+                                                    terms periodically to remain informed about the latest updates.</p>
+
+                                                <p>8. <i>Termination</i></p>
+
+                                                <p>&nbsp;&nbsp;We retain the right to terminate a user's access to the
+                                                    service at our
+                                                    discretion, especially in cases of repeated violations of the terms and
+                                                    conditions or any misuse of the service.</p>
+
+                                                <p>9. <i>Governing Law</i></p>
+
+                                                <p>&nbsp;&nbsp;These terms and conditions are governed by the laws of
+                                                    Philippines, and any disputes or legal matters will be subject to the
+                                                    jurisdiction of the appropriate courts in that jurisdiction.</p>
+
+                                                <p>10. <i>Contact Information</i></p>
+
+                                                <p>&nbsp;&nbsp;If you have any questions or concerns regarding these terms
+                                                    and
+                                                    conditions, please do not hesitate to contact us using the provided
+                                                    contact information. We are committed to providing a transparent and
+                                                    satisfactory experience for our users and are readily available to
+                                                    address any inquiries.</p>
+                                                </p>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">I
+                                                        Agree</button>
+                                                    <button type="button" class="btn btn-danger"
+                                                        data-dismiss="modal">Back</button>
+                                                </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -433,5 +549,15 @@
                 $('#date').text(moment(event.start).format('LLLL'));
             }
         });
+
+        function formatPhoneNumber(input) {
+            // Remove any non-numeric characters
+            input.value = input.value.replace(/[^0-9+]/g, '');
+
+            // Check if the input starts with "09" and change it to "+639"
+            if (input.value.startsWith('09')) {
+                input.value = '+639' + input.value.substring(2);
+            }
+        }
     </script>
 @endsection
