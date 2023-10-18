@@ -88,10 +88,8 @@
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>specialties</th>
                                                 <th>Type</th>
+                                                <th>Name</th>
                                                 <th>Date</th>
                                                 <th>Time</th>
                                                 <th>Status</th>
@@ -101,13 +99,17 @@
                                         <tbody class="text-center">
                                             @foreach ($appointments as $appointment)
                                                 <tr>
-                                                    <td>{{ ucwords($appointment->first_name) }}</td>
-                                                    <td>{{ ucwords($appointment->last_name) }}</td>
-                                                    <td>{{ ucwords($appointment->specialties) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                    <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                    <td>{{ ucwords($appointment->first_name) }}
+                                                        {{ ucwords($appointment->last_name) }}</td>
+                                                    <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}
+                                                    </td>
                                                     <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                                    <td>{{ ucwords($appointment->status) }}</td>
+                                                    @if ($appointment->status == 'pending')
+                                                        <td>Waiting for confirmation</td>
+                                                    @else
+                                                        <td>{{ ucwords($appointment->status) }}</td>
+                                                    @endif
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -146,11 +148,23 @@
                                                                             class="dropdown-item btn btn-primary">Confirm</button>
                                                                     </form>
                                                                 @endif
+                                                                @if ($appointment->status == 'confirmed')
+                                                                    <form action="{{ route('doctor.finish.appointment') }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        <input type="hidden" name="appointment_id"
+                                                                            value="{{ $appointment->id }}">
+                                                                        <input type="hidden" name="status"
+                                                                            value="{{ $appointment->status }}">
+                                                                        <button type="submit"
+                                                                            class="dropdown-item btn btn-primary">Done</button>
+                                                                    </form>
+                                                                @endif
                                                                 <form action="{{ route('doctor.appointment.report') }}"
                                                                     method="GET">
                                                                     @csrf
-                                                                    <input type="hidden" name="appointment_id" id="appointment_id"
-                                                                        value="{{ $appointment->id }}">
+                                                                    <input type="hidden" name="appointment_id"
+                                                                        id="appointment_id" value="{{ $appointment->id }}">
                                                                     <button type="submit"
                                                                         class="dropdown-item btn btn-primary">Generate
                                                                         Report</button>
@@ -173,8 +187,8 @@
                     </div>
 
 
-                    <div class="modal fade" id="viewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="viewModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary text-light">
@@ -250,16 +264,15 @@
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <select class="form-control  p-3" id="gender" name="gender" disabled>
-                                                <option>Select Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="diagnostic appointment">Others</option>
+                                                <option value="">Select Gender</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
                                             </select>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" id="phone" name="phone"
+                                        <input type="text" class="form-control" id="phone" name="phone"
                                             placeholder="Phone" disabled />
                                         <label for="floatingInput">Phone</label>
                                     </div>

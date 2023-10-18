@@ -1,6 +1,7 @@
 @extends('layouts.inner_home')
 
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.css" rel="stylesheet">
@@ -64,9 +65,17 @@
                                         {{ session('info') }}
                                     </div>
                                 @endif
+
+                                @if (session('date'))
+                                    <div class="alert alert-info">
+                                        {{ session('date') }}
+                                    </div>
+                                @endif
                                 <div class="mb-3">
                                     <div id="calendar" style="max-height: 700px; max-width: 100%"></div>
                                 </div>
+
+                                <div id="datePlaceholder"></div>
 
                                 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false"
                                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -184,11 +193,6 @@
                                                             <select class="form-control p-3" id="specialties"
                                                                 name="specialties">
                                                                 <option value="">Select Specialist</option>
-                                                                @foreach ($infos as $info)
-                                                                    <option value="{{ $info->specialties }}">
-                                                                        {{ $info->specialties }}
-                                                                    </option>
-                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -221,11 +225,6 @@
                                                             <select class="form-control  p-3" id="appointment_time"
                                                                 name="appointment_time">
                                                                 <option>Select Time of Appointment</option>
-                                                                @foreach ($timeList as $time)
-                                                                    <option value="{{ $time }}">
-                                                                        {{ $time }}
-                                                                    </option>
-                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -490,6 +489,45 @@
                         return; // Do nothing if it's a holiday
                     }
 
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: '/user/appointment/doctor/specialties', // Route to the Laravel controller method
+                        data: {
+                            date: clickedDateString
+                        },
+                        success: function(data) {
+                            // Update the dropdown with available doctors' specialties
+                            var dropdown = $('#specialties');
+                            dropdown.empty();
+
+                            // Add a default option as the first option in the select
+                            dropdown.append($('<option></option>').attr('value', '').text(
+                                'Select Specialist'));
+
+                            if (data.length > 0) {
+                                $.each(data, function(index, doctor) {
+                                    dropdown.append($('<option></option>').attr(
+                                        'value', doctor.specialty).text(
+                                        doctor.specialty));
+                                });
+                            } else {
+                                // Handle case where no doctors are available for the selected date
+                                dropdown.append($('<option></option>').attr('value', '')
+                                    .text('No available doctors'));
+                            }
+
+
+                        },
+                        error: function() {
+                            console.log('Failed to fetch available doctors data.');
+                        }
+                    });
+
                     // Open a modal for event creation and set the date
                     openEventModal(info.dateStr);
                 },
@@ -559,5 +597,34 @@
                 input.value = '+639' + input.value.substring(2);
             }
         }
+
+        $('#specialties, #appointment_date').change(function() {
+            var selectedSpecialty = $('#specialties').val();
+            var selectedDate = $('#appointment_date').val();
+
+            $.ajax({
+                type: "POST",
+                url: '/user/appointment/doctor/specialties/time',
+                data: {
+                    selectedSpecialty: selectedSpecialty,
+                    selectedDate: selectedDate
+                },
+                success: function(data) {
+                    var dropdown = $('#appointment_time');
+                    dropdown.empty();
+
+                    // Add a default option as the first option in the select
+                    dropdown.append($('<option></option>').attr('value', '').text(
+                        'Select Available Time'));
+
+                    $.each(data, function(index, time) {
+                        dropdown.append($('<option></option>').attr('value', time).text(time));
+                    });
+                },
+                error: function() {
+                    console.log('Failed to fetch available time data.');
+                }
+            });
+        });
     </script>
 @endsection

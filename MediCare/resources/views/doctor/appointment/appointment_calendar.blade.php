@@ -66,6 +66,45 @@
                                     </div>
                                 @endif
 
+                                <div class="container my-3">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-6 text-center">
+                                            <h3>Event Color Legend</h3>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Event Type</th>
+                                                        <th>Color</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Holiday</td>
+                                                        <td style="background-color: green;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Availability</td>
+                                                        <td style="background-color: red;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Appointment (Pending)</td>
+                                                        <td style="background-color: #E1AA74;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Appointment (Confirmed)</td>
+                                                        <td style="background-color: #3876BF;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Appointment (Done)</td>
+                                                        <td style="background-color: #192655;"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
                                 <div class="m-3 p-3">
                                     <div id="calendar" style="max-height: 540px;"></div>
                                 </div>
@@ -117,9 +156,42 @@
                                             <form action="{{ route('doctor.appointment.calendar.confirm') }}"
                                                 method="POST">
                                                 @csrf
-                                                <input type="hidden" name="appointment_id" id="id">
+                                                <input type="hidden" name="appointment_id" id="confirmId">
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-success">Confirm</button>
+                                                    <button type="button" class="btn btn-danger"
+                                                        data-bs-dismiss="modal">Back</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="modal fade" id="doneModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                                        <div class="modal-content">
+                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
+                                                    Appointment
+                                                </h3>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <h4 id="doneEventName" class="pb-3"></h4>
+                                                <p><strong>Appointment Start:</strong> <span
+                                                        id="doneEventStartDate"></span>
+                                                </p>
+                                                <p><strong>Appointment End:</strong> <span id="doneEventEndDate"></span>
+                                                <p><strong>Appointment Status:</strong> <span id="doneStatus"></span>
+                                                </p>
+                                            </div>
+                                            <form action="{{ route('doctor.appointment.calendar.done') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="appointment_id" id="doneId">
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success">Done</button>
                                                     <button type="button" class="btn btn-danger"
                                                         data-bs-dismiss="modal">Back</button>
                                                 </div>
@@ -184,7 +256,8 @@
                                                     Availability
                                                 </h3>
                                             </div>
-                                            <form action="{{ route('doctor.appointment.update.availability') }}" method="POST">
+                                            <form action="{{ route('doctor.appointment.update.availability') }}"
+                                                method="POST">
                                                 @csrf
                                                 <div class="modal-body">
                                                     <div class="row mt-2">
@@ -203,9 +276,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-floating mb-3">
-                                                        <input type="text" class="form-control"
-                                                            id="updateReason" name="reason"
-                                                            placeholder="Reason" />
+                                                        <input type="text" class="form-control" id="updateReason"
+                                                            name="reason" placeholder="Reason" />
                                                         <label for="floatingInput">Reason</label>
                                                     </div>
 
@@ -355,7 +427,10 @@
 
                         if (statusLowerCase === 'pending') {
                             // Your code for handling pending events here
-                            ConfirmEventDetails(info.event);
+                            confirmEventDetails(info.event);
+                        } else if (statusLowerCase === 'confirmed') {
+
+                            doneEventDetails(info.event);
                         } else {
                             // Your code for handling other event statuses here
                             displayEventDetails(info.event);
@@ -372,7 +447,31 @@
                         } else if (event.extendedProps.type === 'availability') {
                             containerEl.style.backgroundColor =
                                 'red'; // Set a green background color for availability events
+                        } else if (event.extendedProps.type === 'appointment') {
+
+                            var statusLowerCase = event.extendedProps.status.toLowerCase();
+
+                            if (statusLowerCase === 'pending') {
+                                containerEl.style.backgroundColor =
+                                '#E1AA74'; // Set a blue background color
+                                containerEl.style.color =
+                                    'white'; // Set the text color to white a green background color for availability events
+                            } else if (statusLowerCase === 'confirmed') {
+                                containerEl.style.backgroundColor =
+                                '#3876BF'; // Set a blue background color
+                                containerEl.style.color =
+                                    'white'; // Set the text color to white a green background color for availability events
+                            } else if (statusLowerCase === 'done') {
+                                containerEl.style.backgroundColor =
+                                '#192655'; // Set a blue background color
+                                containerEl.style.color =
+                                    'white'; // Set the text color to white a green background color for availability events
+                            }
+
                         }
+                        containerEl.style.textAlign = 'center'; // Center the event content
+                        containerEl.style.margin = '0 auto';
+                        containerEl.style.width = '100%';
 
                         // Add a custom CSS class to the event container
                         containerEl.classList.add(
@@ -381,6 +480,10 @@
                         // You can further customize the content inside the event container (e.g., event title)
                         var titleEl = document.createElement('div');
                         titleEl.innerText = event.title;
+
+                        // Apply padding to the title element
+                        titleEl.style.padding = '10px'; // Adjust the padding value as needed
+                        titleEl.style.textAlign = 'center'; // Center the text
 
                         containerEl.appendChild(titleEl);
 
@@ -406,10 +509,16 @@
                     displayEventInfo(event);
                 }
 
-                function ConfirmEventDetails(event) {
+                function confirmEventDetails(event) {
                     // Example: Display event details in a modal
                     $('#confirmModal').modal('show');
                     displayConfirmInfo(event);
+                }
+
+                function doneEventDetails(event) {
+                    // Example: Display event details in a modal
+                    $('#doneModal').modal('show');
+                    displayDoneInfo(event);
                 }
 
                 function displayHolidayDetails(event) {
@@ -433,11 +542,19 @@
                 }
 
                 function displayConfirmInfo(event) {
-                    $('#id').val(event.extendedProps.appointment_id);
+                    $('#confirmId').val(event.extendedProps.appointment_id);
                     $('#confirmEventName').text(event.title);
                     $('#confirmEventStartDate').text(moment(event.start).format('LLLL'));
                     $('#confirmEventEndDate').text(moment(event.end).format('LLLL'));
                     $('#confirmStatus').text(event.extendedProps.status);
+                }
+
+                function displayDoneInfo(event) {
+                    $('#doneId').val(event.extendedProps.appointment_id);
+                    $('#doneEventName').text(event.title);
+                    $('#doneEventStartDate').text(moment(event.start).format('LLLL'));
+                    $('#doneEventEndDate').text(moment(event.end).format('LLLL'));
+                    $('#doneStatus').text(event.extendedProps.status);
                 }
 
                 function displayHolidayInfo(event) {
@@ -453,7 +570,7 @@
                     $('#updateAvailability').val(event.extendedProps.availability);
                     $('#updateReason').val(event.extendedProps.reason);
 
-                    
+
                 }
             });
         </script>

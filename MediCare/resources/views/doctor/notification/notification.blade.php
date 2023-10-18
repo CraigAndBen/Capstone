@@ -80,6 +80,8 @@
                                             <tr>
                                                 <th>Title</th>
                                                 <th>Message</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -89,6 +91,11 @@
                                                 <tr class="p-3">
                                                     <td>{{ ucwords($notification->title) }}</td>
                                                     <td>{{ ucwords(Str::limit($notification->message, 30)) }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($notification->date)->format('M j, Y') }}
+                                                    </td>
+                                                    <td>{{ \Carbon\Carbon::parse($notification->time)->format('h:i A') }}
+                                                    </td>
+
                                                     @if ($notification->is_read == 0)
                                                         <td>Unread</td>
                                                     @else
@@ -184,16 +191,33 @@
                     var id = JSON.parse(button.data('id'));
                     var title = JSON.parse(button.data('title'));
                     var message = JSON.parse(button.data('message'));
-                    var date = JSON.parse(button.data('date'));
+                    var date = JSON.parse(button.data('date')); // Assuming 'date' is in ISO 8601 format
+
+                    // Create a Date object from the ISO 8601 date string
+                    var parsedDate = new Date(date);
+
+                    // Format the date in a more readable format (e.g., "October 18, 2023")
+                    var options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
+                    var formattedDate = parsedDate.toLocaleDateString(undefined, options);
                     var time = JSON.parse(button.data('time'));
+                    var [hours, minutes] = time.split(':').map(Number);
+                    var formattedTime = new Date(0, 0, 0, hours, minutes).toLocaleString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
                     var is_read = JSON.parse(button.data('is-read'));
                     var modal = $(this);
 
                     modal.find('#id').val(id);
                     modal.find('#title').text(title);
                     modal.find('#message').text(message);
-                    modal.find('#date').text(date);
-                    modal.find('#time').text(time);
+                    modal.find('#date').text(formattedDate);
+                    modal.find('#time').text(formattedTime);
                     modal.find('#is_read').val(is_read);
                 });
             });

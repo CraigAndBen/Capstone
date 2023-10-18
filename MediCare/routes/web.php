@@ -35,6 +35,8 @@ Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.l
 Route::get('/user/show/appointment', [AppointmentController::class, 'showAppointment'])->name('user.show.appointment');
 Route::get('/user/appointment/event', [AppointmentController::class, 'appointmentEvents'])->name('user.appointment.event');
 Route::get('/user/appointment/holiday', [AppointmentController::class, 'holidayEvents'])->name('user.appointment.holiday');
+Route::post('/user/appointment/doctor/specialties', [AppointmentController::class, 'doctorSpecialties'])->name('user.appointment.doctor.specialties');
+Route::post('/user/appointment/doctor/specialties/time', [AppointmentController::class, 'getAvailableTime'])->name('user.appointment.doctor.specialties.time');
 Route::get('/user/appointment', [AppointmentController::class, 'appointment'])->name('user.appointment');
 Route::get('/user/appointment/confirmed', [AppointmentController::class, 'confirmedAppointmentList'])->name('user.confirmed.appointment');
 
@@ -115,6 +117,7 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::post('/doctor/appointment/calendar/availability', [DoctorController::class, 'doctorAvailability'])->name('doctor.appointment.availability');
     Route::post('/doctor/appointment/calendar/update/availability', [DoctorController::class, 'updateDoctorAvailability'])->name('doctor.appointment.update.availability');
     Route::post('/doctor/appointment/calendar/confirm', [DoctorController::class, 'calendarConfirmedAppointment'])->name('doctor.appointment.calendar.confirm');
+    Route::post('/doctor/appointment/calendar/done', [DoctorController::class, 'calendarDoneAppointment'])->name('doctor.appointment.calendar.done');
     Route::get('/doctor/appointment/report', [DoctorController::class, 'appointmentReport'])->name('doctor.appointment.report');
 
 

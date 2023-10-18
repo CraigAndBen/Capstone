@@ -61,7 +61,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
+                            <h5><i>{{ date('M j, Y', strtotime($currentDate)) }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -78,24 +78,21 @@
                             <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 215px)">
                                 <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
                                     @foreach ($limitNotifications as $notification)
                                         <a class="list-group-item list-group-item-action"
                                             href="{{ route('doctor.notification') }}">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
+                                                    <br>
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">
-                                                    <span class="float-end text-muted">{{ $notification->time }}</span>
+                                                    <span class="float-end text-muted mb-3" >
+                                                        {{ date('M j, Y', strtotime($notification->date)) }}
+                                                        {{ date('h:i A', strtotime($notification->time)) }}
+                                                    </span>
+                                                    <br>
                                                     <h5>{{ ucwords($notification->title) }}</h5>
                                                     <p class="text-body fs-6">
                                                         {{ Str::words($notification->message, $limit = 10, $end = '...') }}
@@ -126,8 +123,25 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Good Morning, <span class="small text-muted">{{ ucwords($profile->first_name) }}
-                                        {{ ucwords($profile->last_name) }}</span></h4>
+                                <?php
+                                // Assuming $currentTime is in the format "H:i" (24-hour format)
+                                $currentHour = date('H', strtotime($currentTime));
+                                
+                                if ($currentHour >= 6 && $currentHour < 12) {
+                                    // It's morning (between 6 AM and 12 PM)
+                                    $greeting = 'Good Morning';
+                                } elseif ($currentHour >= 12 && $currentHour < 17) {
+                                    // It's afternoon (between 12 PM and 5 PM)
+                                    $greeting = 'Good Afternoon';
+                                } else {
+                                    // It's evening or night
+                                    $greeting = 'Good Evening';
+                                }
+                                ?>
+
+                                <h4>{{ $greeting }}, <span class="small text-muted">Dr. {{ ucwords($profile->first_name) }}
+                                        {{ ucwords($profile->last_name) }}</span>
+                                </h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('doctor.profile') }}" class="dropdown-item">

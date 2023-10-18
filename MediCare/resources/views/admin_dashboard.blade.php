@@ -80,14 +80,6 @@
                                 <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 215px)">
                                     <div class="list-group list-group-flush w-100">
-                                        <div class="list-group-item">
-                                            <select class="form-select">
-                                                <option value="all">All Notification</option>
-                                                <option value="new">New</option>
-                                                <option value="unread">Unread</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
                                         @foreach ($limitNotifications as $notification)
                                             <a class="list-group-item list-group-item-action"
                                                 href="{{ route('admin.notification') }}">
@@ -98,7 +90,7 @@
                                                     </div>
                                                     <div class="flex-grow-1 ms-1">
                                                         <span
-                                                            class="float-end text-muted">{{ $notification->time }}</span>
+                                                            class="float-end text-muted">{{ $notification->date }}</span>
                                                         <h5>{{ ucwords($notification->title) }}</h5>
                                                         <p class="text-body fs-6">
                                                             {{ Str::words($notification->message, $limit = 10, $end = '...') }}
@@ -123,14 +115,6 @@
                                 <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 215px)">
                                     <div class="list-group list-group-flush w-100">
-                                        <div class="list-group-item">
-                                            <select class="form-select">
-                                                <option value="all">All Notification</option>
-                                                <option value="new">New</option>
-                                                <option value="unread">Unread</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
                                         <a class="list-group-item list-group-item-action">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">

@@ -24,7 +24,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $appointments = Appointment::all();
@@ -93,7 +95,9 @@ class DoctorController extends Controller
 
         $profile = $request->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
@@ -109,7 +113,9 @@ class DoctorController extends Controller
 
         $profile = $request->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
@@ -124,7 +130,9 @@ class DoctorController extends Controller
     {
         $profile = $request->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
@@ -386,7 +394,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
@@ -397,7 +407,8 @@ class DoctorController extends Controller
         $appointments = Appointment::where('doctor_id', $profile->id)
             ->orWhere('specialties', $info->specialties)
             ->orWhereNull('doctor_id')
-            ->orderBy('appointment_date', 'desc')->paginate(10);
+            ->orderByRaw("TIME_FORMAT(appointment_time, '%h:%i %p') DESC, appointment_date DESC")
+            ->paginate(5);
 
         return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -423,7 +434,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
@@ -432,7 +445,9 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
-            ->where('status', 'confirmed')->paginate(10);
+            ->Where('specialties', $info->specialties)
+            ->where('status', 'confirmed')
+            ->orderBy('appointment_date', 'desc')->paginate(5);
 
         return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
 
@@ -460,7 +475,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
@@ -476,10 +493,9 @@ class DoctorController extends Controller
 
     public function confirmedAppointment(Request $request)
     {
-
         $profile = auth()->user();
         $doctor = Doctor::where('account_id', $profile->id)->first();
-        $appointment = Appointment::findOrFail($request->input('appointment_id'));
+        $appointment = Appointment::where('id', $request->input('appointment_id'))->first();
 
         $appointment->status = 'confirmed';
         $appointment->doctor_id = $doctor->account_id;
@@ -491,11 +507,13 @@ class DoctorController extends Controller
 
         Notification::create([
             'account_id' => $appointment->account_id,
-            'title' => 'appointment confirmation',
+            'title' => 'Appointment confirmed',
             'message' => $message,
             'date' => $currentDate,
             'time' => $currentTime,
+            'type' => 'user',
         ]);
+
 
         return redirect()->back()->with('success', 'Appointment Confirmed successfully.');
     }
@@ -514,10 +532,11 @@ class DoctorController extends Controller
 
         Notification::create([
             'account_id' => $appointment->account_id,
-            'title' => 'appointment done',
+            'title' => 'Appointment done',
             'message' => $message,
             'date' => $currentDate,
             'time' => $currentTime,
+            'type' => 'user',
         ]);
 
 
@@ -566,12 +585,23 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
-        $appointments = Appointment::where('doctor_id', $profile->id)
-            ->orWhereNull('doctor_id')
+        $appointments = Appointment::where('specialties', $info->specialties)
             ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(10);
+                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+            })
+            ->where(function ($query) {
+                $query->where('status', 'pending')
+                    ->orWhere('status', 'confirmed')
+                    ->orWhere('status', 'done');
+            })
+            ->where(function ($query) use ($profile) {
+                $query->where('doctor_id', $profile->id)
+                    ->orWhereNull('doctor_id');
+            })
+            ->orderBy('appointment_date', 'desc')
+            ->paginate(5);
+
 
         return view('doctor.appointment.appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
 
@@ -599,7 +629,8 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
@@ -609,12 +640,20 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
-        $appointments = Appointment::where('account_id', $profile->id)
-            ->where('status', 'confirmed')
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(10);
+        $appointments = Appointment::where('specialties', $info->specialties)
+        ->where(function ($query) use ($searchTerm) {
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+        })
+        ->where(function ($query) {
+            $query->where('status', 'confirmed');
+        })
+        ->where(function ($query) use ($profile) {
+            $query->where('doctor_id', $profile->id)
+                ->orWhereNull('doctor_id');
+        })
+        ->orderBy('appointment_date', 'desc')
+        ->paginate(5);
 
         return view('doctor.appointment.confirmed_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -651,12 +690,20 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $searchTerm = $request->input('search');
 
-        $appointments = Appointment::where('doctor_id', $profile->id)
-            ->where('status', 'done')
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(10);
+        $appointments = Appointment::where('specialties', $info->specialties)
+        ->where(function ($query) use ($searchTerm) {
+            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
+        })
+        ->where(function ($query) {
+            $query->where('status', 'done');
+        })
+        ->where(function ($query) use ($profile) {
+            $query->where('doctor_id', $profile->id)
+                ->orWhereNull('doctor_id');
+        })
+        ->orderBy('appointment_date', 'desc')
+        ->paginate(5);
 
         return view('doctor.appointment.done_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -665,7 +712,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
@@ -724,6 +773,7 @@ class DoctorController extends Controller
                 // Format the end date and time
                 'status' => ucwords($appointment->status),
                 // Format the end date and time
+                'type' => 'appointment',
             ];
         }
 
@@ -816,8 +866,7 @@ class DoctorController extends Controller
 
         $events = [];
 
-        foreach ($availabilities as $available) 
-        {
+        foreach ($availabilities as $available) {
             $events[] = [
                 'availability_id' => $available->id,
                 'title' => ucwords($available->type),
@@ -851,13 +900,37 @@ class DoctorController extends Controller
 
         Notification::create([
             'account_id' => $appointment->account_id,
-            'title' => 'appointment confirmation',
+            'title' => 'Appointment Confirmed',
             'message' => $message,
             'date' => $currentDate,
             'time' => $currentTime,
         ]);
 
         return redirect()->route('doctor.appointment.calendar')->with('success', 'Appointment Confirmed successfully.');
+    }
+
+    public function calendarDoneAppointment(Request $request)
+    {
+        $profile = auth()->user();
+        $doctor = Doctor::where('account_id', $profile->id)->first();
+        $appointment = Appointment::findOrFail($request->input('appointment_id'));
+
+        $appointment->status = 'done';
+        $appointment->save();
+
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
+        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is done.';
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'Appointment Done',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+        ]);
+
+        return redirect()->route('doctor.appointment.calendar')->with('success', 'Appointment Done successfully.');
     }
 
     public function doctorAvailability(Request $request)
@@ -914,14 +987,14 @@ class DoctorController extends Controller
 
             return redirect()->route('doctor.appointment.calendar')->with('info', "Your availability hasn't changed.");
 
-        } else { 
+        } else {
 
             $availability->type = $request->input('availability');
             $availability->reason = $request->input('reason');
             $availability->save();
 
-  
-            if($availability->type == 'available'){
+
+            if ($availability->type == 'available') {
 
                 $availability = Doctor_availabilities::where('id', $availability->id)->first();
                 $availability->delete();
@@ -936,7 +1009,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
@@ -953,7 +1028,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
@@ -972,7 +1049,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
@@ -991,7 +1070,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
@@ -1015,7 +1096,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
@@ -1040,7 +1123,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
@@ -1105,7 +1190,9 @@ class DoctorController extends Controller
 
         $profile = Auth::user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->paginate(5);
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('created_at', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
@@ -1146,7 +1233,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->get(); // Split the string into an array using a delimiter (e.g., comma)
+        $notifications = Notification::where('specialties', $info->specialties)
+        ->where('type','doctor')
+        ->orderBy('date', 'desc')->get();
 
         if ($notifications->isEmpty()) {
             return redirect()->back()->with('info', 'No notification to delete.');

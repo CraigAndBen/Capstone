@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor_availabilities;
 use DateTime;
 use DateInterval;
 use Carbon\Carbon;
@@ -37,6 +38,7 @@ class AppointmentController extends Controller
 
         $users = User::where('role', 'doctor')->get();
         $infos = Doctor::all();
+        $availability = Doctor_availabilities::all();
 
         // Fetch appointment data here
         $appointments = Appointment::where('account_id', $user->id)->get(); // Replace with your own query to fetch the data
@@ -51,7 +53,7 @@ class AppointmentController extends Controller
             ];
         }
 
-        return view('user.appointment.appointment_create', compact('users', 'infos', 'timeList'))->with('events', json_encode($events));
+        return view('user.appointment.appointment_create', compact('users', 'infos', 'timeList', 'availability'))->with('events', json_encode($events));
     }
 
     public function appointmentEvents()
@@ -163,6 +165,80 @@ class AppointmentController extends Controller
 
     }
 
+    public function doctorSpecialties(Request $request)
+    {
+        $selectedDate = $request->input('date');
+        $doctors = Doctor::all();
+        $availability = Doctor_availabilities::all();
+
+        $availableDoctors = [];
+
+        foreach ($doctors as $doctor) {
+            $isAvailable = true;
+            foreach ($availability as $avail) {
+                if ($doctor->account_id == $avail->doctor_id && $selectedDate == $avail->date) {
+                    $isAvailable = false;
+                    break; // No need to check further if doctor is unavailable on this date
+                }
+            }
+
+            if ($isAvailable) {
+                $availableDoctors[] = [
+                    'id' => $doctor->id,
+                    'specialty' => $doctor->specialties,
+                ];
+            }
+        }
+
+
+        return response()->json($availableDoctors);
+    }
+
+    public function getAvailableTime(Request $request)
+    {
+        $selectedDate = $request->input('selectedDate');
+        $selectedSpecialty = $request->input('selectedSpecialty');
+
+        // Fetch all appointment times for the selected date and specialty
+        $appointments = Appointment::where('appointment_date', $selectedDate)
+            ->where('specialties', $selectedSpecialty)
+            ->where('status', 'pending')
+            ->orWhere('status', 'confirmed')
+            ->get();
+
+        $availableTimes = [
+            '8:30 AM',
+            '9:00 AM',
+            '9:30 AM',
+            '10:30 AM',
+            '11:00 AM',
+            '11:30 AM',
+            '1:30 PM',
+            '2:00 PM',
+            '2:30 PM',
+            '3:00 PM',
+            '3:30 PM',
+            '4:00 PM',
+        ];
+
+        // Remove appointment times from available times
+        foreach ($appointments as $appointment) {
+            // Parse the appointment time to match the format "8 30 AM"
+            $appointmentTime = $appointment->appointment_time;
+
+            // Loop through the available times and remove the matching appointment time
+            foreach ($availableTimes as $key => $availableTime) {
+                if ($appointmentTime === $availableTime) {
+                    unset($availableTimes[$key]);
+                }
+            }
+        }
+
+
+        // Return available times as JSON
+        return response()->json(array_values($availableTimes));
+    }
+
     public function createAppointment(Request $request)
     {
         $timeList = [
@@ -250,8 +326,8 @@ class AppointmentController extends Controller
         ]);
 
         $appointment = Appointment::latest()->first();
-        $currentDate = Carbon::now()->toTimeString();
-        $currentTime = Carbon::now()->toDateString();
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
         $rawDate = $request->input('appointment_date');
         $dateTime = new DateTime($rawDate);
         $readableDate = $dateTime->format('F j, Y');
@@ -268,7 +344,7 @@ class AppointmentController extends Controller
             'specialties' => $request->input('specialties'),
         ]);
 
-        $message = 'You have a new appointment with ' . $appointment->appointment_type . ' scheduled for ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+        $message = 'You have a new appointment from ' . ucwords($user->first_name). ' '. ucwords($user->last_name) . ' with ' . $appointment->appointment_type . ' scheduled for ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
 
         Notification::create([
             'title' => 'New Appointment',
@@ -494,8 +570,8 @@ class AppointmentController extends Controller
         $appointment->status = 'cancelled';
         $appointment->save();
 
-        $currentDate = Carbon::now()->toTimeString();
-        $currentTime = Carbon::now()->toDateString();
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
         $rawDate = $request->input('appointment_date');
         $dateTime = new DateTime($rawDate);
         $readableDate = $dateTime->format('F j, Y');

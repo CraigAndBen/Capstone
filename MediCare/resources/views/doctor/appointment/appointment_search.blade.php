@@ -94,10 +94,8 @@
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>specialties</th>
                                                 <th>Type</th>
+                                                <th>Name</th>
                                                 <th>Date</th>
                                                 <th>Time</th>
                                                 <th>Status</th>
@@ -107,13 +105,17 @@
                                         <tbody class="text-center">
                                             @foreach ($appointments as $appointment)
                                                 <tr>
-                                                    <td>{{ ucwords($appointment->first_name) }}</td>
-                                                    <td>{{ ucwords($appointment->last_name) }}</td>
-                                                    <td>{{ ucwords($appointment->specialties) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                    <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                    <td>{{ ucwords($appointment->first_name) }}
+                                                        {{ ucwords($appointment->last_name) }}</td>
+                                                    <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}
+                                                    </td>
                                                     <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                                    <td>{{ ucwords($appointment->status) }}</td>
+                                                    @if ($appointment->status == 'pending')
+                                                        <td>Waiting for confirmation</td>
+                                                    @else
+                                                        <td>{{ ucwords($appointment->status) }}</td>
+                                                    @endif
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
