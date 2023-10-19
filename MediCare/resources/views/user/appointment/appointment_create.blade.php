@@ -75,6 +75,41 @@
                                     <div id="calendar" style="max-height: 700px; max-width: 100%"></div>
                                 </div>
 
+                                <div class="container my-5">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-6 text-center">
+                                            <h3>Event Color Legend</h3>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Event Type</th>
+                                                        <th>Color</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Holiday</td>
+                                                        <td style="background-color: green;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Appointment (Pending)</td>
+                                                        <td style="background-color: #E1AA74;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Appointment (Confirmed)</td>
+                                                        <td style="background-color: #3876BF;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Appointment (Done)</td>
+                                                        <td style="background-color: #192655;"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
                                 <div id="datePlaceholder"></div>
 
                                 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -542,10 +577,59 @@
                         displayEventDetails(info.event);
                     }
                 },
-                eventRender: function(info) {
-                    // Customize the appearance of events (e.g., add custom CSS classes)
-                    info.el.classList.add('custom-event');
-                }
+                eventContent: function(arg) {
+                        var event = arg.event;
+                        var containerEl = document.createElement('div');
+
+                        // Customize the appearance of events based on the 'type' property in event.extendedProps
+                        if (event.extendedProps.type === 'holiday') {
+                            containerEl.style.backgroundColor =
+                                'green'; // Set a red background color for holiday events
+                        } else if (event.extendedProps.type === 'appointment') {
+
+                            var statusLowerCase = event.extendedProps.status.toLowerCase();
+
+                            if (statusLowerCase === 'pending') {
+                                containerEl.style.backgroundColor =
+                                '#E1AA74'; // Set a blue background color
+                                containerEl.style.color =
+                                    'white'; // Set the text color to white a green background color for availability events
+                            } else if (statusLowerCase === 'confirmed') {
+                                containerEl.style.backgroundColor =
+                                '#3876BF'; // Set a blue background color
+                                containerEl.style.color =
+                                    'white'; // Set the text color to white a green background color for availability events
+                            } else if (statusLowerCase === 'done') {
+                                containerEl.style.backgroundColor =
+                                '#192655'; // Set a blue background color
+                                containerEl.style.color =
+                                    'white'; // Set the text color to white a green background color for availability events
+                            }
+
+                        }
+                        containerEl.style.textAlign = 'center'; // Center the event content
+                        containerEl.style.margin = '0 auto';
+                        containerEl.style.width = '100%';
+
+                        // Add a custom CSS class to the event container
+                        containerEl.classList.add(
+                            'custom-event'); // Add a custom CSS class to the event container
+
+                        // You can further customize the content inside the event container (e.g., event title)
+                        var titleEl = document.createElement('div');
+                        titleEl.innerText = event.title;
+
+                        // Apply padding to the title element
+                        titleEl.style.padding = '10px'; // Adjust the padding value as needed
+                        titleEl.style.textAlign = 'center'; // Center the text
+
+                        containerEl.appendChild(titleEl);
+
+                        // Return the customized event content
+                        return {
+                            domNodes: [containerEl]
+                        };
+                    }
             });
 
             calendar.render();

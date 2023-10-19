@@ -119,6 +119,7 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::post('/doctor/appointment/calendar/confirm', [DoctorController::class, 'calendarConfirmedAppointment'])->name('doctor.appointment.calendar.confirm');
     Route::post('/doctor/appointment/calendar/done', [DoctorController::class, 'calendarDoneAppointment'])->name('doctor.appointment.calendar.done');
     Route::get('/doctor/appointment/report', [DoctorController::class, 'appointmentReport'])->name('doctor.appointment.report');
+    Route::post('/doctor/appointment/report/save', [DoctorController::class, 'saveReport'])->name('doctor.appointment.report.save');
 
 
     // Patient

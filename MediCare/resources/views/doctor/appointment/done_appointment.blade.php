@@ -88,10 +88,10 @@
                                     <table class="table table-bordered text-center">
                                         <thead class="bg-primary text-light ">
                                             <tr>
-                                                <th>Type</th>
-                                                <th>Name</th>
-                                                <th>Date</th>
-                                                <th>Time</th>
+                                                <th>Appointment Type</th>
+                                                <th>Patient Name</th>
+                                                <th>Appointment Date</th>
+                                                <th>Appointment Time</th>
                                                 <th></th>
                                             </tr>
                                         </thead>

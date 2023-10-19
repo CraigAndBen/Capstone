@@ -106,7 +106,7 @@
                                 <hr>
 
                                 <div class="m-3 p-3">
-                                    <div id="calendar" style="max-height: 540px;"></div>
+                                    <div id="calendar" style="max-height: 700px;"></div>
                                 </div>
 
                                 <div class="modal fade" id="infoModal" data-bs-backdrop="static" data-bs-keyboard="false"

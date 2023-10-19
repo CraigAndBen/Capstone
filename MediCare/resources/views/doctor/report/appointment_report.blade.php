@@ -8,7 +8,11 @@
                 display: none;
             }
 
-            #back {
+            #goBack {
+                display: none;
+            }
+
+            #done {
                 display: none;
             }
         }
@@ -24,10 +28,12 @@
 @endsection
 @section('content')
     <div class="container mt-2">
+
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-5">
-                <h5>Report Type: <i><b>Appointment Document Report</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
+                <h5>Report Type: <i><b>Doctor Appointment Report</b></i></h5>
+                <h5>Reference Number: <i><b>{{ $reference }}</b></i></h5>
+                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate)) }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
             <div class="col-2">
@@ -38,9 +44,9 @@
             </div>
 
         </div>
-        <div class="container">
+        <div class="container mb-3">
             <div class="row mb-5 justify-content-center">
-                <h4><i>Appointment Document</i></h4>
+                <h4><i>Doctor Appointment Document</i></h4>
             </div>
             <div class="row">
                 <div class="col-md-4">
@@ -133,14 +139,29 @@
             <hr>
 
         </div>
-        <div class="row justify-content-end align-items-end my-5">
-            <div class="col-10 text-right">
-                <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('doctor.appointment') }}" class="btn btn-danger">Back</a>
+        <div class="row justify-content-end my-5">
+            <div class="col-2">
+
+            </div>
+            <div class="col-10">
+                <div class="d-flex justify-content-end align-items-end">
+                    <button id="printButton" class="btn btn-primary">Preview Report</button>
+                    <form action="{{ route('doctor.appointment.report.save') }}" method="POST">
+                        @csrf
+                        <input type="hidden" value="{{ $appointment->id }}" name="appointment_id">
+                        <input type="hidden" value="{{ $appointment->account_id }}" name="user_id">
+                        <input type="hidden" value="{{ $reference }}" name="reference">
+                        <input type="hidden" value="{{ $currentDate }}" name="date">
+                        <input type="hidden" value="{{ $currentTime }}" name="time">
+                        <button id='done' type="submit" class="btn btn-success ml-2">Done</button>
+                    </form>
+                    <a id="goBack" href="{{ route('doctor.appointment') }}" class="btn btn-danger ml-2">Back</a>
+                </div>
             </div>
             <div class="col-2">
             </div>
         </div>
+
 
     </div>
 @endsection

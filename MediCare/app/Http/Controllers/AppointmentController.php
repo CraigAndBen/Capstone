@@ -80,7 +80,7 @@ class AppointmentController extends Controller
                 // Format the end date and time
                 'status' => ucwords($appointment->status),
                 // Format the end date and time
-                'type' => 'event',
+                'type' => 'appointment',
             ];
         }
 

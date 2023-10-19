@@ -88,11 +88,11 @@
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th>Type</th>
-                                                <th>Name</th>
-                                                <th>Date</th>
-                                                <th>Time</th>
-                                                <th>Status</th>
+                                                <th>Appointment Type</th>
+                                                <th>Patient Name</th>
+                                                <th>Appointment Date</th>
+                                                <th>Appointment Time</th>
+                                                <th>Appointment Status</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -160,15 +160,19 @@
                                                                             class="dropdown-item btn btn-primary">Done</button>
                                                                     </form>
                                                                 @endif
-                                                                <form action="{{ route('doctor.appointment.report') }}"
-                                                                    method="GET">
-                                                                    @csrf
-                                                                    <input type="hidden" name="appointment_id"
-                                                                        id="appointment_id" value="{{ $appointment->id }}">
-                                                                    <button type="submit"
-                                                                        class="dropdown-item btn btn-primary">Generate
-                                                                        Report</button>
-                                                                </form>
+                                                                @if ($appointment->status != 'pending')
+                                                                    <form action="{{ route('doctor.appointment.report') }}"
+                                                                        method="GET">
+                                                                        @csrf
+                                                                        <input type="hidden" name="appointment_id"
+                                                                            id="appointment_id"
+                                                                            value="{{ $appointment->id }}">
+                                                                        <button type="submit"
+                                                                            class="dropdown-item btn btn-primary">Generate
+                                                                            Report</button>
+                                                                    </form>
+                                                                @endif
+
 
                                                             </div>
                                                         </div>
