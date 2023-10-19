@@ -27,43 +27,43 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $patientsByMonth = DB::table('patients')
-            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy('month')
-            ->get();
+        // $patientsByMonth = DB::table('patients')
+        //     ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+        //     ->whereYear('admitted_date', $currentYear)
+        //     ->groupBy('month')
+        //     ->get();
 
-        $patientsByYear = DB::table('patients')
-            ->whereYear('admitted_date', $currentYear)
-            ->get();
+        // $patientsByYear = DB::table('patients')
+        //     ->whereYear('admitted_date', $currentYear)
+        //     ->get();
 
-        $patientCount = $patientsByYear->count();
+        // $patientCount = $patientsByYear->count();
 
-        $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
-            ->selectRaw('COUNT(*) as total_occurrences')
-            ->whereYear('admitted_date', $currentYear)
-            ->whereNotNull('diagnosis')
-            ->groupBy('diagnosis', 'month')
-            ->orderByDesc('total_occurrences')
-            ->get();
+        // $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
+        //     ->selectRaw('COUNT(*) as total_occurrences')
+        //     ->whereYear('admitted_date', $currentYear)
+        //     ->whereNotNull('diagnosis')
+        //     ->groupBy('diagnosis', 'month')
+        //     ->orderByDesc('total_occurrences')
+        //     ->get();
 
 
-        $diagnosesWithOccurrences = Patient::select('diagnosis')
-            ->selectRaw('COUNT(*) as total_occurrences')
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy('diagnosis')
-            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
-            ->take(5) // Limit the result to the top 5 diagnoses
-            ->get();
+        // $diagnosesWithOccurrences = Patient::select('diagnosis')
+        //     ->selectRaw('COUNT(*) as total_occurrences')
+        //     ->whereYear('admitted_date', $currentYear)
+        //     ->groupBy('diagnosis')
+        //     ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
+        //     ->take(5) // Limit the result to the top 5 diagnoses
+        //     ->get();
 
-        $diagnosisCount = $diagnosesWithOccurrences->count();
+        // $diagnosisCount = $diagnosesWithOccurrences->count();
 
-        // $limitDiagnosis = $rankedDiagnosis->take(5);
+        // // $limitDiagnosis = $rankedDiagnosis->take(5);
 
-        // Retrieve the rank 1 diagnosis for the current year
-        $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
+        // // Retrieve the rank 1 diagnosis for the current year
+        // $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
 
-        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'patientsByMonth', 'patientCount', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'rank1Diagnosis', 'currentTime', 'currentDate', 'diagnosisCount'));
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function profile(Request $request): View
@@ -228,15 +228,39 @@ class AdminController extends Controller
 
     public function patientStore(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'admitted_date' => 'required|date',
-            'room_number' => 'required',
-            'bed_number' => 'required',
-            'physician' => 'required|string|max:255',
-        ]);
+        $type = $request->input('patient_type');
+
+        switch ($type) {
+            case 'admitted_patient':
+                // Do something for action 1
+                $request->validate([
+                    'first_name' => 'required|string|max:255',
+                    'middle_name' => 'required|string|max:255',
+                    'last_name' => 'required|string|max:255',
+                    'admitted_date' => 'required|date',
+                    'admitted_time' => 'required',
+                    'room_number' => 'required',
+                    'bed_number' => 'required',
+                    'physician' => 'required|string|max:255',
+                ]);
+                break;
+
+            case 'outpatient':
+                $request->validate([
+                    'first_name' => 'required|string|max:255',
+                    'middle_name' => 'required|string|max:255',
+                    'last_name' => 'required|string|max:255',
+                    'admitted_date' => 'required|date',
+                    'room_number' => 'required',
+                    'bed_number' => 'required',
+                    'physician' => 'required|string|max:255',
+                ]);
+                break;
+
+            default:
+                // Default action when no case matches
+                return "No valid action specified.";
+        }
 
         Patient::create([
             'first_name' => $request->input('first_name'),
@@ -249,15 +273,13 @@ class AdminController extends Controller
             'province' => $request->input('province'),
             'birthdate' => $request->input('birthdate'),
             'phone' => $request->input('phone'),
-            'type' => 'admitted_patient',
+            'type' => $request->input('patient_type'),
             'admitted_date' => $request->input('admitted_date'),
             'discharged_date' => $request->input('discharged_date'),
             'room_number' => $request->input('room_number'),
             'bed_number' => $request->input('bed_number'),
             'physician' => $request->input('physician'),
             'medical_condition' => $request->input('medical_condition'),
-            'diagnosis' => $request->input('diagnosis'),
-            'medication' => $request->input('medication'),
             'guardian_first_name' => $request->input('guardian_first_name'),
             'guardian_last_name' => $request->input('guardian_last_name'),
             'guardian_birthdate' => $request->input('guardian_birthdate'),

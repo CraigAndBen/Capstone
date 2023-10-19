@@ -46,25 +46,25 @@ class SuperAdminController extends Controller
         })->get();
         $patientCount = $patients->count();
 
-        $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
-            ->selectRaw('COUNT(*) as total_occurrences')
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy(DB::raw('LOWER(diagnosis)'), 'month')
-            ->groupBy('diagnosis', 'month')
-            ->orderByDesc('total_occurrences')
-            ->get();
+        // $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
+        //     ->selectRaw('COUNT(*) as total_occurrences')
+        //     ->whereYear('admitted_date', $currentYear)
+        //     ->groupBy(DB::raw('LOWER(diagnosis)'), 'month')
+        //     ->groupBy('diagnosis', 'month')
+        //     ->orderByDesc('total_occurrences')
+        //     ->get();
 
-        $diagnosesWithOccurrences = Patient::select('diagnosis')
-            ->selectRaw('COUNT(*) as total_occurrences')
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy('diagnosis')
-            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
-            ->take(3) // Limit the result to the top 5 diagnoses
-            ->get();
+        // $diagnosesWithOccurrences = Patient::select('diagnosis')
+        //     ->selectRaw('COUNT(*) as total_occurrences')
+        //     ->whereYear('admitted_date', $currentYear)
+        //     ->groupBy('diagnosis')
+        //     ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
+        //     ->take(3) // Limit the result to the top 5 diagnoses
+        //     ->get();
 
-        $diagnosisCount = $diagnosesWithOccurrences->count();
+        // $diagnosisCount = $diagnosesWithOccurrences->count();
 
-        $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
+        // $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
 
         $patientsByMonth = DB::table('patients')
             ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
@@ -182,7 +182,7 @@ class SuperAdminController extends Controller
             }
         }
 
-        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count', 'patientsByMonth', 'patientCount', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'rank1Diagnosis', 'diagnosisCount', 'currentTime', 'currentDate', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount', 'productPrices', 'mostValuedProducts', 'mediumValuedProducts', 'lowValuedProducts','totalCount', 'mostValuedPercentage', 'mediumValuedPercentage', 'lowValuedPercentage', 'categories', 'counts', 'fastProducts', 'slowProducts', 'nonMovingProducts'));
+        return view('super_admin_dashboard', compact('profile', 'limitNotifications', 'count','currentTime', 'currentDate','patientCount', 'appointmentLabels', 'appointmentData', 'appointmentCount', 'rolesCount', 'usersLabels', 'usersData', 'rolesCount', 'productPrices', 'mostValuedProducts', 'mediumValuedProducts', 'lowValuedProducts','totalCount', 'mostValuedPercentage', 'mediumValuedPercentage', 'lowValuedPercentage', 'categories', 'counts', 'fastProducts', 'slowProducts', 'nonMovingProducts'));
     }
 
     public function profile(Request $request): View

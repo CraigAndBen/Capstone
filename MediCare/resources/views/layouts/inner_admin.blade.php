@@ -65,7 +65,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5>
+                            <h5><i>{{ date('M j, Y', strtotime($currentDate)) }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
                   <li class="dropdown pc-h-item">
@@ -83,25 +83,21 @@
                             <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 215px)">
                                 <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
                                     @foreach ($limitNotifications as $notification)
                                         <a class="list-group-item list-group-item-action"
                                             href="{{ route('admin.notification') }}">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
+                                                    <br>
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">
-                                                    <span
-                                                        class="float-end text-muted">{{ $notification->time }}</span>
+                                                    <span class="float-end text-muted">
+                                                        {{ date('M j, Y', strtotime($notification->date)) }}
+                                                        {{ date('h:i A', strtotime($notification->time)) }}
+                                                    </span>
+                                                    <br>
                                                     <h5>{{ ucwords($notification->title) }}</h5>
                                                     <p class="text-body fs-6">
                                                         {{ Str::words($notification->message, $limit = 10, $end = '...') }}
@@ -126,14 +122,6 @@
                             <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 215px)">
                                 <div class="list-group list-group-flush w-100">
-                                    <div class="list-group-item">
-                                        <select class="form-select">
-                                            <option value="all">All Notification</option>
-                                            <option value="new">New</option>
-                                            <option value="unread">Unread</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
                                     <a class="list-group-item list-group-item-action">
                                         <div class="d-flex">
                                             <div class="flex-shrink-0">

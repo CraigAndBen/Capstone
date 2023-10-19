@@ -25,15 +25,15 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->enum('type', ['outpatient','admitted_patient'])->default('outpatient');
             $table->string('admitted_date')->nullable();
+            $table->string('admitted_time')->nullable();
             $table->string('discharged_date')->nullable();
+            $table->string('discharged_time')->nullable();
             $table->string('date')->nullable();
             $table->string('time')->nullable();
             $table->smallInteger('room_number')->nullable();
             $table->smallInteger('bed_number')->nullable();
             $table->smallInteger('physician')->nullable();
             $table->string('medical_condition')->nullable();
-            $table->string('diagnosis')->nullable();
-            $table->string('medication')->nullable();
             $table->string('guardian_first_name')->nullable();
             $table->string('guardian_last_name')->nullable();
             $table->string('guardian_birthdate')->nullable();

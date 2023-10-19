@@ -62,7 +62,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            <h5><i>{{ $currentDate }} | {{ $currentTime }}</i></h5>
+                            <h5><i>{{ date('M j, Y', strtotime($currentDate)) }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -85,12 +85,16 @@
                                                 href="{{ route('admin.notification') }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0">
+                                                        <br>
                                                         <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
                                                             alt="user-image" class="user-avtar" />
                                                     </div>
                                                     <div class="flex-grow-1 ms-1">
-                                                        <span
-                                                            class="float-end text-muted">{{ $notification->date }}</span>
+                                                        <span class="float-end text-muted">
+                                                            {{ date('M j, Y', strtotime($notification->date)) }}
+                                                            {{ date('h:i A', strtotime($notification->time)) }}
+                                                        </span>
+                                                        <br>
                                                         <h5>{{ ucwords($notification->title) }}</h5>
                                                         <p class="text-body fs-6">
                                                             {{ Str::words($notification->message, $limit = 10, $end = '...') }}
@@ -283,7 +287,7 @@
             <div class="row">
                 <!-- [ sample-page ] start -->
 
-                <div class="col-xl-6 col-md-12 mt-4">
+                {{-- <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             @if ($patientCount)
@@ -301,9 +305,9 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="col-xl-6 col-md-12 mt-4">
+                {{-- <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             @if ($diagnosisCount)
@@ -343,7 +347,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!-- [ sample-page ] end -->
             </div>
             <!-- [ Main Content ] end -->
@@ -382,85 +386,7 @@
 </body>
 <!-- [Body] end -->
 <script>
-    // PHP array to JavaScript variables
-    const patientMonths = @json($patientsByMonth->pluck('month'));
-    const patientCounts = @json($patientsByMonth->pluck('count'));
 
-    // Create an array for all months
-    const allMonths = [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November', 'December'
-    ];
-
-    // Initialize an array to store counts for each month
-    const monthCounts = Array.from({
-        length: 12
-    }, () => 0);
-
-    // Fill in the counts for the corresponding months
-    for (let i = 0; i < patientMonths.length; i++) {
-        const monthIndex = allMonths.indexOf(patientMonths[i]);
-        if (monthIndex !== -1) {
-            monthCounts[monthIndex] = patientCounts[i];
-        }
-    }
-
-    var ctx = document.getElementById('patientChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: allMonths,
-            datasets: [{
-                label: 'Admitted Patient',
-                data: monthCounts,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    var labels = [];
-    var data = [];
-    @for ($month = 1; $month <= 12; $month++)
-        @php
-            $monthData = $rankedDiagnosis->firstWhere('month', $month);
-        @endphp
-        labels.push('{{ \Carbon\Carbon::createFromDate(null, $month, 1)->format('F') }}');
-        data.push({{ $monthData ? $monthData->total_occurrences : 0 }});
-    @endfor
-
-    // Get the chart context and create the line chart
-    var ctx = document.getElementById('diagnosisChart').getContext('2d');
-    var lineChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Rank 1 Diagnosis',
-                data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 1,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
 </script>
 
 </html>
