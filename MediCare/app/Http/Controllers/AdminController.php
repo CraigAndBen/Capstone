@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Patient;
+use App\Models\Diagnose;
 use Illuminate\View\View;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -193,7 +194,8 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::orderBy('admitted_date', 'desc')->orderBy('date', 'desc')->paginate(5);
+        $patients = Patient::orderBy('created_at', 'desc')
+        ->paginate(5);
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -217,11 +219,9 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $patients = Patient::where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(5);
+        $patients = Patient::where('first_name', 'LIKE', '%' . $searchTerm . '%')
+        ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%')
+        ->paginate(5);
 
         return view('admin.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
@@ -230,107 +230,83 @@ class AdminController extends Controller
     {
         $type = $request->input('patient_type');
 
-        switch ($type) {
-            case 'admitted_patient':
-                // Do something for action 1
-                $request->validate([
-                    'first_name' => 'required|string|max:255',
-                    'middle_name' => 'required|string|max:255',
-                    'last_name' => 'required|string|max:255',
-                    'admitted_date' => 'required|date',
-                    'admitted_time' => 'required',
-                    'room_number' => 'required',
-                    'bed_number' => 'required',
-                    'physician' => 'required|string|max:255',
-                ]);
-                break;
-
-            case 'outpatient':
-                $request->validate([
-                    'first_name' => 'required|string|max:255',
-                    'middle_name' => 'required|string|max:255',
-                    'last_name' => 'required|string|max:255',
-                    'admitted_date' => 'required|date',
-                    'room_number' => 'required',
-                    'bed_number' => 'required',
-                    'physician' => 'required|string|max:255',
-                ]);
-                break;
-
-            default:
-                // Default action when no case matches
-                return "No valid action specified.";
-        }
-
-        Patient::create([
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'street' => $request->input('street'),
-            'gender' => $request->input('gender'),
-            'brgy' => $request->input('brgy'),
-            'city' => $request->input('city'),
-            'province' => $request->input('province'),
-            'birthdate' => $request->input('birthdate'),
-            'phone' => $request->input('phone'),
-            'type' => $request->input('patient_type'),
-            'admitted_date' => $request->input('admitted_date'),
-            'discharged_date' => $request->input('discharged_date'),
-            'room_number' => $request->input('room_number'),
-            'bed_number' => $request->input('bed_number'),
-            'physician' => $request->input('physician'),
-            'medical_condition' => $request->input('medical_condition'),
-            'guardian_first_name' => $request->input('guardian_first_name'),
-            'guardian_last_name' => $request->input('guardian_last_name'),
-            'guardian_birthdate' => $request->input('guardian_birthdate'),
-            'relationship' => $request->input('relationship'),
-            'guardian_phone' => $request->input('guardian_phone'),
-            'guardian_email' => $request->input('guardian_email'),
-        ]);
-
-        return back()->with('success', 'Patient added sucessfully.');
-
-    }
-    public function outpatientStore(Request $request)
-    {
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'date' => 'required|date',
-            'time' => 'required',
-            'phone' => 'required',
             'physician' => 'required|string|max:255',
         ]);
 
-        Patient::create([
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'street' => $request->input('street'),
-            'gender' => $request->input('gender'),
-            'brgy' => $request->input('brgy'),
-            'city' => $request->input('city'),
-            'province' => $request->input('province'),
-            'birthdate' => $request->input('birthdate'),
-            'phone' => $request->input('phone'),
-            'type' => 'outpatient',
-            'date' => $request->input('date'),
-            'time' => $request->input('time'),
-            'physician' => $request->input('physician'),
-            'medical_condition' => $request->input('medical_condition'),
-            'diagnosis' => $request->input('diagnosis'),
-            'medication' => $request->input('medication'),
-            'guardian_first_name' => $request->input('guardian_first_name'),
-            'guardian_last_name' => $request->input('guardian_last_name'),
-            'guardian_birthdate' => $request->input('guardian_birthdate'),
-            'relationship' => $request->input('relationship'),
-            'guardian_phone' => $request->input('guardian_phone'),
-            'guardian_email' => $request->input('guardian_email'),
+        if ($type == 'admitted_patient') {
+
+            $request->validate([
+                'admitted_date' => 'required|date',
+                'admitted_time' => 'required|time',
+            ]);
+
+        } elseif ($type == 'outpatient') {
+            $request->validate([
+                'date' => 'required',
+                'time' => 'required',
+            ]);
+        }
+
+        $patientData = $request->only([
+            'first_name' => 'first_name',
+            'middle_name' => 'middle_name',
+            'last_name' => 'last_name',
+            'street' => 'street',
+            'gender' => 'gender',
+            'brgy' => 'brgy',
+            'city' => 'city',
+            'province' => 'province',
+            'birthdate' => 'birthdate',
+            'phone' => 'phone',
+            'type' => 'type',
+            'admitted_date' => 'admitted_date',
+            'admitted_time' => 'admitted_time',
+            'discharged_date' => 'discharged_date',
+            'discharged_time' => 'discharged_time',
+            'room_number' => 'room_number',
+            'bed_number' => 'bed_number',
+            'date' => 'date',
+            'time' => 'time',
+            'physician' => 'physician',
+            'medical_condition' => 'medical_condition',
+            'guardian_first_name' => 'guardian_first_name',
+            'guardian_last_name' => 'guardian_last_name',
+            'guardian_birthdate' => 'guardian_birthdate',
+            'relationship' => 'relationship',
+            'guardian_phone' => 'guardian_phone',
+            'guardian_email' => 'guardian_email',
         ]);
 
-        return back()->with('success', 'Outpatient added sucessfully.');
+        $patient = Patient::create($patientData);
 
+        // Retrieve the ID of the last inserted patient
+        $patientId = $patient->id;
+        $patientType = $type;
+        $currentTime = date('H:i:s'); // Format: Hours:Minutes:Seconds
+
+
+        $diagnosisDates = $request->input('diagnosisDate', []); // Retrieve an array of diagnosis dates
+        $diagnoses = $request->input('diagnosis', []); // Retrieve an array of diagnoses
+
+        // Iterate through the diagnosis data and save them
+        foreach ($diagnosisDates as $key => $diagnosisDate) {
+            $diagnosis = new Diagnose();
+            $diagnosis->patient_id = $patientId; // Assuming you have the patient object
+            $diagnosis->patient_type = $patientType; // Assuming you have the patient object
+
+            // Assign diagnosis data from the arrays
+            $diagnosis->date = $diagnosisDate;
+            $diagnosis->time = $currentTime;
+            $diagnosis->diagnose = $diagnoses[$key];
+
+            // Save the diagnosis record
+            $diagnosis->save();
+        }
+
+        return back()->with('success', 'Patient added successfully.');
     }
 
     public function outpatientList()
@@ -562,7 +538,7 @@ class AdminController extends Controller
 
     public function patientReport(Request $request)
     {
-       
+
         $profile = auth()->user();
         $patient = Patient::where('id', $request->input('patient_id'))->first();
         $currentYear = Carbon::now()->year; // Get current year
@@ -571,7 +547,7 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $doctor = User::where('id', $patient->physician)->first();
-        
+
         return view('admin.report.patient_report', compact('patient', 'currentTime', 'currentDate', 'doctor', 'profile'));
     }
 
@@ -618,11 +594,11 @@ class AdminController extends Controller
     public function deleteNotificationAll(Request $request)
     {
         $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->get(); // Split the string into an array using a delimiter (e.g., comma)
+        $notifications = Notification::where('type', $profile->role)->get(); // Split the string into an array using a delimiter (e.g., comma)
 
-        if($notifications->isEmpty()){
+        if ($notifications->isEmpty()) {
             return redirect()->back()->with('info', 'No notification to delete.');
-            
+
         } else {
 
             foreach ($notifications as $notification) {

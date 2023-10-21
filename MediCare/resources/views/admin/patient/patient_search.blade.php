@@ -44,11 +44,6 @@
                                             Patient</button>
                                     </div>
                                     <div class="m-1">
-                                        <button class="btn btn-primary" data-toggle="modal"
-                                            data-target="#createOutpatientModal">Add
-                                            Outpatient</button>
-                                    </div>
-                                    <div class="m-1">
                                         <a href="{{ route('admin.patient') }}" class="btn btn-success">Show All</a>
                                     </div>
                                 </div>
@@ -150,7 +145,6 @@
                                                                         data-time="{{ json_encode($patient->time) }}"
                                                                         data-physician="{{ json_encode($patient->physician) }}"
                                                                         data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
                                                                         data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
                                                                         data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
                                                                         data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
@@ -175,7 +169,6 @@
                                                                         data-time="{{ json_encode($patient->time) }}"
                                                                         data-physician="{{ json_encode($patient->physician) }}"
                                                                         data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
                                                                         data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
                                                                         data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
                                                                         data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
@@ -219,12 +212,13 @@
                                                                         data-birthdate="{{ json_encode($patient->birthdate) }}"
                                                                         data-gender="{{ json_encode($patient->gender) }}"
                                                                         data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-admitted-date="{{ json_encode($patient->admitted_time) }}"
                                                                         data-discharged-date="{{ json_encode($patient->discharged_date) }}"
+                                                                        data-discharged-date="{{ json_encode($patient->discharged_time) }}"
                                                                         data-room-no="{{ json_encode($patient->room_number) }}"
                                                                         data-bed-no="{{ json_encode($patient->bed_number) }}"
                                                                         data-physician="{{ json_encode($patient->physician) }}"
                                                                         data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
                                                                         data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
                                                                         data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
                                                                         data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
@@ -247,12 +241,13 @@
                                                                         data-birthdate="{{ json_encode($patient->birthdate) }}"
                                                                         data-gender="{{ json_encode($patient->gender) }}"
                                                                         data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-admitted-date="{{ json_encode($patient->admitted_time) }}"
                                                                         data-discharged-date="{{ json_encode($patient->discharged_date) }}"
+                                                                        data-discharged-date="{{ json_encode($patient->discharged_time) }}"
                                                                         data-room-no="{{ json_encode($patient->room_number) }}"
                                                                         data-bed-no="{{ json_encode($patient->bed_number) }}"
                                                                         data-physician="{{ json_encode($patient->physician) }}"
                                                                         data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
                                                                         data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
                                                                         data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
                                                                         data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
@@ -511,213 +506,6 @@
                         </div>
                     </div>
                     {{-- End Create Admitted Patient Modal --}}
-
-                    {{-- Create Outpatient modal --}}
-                    <div class="modal fade" id="createOutpatientModal" tabindex="-1" role="dialog"
-                        aria-labelledby="myModalLabel">
-                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Adding Outpatient</h2>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="POST" action="{{ route('admin.outpatient.store') }}">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput first_name" placeholder="First Name"
-                                                        name="first_name" />
-                                                    <label for="floatingInput">First Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput middle_name" placeholder="Middle Name"
-                                                        name="middle_name"/>
-                                                    <label for="floatingInput">Middle Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="floatingInput last_name" placeholder="Last Name"
-                                                        name="last_name"/>
-                                                    <label for="floatingInput">Last Name</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="street" class="form-control"
-                                                        id="floatingInput street" placeholder="Street" />
-                                                    <label for="floatingInput">Street</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="brgy" class="form-control"
-                                                        id="floatingInput brgy" placeholder="Brgy" />
-                                                    <label for="floatingInput">Brgy</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="city" class="form-control"
-                                                        id="floatingInput city" placeholder="City" />
-                                                    <label for="floatingInput">City</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" name="province" class="form-control"
-                                                        id="floatingInput province" placeholder="Street" />
-                                                    <label for="floatingInput">Province</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3">
-                                                    <input type="number" name="phone" class="form-control"
-                                                        id="floatingInput phone" placeholder="Phone" />
-                                                    <label for="floatingInput">Phone</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="birthdate" class="form-control"
-                                                        id="floatingInput birthdate" placeholder="Birthdate" />
-                                                    <label for="floatingInput">Birthdate</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <select class="form-control p-3" id="gender" name="gender">
-                                                    <option value="">Select Gender</option>
-                                                    <option value="male">Male</option>
-                                                    <option value="female">Female</option>
-                                                    <option value="others">Others</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="date" class="form-control"
-                                                        id="floatingInput date" placeholder="Date" />
-                                                    <label for="floatingInput">Date</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3">
-                                                    <input type="time" name="time" class="form-control"
-                                                        id="floatingInput time" placeholder="Time" />
-                                                    <label for="floatingInput">Time</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="form-floating mb-3">
-                                            <select class="form-control p-3" id="physician" name="physician">
-                                                <option value="">Select physician</option>
-                                                @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}">Dr.
-                                                        {{ ucwords($doctor->first_name) }}
-                                                        {{ ucwords($doctor->last_name) }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="medical_condtion" class="form-control"
-                                                id="floatingInput medical_condition" placeholder="Medical Condition" />
-                                            <label for="floatingInput">Medical Condition</label>
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="diagnosis" class="form-control"
-                                                id="floatingInput diagnosis" placeholder="Diagnosis" />
-                                            <label for="floatingInput">Diagnosis</label>
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="medication" class="form-control"
-                                                id="floatingInput medication" placeholder="Medication" />
-                                            <label for="floatingInput">Medication</label>
-                                        </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput guardian_first_name"
-                                                        placeholder="Guardian First Name" name="guardian_first_name" />
-                                                    <label for="floatingInput">Guardian First Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput guardian_last_name"
-                                                        placeholder="Guardian Last Name" name="guardian_last_name" />
-                                                    <label for="floatingInput">Guardian Last Name</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-floating mb-3 ">
-                                            <select class="form-control p-3" id="relationship" name="relationship">
-                                                <option value="">Select Relationship</option>
-                                                <option value="parent">Parent</option>
-                                                <option value="legal guardian">Legal Guardian</option>
-                                                <option value="spouse">Spouse</option>
-                                                <option value="sibling">Siblings</option>
-                                                <option value="grandparent">Grandparent</option>
-                                                <option value="aunt/Uncle">Aunt/Uncle</option>
-                                                <option value="cousin">Cousin</option>
-                                                <option value="extended family member">Extended Family Member</option>
-                                                <option value="foster Parent">Foster Parent</option>
-                                                <option value="close friend">Close Friend</option>
-                                            </select>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3">
-                                                    <input type="date" name="guardian_birthdate" class="form-control"
-                                                        id="floatingInput guardian_birthdate"
-                                                        placeholder="Guardian Birthdate" />
-                                                    <label for="floatingInput">Guardian Birthdate</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="floatingInput guardian_phone" placeholder="Guardian Phone"
-                                                        name="guardian_phone" />
-                                                    <label for="floatingInput">Guardian Phone</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="floatingInput guardian_phone" placeholder="Guardian Email"
-                                                        name="guardian_phone" />
-                                                    <label for="floatingInput">Guardian Email</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- End Create Outpatient Modal --}}
 
 
                     {{-- Update Admitted Patient modal --}}
