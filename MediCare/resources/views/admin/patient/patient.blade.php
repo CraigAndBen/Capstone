@@ -760,7 +760,10 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <div id="diagnoses-list"></div>
+                                        <div id="diagnoses-list">
+                                        </div>
+                                        <button id="addDiagnosisButtonForUpdate" class="btn btn-primary">Add
+                                            Diagnosis</button>
                                         <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
@@ -1426,7 +1429,9 @@
                         modal.find('#gender').val(gender);
                         modal.find('#phone').val(phone);
                         modal.find('#admitted_date').val(admitted_date);
+                        modal.find('#admitted_time').val(admitted_time);
                         modal.find('#discharged_date').val(discharged_date);
+                        modal.find('#discharged_time').val(discharged_time);
                         modal.find('#room_number').val(room_number);
                         modal.find('#bed_number').val(bed_number);
                         modal.find('#physician').val(physician);
@@ -1461,7 +1466,7 @@
                                         </div>
                                     </div>
                                 `;
-                                diagnosesList.append(diagnosisHtml);
+                                    diagnosesList.append(diagnosisHtml);
                                 });
                             })
                             .fail(function(jqXHR, textStatus, errorThrown) {
@@ -1637,5 +1642,30 @@
                         input.value = '+639' + input.value.substring(2);
                     }
                 }
+
+                $('#addDiagnosisButtonForUpdate').click(function(event) {
+                    event.preventDefault(); // Prevent the default form submission behavior
+
+                    var newDiagnosisHtml = `
+                    <div class="row mb-2">
+                        <div class="col-md-5">
+                            <div class="form-floating">
+                                <input type="date" name="diagnosisDate[]" class="form-control" id="diagnosisDate" placeholder="Diagnose Date" />
+                                <label for="floatingInput">Date</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-floating">
+                                <input type="text" name="diagnosis[]" class="form-control" id="floatingInputDiagnosis" placeholder="Diagnosis">
+                                <label for="floatingInputDiagnosis">Diagnosis</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mt-2">
+                            <button type="button" class="btn btn-danger removeDiagnosis">Remove</button>
+                        </div>
+                    </div>                        
+                    `;
+                    $('#diagnoses-list').append(newDiagnosisHtml);
+                });
             </script>
         @endsection

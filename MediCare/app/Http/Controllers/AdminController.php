@@ -535,6 +535,7 @@ class AdminController extends Controller
                 $patientChange = $this->hasChanges($patient, $patientUpdatedData);
 
                 if ($patientChange || $changesDetected) {
+
                     $patient->first_name = $request->input('first_name');
                     $patient->middle_name = $request->input('middle_name');
                     $patient->last_name = $request->input('last_name');
