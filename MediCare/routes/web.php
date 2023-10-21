@@ -166,6 +166,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
     Route::get('/admin/patient/report', [AdminController::class, 'patientReport'])->name('admin.patient.report');
+    Route::get('/admin/patient/{id}/diagnoses', [AdminController::class, 'getDiagnoses'])->name('admin.patient.diagnoses');
 
     //  Notification
     Route::get('/admin/notification', [AdminController::class, 'notification'])->name('admin.notification');

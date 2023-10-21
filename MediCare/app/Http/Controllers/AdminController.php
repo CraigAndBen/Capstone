@@ -195,7 +195,7 @@ class AdminController extends Controller
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::orderBy('created_at', 'desc')
-        ->paginate(5);
+            ->paginate(5);
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -220,8 +220,8 @@ class AdminController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
 
         $patients = Patient::where('first_name', 'LIKE', '%' . $searchTerm . '%')
-        ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%')
-        ->paginate(5);
+            ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%')
+            ->paginate(5);
 
         return view('admin.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
@@ -309,6 +309,13 @@ class AdminController extends Controller
         return back()->with('success', 'Patient added successfully.');
     }
 
+    public function getDiagnoses($id)
+    {
+        $diagnoses = Diagnose::where('patient_id', $id)->get();
+
+        return response()->json($diagnoses);
+    }
+
     public function outpatientList()
     {
         $profile = auth()->user();
@@ -349,7 +356,6 @@ class AdminController extends Controller
 
     public function patientUpdate(Request $request)
     {
-
         $patient = Patient::where('id', $request->id)->first();
 
         switch ($patient) {
@@ -389,9 +395,42 @@ class AdminController extends Controller
 
                 ];
 
+                // Retrieve the request data
+                $diagnosisDates = $request->input('diagnosisDate');
+                $diagnoses = $request->input('diagnosis');
+
+                // Retrieve the existing data from the database
+                $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
+
+                // Initialize a boolean variable to track changes
+                $changesDetected = false;
+
+                foreach ($diagnoses as $index => $newDiagnosis) {
+                    $existingDiagnosis = $existingDiagnoses->get($index);
+                    $newDiagnoseDate = $diagnosisDates[$index];
+
+                    // Check if an existing record exists for this index
+                    if ($existingDiagnosis) {
+                        // Compare both the new diagnosis and new diagnoseDate with the existing ones
+                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate])) {
+                            // At least one of the fields has been updated
+                            $changesDetected = true;
+                            // You can log or perform other actions here
+
+                            // Update the existing record with the new data
+                            $existingDiagnosis->diagnose = $newDiagnosis;
+                            $existingDiagnosis->date = $newDiagnoseDate;
+                            $existingDiagnosis->save(); // Save the changes to the database
+                        }
+                    } else {
+                        // No existing record for this index, this may mean a new diagnosis was added
+                        // Handle new diagnoses here if needed
+                    }
+                }
+
                 $patientChange = $this->hasChanges($patient, $patientUpdatedData);
 
-                if ($patientChange) {
+                if ($patientChange || $changesDetected) {
                     $patient->first_name = $request->input('first_name');
                     $patient->middle_name = $request->input('middle_name');
                     $patient->last_name = $request->input('last_name');
@@ -429,8 +468,6 @@ class AdminController extends Controller
                     'middle_name' => 'required|string|max:255',
                     'last_name' => 'required|string|max:255',
                     'admitted_date' => 'required|date',
-                    'room_number' => 'required',
-                    'bed_number' => 'required',
                     'physician' => 'required|string|max:255',
                 ]);
 
@@ -446,13 +483,13 @@ class AdminController extends Controller
                     'gender' => $request->input('gender'),
                     'phone' => $request->input('phone'),
                     'admitted_date' => $request->input('admitted_date'),
+                    'admitted_time' => $request->input('admitted_time'),
                     'discharged_date' => $request->input('discharged_date'),
+                    'discharged_time' => $request->input('discharged_time'),
                     'room_number' => $request->input('room_number'),
                     'bed_number' => $request->input('bed_number'),
                     'physician' => $request->input('physician'),
                     'medical_condition' => $request->input('medical_condition'),
-                    'diagnosis' => $request->input('diagnosis'),
-                    'medication' => $request->input('medication'),
                     'guardian_first_name' => $request->input('guardian_first_name'),
                     'guardian_last_name' => $request->input('guardian_last_name'),
                     'guardian_birthdate' => $request->input('guardian_birthdate'),
@@ -462,9 +499,42 @@ class AdminController extends Controller
 
                 ];
 
+                 // Retrieve the request data
+                 $diagnosisDates = $request->input('diagnosisDate');
+                 $diagnoses = $request->input('diagnosis');
+ 
+                 // Retrieve the existing data from the database
+                 $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
+ 
+                 // Initialize a boolean variable to track changes
+                 $changesDetected = false;
+ 
+                 foreach ($diagnoses as $index => $newDiagnosis) {
+                     $existingDiagnosis = $existingDiagnoses->get($index);
+                     $newDiagnoseDate = $diagnosisDates[$index];
+ 
+                     // Check if an existing record exists for this index
+                     if ($existingDiagnosis) {
+                         // Compare both the new diagnosis and new diagnoseDate with the existing ones
+                         if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate])) {
+                             // At least one of the fields has been updated
+                             $changesDetected = true;
+                             // You can log or perform other actions here
+ 
+                             // Update the existing record with the new data
+                             $existingDiagnosis->diagnose = $newDiagnosis;
+                             $existingDiagnosis->date = $newDiagnoseDate;
+                             $existingDiagnosis->save(); // Save the changes to the database
+                         }
+                     } else {
+                         // No existing record for this index, this may mean a new diagnosis was added
+                         // Handle new diagnoses here if needed
+                     }
+                 }
+
                 $patientChange = $this->hasChanges($patient, $patientUpdatedData);
 
-                if ($patientChange) {
+                if ($patientChange || $changesDetected) {
                     $patient->first_name = $request->input('first_name');
                     $patient->middle_name = $request->input('middle_name');
                     $patient->last_name = $request->input('last_name');
@@ -476,13 +546,13 @@ class AdminController extends Controller
                     $patient->gender = $request->input('gender');
                     $patient->phone = $request->input('phone');
                     $patient->admitted_date = $request->input('admitted_date');
+                    $patient->admitted_time = $request->input('admitted_time');
                     $patient->discharged_date = $request->input('discharged_date');
+                    $patient->discharged_time = $request->input('discharged_time');
                     $patient->room_number = $request->input('room_number');
                     $patient->bed_number = $request->input('bed_number');
                     $patient->physician = $request->input('physician');
                     $patient->medical_condition = $request->input('medical_condition');
-                    $patient->diagnosis = $request->input('diagnosis');
-                    $patient->medication = $request->input('medication');
                     $patient->guardian_first_name = $request->input('guardian_first_name');
                     $patient->guardian_last_name = $request->input('guardian_last_name');
                     $patient->guardian_birthdate = $request->input('guardian_birthdate');
@@ -1867,7 +1937,7 @@ class AdminController extends Controller
 
             if ($info->{$key} != $value) {
 
-                return $value;
+                return true;
             }
         }
 

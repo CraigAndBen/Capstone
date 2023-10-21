@@ -211,12 +211,13 @@
                                                                         data-birthdate="{{ json_encode($patient->birthdate) }}"
                                                                         data-gender="{{ json_encode($patient->gender) }}"
                                                                         data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-admitted-time="{{ json_encode($patient->admitted_time) }}"
                                                                         data-discharged-date="{{ json_encode($patient->discharged_date) }}"
+                                                                        data-discharged-time="{{ json_encode($patient->discharged_time) }}"
                                                                         data-room-no="{{ json_encode($patient->room_number) }}"
                                                                         data-bed-no="{{ json_encode($patient->bed_number) }}"
                                                                         data-physician="{{ json_encode($patient->physician) }}"
                                                                         data-medical-condition="{{ json_encode($patient->medical_condition) }}"
-                                                                        data-diagnosis="{{ json_encode($patient->diagnosis) }}"
                                                                         data-guardian-first_name="{{ json_encode($patient->guardian_first_name) }}"
                                                                         data-guardian-last_name="{{ json_encode($patient->guardian_last_name) }}"
                                                                         data-guardian-birthdate="{{ json_encode($patient->guardian_birthdate) }}"
@@ -285,7 +286,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Adding Patient</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Patient Form</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('admin.patient.store') }}">
@@ -295,7 +296,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
                                                         id="floatingInput first_name" placeholder="First Name"
-                                                        name="first_name"/>
+                                                        name="first_name" />
                                                     <label for="floatingInput">First Name</label>
                                                 </div>
                                             </div>
@@ -303,7 +304,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2"
                                                         id="floatingInput middle_name" placeholder="Middle Name"
-                                                        name="middle_name"/>
+                                                        name="middle_name" />
                                                     <label for="floatingInput">Middle Name</label>
                                                 </div>
                                             </div>
@@ -311,7 +312,7 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control"
                                                         id="floatingInput last_name" placeholder="Last Name"
-                                                        name="last_name"/>
+                                                        name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
                                                 </div>
                                             </div>
@@ -706,7 +707,6 @@
                                                     <option value="">Select Gender</option>
                                                     <option value="male">Male</option>
                                                     <option value="female">Female</option>
-                                                    <option value="others">Others</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -721,9 +721,25 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
+                                                    <input type="time" name="admitted_time" class="form-control"
+                                                        id="admitted_time" placeholder="Admitted Time" />
+                                                    <label for="floatingInput">Admitted Time</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
                                                     <input type="date" name="discharged_date" class="form-control"
                                                         id="discharged_date" placeholder="Discharged Date" />
                                                     <label for="floatingInput">Discharged Date</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="time" name="discharged_date" class="form-control"
+                                                        id="discharged_time" placeholder="Discharged Time" />
+                                                    <label for="floatingInput">Discharged Time</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -744,6 +760,8 @@
                                             </div>
                                         </div>
                                         <hr>
+                                        <div id="diagnoses-list"></div>
+                                        <hr>
                                         <div class="form-floating mb-3">
                                             <select class="form-control p-3" id="physician" name="physician">
                                                 <option value="">Select physician</option>
@@ -759,17 +777,6 @@
                                                 id="medical_condtion" placeholder="Medical Condition" />
                                             <label for="floatingInput">Medical Condition</label>
                                         </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="diagnosis" class="form-control" id="diagnosis"
-                                                placeholder="Diagnosis" />
-                                            <label for="floatingInput">Diagnosis</label>
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="text" name="medication" class="form-control" id="medication"
-                                                placeholder="Medication" />
-                                            <label for="floatingInput">Medication</label>
-                                        </div>
-                                        <hr>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 ">
@@ -907,8 +914,8 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-floating mb-3">
-                                                <input type="number" name="phone" class="form-control"
-                                                    id="phone" placeholder="Phone" disabled />
+                                                <input type="number" name="phone" class="form-control" id="phone"
+                                                    placeholder="Phone" disabled />
                                                 <label for="floatingInput">Phone</label>
                                             </div>
                                         </div>
@@ -990,24 +997,22 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="guardian_first_name" placeholder="Guardian First Name"
-                                                    name="guardian_first_name" disabled />
+                                                <input type="text" class="form-control ml-2" id="guardian_first_name"
+                                                    placeholder="Guardian First Name" name="guardian_first_name"
+                                                    disabled />
                                                 <label for="floatingInput">Guardian First Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 ">
-                                                <input type="text" class="form-control ml-2"
-                                                    id="guardian_last_name" placeholder="Guardian Last Name"
-                                                    name="guardian_last_name" disabled />
+                                                <input type="text" class="form-control ml-2" id="guardian_last_name"
+                                                    placeholder="Guardian Last Name" name="guardian_last_name" disabled />
                                                 <label for="floatingInput">Guardian Last Name</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-floating mb-3 ">
-                                        <select class="form-control p-3" id="relationship" name="relationship"
-                                            disabled>
+                                        <select class="form-control p-3" id="relationship" name="relationship" disabled>
                                             <option va>Select Relationship</option>
                                             <option value="parent">Parent</option>
                                             <option value="legal guardian">Legal Guardian</option>
@@ -1057,8 +1062,7 @@
                     {{-- View OutPatient modal --}}
                     <div class="modal fade" id="viewOutpatientModal" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel">
-                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
-                            role="document">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
                                     <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
@@ -1379,7 +1383,9 @@
                 $(document).ready(function() {
 
                     $('#updateAdmittedpatientModal').on('show.bs.modal', function(event) {
+
                         var button = $(event.relatedTarget); // Button that triggered the modal
+
                         var id = JSON.parse(button.data('id'));
                         var first_name = JSON.parse(button.data('first-name'));
                         var middle_name = JSON.parse(button.data('middle-name'));
@@ -1392,13 +1398,13 @@
                         var gender = JSON.parse(button.data('gender'));
                         var phone = JSON.parse(button.data('phone'));
                         var admitted_date = JSON.parse(button.data('admitted-date'));
+                        var admitted_time = JSON.parse(button.data('admitted-time'));
                         var discharged_date = JSON.parse(button.data('discharged-date'));
+                        var discharged_time = JSON.parse(button.data('discharged-time'));
                         var room_number = JSON.parse(button.data('room-no'));
                         var bed_number = JSON.parse(button.data('bed-no'));
                         var physician = JSON.parse(button.data('physician'));
                         var medical_condition = JSON.parse(button.data('medical-condition'));
-                        var diagnosis = JSON.parse(button.data('diagnosis'));
-                        var medication = JSON.parse(button.data('medication'));
                         var guardian_first_name = JSON.parse(button.data('guardian-first_name'));
                         var guardian_last_name = JSON.parse(button.data('guardian-last_name'));
                         var guardian_birthdate = JSON.parse(button.data('guardian-birthdate'));
@@ -1407,6 +1413,7 @@
                         var guardian_email = JSON.parse(button.data('guardian-email'));
                         var modal = $(this);
 
+                        var diagnosesList = modal.find('#diagnoses-list');
                         modal.find('#id').val(id);
                         modal.find('#first_name').val(first_name);
                         modal.find('#middle_name').val(middle_name);
@@ -1424,7 +1431,6 @@
                         modal.find('#bed_number').val(bed_number);
                         modal.find('#physician').val(physician);
                         modal.find('#medical_condition').val(medical_condition);
-                        modal.find('#diagnosis').val(diagnosis);
                         modal.find('#medication').val(medication);
                         modal.find('#guardian_first_name').val(guardian_first_name);
                         modal.find('#guardian_last_name').val(guardian_last_name);
@@ -1432,6 +1438,35 @@
                         modal.find('#relationship').val(relationship);
                         modal.find('#guardian_phone').val(guardian_phone);
                         modal.find('#guardian_email').val(guardian_email);
+
+                        // Make an AJAX request to fetch diagnoses
+                        $.get('/admin/patient/' + id + '/diagnoses')
+                            .done(function(diagnoses) {
+                                diagnosesList.empty();
+                                diagnosesList.append('<h3>Diagnosis List</h3>');
+                                $.each(diagnoses, function(index, diagnosis) {
+                                    var diagnosisHtml = `
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="date" name="diagnosisDate[]" class="form-control" id="diagnosisDate" placeholder="Diagnose Date" value="${diagnosis.date}" />
+                                                <label for="floatingInput">Date</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text" name="diagnosis[]" class="form-control" id="Diagnosis" placeholder="Diagnosis" value="${diagnosis.diagnose}" />
+                                                <label for="floatingInputDiagnosis">Diagnosis</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                diagnosesList.append(diagnosisHtml);
+                                });
+                            })
+                            .fail(function(jqXHR, textStatus, errorThrown) {
+                                console.error("Error: " + errorThrown);
+                            });
                     });
 
                     $('#updateaOutpatientModal').on('show.bs.modal', function(event) {
