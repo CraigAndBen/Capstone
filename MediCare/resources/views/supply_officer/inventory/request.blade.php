@@ -71,20 +71,14 @@
                                         <span class="fa fa-check-circle"></span> No Request Yet.
                                     </div>
                                 @else
-                                <div class="row justify-content-end">
-                                    <div class="form-group col-sm-4">
-                                        <input type="text" id="requestSearch" class="form-control"
-                                            placeholder="Search Requests">
-                                    </div>
-                                </div>
-                                    <table class="table table-hover">
+                                    <table id="requesttable" class="display">
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center">#</th>
                                                 <th style="text-align: center">Name Of Requester</th>
                                                 <th style="text-align: center">Department</th>
                                                 <th style="text-align: center">Date</th>
-                                                <th style="text-align: center">Product Name</th>
+                                                <th style="text-align: center">Item Name</th>
                                                 <th style="text-align: center">Brand</th>
                                                 <th style="text-align: center">Quantity</th>
                                             </tr>
@@ -106,9 +100,6 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $requests->links('pagination::bootstrap-4') }}
-                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -120,37 +111,9 @@
         </div>
     @endsection
     @section('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#requestSearch').on('keyup', function() {
-                    var searchText = $(this).val().toLowerCase();
-                    filterRequests(searchText);
-                });
-
-                function filterRequests(searchText) {
-                    var rows = document.querySelectorAll("table tbody tr");
-                    for (var i = 0; i < rows.length; i++) {
-                        var requestName = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
-                        var department = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
-                        var date = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
-                        var productName = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
-                        var brand = rows[i].querySelector("td:nth-child(6)").textContent.toLowerCase();
-                        var quantity = rows[i].querySelector("td:nth-child(7)").textContent.toLowerCase();
-
-                        if (
-                            requestName.includes(searchText) ||
-                            department.includes(searchText) ||
-                            date.includes(searchText) ||
-                            productName.includes(searchText) ||
-                            brand.includes(searchText) ||
-                            quantity.includes(searchText)
-                        ) {
-                            rows[i].style.display = "";
-                        } else {
-                            rows[i].style.display = "none";
-                        }
-                    }
-                }
-            });
-        </script>
+    <script>
+        $(document).ready( function () {
+             $('#requesttable').DataTable();
+         });
+     </script>
     @endsection

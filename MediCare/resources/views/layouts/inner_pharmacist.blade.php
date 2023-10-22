@@ -27,6 +27,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+
 
 </head>
 <!-- [Head] end -->
@@ -227,12 +229,11 @@
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Product</span><span class="pc-arrow"><i
+                                class="pc-mtext">Item</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('pharmacist.inventory') }}">Medicine Inventory</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('pharmacist.product') }}">Product
-                                    List</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('pharmacist.product') }}">Item Price List</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -281,6 +282,7 @@
 
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 
 <!-- [Body] end -->
 @yield('scripts')

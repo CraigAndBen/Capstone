@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Product List</h5>
+                                <h5 class="m-b-10">Item Price List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('pharmacist.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('pharmacist.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Product List List</li>
+                                <li class="breadcrumb-item" aria-current="page">Item Price List</li>
                             </ul>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Product List</h1>
+                            <h1>Item Price List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -41,8 +41,8 @@
                                     <div class="m-1">
                                         <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
                                             Price</button>
-                                        <a href="{{ route('pharmacist.product.report') }}"
-                                            class="btn btn-success">Generate Report</a>
+                                        <a href="{{ route('pharmacist.product.report') }}" class="btn btn-success">Generate
+                                            Report</a>
 
                                     </div>
                                 </div>
@@ -74,13 +74,13 @@
 
                                 @if ($products_price->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Product Yet.
+                                        <span class="fa fa-check-circle"></span> No Item Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
+                                    <table  class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th>Product Name</th>
+                                                <th>Item Name</th>
                                                 <th>Category Name</th>
                                                 <th>Price</th>
                                                 <th></th>
@@ -95,7 +95,7 @@
                                                             <td>{{ ucwords($category->category_name) }}</td>
                                                             @foreach ($products_price as $price)
                                                                 @if ($price->product_id == $product->id)
-                                                                    <td>₱{{ ucwords($price->price) }}</td>
+                                                                    <td>₱{{ number_format($price->price, 2) }}</td>
                                                                     <td class="text-center">
                                                                         <div class="dropdown">
                                                                             <button class="btn btn-primary dropdown-toggle"
@@ -137,9 +137,9 @@
 
                                         </tbody>
                                     </table>
-                                    {{-- <div class="d-flex justify-content-center my-3">
-                                        {{ $products_price->links('pagination::bootstrap-4') }}
-                                    </div> --}}
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $products->links('pagination::bootstrap-4') }}
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -150,7 +150,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Adding Product</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Add Item price</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('pharmacist.product.create') }}">
@@ -159,11 +159,15 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" id="product" name="product">
-                                                        <option>Select Product</option>
+                                                        <option>Select Item</option>
                                                         @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}">
-                                                                {{ ucwords($product->p_name) }}
-                                                            </option>
+                                                            @foreach ($categories as $category)
+                                                                @if ($product->category_id == $category->id)
+                                                                    <option value="{{ $product->id }}">
+                                                                        {{ ucwords($product->p_name) }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -195,7 +199,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Update Product</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Update Item</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('pharmacist.product.update') }}">
@@ -204,11 +208,15 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" id="product_id" name="product_id">
-                                                        <option>Select Product</option>
+                                                        <option>Select Item</option>
                                                         @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}">
-                                                                {{ ucwords($product->p_name) }}
-                                                            </option>
+                                                            @foreach ($categories as $category)
+                                                                @if ($product->category_id == $category->id)
+                                                                    <option value="{{ $product->id }}">
+                                                                        {{ ucwords($product->p_name) }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -233,13 +241,13 @@
                     </div>
                     {{-- End Update Modal --}}
 
-                    {{-- Update modal --}}
+                    {{-- View modal --}}
                     <div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
                         aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Item price</h2>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
@@ -247,7 +255,7 @@
                                             <div class="form-floating mb-3">
                                                 <select class="form-control p-3" id="product_id" name="product_id"
                                                     disabled>
-                                                    <option>Select Product</option>
+                                                    <option>Select Item</option>
                                                     @foreach ($products as $product)
                                                         <option value="{{ $product->id }}">
                                                             {{ ucwords($product->p_name) }}
@@ -272,7 +280,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- End Update Modal --}}
+                    {{-- End View Modal --}}
 
 
                     <!-- [ sample-page ] end -->

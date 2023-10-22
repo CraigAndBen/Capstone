@@ -44,36 +44,63 @@
                                             <div class="row">
                                                 <div class="form-group col-md-4">
                                                     <label>Name of Requester</label>
-                                                    <select id="name_requester" name="name_requester" class="form-control n_requester">
-                                                        <option selected disabled>Choose...</option>
+                                                    <select id="name_requester" name="name_requester"
+                                                        class="form-control n_requester" required
+                                                        oninvalid="this.setCustomValidity('Please input a name.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Choose...</option>
                                                         <option value="Angela">Angela</option>
                                                         <option value="Arjay">Arjay</option>
                                                         <option value="Jeremy">Jeremy</option>
                                                     </select>
+                                                    @error('name_requester')
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="department">Department</label>
-                                                    <select id="department" name="department"class="form-control dept">
-                                                        <option selected disabled>Choose...</option>
+                                                    <select id="department" name="department"class="form-control dept"
+                                                        required
+                                                        oninvalid="this.setCustomValidity('Please select a department.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Choose...</option>
                                                         <option value="CSR">CSR</option>
                                                         <option value="ER">ER</option>
                                                         <option value="OR">OR</option>
-                                                        <option value="Nursing Service (Private)">Nursing Service (Private)</option>
-                                                        <option value="Nursing Service (Ward)">Nursing Service (Ward)</option>
+                                                        <option value="Nursing Service (Private)">Nursing Service (Private)
+                                                        </option>
+                                                        <option value="Nursing Service (Ward)">Nursing Service (Ward)
+                                                        </option>
                                                         <option value="Laboratory">Laboratory</option>
                                                     </select>
+                                                    @error('department')
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label>Date</label>
                                                     <input type="date" class="form-control" id="date" name="date"
-                                                        value="{{ isset($_GET['date']) ? $_GET['date'] : '' }}">
+                                                        value="{{ isset($_GET['date']) ? $_GET['date'] : '' }}" required
+                                                        oninvalid="this.setCustomValidity('Please input a date.')"
+                                                        oninput="setCustomValidity('')">
+                                                    @error('date')
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-4">
-                                                    <label for="product_id">Product Name</label>
-                                                    <select class="form-control" name="product_id" id="product_id">
-                                                        <option selected disabled>Select a Product</option>
+                                                    <label for="product_id">Item Name</label>
+                                                    <select class="form-control" name="product_id" id="product_id" required
+                                                        oninvalid="this.setCustomValidity('Please select a item.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Select a Item</option>
                                                         @foreach ($products as $product)
                                                             @if ($product->status == 'Available')
                                                                 <option value="{{ $product->id }}"
@@ -82,11 +109,19 @@
                                                             @endif
                                                         @endforeach
                                                     </select>
-                                                </div>                                                
+                                                    @error('product_id')
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="brand">Brand</label>
-                                                    <select class="brand form-control" name="brand" id="brand">
-                                                        <option selected disabled>Select Brand</option>
+                                                    <select class="brand form-control" name="brand" id="brand"
+                                                        required
+                                                        oninvalid="this.setCustomValidity('Please select a brand.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Select Brand</option>
                                                         <option value="Pfizer"
                                                             {{ isset($_GET['brand']) && $_GET['brand'] == 'Pfizer' ? 'selected' : '' }}>
                                                             Pfizer</option>
@@ -102,11 +137,23 @@
                                                             {{ isset($_GET['brand']) && $_GET['brand'] == 'Cintas' ? 'selected' : '' }}>
                                                             Cintas</option>
                                                     </select>
+                                                    @error('brand')
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="quantity">Quantity</label>
                                                     <input type="number" class="form-control" name="quantity"
-                                                        placeholder="Enter Quantity">
+                                                        placeholder="Enter Quantity" required
+                                                        oninvalid="this.setCustomValidity('Please input a quantity.')"
+                                                        oninput="setCustomValidity('')">
+                                                    @error('quntity')
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <button type="submit" class="btn btn-success">Submit</button>
@@ -150,10 +197,10 @@
                 $(".n_requester").select2({
                     width: '100%',
                     height: '80%',
-                    placeholder: 'Choose Product',
+                    placeholder: 'Choose Item',
                     tags: true
                 });
-                $(".dept").select2({
+                $(".brand").select2({
                     width: '100%',
                     placeholder: 'Select Brand',
                     tags: true
@@ -161,4 +208,3 @@
             });
         </script>
     @endsection
-   

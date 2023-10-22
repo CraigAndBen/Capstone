@@ -53,11 +53,11 @@
                                     @if (count($mostValuedProducts) > 0)
                                         <ul>
                                             @foreach ($mostValuedProducts as $product)
-                                                <li>{{ $product }}</li>
+                                                <li>{{ $product['name'] }} - ₱{{ number_format($product['price'], 2) }}</li>
                                             @endforeach
                                         </ul>
                                     @else
-                                        No products in this classification.
+                                        No items in this classification.
                                     @endif
                                 </div>
                                 <div class="col-md-4">
@@ -65,11 +65,11 @@
                                     @if (count($mediumValuedProducts) > 0)
                                         <ul>
                                             @foreach ($mediumValuedProducts as $product)
-                                                <li>{{ $product }}</li>
+                                                <li>{{ $product['name'] }} - ₱{{ number_format($product['price'], 2) }}</li>
                                             @endforeach
                                         </ul>
                                     @else
-                                        No products in this classification.
+                                        No items in this classification.
                                     @endif
                                 </div>
                                 <div class="col-md-4">
@@ -77,14 +77,16 @@
                                     @if (count($lowValuedProducts) > 0)
                                         <ul>
                                             @foreach ($lowValuedProducts as $product)
-                                                <li>{{ $product }}</li>
+                                                <li>{{ $product['name'] }} - ₱{{ number_format($product['price'], 2) }}</li>
                                             @endforeach
                                         </ul>
                                     @else
-                                        No products in this classification.
+                                        No items in this classification.
                                     @endif
                                 </div>
                             </div>
+                            
+                            
                             
                         </div>
 

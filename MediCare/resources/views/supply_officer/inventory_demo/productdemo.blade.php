@@ -1,3 +1,4 @@
+
 @extends('layouts.inner_demo')
 
 @section('content')
@@ -11,13 +12,13 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Product Demographics</h5>
+                                <h5 class="m-b-10">Item Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item" aria-current="page">Product Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Item Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -33,10 +34,10 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Product Demographics</h2>
+                            <h2>Item Demographics</h2>
                         </div>
                         <div class="card-body">
-                            <h4>Segregates products based on their consumption rate</h4>
+                            <h4>Segregates items based on their consumption rate</h4>
                             <div class="row justify-content-end">
                                 <div class="col-md-2 mt-2">
                                     <a href="{{ route('supply_officer.products.report') }}" class="btn btn-success">Generate
@@ -48,42 +49,52 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <strong>Fast Moving</strong>
-                                    @if (count($fastProducts) > 0)
-                                    <ul>
-                                        @foreach ($fastProducts as $product)
-                                        <li>{{ $product }}</li>
-                                        @endforeach
-                                    </ul>
-                                    @else
-                                    No products in this classification.
-                                    @endif
+                                    <div class="classification">
+                                        <strong>Fast Moving</strong>
+                                        @if (count($fastProducts) > 0)
+                                            <ul>
+                                                @foreach ($fastProducts as $index => $product)
+                                                    <li><strong> {{ $index + 1 }} -</strong> {{ $product['name'] }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            No items in this classification.
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <strong>Slow Moving</strong>
-                                    @if (count($slowProducts) > 0)
-                                    <ul>
-                                        @foreach ($slowProducts as $product)
-                                        <li>{{ $product }}</li>
-                                        @endforeach
-                                    </ul>
-                                    @else
-                                    No products in this classification.
-                                    @endif
+                                    <div class="classification">
+                                        <strong>Slow Moving:</strong>
+                                        @if (count($slowProducts) > 0)
+                                            <ul>
+                                                @foreach ($slowProducts as $index => $product)
+                                                    <li><strong>{{ $index + 1 }} - </strong>{{ $product['name'] }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            No items in this classification.
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <strong>Non-Moving</strong>
-                                    @if (count($nonMovingProducts) > 0)
-                                    <ul>
-                                        @foreach ($nonMovingProducts as $product)
-                                        <li>{{ $product }}</li>
-                                        @endforeach
-                                    </ul>
-                                    @else
-                                    No products in this classification.
-                                    @endif
+                                    <div class="classification">
+                                        <strong>Non-Moving:</strong>
+                                        @if (count($nonMovingProducts) > 0)
+                                            <ul>
+                                                @foreach ($nonMovingProducts as $product)
+                                                    <li>{{ $product['name'] }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            No items in this classification.
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>    
+                            </div>
+                            
+                            
+                            
+                            
                         </div>
 
                         <!-- [ sample-page ] end -->

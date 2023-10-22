@@ -59,7 +59,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Product/Department</th>
+                            <th>Item/Department</th>
                             <th>Total</th>
                         </tr>
                     </thead>

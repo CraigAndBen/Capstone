@@ -78,10 +78,10 @@
                     
                     <div class="mt-4">
                         <div class="table table-sm row ">
-                            <div class="d-none d-sm-block col-2">Product Id</div>
-                            <div class="col-9 col-sm-3">Product Name</div>
-                            <div class="d-none d-sm-block col-sm-2">Price</div>
-                            <div class="d-none d-sm-block col-sm-2">Qunatity</div>
+                            <div class="d-none d-sm-block col-2">Item Id</div>
+                            <div class="col-9 col-sm-3">Item Name</div>
+                            <div class="d-none d-sm-block col-sm-2">Unit Price</div>
+                            <div class="d-none d-sm-block col-sm-2">Quantity</div>
                             <div class="col-9 col-sm-3">Sub total</div>
                         </div>
 
@@ -90,9 +90,9 @@
                                 <div class="row mb-2 mb-sm-0 py-25">
                                     <div class="d-none d-sm-block col-2">{{ $item['product_id'] }}</div>
                                     <div class="col-9 col-sm-3">{{ $item['name'] }}</div>
-                                    <div class="d-none d-sm-block col-2">₱{{ $item['price'] }}</div>
+                                    <div class="d-none d-sm-block col-2">₱{{ number_format($item['price'], 2) }}</div>
                                     <div class="d-none d-sm-block col-2 text-95">{{ $item['quantity'] }}</div>
-                                    <div class="col-9 col-sm-3">₱{{ $item['price'] * $item['quantity'] }}</div>
+                                    <div class="col-9 col-sm-3">₱{{ number_format($item['price'] * $item['quantity'], 2) }}</div>
                                 </div>
                             @endforeach
                         </div>
@@ -110,8 +110,8 @@
                                     </div>
                                     <div class="col-5">
                                         <span class="text-110 text-secondary-d1">
-                                            ₱{{ array_sum(array_map(function ($item) 
-                                            {return $item['price'] * $item['quantity'];}, $cart)) }}</span>
+                                            ₱{{ number_format(array_sum(array_map(function ($item) 
+                                                {return $item['price'] * $item['quantity'];}, $cart)), 2) }}</span>
                                     </div>
                                 </div>
 
@@ -120,7 +120,7 @@
                                         Amount:
                                     </div>
                                     <div class="col-5">
-                                        <span class="text-110 text-secondary-d1">₱{{ $amount }}</span>
+                                        <span class="text-110 text-secondary-d1">₱{{ number_format($amount, 2) }}</span>
                                     </div>
                                 </div>
 
@@ -129,7 +129,7 @@
                                         Change:
                                     </div>
                                     <div class="col-5">
-                                        <span class="text-110 text-secondary-d1">₱{{ $change }}</span>
+                                        <span class="text-110 text-secondary-d1">₱{{ number_format($change, 2) }}</span>
                                     </div>
                                 </div>
                             </div>

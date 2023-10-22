@@ -165,7 +165,7 @@ class PharmacistController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         
-        $products = Product::with('category')->get();
+        $products = Product::with('category')->paginate(10);
         $categories = Category::where('category_name', 'pharmaceutical')->get();
     
         return view('pharmacist.product.inventory_medicine', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
@@ -277,7 +277,7 @@ class PharmacistController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $products_price = Product_price::all();
-        $products = Product::all();
+        $products = Product::with('category')->paginate(10);
         $categories = Category::where('category_name', 'pharmaceutical')->get();
 
         return view('pharmacist.product.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories', 'products_price'));
@@ -302,7 +302,8 @@ class PharmacistController extends Controller
             'product' => 'required',
             'price' => 'required'
         ]);
-
+        
+        
         $product_price = new Product_price;
         $product_price->product_id = $request->input('product');
         $product_price->price = $request->input('price');

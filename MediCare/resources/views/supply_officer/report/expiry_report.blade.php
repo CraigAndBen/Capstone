@@ -26,9 +26,11 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Expiration Report</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>Expiration Report</b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -39,14 +41,14 @@
 
         </div>
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center">    
             <div class="col-10 text-center">
                 <h3><i>Expiration Report</i></h3>
                 <br>
-                <table class="table table-hover">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="text-align: center">Product Name</th>
+                            <th style="text-align: center">Item Name</th>
                             <th style="text-align: center">Stock</th>
                             <th style="text-align: center">Brand</th>
                             <th style="text-align: center">Category</th>
@@ -62,7 +64,7 @@
                                 <td style="text-align: center">{{ $product->brand }}</td>
                                 <td style="text-align: center">{{ $product->category->category_name }}
                                 </td>
-                                <td style="text-align: center">{{ $product->expiration }}</td>
+                                <td style="text-align: center">{{ date('M j, Y', strtotime($product->expiration)) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

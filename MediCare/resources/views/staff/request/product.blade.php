@@ -17,16 +17,11 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
-                                <div class="row justify-content-end">
-                                    <div class="form-group col-sm-4">
-                                        <input type="text" id="stockSearch" class="form-control"
-                                            placeholder="Search Product">
-                                    </div>
-                                </div>
-                                <table class="table">
+                               
+                                <table id="stocktable" class="table ">
                                     <thead>
                                         <tr>
-                                            <th class="text-center" scope="col">Product Name</th>
+                                            <th class="text-center" scope="col">Item Name</th>
                                             <th class="text-center"scope="col">Category</th>
                                             <th class="text-center"scope="col">Brand</th>
                                             <th class="text-center" scope="col">Quantity</th>
@@ -62,6 +57,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                      
                             </div>
 
                             <!-- [ Main Content ] end -->
@@ -89,38 +85,9 @@
                                     window.location.href = redirectUrl;
                                 }
                             </script>
-
-                            <script>
-                                $(document).ready(function() {
-                                    $('#stockSearch').on('keyup', function() {
-                                        var searchText = $(this).val().toLowerCase();
-                                        filterRequests(searchText);
-                                    });
-
-                                    function filterRequests(searchText) {
-                                        var rows = document.querySelectorAll("table tbody tr");
-                                        for (var i = 0; i < rows.length; i++) {
-                                            var productName = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
-                                            var category = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
-                                            var brand = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
-                                            var quantity = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
-                                            var expiration = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
-                                            var status = rows[i].querySelector("td:nth-child(6)").textContent.toLowerCase();
-
-                                            if (
-                                                productName.includes(searchText) ||
-                                                category.includes(searchText) ||
-                                                brand.includes(searchText) ||
-                                                quantity.includes(searchText) ||
-                                                expiration.includes(searchText) ||
-                                                status.includes(searchText)
-                                            ) {
-                                                rows[i].style.display = "";
-                                            } else {
-                                                rows[i].style.display = "none";
-                                            }
-                                        }
-                                    }
-                                });
-                            </script>
+                             <script>
+                                $(document).ready( function () {
+                                     $('#stocktable').DataTable();
+                                 });
+                             </script>
                         @endsection

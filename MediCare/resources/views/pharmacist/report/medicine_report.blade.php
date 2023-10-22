@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: portrait;
         }
 
         .page-break {
@@ -26,9 +26,11 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Product Report</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>Item Report</b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -41,12 +43,12 @@
 
         <div class="row justify-content-center">
             <div class="col-10 text-center">
-                <h3><i>Product Table</i></h3>
+                <h3><i>Item Table</i></h3>
                 <br>
                 <table class="table table-bordered">
-                    <thead class="bg-primary text-light">
+                    <thead class="bg-primary dark-light">
                         <tr>
-                            <th>Product Name</th>
+                            <th>Item Name</th>
                             <th>Category</th>
                             <th>Stock</th>
                             <th>Brand</th>
@@ -65,8 +67,8 @@
                                 @endforeach
                                 <td>{{ $product->stock }}</td>
                                 <td>{{ $product->brand }}</td>
-                                <td>{{ $product->expiration }}</td>
-                                <!-- Add more table cells for other product attributes -->
+                                <td>{{ date('M j, Y', strtotime($product->expiration)) }}</td>
+                             <!-- Add more table cells for other product attributes -->
                             </tr>
                         @endforeach
                     </tbody>

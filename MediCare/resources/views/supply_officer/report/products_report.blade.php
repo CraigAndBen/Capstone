@@ -1,3 +1,4 @@
+
 @extends('layouts.analytics_report')
 @section('style')
     <style>
@@ -26,7 +27,7 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Product (FSN) Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>Item (FSN) Analytics Report</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
@@ -41,10 +42,10 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Product (FSN) Pie Graph</i></h3>
-                <h4>Segregates products based on their consumption rate</h4>
+                <h3><i>Item (FSN) Pie Graph</i></h3>
+                <h4>Segregates item based on their consumption rate</h4>
                 <div class="row mb-5 p-3  mx-auto">
-                    <canvas id="productGraph"></canvas>
+                    <canvas id="productGraph" style="width: 300px; height: 300px;"></canvas>
                 </div>
             </div>
             <div class="col-1">

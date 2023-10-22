@@ -18,74 +18,67 @@ class ExpirationAlert
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $currentTime = Carbon::now()->toTimeString();
-        $currentDate = date('M j, Y');
-        $currentMonth = Carbon::now()->month;
-
-        $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->get();
-
         // Calculate the date three months from the current date
         $threeMonthsFromNow = Carbon::now()->addMonths(3)->format('Y-m-d');
 
-        // Retrieve products with expiration dates exactly three months from now
-        $productsToExpire = Product::whereDate('expiration', $threeMonthsFromNow)->get();
+        // Retrieve products with expiration dates within three months
+        $productsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)->get();
 
         foreach ($productsToExpire as $product) {
-            $title = 'Expiration Alert';
-            $message = "Product: $product->p_name will expire on: $product->expiration";
+            $title = 'Product Expiration Alert';
+            $message = "Product: $product->p_name will expire on: " . date("M j, Y", strtotime($product->expiration));
 
-            // Check if a similar notification already exists and if it's a new month
-            $notificationExists = false;
 
-            foreach ($notifications as $notification) {
-                if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
-                    $notificationExists = true;
-                    break;
+            // Check if a similar notification already exists for this product
+            $notificationExists = Notification::where('title', $title)
+                ->where('message', $message)
+                ->where('date', $product->expiration)
+                ->exists();
+
+                if (!$notificationExists) {
+                    // Set the Manila time zone
+                    $manilaTime = Carbon::now('Asia/Manila');
+                
+                    // Create a new notification for product expiration
+                    Notification::create([
+                        'title' => $title,
+                        'message' => $message,
+                        'date' => $product->expiration,
+                        'time' => $manilaTime->format('g:i A'),
+                        'type' => 'supply_officer',
+                    ]);
                 }
-            }
-
-            if (!$notificationExists) {
-                // Create a new notification
-                Notification::create([
-                    'title' => $title,
-                    'message' => $message,
-                    'date' => $currentDate,
-                    'time' => $currentTime,
-                    'type' => 'supply_officer',
-                ]);
-            }
+                
         }
 
-        // Get products with stock below 100
-        $lowStockProducts = Product::where('stock', '<', 100)->get();
+        // Retrieve products with stock less than 100
+        $productsLowStock = Product::where('stock', '<', 100)->get();
 
-        foreach ($lowStockProducts as $product) {
+        foreach ($productsLowStock as $product) {
             $title = 'Low Stock Alert';
-            $message = "Product: $product->p_name has low stock. Remaining stock: $product->stock";
+            $message = "Product: $product->p_name has low stock. The Remaining stock: $product->stock";
 
-            // Check if a similar notification already exists and if it's a new month
-            $notificationExists = false;
+            // Check if a similar notification already exists for this product
+            $notificationExists = Notification::where('title', $title)
+                ->where('message', $message)
+                ->exists();
 
-            foreach ($notifications as $notification) {
-                if ($notification->title === $title && Carbon::parse($notification->date)->month === $currentMonth) {
-                    $notificationExists = true;
-                    break;
+                if (!$notificationExists) {
+                    // Set the Manila time zone
+                    $manilaTime = Carbon::now('Asia/Manila');
+                
+                    // Create a new notification for product expiration
+                    Notification::create([
+                        'title' => $title,
+                        'message' => $message,
+                        'date' => $product->expiration,
+                        'time' => $manilaTime->format('g:i A'),
+                        'type' => 'supply_officer',
+                    ]);
                 }
-            }
-
-            if (!$notificationExists) {
-                // Create a new notification
-                Notification::create([
-                    'title' => $title,
-                    'message' => $message,
-                    'date' => $currentDate,
-                    'time' => $currentTime,
-                    'type' => 'supply_officer',
-                ]);
-            }
+                
         }
 
         return $next($request);
     }
-
 }

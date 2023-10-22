@@ -11,13 +11,13 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Product List</h5>
+                                <h5 class="m-b-10">Item List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item" aria-current="page">Product List</li>
+                                <li class="breadcrumb-item" aria-current="page">Item List</li>
                             </ul>
                         </div>
                     </div>
@@ -33,19 +33,20 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Product List</h1>
+                            <h1>Item List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
-                                    <div class="col"></div>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#createModal">Add product</button>
-                                    <a href="{{route('supply_officer.product.report')}}" class="btn btn-success">Generate Report</a>
-
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#createModal">Add Item</button>
+                                        <a href="{{ route('supply_officer.product.report') }}"
+                                            class="btn btn-success">Generate Report</a>
+                                    </div>
                                 </div>
-                          
+
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -73,19 +74,13 @@
 
                                 @if ($products->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Product Yet.
+                                        <span class="fa fa-check-circle"></span> No Item Yet.
                                     </div>
                                 @else
-                                    <div class="row justify-content-end">
-                                        <div class="form-group col-sm-4">
-                                            <input type="text" id="productSearch" class="form-control"
-                                                placeholder="Search Product">
-                                        </div>
-                                    </div>
-                                    <table class="table table-bordered">
+                                    <table id="producttable" class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th class="text-center">Product Name</th>
+                                                <th class="text-center">Item Name</th>
                                                 <th class="text-center">Category</th>
                                                 <th class="text-center">Stock Available</th>
                                                 <th class="text-center">Brand</th>
@@ -101,7 +96,7 @@
                                                     <td class="text-center">{{ $product->category->category_name }}</td>
                                                     <td class="text-center">{{ $product->stock }}</td>
                                                     <td class="text-center">{{ $product->brand }}</td>
-                                                    <td class="text-center">{{ $product->expiration }}</td>
+                                                    <td class="text-center">{{ date('M j, Y', strtotime($product->expiration)) }}</td>
                                                     <td class="text-center">{{ $product->status }}</td>
                                                     <td class="text-center">
                                                         <a
@@ -110,14 +105,14 @@
                                                         <a type="icon" class="icon-trigger editIcon" data-toggle="modal"
                                                             data-target="#updateProduct{{ $product->id }}" href="">
                                                             <i class="bi bi-pencil-fill"></i></a>
-                                                        <a href="{{ url('/supply_officer/product/delete/' . $product->id) }}"><i
+                                                        <a
+                                                            href="{{ url('/supply_officer/product/delete/' . $product->id) }}"><i
                                                                 class="bi bi-trash-fill"></i></a>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    
                                 @endif
                             </div>
                         </div>
@@ -129,21 +124,24 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Add product</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Add item</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('supply_officer.product.create') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Product</label>
+                                                <label>Item</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3 p_name" name="p_name">
-                                                        <option value="">Select Product</option>
+                                                    <select class="form-control p-3 p_name" name="p_name" required
+                                                        oninvalid="this.setCustomValidity('Please input a item.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Select Item</option>
                                                         <option value="Xanax ">Xanax </option>
                                                         <option value="Lipitor (Atorvastatin)">Lipitor
                                                             (Atorvastatin)</option>
-                                                        <option value="Amlorex Amplodipine 10 mg">Amlorex Amplodipine 10 mg</option>
+                                                        <option value="Amlorex Amplodipine 10 mg">Amlorex Amplodipine 10 mg
+                                                        </option>
                                                         <option value="3M N95 Respirator Masks">3M N95 Respirator
                                                             Masks</option>
                                                         <option value="Disposable Nitrile Gloves">Disposable Nitrile
@@ -164,7 +162,9 @@
                                             <div class="col-md-6">
                                                 <label>Brand</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3 brand" name="brand">
+                                                    <select class="form-control p-3 brand" name="brand" required
+                                                        oninvalid="this.setCustomValidity('Please input a brand.')"
+                                                        oninput="setCustomValidity('')">
                                                         <option></option>
                                                         <option value="Pfizer">Pfizer</option>
                                                         <option value="3M">3M</option>
@@ -184,7 +184,9 @@
                                                 <label>Stock</label>
                                                 <div class="form-floating mb-3">
                                                     <input type="number" class="form-control p-3"
-                                                        placeholder="Stock Available" name="stock" />
+                                                        placeholder="Stock Available" name="stock" required
+                                                        oninvalid="this.setCustomValidity('Please input a stock.')"
+                                                        oninput="setCustomValidity('')" />
                                                 </div>
                                                 @error('stock')
                                                     <div class="alert alert-danger" role="alert">
@@ -195,8 +197,10 @@
                                             <div class="col-md-6">
                                                 <label>Category</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3" name="category_id">
-                                                        <option selected disabled>Select a Category</option>
+                                                    <select class="form-control p-3" name="category_id" required
+                                                        oninvalid="this.setCustomValidity('Please select a category.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Select a Category</option>
                                                         @foreach ($categories as $category)
                                                             <option value="{{ $category->id }}">
                                                                 {{ $category->category_name }}</option>
@@ -214,7 +218,10 @@
                                             <div class="col-md-6">
                                                 <label>Expiration Date</label>
                                                 <div class="form-floating mb-3">
-                                                    <input type="date" name="expiration" class="form-control p-3" />
+                                                    <input type="date" name="expiration" class="form-control p-3"
+                                                        required
+                                                        oninvalid="this.setCustomValidity('Please input a expiration date.')"
+                                                        oninput="setCustomValidity('')" />
                                                 </div>
                                                 @error('expiration')
                                                     <div class="alert alert-danger" role="alert">
@@ -225,8 +232,10 @@
                                             <div class="col-md-6">
                                                 <label>Status</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3" name="status">
-                                                        <option selected disabled>Select Status</option>
+                                                    <select class="form-control p-3" name="status" required
+                                                        oninvalid="this.setCustomValidity('Please select a status.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Select Status</option>
                                                         <option value="Available">Available</option>
                                                         <option value="Unavailable">Unavailable</option>
                                                     </select>
@@ -243,7 +252,9 @@
                                                 <label>Description</label>
                                                 <div class="form-floating mb-2">
                                                     <input type="text" name="description" class="form-control"
-                                                        placeholder="Description" />
+                                                        placeholder="Description" required
+                                                        oninvalid="this.setCustomValidity('Please input a description.')"
+                                                        oninput="setCustomValidity('')" />
                                                     <label for="floatingInput">Description</label>
                                                 </div>
                                             </div>
@@ -272,21 +283,28 @@
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary">
-                                        <h2 class="modal-title text-light" id="myModalLabel">Update product</h2>
+                                        <h2 class="modal-title text-light" id="myModalLabel">Update item</h2>
                                         {{ $product->id }}
                                     </div>
                                     <div class="modal-body">
-                                        <form method="POST" action="{{ route('supply_officer.product.update', $product->id) }}">
+                                        <form method="POST"
+                                            action="{{ route('supply_officer.product.update', $product->id) }}">
                                             @csrf
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label>Product Name</label>
+                                                    <label>Item Name</label>
                                                     <div class="form-floating mb-3">
                                                         <select class="form-control p-3 p_name" name="p_name">
                                                             <option value="{{ $product->p_name }}">
                                                                 {{ $product->p_name }}</option>
                                                         </select>
                                                     </div>
+                                                    @error('p_name')
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Brand</label>
@@ -374,7 +392,7 @@
 
                 $(".p_name").select2({
                     width: '100%',
-                    placeholder: 'Choose Product',
+                    placeholder: 'Choose Item',
                     tags: true
                 });
                 $(".brand").select2({
@@ -386,35 +404,7 @@
         </script>
         <script>
             $(document).ready(function() {
-                $('#productSearch').on('keyup', function() {
-                    var searchText = $(this).val().toLowerCase();
-                    filterRequests(searchText);
-                });
-    
-                function filterRequests(searchText) {
-                    var rows = document.querySelectorAll("table tbody tr");
-                    for (var i = 0; i < rows.length; i++) {
-                        var productName = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
-                        var category = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
-                        var stock = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
-                        var brand = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
-                        var expiration = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
-                        var status = rows[i].querySelector("td:nth-child(6)").textContent.toLowerCase();
-    
-                        if (
-                            productName.includes(searchText) ||
-                            category.includes(searchText) ||
-                            stock.includes(searchText) ||
-                            brand.includes(searchText) ||
-                            expiration.includes(searchText) ||
-                            status.includes(searchText)
-                        ) {
-                            rows[i].style.display = "";
-                        } else {
-                            rows[i].style.display = "none";
-                        }
-                    }
-                }
+                $('#producttable').DataTable();
             });
         </script>
     @endsection

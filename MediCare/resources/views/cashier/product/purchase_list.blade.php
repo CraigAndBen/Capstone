@@ -96,9 +96,9 @@
                                                 <tr class="p-3">
                                                     <td>{{ $purchase->reference }}</td>
                                                     <td>{{ $purchase->total_quantity }}</td>
-                                                    <td>₱{{ $purchase->total_price }}</td>
-                                                    <td>₱{{ $purchase->amount }}</td>
-                                                    <td>₱{{ $purchase->change }}</td> 
+                                                    <td>₱{{ number_format($purchase->total_price, 2) }}</td>
+                                                    <td>₱{{ number_format($purchase->amount, 2) }}</td>
+                                                    <td>₱{{ number_format($purchase->change, 2) }}</td> 
                                                     <td class="text-center">
                                                         <div class="dropdown">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -135,7 +135,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Patient Information</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Purchase transaction</h2>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">

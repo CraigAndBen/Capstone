@@ -27,12 +27,16 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+
 
 </head>
 <!-- [Head] end -->
 <!-- [Body] Start -->
 
+
 <body>
+    
     <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
         <div class="loader-track">
@@ -241,11 +245,11 @@
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Product</span><span class="pc-arrow"><i
+                                class="pc-mtext">Item</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.product') }}">Product List</a></li>
+                                    href="{{ route('supply_officer.product') }}">Item List</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.category') }}">Category List</a></li>
                         </ul>
@@ -273,7 +277,7 @@
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sale.demo') }}">Sales</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.medicine.demo') }}">Medicine</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Product</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Item</a></li></li>   
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
@@ -282,7 +286,7 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.product.expiration') }}">Expiring Product</a></li>
+                                    href="{{ route('supply_officer.product.expiration') }}">Expiring Item</a></li>
 
                         </ul>
                     </li>
@@ -320,6 +324,7 @@
 
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 <!-- [Body] end -->
 @yield('scripts')

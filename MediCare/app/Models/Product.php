@@ -28,4 +28,8 @@ class Product extends Model
     {
         return $this->hasMany(Request_Form::class, 'product_id');
     }
+    public function productPrice()
+    {
+        return $this->hasOne(Product_price::class);
+    }
 }

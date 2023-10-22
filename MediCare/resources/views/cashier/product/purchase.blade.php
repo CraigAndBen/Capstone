@@ -74,10 +74,10 @@
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
-                                                            <th>Product Name</th>
-                                                            <th>Price</th>
+                                                            <th>Item Name</th>
+                                                            <th>Unit Price</th>
                                                             <th>Quantity</th>
-                                                            <th>Total Price</th>
+                                                            <th>Sub total</th>
                                                             <th>Action</th> <!-- Add a new column for the "Clear" button -->
                                                         </tr>
                                                     </thead>
@@ -86,9 +86,9 @@
                                                             <!-- Use $key to identify each item -->
                                                             <tr>
                                                                 <td>{{ $item['name'] }}</td>
-                                                                <td>₱{{ $item['price'] }}</td>
+                                                                <td>₱{{ number_format($item['price'], 2) }}</td></td>
                                                                 <td>{{ $item['quantity'] }}</td>
-                                                                <td>₱{{ $item['price'] * $item['quantity'] }}</td>
+                                                                <td>₱{{ number_format($item['price'] * $item['quantity'], 2) }}</td>
                                                                 <td>
                                                                     <form method="POST"
                                                                         action="{{ route('cashier.product.purchase.remove', ['key' => $key]) }}">
@@ -102,9 +102,7 @@
                                                         @endforeach
                                                     </tbody>
                                                 </table>
-                                                <p>Total:
-                                                    ₱{{ array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart)) }}
-                                                </p>
+                                                <p>Total: ₱{{ number_format(array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart)), 2) }}</p>
                                                 <form method="POST" action="{{ route('cashier.product.purchase.receipt') }}">
                                                     @csrf
                                                     <div class="row">
@@ -135,13 +133,13 @@
                                         <form method="POST" action="{{ route('cashier.product.purchase.add') }}">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="product_id">Select a Product</label>
+                                                <label for="product_id">Select a Item</label>
                                                 <select name="product_id" id="product_id" class="form-control">
                                                     @foreach ($products as $product)
                                                         @foreach ($prices as $price)
                                                             @if ($price->product_id == $product->id)
                                                                 <option value="{{ $product->id }}" data-stock="{{ $product->stock }}">
-                                                                    {{ $product->p_name }} - ₱{{ $price->price }}</option>
+                                                                    {{ $product->p_name }} - ₱{{ number_format($price->price, 2) }}</option>
                                                             @endif
                                                         @endforeach
                                                     @endforeach
@@ -155,7 +153,7 @@
                                                     min="1" value="1"> 
                                             </div>
 
-                                            <button type="submit" class="btn btn-primary">Add Product</button>
+                                            <button type="submit" class="btn btn-primary">Add Item</button>
                                         </form> 
                                     </div>
                                 </div>
@@ -168,7 +166,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Adding Product</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Adding Item</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('pharmacist.product.create') }}">
@@ -177,7 +175,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" id="product" name="product">
-                                                        <option>Select Product</option>
+                                                        <option>Select Item</option>
                                                         @foreach ($products as $product)
                                                             <option value="{{ $product->id }}">
                                                                 {{ ucwords($product->p_name) }}
@@ -213,7 +211,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Update Product</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Update Item</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('pharmacist.product.update') }}">
@@ -222,7 +220,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" id="product_id" name="product_id">
-                                                        <option>Select Product</option>
+                                                        <option>Select Item</option>
                                                         @foreach ($products as $product)
                                                             <option value="{{ $product->id }}">
                                                                 {{ ucwords($product->p_name) }}
@@ -265,7 +263,7 @@
                                             <div class="form-floating mb-3">
                                                 <select class="form-control p-3" id="product_id" name="product_id"
                                                     disabled>
-                                                    <option>Select Product</option>
+                                                    <option>Select Item</option>
                                                     @foreach ($products as $product)
                                                         <option value="{{ $product->id }}">
                                                             {{ ucwords($product->p_name) }}

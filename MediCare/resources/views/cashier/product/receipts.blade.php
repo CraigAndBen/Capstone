@@ -52,8 +52,8 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Product Id</th>
-                            <th>Product Name</th>
+                            <th>Item Id</th>
+                            <th>Item Name</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Sub total</th>

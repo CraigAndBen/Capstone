@@ -163,13 +163,10 @@ class StaffController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        $products = Product::with('category')->get();
+        $products = Product::with('category')->paginate();
         $categories = Category::with('products')->get();
 
         return view('staff.request.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
-        
-
-       
     }
 
     /** Request Form**/
@@ -191,6 +188,15 @@ class StaffController extends Controller
     }
     public function requeststore(Request $request)
     {
+           $request->validate([
+                'name_requester' => 'required',
+                'department' => 'required',
+                'date' => 'required|date',
+                'product_id' => 'required|exists:products,id',
+                'brand'=> 'required',
+                'quantity' => 'required|integer|min:1',
+            ]);
+
         $product = Product::find($request->input('product_id'));
 
         // Check if the product exists and has enough stock

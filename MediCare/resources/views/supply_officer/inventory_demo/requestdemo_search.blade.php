@@ -80,7 +80,7 @@
                                         <label for="select">Most request</label>
                                         <select class="form-control" name="select" id="select">
                                             <option value="">Select</option>
-                                            <option value="Product">Product</option>
+                                            <option value="Item">Item</option>
                                             <option value="Department">Department</option>
                                         </select>
                                     </div>

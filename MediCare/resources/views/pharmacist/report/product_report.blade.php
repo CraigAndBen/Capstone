@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: portrait;
         }
 
         .page-break {
@@ -26,9 +26,11 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Product Price Report</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>Item Price Report</b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -41,12 +43,12 @@
 
         <div class="row justify-content-center">
             <div class="col-10 text-center">
-                <h3><i>Product Price Table</i></h3>
+                <h3><i>Item Price Table</i></h3>
                 <br>
                 <table class="table table-bordered">
-                    <thead class="bg-primary text-light text-center">
+                    <thead class="bg-primary text-dark text-center">
                         <tr>
-                            <th>Product Name</th>
+                            <th>Item Name</th>
                             <th>Category Name</th>
                             <th>Price</th>
                         </tr>
@@ -61,7 +63,7 @@
                                                 <td>{{ ucwords($product->p_name) }}</td>
                                                 <td>{{ ucwords($category->category_name) }}</td>
                                             @endif
-                                            <td>₱{{ ucwords($price->price) }}</td>
+                                            <td>₱{{ number_format($price->price, 2) }}</td>
                                         @endif
                                     @endforeach
                                 @endforeach

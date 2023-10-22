@@ -129,7 +129,7 @@
             }
         
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labelsWithNamesAndNumbers, // Use labels with both name and number
                     datasets: [{
@@ -176,7 +176,13 @@
                 }
             });
         
-          
+            $(document).ready(function() {
+                // Attach a click event handler to the button
+                $("#printButton").click(function() {
+                    // Call the window.print() function to open the print dialog
+                    window.print();
+                });
+            });
         </script>
         
         

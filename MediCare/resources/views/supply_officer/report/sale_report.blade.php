@@ -26,9 +26,11 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Sale Analytics Report</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>Sale Analytics Report</b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -53,30 +55,34 @@
         <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
+            <div class="col-12 col-md-10 text-center">
                 <h3><i>Sale Table</i></h3>
                 <br>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            @foreach ($dateRange as $date)
-                                <th>{{ $date }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($salesData as $productName => $productSales)
+                <div class="table-flex">
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td>{{ $productName }}</td>
-                                @foreach ($productSales as $quantity)
-                                    <td>{{ $quantity }}</td>
+                                <th>Item</th>
+                                @foreach ($dateRange as $date)
+                                    <th>{{ $date }}</th>
                                 @endforeach
                             </tr>
-                        @endforeach
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            @foreach ($salesData as $productName => $productSales)
+                                <tr>
+                                    <td>{{ $productName }}</td>
+                                    @foreach ($productSales as $quantity)
+                                        <td>{{ $quantity }}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
+                </div>
             </div>
+        </div>
+        
             <div class="col-1">
 
             </div>

@@ -80,6 +80,7 @@
                                             <tr>
                                                 <th>Title</th>
                                                 <th>Message</th>
+                                                <th>Date</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -89,6 +90,12 @@
                                                 <tr class="p-3">
                                                     <td>{{ ucwords($notification->title) }}</td>
                                                     <td>{{ ucwords(Str::limit($notification->message, 30)) }}</td>
+                                                    <td>
+                                                        @php
+                                                            $extractedDate = date('M j, Y', strtotime($notification->created_at));
+                                                        @endphp
+                                                        {{ $extractedDate }}
+                                                    </td>
                                                     @if ($notification->is_read == 0)
                                                         <td>Unread</td>
                                                     @else

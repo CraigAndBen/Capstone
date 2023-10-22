@@ -33,7 +33,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Expiring Products</h3>
+                            <h3>Expiring Items</h3>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -73,7 +73,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center">#</th>
-                                                <th style="text-align: center">Product Name</th>
+                                                <th style="text-align: center">Item Name</th>
                                                 <th style="text-align: center">Stock</th>
                                                 <th style="text-align: center">Brand</th>
                                                 <th style="text-align: center">Category</th>
@@ -93,13 +93,13 @@
                                                     <td style="text-align: center">{{ $product->brand }}</td>
                                                     <td style="text-align: center">{{ $product->category->category_name }}
                                                     </td>
-                                                    <td style="text-align: center">{{ $product->expiration }}</td>
+                                                    <td style="text-align: center">{{ date('M j, Y', strtotime($product->expiration)) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 @else
-                                    <p>No expiring products found.</p>
+                                    <p>No expiring items found.</p>
                                 @endif
                             </div>
                         </div>

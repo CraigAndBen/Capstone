@@ -72,13 +72,7 @@
                                         <span class="fa fa-check-circle"></span> No Notification Yet.
                                     </div>
                                 @else
-                                <div class="row justify-content-end">
-                                    <div class="form-group col-sm-4">
-                                        <input type="text" id="categorySearch" class="form-control"
-                                            placeholder="Search Product">
-                                    </div>
-                                </div>
-                                    <table class="table table-bordered">
+                                    <table id="categorytable" class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th class="text-center">Category Name</th>
@@ -102,9 +96,6 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $categories->links('pagination::bootstrap-4') }}
-                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -126,7 +117,7 @@
                                         <div class="col-md-6">
                                             <label>Category Name</label>
                                             <div class="form-floating mb-3">
-                                                <select class="form-control category_n " name="category_name">
+                                                <select class="form-control category_n " name="category_name" required oninvalid="this.setCustomValidity('Please input a category name.')" oninput="setCustomValidity('')">
                                                     <option>{{ old('category_name') }}</option>
                                                     <option value="Pharmaceutical">Pharmaceutical</option>
                                                     <option value="PPE">PPE</option>
@@ -143,7 +134,7 @@
                                         <div class="col-md-6">
                                             <label>Category Code</label>
                                             <div class="form-floating mb-3">
-                                                <select class="form-control category_c" name="category_code">
+                                                <select class="form-control category_c" name="category_code" required oninvalid="this.setCustomValidity('Please input a category code.')" oninput="setCustomValidity('')">
                                                     <option>{{ old('category_code') }}</option>
                                                     <option value="1001">1001</option>
                                                     <option value="1002">1002</option>
@@ -240,29 +231,9 @@
 
             });
         </script>
-         <script>
-            $(document).ready(function() {
-                $('#categorySearch').on('keyup', function() {
-                    var searchText = $(this).val().toLowerCase();
-                    filterRequests(searchText);
-                });
-    
-                function filterRequests(searchText) {
-                    var rows = document.querySelectorAll("table tbody tr");
-                    for (var i = 0; i < rows.length; i++) {
-                        var categoryName = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
-                        var categoryCode = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
-    
-                        if (
-                            categoryName.includes(searchText) ||
-                            categoryCode.includes(searchText) 
-                        ) {
-                            rows[i].style.display = "";
-                        } else {
-                            rows[i].style.display = "none";
-                        }
-                    }
-                }
+        <script>
+           $(document).ready( function () {
+                $('#categorytable').DataTable();
             });
         </script>
     @endsection

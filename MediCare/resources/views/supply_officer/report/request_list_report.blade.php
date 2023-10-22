@@ -26,9 +26,11 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Request Report</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>Request Report</b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -44,12 +46,12 @@
                 <h3><i>Request Table</i></h3>
                 <br>
                 <table class="table table-bordered">
-                    <thead class="bg-primary text-light">
+                    <thead class="bg-primary text-dark">
                         <tr>
                             <th>Requester Name</th>
                             <th>Department</th>
                             <th>Date</th>
-                            <th>Product</th>
+                            <th>Item</th>
                             <th>Brand</th>
                             <th>Quantity</th>
                             <!-- Add more table headers for other product attributes -->

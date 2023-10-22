@@ -39,9 +39,9 @@
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
-                                    <div class="forn-group">
+                                    <div class="form-group">
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#createMedicine">Add product</button>
+                                        data-target="#createMedicine">Add Item</button>
                                     <a href="{{ route('pharmacist.medicine.report') }}" class="btn btn-success">Generate
                                         Report</a>
                                     </div>
@@ -74,19 +74,13 @@
 
                                 @if ($products->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Product Yet.
+                                        <span class="fa fa-check-circle"></span> No Item Yet.
                                     </div>
                                 @else
-                                    <div class="row justify-content-end">
-                                        <div class="form-group col-sm-4">
-                                            <input type="text" id="medicineSearch" class="form-control"
-                                                placeholder="Search Product">
-                                        </div>
-                                    </div>
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th class="text-center">Product Name</th>
+                                                <th class="text-center">Item Name</th>
                                                 <th class="text-center">Category</th>
                                                 <th class="text-center">Stock Available</th>
                                                 <th class="text-center">Brand</th>
@@ -105,7 +99,7 @@
                                                             </td>
                                                             <td class="text-center">{{ $product->stock }}</td>
                                                             <td class="text-center">{{ $product->brand }}</td>
-                                                            <td class="text-center">{{ $product->expiration }}</td>
+                                                            <td class="text-center">{{ date('M j, Y', strtotime($product->expiration)) }}</td>
                                                             <td class="text-center">{{ $product->status }}</td>
                                                             <td class="text-center">
                                                                 <a
@@ -126,7 +120,9 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                   
+                                    <div class="d-flex justify-content-center my-3">
+                                        {{ $products->links('pagination::bootstrap-4') }}
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -138,29 +134,28 @@
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
-                                    <h2 class="modal-title text-light" id="myModalLabel">Add product</h2>
+                                    <h2 class="modal-title text-light" id="myModalLabel">Add Item</h2>
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" action="{{ route('pharmacist.medicine.create') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Product</label>
+                                                <label>Item</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3 p_name" name="p_name">
-                                                        <option value="">Select Product</option>
-                                                        <option value="Xanax ">Xanax </option>
-                                                        <option value="Lipitor (Atorvastatin)">Lipitor
-                                                            (Atorvastatin)</option>
-                                                        <option value="3M N95 Respirator Masks">3M N95 Respirator
-                                                            Masks</option>
-                                                        <option value="Disposable Nitrile Gloves">Disposable Nitrile
-                                                            Gloves</option>
-                                                        <option value="BD Syringes">BD Syringes</option>
-                                                        <option value="BD Vacutainer Blood Collection Tubes">BD
-                                                            Vacutainer Blood Collection Tubes</option>
-                                                        <option value="Uniforms">Uniforms</option>
-                                                        <option value="Towels">Towels</option>
+                                                    <select class="form-control p-3 p_name" name="p_name" required
+                                                    oninvalid="this.setCustomValidity('Please input a item.')"
+                                                    oninput="setCustomValidity('')">
+                                                        <option value="">Select Item</option>
+                                                        @foreach ($products as $product)
+                                                        @foreach ($categories as $category)
+                                                            @if ($product->category_id == $category->id)
+                                                                <option value="{{ $product->id }}">
+                                                                    {{ ucwords($product->p_name) }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endforeach
                                                     </select>
                                                 </div>
                                                 @error('p_name')
@@ -172,7 +167,9 @@
                                             <div class="col-md-6">
                                                 <label>Brand</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3 brand" name="brand">
+                                                    <select class="form-control p-3 brand" name="brand" required
+                                                    oninvalid="this.setCustomValidity('Please input a brand.')"
+                                                    oninput="setCustomValidity('')">
                                                         <option></option>
                                                         <option value="Pfizer">Pfizer</option>
                                                         <option value="3M">3M</option>
@@ -192,7 +189,9 @@
                                                 <label>Stock</label>
                                                 <div class="form-floating mb-3">
                                                     <input type="number" class="form-control p-3"
-                                                        placeholder="Stock Available" name="stock" />
+                                                        placeholder="Stock Available" name="stock" required
+                                                        oninvalid="this.setCustomValidity('Please input a stock.')"
+                                                        oninput="setCustomValidity('')" />
                                                 </div>
                                                 @error('stock')
                                                     <div class="alert alert-danger" role="alert">
@@ -203,8 +202,10 @@
                                             <div class="col-md-6">
                                                 <label>Category</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3" name="category_id">
-                                                        <option selected disabled>Select a Category</option>
+                                                    <select class="form-control p-3" name="category_id" required
+                                                    oninvalid="this.setCustomValidity('Please input a category.')"
+                                                    oninput="setCustomValidity('')">
+                                                        <option value="" >Select a Category</option>
                                                         @foreach ($categories as $category)
                                                             <option value="{{ $category->id }}">
                                                                 {{ $category->category_name }}</option>
@@ -222,7 +223,9 @@
                                             <div class="col-md-6">
                                                 <label>Expiration Date</label>
                                                 <div class="form-floating mb-3">
-                                                    <input type="date" name="expiration" class="form-control p-3" />
+                                                    <input type="date" name="expiration" class="form-control p-3"  required
+                                                    oninvalid="this.setCustomValidity('Please input a expiration date.')"
+                                                    oninput="setCustomValidity('')" />
                                                 </div>
                                                 @error('expiration')
                                                     <div class="alert alert-danger" role="alert">
@@ -233,8 +236,10 @@
                                             <div class="col-md-6">
                                                 <label>Status</label>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control p-3" name="status">
-                                                        <option selected disabled>Select Status</option>
+                                                    <select class="form-control p-3" name="status" required
+                                                    oninvalid="this.setCustomValidity('Please select a status.')"
+                                                    oninput="setCustomValidity('')">
+                                                        <option value="" >Select Status</option>
                                                         <option value="Available">Available</option>
                                                         <option value="Unavailable">Unavailable</option>
                                                     </select>
@@ -251,7 +256,9 @@
                                                 <label>Description</label>
                                                 <div class="form-floating mb-2">
                                                     <input type="text" name="description" class="form-control"
-                                                        placeholder="Description" />
+                                                        placeholder="Description" required
+                                                        oninvalid="this.setCustomValidity('Please input a description.')"
+                                                        oninput="setCustomValidity('')" />
                                                     <label for="floatingInput">Description</label>
                                                 </div>
                                             </div>
@@ -280,7 +287,7 @@
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary">
-                                        <h2 class="modal-title text-light" id="myModalLabel">Update product</h2>
+                                        <h2 class="modal-title text-light" id="myModalLabel">Update item</h2>
                                         {{ $product->id }}
                                     </div>
                                     <div class="modal-body">
@@ -289,7 +296,7 @@
                                             @csrf
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label>Product Name</label>
+                                                    <label>Item Name</label>
                                                     <div class="form-floating mb-3">
                                                         <select class="form-control p-3 p_name" name="p_name">
                                                             <option value="{{ $product->p_name }}">
@@ -383,7 +390,7 @@
 
                 $(".p_name").select2({
                     width: '100%',
-                    placeholder: 'Choose Product',
+                    placeholder: 'Choose Item',
                     tags: true
                 });
                 $(".brand").select2({
@@ -393,31 +400,6 @@
                 });
             });
         </script>
-        <script>
-            $(document).ready(function() {
-                $('#medicineSearch').on('keyup', function() {
-                    var searchText = $(this).val().toLowerCase();
-                    filterTable(searchText);
-                });
-
-                function filterTable(searchText) {
-                    var rows = document.querySelectorAll("table tbody tr");
-
-                    rows.forEach(function(row) {
-                        var visible = false;
-                        row.querySelectorAll("td").forEach(function(cell) {
-                            if (cell.textContent.toLowerCase().includes(searchText)) {
-                                visible = true;
-                            }
-                        });
-
-                        if (visible) {
-                            row.style.display = "";
-                        } else {
-                            row.style.display = "none";
-                        }
-                    });
-                }
-            });
-        </script>
+        
+         
     @endsection
