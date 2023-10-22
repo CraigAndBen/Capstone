@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->smallInteger('patient_id')->nullable();
             $table->string('medication_name')->nullable();
+            $table->string('patient_type')->nullable();
             $table->string('dosage')->nullable();
             $table->string('duration')->nullable();
             $table->string('date')->nullable();
