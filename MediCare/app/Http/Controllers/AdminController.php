@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Patient;
 use App\Models\Diagnose;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\View\View;
 use App\Models\Medication;
 use App\Models\Notification;
@@ -779,11 +780,41 @@ class AdminController extends Controller
         $currentYear = Carbon::now()->year; // Get current year
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $doctor = User::where('id', $patient->physician)->first();
+        $diagnoses = Diagnose::where('patient_id', $patient->id)->get();
+        $medications = Medication::where('patient_id', $patient->id)->get();
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        return view('admin.report.patient_report', compact('patient', 'currentTime', 'currentDate', 'doctor', 'profile'));
+        // return view('admin.report.patient_report', compact('patient', 'currentTime', 'currentDate', 'doctor', 'profile','diagnoses','medications','reference'));
+
+        $data = [
+            'patient' => $patient,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+            'profile' => $profile,
+            'doctor' => $doctor,
+            'diagnoses' => $diagnoses,
+            'medications' => $medications,
+            'reference' => $reference,
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('admin.report.patient_report', $data);
+
+        return $pdf->stream('patient_report.pdf');
+    
+        // // Call the generatePDF method with the data
+        // return $this->generatePDF($data);
+
+    }
+
+    public function generatePDF($data)
+    {
+        $pdf = app('dompdf.wrapper')->loadView('admin.report.patient_report', $data);
+        return $pdf->stream('patient_report.pdf');
     }
 
     public function notification()

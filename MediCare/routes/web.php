@@ -147,6 +147,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
+    Route::get('/generate/pdf', [AdminController::class, 'generatePdf'])->name('admin.generate.pdf');
+
+
+
     // Profile
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::get('/admin/profile/password', [AdminController::class, 'passwordProfile'])->name('admin.profile.password');
