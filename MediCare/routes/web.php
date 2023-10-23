@@ -118,10 +118,8 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::post('/doctor/appointment/calendar/update/availability', [DoctorController::class, 'updateDoctorAvailability'])->name('doctor.appointment.update.availability');
     Route::post('/doctor/appointment/calendar/confirm', [DoctorController::class, 'calendarConfirmedAppointment'])->name('doctor.appointment.calendar.confirm');
     Route::post('/doctor/appointment/calendar/done', [DoctorController::class, 'calendarDoneAppointment'])->name('doctor.appointment.calendar.done');
-    Route::get('/doctor/appointment/report', [DoctorController::class, 'appointmentReport'])->name('doctor.appointment.report');
-    Route::post('/doctor/appointment/report/save', [DoctorController::class, 'saveReport'])->name('doctor.appointment.report.save');
-
-
+    Route::get('/doctor/appointment/report/view', [DoctorController::class, 'viewAppointmentReport'])->name('doctor.appointment.report.view');
+    Route::get('/doctor/appointment/report/download', [DoctorController::class, 'downloadAppointmentReport'])->name('doctor.appointment.report.download');
     // Patient
     Route::get('/doctor/patient', [DoctorController::class, 'patientList'])->name('doctor.patient');
     Route::get('/doctor/outpatient', [DoctorController::class, 'outpatientList'])->name('doctor.outpatient');
@@ -130,6 +128,8 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::post('/doctor/patient/search', [DoctorController::class, 'patientSearch'])->name('doctor.patient.search');
     Route::post('/doctor/admitted/patient/search', [DoctorController::class, 'admittedPatientSearch'])->name('doctor.admitted.search');
     Route::post('/doctor/outpatient/search', [DoctorController::class, 'outpatientSearch'])->name('doctor.outpatient.search');
+    Route::get('/doctor/patient/{id}/diagnoses', [DoctorController::class, 'getDiagnoses'])->name('doctor.patient.diagnoses');
+    Route::get('/doctor/patient/{id}/medications', [DoctorController::class, 'getMedications'])->name('doctor.patient.medications');
 
     // Doctor Notification
     Route::get('/doctor/notification', [DoctorController::class, 'notification'])->name('doctor.notification');

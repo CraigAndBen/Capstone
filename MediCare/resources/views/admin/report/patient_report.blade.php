@@ -165,6 +165,14 @@
                     <th>Patient Type</th>
                     <td>{{ ucwords($patient->type) }}</td>
                 </tr>
+                <tr>
+                    <th>Physician</th>
+                    <td>Dr. {{ ucwords($doctor->first_name) }} {{ucwords($doctor->last_name)}}</td>
+                </tr>
+                <tr>
+                    <th>Medical Condition</th>
+                    <td>{{ ucwords($patient->medical_condition) }}</td>
+                </tr>
             </table>
             <br>
             @if ($patient->type == 'admitted_patient')

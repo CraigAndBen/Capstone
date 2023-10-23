@@ -6,16 +6,18 @@ use DateTime;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Doctor;
+use App\Models\Report;
 use App\Models\Patient;
+use App\Models\Diagnose;
 use Illuminate\View\View;
+use App\Models\Medication;
 use App\Models\Appointment;
 use App\Models\Notification;
-use App\Models\Report;
-use App\Models\Doctor_availabilities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Doctor_availabilities;
 use Illuminate\Http\RedirectResponse;
 
 class DoctorController extends Controller
@@ -1006,6 +1008,20 @@ class DoctorController extends Controller
         }
     }
 
+    public function getDiagnoses($id)
+    {
+        $diagnoses = Diagnose::where('patient_id', $id)->get();
+
+        return response()->json($diagnoses);
+    }
+
+    public function getMedications($id)
+    {
+        $medications = Medication::where('patient_id', $id)->get();
+
+        return response()->json($medications);
+    }
+
     public function patientList()
     {
         $profile = auth()->user();
@@ -1172,8 +1188,10 @@ class DoctorController extends Controller
             return redirect()->back()->with('info', 'No changes were made.');
         }
     }
-    public function appointmentReport(Request $request)
+
+    public function viewAppointmentReport(Request $request)
     {
+
         $profile = auth()->user();
         $appointment = Appointment::where('id', $request->input('appointment_id'))->first();
         $currentYear = Carbon::now()->year; // Get current year
@@ -1186,11 +1204,36 @@ class DoctorController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'DAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        return view('doctor.report.appointment_report', compact('appointment', 'currentTime', 'currentDate', 'doctor', 'profile', 'reference'));
+        $data = [
+            'appointment' => $appointment,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+            'profile' => $profile,
+            'doctor' => $doctor,
+            'reference' => $reference,
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('doctor.report.appointment_report', $data);
+
+        return $pdf->stream('appointment_report.pdf');
+
     }
 
-    public function saveReport(Request $request)
+    public function downloadPatientReport(Request $request)
     {
+
+        $profile = auth()->user();
+        $appointment = Appointment::where('id', $request->input('appointment_id'))->first();
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $doctor = User::where('id', $appointment->doctor_id)->first();
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'DAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $reference = $request->input('reference');
         $time = $request->input('time');
         $date = $request->input('date');
@@ -1237,43 +1280,18 @@ class DoctorController extends Controller
             'content' => $content,
         ]);
 
-        $amTime = [
-            '8:30',
-            '9:00',
-            '9:30',
-            '10:30',
-            '11:00',
-            '11:30',
+        $data = [
+            'appointment' => $appointment,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+            'profile' => $profile,
+            'doctor' => $doctor,
+            'reference' => $reference,
         ];
 
-        $pmTime = [
-            '1:30',
-            '2:00',
-            '2:30',
-            '3:00',
-            '3:30',
-            '4:00',
-        ];
+        $pdf = app('dompdf.wrapper')->loadView('doctor.report.appointment_report', $data);
 
-        $profile = auth()->user();
-        $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = Doctor::all();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $appointments = Appointment::where('doctor_id', $profile->id)
-            ->orWhere('specialties', $info->specialties)
-            ->orWhereNull('doctor_id')
-            ->orderByRaw("TIME_FORMAT(appointment_time, '%h:%i %p') DESC, appointment_date DESC")
-            ->paginate(5);
-
-        return redirect()->route('doctor.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
+        return $pdf->download('appointment_report.pdf');
     }
 
     public function notification()
