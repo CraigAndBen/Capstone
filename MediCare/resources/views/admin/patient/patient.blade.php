@@ -159,15 +159,23 @@
                                                                     data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
                                                                     data-guardian-email="{{ json_encode($patient->guardian_email) }}"
                                                                     data-medication="{{ json_encode($patient->medication) }}">Update</a>
-                                                                <form action="{{ route('admin.patient.report') }}"
-                                                                    method="GET">
+
+                                                                <form action="{{ route('admin.patient.report.view') }}"
+                                                                    method="GET" target="_blank">
                                                                     @csrf
                                                                     <input type="hidden" name="patient_id"
                                                                         id="patient_id" value="{{ $patient->id }}">
                                                                     <button type="submit"
-                                                                        class="dropdown-item btn btn-primary">Generate
-                                                                        Report</button>
+                                                                        class="dropdown-item btn btn-primary">View Report</button>
                                                                 </form>
+                                                                <form action="{{ route('admin.patient.report.download') }}"
+                                                                method="GET">
+                                                                @csrf
+                                                                <input type="hidden" name="patient_id"
+                                                                    id="patient_id" value="{{ $patient->id }}">
+                                                                <button type="submit"
+                                                                    class="dropdown-item btn btn-primary">Download Report</button>
+                                                            </form>
 
                                                             </div>
                                                         </div>
@@ -258,8 +266,8 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control" id="phoneInput"
-                                                        name="phone" placeholder="Phone"
+                                                    <input type="text" class="form-control" id="phone"
+                                                        name="phone" placeholder="Phone" 
                                                         oninput="formatPhoneNumber(this);" />
                                                     <label for="phoneInput">Phone</label>
                                                 </div>
@@ -372,7 +380,7 @@
                                             </select>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="medical_condtion" class="form-control"
+                                            <input type="text" name="medical_condition" class="form-control"
                                                 id="floatingInput medical_condition" placeholder="Medical Condition" />
                                             <label for="floatingInput">Medical Condition</label>
                                         </div>
@@ -513,11 +521,11 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control"
-                                                        id="floatingInput guardian_phone" placeholder="Guardian Phone"
-                                                        name="guardian_phone" />
-                                                    <label for="floatingInput">Guardian Phone</label>
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="phone"
+                                                        name="guardian_phone" placeholder="Phone" 
+                                                        oninput="formatPhoneNumber(this);" />
+                                                    <label for="phoneInput">Phone</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -610,9 +618,10 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
-                                                    <input type="number" name="phone" class="form-control"
-                                                        id="phone" placeholder="Phone" />
-                                                    <label for="floatingInput">Phone</label>
+                                                    <input type="text" class="form-control" id="phone"
+                                                        name="phone" placeholder="Phone"
+                                                        oninput="formatPhoneNumber(this);" />
+                                                    <label for="phoneInput">Phone</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -645,20 +654,28 @@
                                             </select>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input type="text" name="medical_condtion" class="form-control"
-                                                id="medical_condtion" placeholder="Medical Condition" />
+                                            <input type="text" name="medical_condition" class="form-control"
+                                                id="medical_condition" placeholder="Medical Condition" />
                                             <label for="floatingInput">Medical Condition</label>
                                         </div>
                                         <hr>
                                         <div id="diagnoses-list">
                                         </div>
-                                        <button id="addDiagnosisButtonForUpdate" class="btn btn-primary">Add
-                                            Diagnoses</button>
+                                        <div class="row justify-content-center mb-3 mt-3">
+                                            <div class="col-md-10 text-center">
+                                                <button type="button" class="btn btn-primary" id="addDiagnosisButtonForUpdate"> Add
+                                                    Another Diagnosis</button>
+                                            </div>
+                                        </div>
                                         <hr>
                                         <div id="medications-list">
                                         </div>
-                                        <button id="addMedicationButtonForUpdate" class="btn btn-primary"> Add
-                                            Medication</button>
+                                        <div class="row justify-content-center mb-3">
+                                            <div class="col-md-10 text-center">
+                                                <button id="addMedicationButtonForUpdate" class="btn btn-primary"> Add
+                                                    Medication</button>
+                                            </div>
+                                        </div>
                                         <hr>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -702,10 +719,11 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-floating mb-3 ">
-                                                    <input type="phone" class="form-control" id="guardian_phone"
-                                                        placeholder="Guardian Phone" name="guardian_phone" />
-                                                    <label for="floatingInput">Guardian Phone</label>
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="guardian_phone"
+                                                        name="guardian_phone" placeholder="Phone" 
+                                                        oninput="formatPhoneNumber(this);" />
+                                                    <label for="phoneInput">Phone</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -777,7 +795,6 @@
                     const newMedicationInput = document.createElement("div");
                     newMedicationInput.classList.add("row", "mb-3", "medicationInput");
                     newMedicationInput.innerHTML = `
-                    <div class="row mb-3 medicationInput">
                                                 <div class="col-md-3">
                                                     <div class="form-floating">
                                                         <input type="date" name="medicationDate[]"
@@ -824,7 +841,7 @@
                                                             Duration</label>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            
             `;
                     medicationContainer.appendChild(newMedicationInput);
 
@@ -911,7 +928,6 @@
 
                         var date = JSON.parse(button.data('date'));
                         var time = JSON.parse(button.data('time'));
-
                         // Populate common data
                         modal.find('#id').val(id);
                         modal.find('#first_name').val(first_name);

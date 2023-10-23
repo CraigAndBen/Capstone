@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Report;
 use App\Models\Patient;
 use App\Models\Diagnose;
 use Barryvdh\DomPDF\PDF;
@@ -381,7 +382,6 @@ class AdminController extends Controller
         $patients = Patient::where('type', 'outpatient')->where(function ($query) use ($searchTerm) {
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(5);
 
         return view('admin.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
@@ -389,7 +389,6 @@ class AdminController extends Controller
 
     public function patientUpdate(Request $request)
     {
-        // dd($request->all());
         $patient = Patient::where('id', $request->id)->first();
 
         switch ($patient) {
@@ -766,13 +765,12 @@ class AdminController extends Controller
         $patients = Patient::whereNull('discharged_date')->where(function ($query) use ($searchTerm) {
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
         })->paginate(5);
 
         return view('admin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
-    public function patientReport(Request $request)
+    public function viewPatientReport(Request $request)
     {
 
         $profile = auth()->user();
@@ -789,8 +787,6 @@ class AdminController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        // return view('admin.report.patient_report', compact('patient', 'currentTime', 'currentDate', 'doctor', 'profile','diagnoses','medications','reference'));
-
         $data = [
             'patient' => $patient,
             'currentTime' => $currentTime,
@@ -805,18 +801,88 @@ class AdminController extends Controller
         $pdf = app('dompdf.wrapper')->loadView('admin.report.patient_report', $data);
 
         return $pdf->stream('patient_report.pdf');
-    
-        // // Call the generatePDF method with the data
-        // return $this->generatePDF($data);
 
     }
 
-    public function generatePDF($data)
+    public function downloadPatientReport(Request $request)
     {
-        $pdf = app('dompdf.wrapper')->loadView('admin.report.patient_report', $data);
-        return $pdf->stream('patient_report.pdf');
-    }
 
+        $profile = auth()->user();
+        $patient = Patient::where('id', $request->input('patient_id'))->first();
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $doctor = User::where('id', $patient->physician)->first();
+        $diagnoses = Diagnose::where('patient_id', $patient->id)->get();
+        $medications = Medication::where('patient_id', $patient->id)->get();
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        if($patient->type == 'admitted_patient'){
+            $innerContent = '
+                Admission Details:
+                - Admitted Date and Time: '.$patient->admitted_date.' '. $patient->admitted_time.'
+                - Discharged Date and Time: '.$patient->discharged_date.' '. $patient->discharged_time.'
+                - Doctor: Dr. '.$doctor->first_name.' '.$doctor->last_name.'
+            ';
+        } else {
+            $innerContent = '
+            Appointment Details:
+            - Appointment Date and Time: '.$patient->admitted_date.' '. $patient->admitted_time.'
+            - Doctor: Dr. '.$doctor->first_name.' '.$doctor->last_name.'
+        ';
+        }
+
+        $content =
+            '           Patient Information Report
+            ------------------------
+
+            Report Reference Number: '.$reference.'
+            Report Date and Time: '.$currentDate.' '. $currentTime .'
+
+            Patient Information:
+            - Name: '.$patient->first_name.' '. $patient->last_name .'
+            - Date of Birth: '.$patient->birthdate.'
+              Address:
+                - Street: '.$patient->street.'
+                - Brgy: '.$patient->brgy.'
+                - City: '.$patient->city.'
+                - Province '.$patient->province.'
+              Contact Information: 
+                - Email: '.$patient->email.'
+                - Phone: '.$patient->phone.'
+            '.$innerContent.'
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Patient Information Report',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        $data = [
+            'patient' => $patient,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+            'profile' => $profile,
+            'doctor' => $doctor,
+            'diagnoses' => $diagnoses,
+            'medications' => $medications,
+            'reference' => $reference,
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('admin.report.patient_report', $data);
+
+        return $pdf->download('patient_report.pdf');
+    }
     public function notification()
     {
 
