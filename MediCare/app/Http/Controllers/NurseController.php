@@ -163,7 +163,7 @@ class NurseController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where('type', 'admitted_patient')->paginate(10);
+        $patients = Patient::where('type', 'admitted_patient')->whereNull('discharged_date')->paginate(5);
 
         return view('nurse.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count','currentTime','currentDate'));
     }
@@ -174,17 +174,15 @@ class NurseController extends Controller
         $patient = Patient::where('id', $request->id)->first();
 
             $patientUpdatedData = [
-                'medical_condition' => $request->input('medical_condition'),
-                'diagnosis' => $request->input('diagnosis'),
-                'medication' => $request->input('medication'),
+                'room_number' => $request->input('room_number'),
+                'bed_number' => $request->input('bed_number'),
             ];
     
             $patientChange = $this->hasChanges($patient, $patientUpdatedData);
     
             if($patientChange) {
-                $patient->medical_condition = $request->input('medical_condition');
-                $patient->diagnosis = $request->input('diagnosis');
-                $patient->medication = $request->input('medication');
+                $patient->room_number = $request->input('room_number');
+                $patient->room_number = $request->input('bed_number');
     
                 $patient->save();
     
@@ -210,8 +208,7 @@ class NurseController extends Controller
         $patients = Patient::where('type', 'admitted_patient')->where(function ($query) use ($searchTerm) {
             $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
+        })->paginate(5);
 
         return view('nurse.patient.patient_search', compact('patients', 'profile', 'doctors','limitNotifications','count','currentTime','currentDate'));
     }

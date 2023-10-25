@@ -289,9 +289,12 @@
                                 </div>
                                 <canvas id="patientChart" width="100%" height="87"></canvas>
                                 <script>
-                                    // PHP array to JavaScript variables
-                                    const patientMonths = @json($patientsByMonth->pluck('month'));
-                                    const patientCounts = @json($patientsByMonth->pluck('count'));
+                                    // PHP arrays to JavaScript variables
+                                    const admittedMonths = @json($admittedPatientsByMonth->pluck('month'));
+                                    const admittedCounts = @json($admittedPatientsByMonth->pluck('count'));
+
+                                    const outpatientMonths = @json($outpatientPatientsByMonth->pluck('month'));
+                                    const outpatientCounts = @json($outpatientPatientsByMonth->pluck('count'));
 
                                     // Create an array for all months
                                     const allMonths = [
@@ -299,16 +302,27 @@
                                         'August', 'September', 'October', 'November', 'December'
                                     ];
 
-                                    // Initialize an array to store counts for each month
-                                    const monthCounts = Array.from({
+                                    // Initialize arrays to store counts for admitted and outpatient data
+                                    const admittedMonthCounts = Array.from({
+                                        length: 12
+                                    }, () => 0);
+                                    const outpatientMonthCounts = Array.from({
                                         length: 12
                                     }, () => 0);
 
-                                    // Fill in the counts for the corresponding months
-                                    for (let i = 0; i < patientMonths.length; i++) {
-                                        const monthIndex = allMonths.indexOf(patientMonths[i]);
+                                    // Fill in the counts for the corresponding months for admitted patients
+                                    for (let i = 0; i < admittedMonths.length; i++) {
+                                        const monthIndex = allMonths.indexOf(admittedMonths[i]);
                                         if (monthIndex !== -1) {
-                                            monthCounts[monthIndex] = patientCounts[i];
+                                            admittedMonthCounts[monthIndex] = admittedCounts[i];
+                                        }
+                                    }
+
+                                    // Fill in the counts for the corresponding months for outpatient patients
+                                    for (let i = 0; i < outpatientMonths.length; i++) {
+                                        const monthIndex = allMonths.indexOf(outpatientMonths[i]);
+                                        if (monthIndex !== -1) {
+                                            outpatientMonthCounts[monthIndex] = outpatientCounts[i];
                                         }
                                     }
 
@@ -318,12 +332,20 @@
                                         data: {
                                             labels: allMonths,
                                             datasets: [{
-                                                label: 'Admitted Patient',
-                                                data: monthCounts,
-                                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                borderColor: 'rgba(54, 162, 235, 1)',
-                                                borderWidth: 1
-                                            }]
+                                                    label: 'Admitted Patient',
+                                                    data: admittedMonthCounts,
+                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                    borderWidth: 1
+                                                },
+                                                {
+                                                    label: 'Outpatient',
+                                                    data: outpatientMonthCounts,
+                                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                                    borderWidth: 1
+                                                }
+                                            ]
                                         },
                                         options: {
                                             scales: {

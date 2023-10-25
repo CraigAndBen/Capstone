@@ -77,6 +77,8 @@ Route::middleware(['auth', 'role:nurse'])->group(function () {
     // Patient
     Route::get('/nurse/patient', [NurseController::class, 'patientList'])->name('nurse.patient');
     Route::get('/nurse/patient/search', [NurseController::class, 'patientSearch'])->name('nurse.patient.search');
+    Route::post('/nurse/patient/update', [NurseController::class, 'patientUpdate'])->name('nurse.patient.update');
+
 
     // Nurse Notification
     Route::get('/nurse/notification', [NurseController::class, 'notification'])->name('nurse.notification');
@@ -120,14 +122,15 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::post('/doctor/appointment/calendar/done', [DoctorController::class, 'calendarDoneAppointment'])->name('doctor.appointment.calendar.done');
     Route::get('/doctor/appointment/report/view', [DoctorController::class, 'viewAppointmentReport'])->name('doctor.appointment.report.view');
     Route::get('/doctor/appointment/report/download', [DoctorController::class, 'downloadAppointmentReport'])->name('doctor.appointment.report.download');
+
     // Patient
     Route::get('/doctor/patient', [DoctorController::class, 'patientList'])->name('doctor.patient');
     Route::get('/doctor/outpatient', [DoctorController::class, 'outpatientList'])->name('doctor.outpatient');
     Route::get('/doctor/admotted/patient', [DoctorController::class, 'admittedPatientList'])->name('doctor.admitted');
     Route::post('/doctor/patient/update', [DoctorController::class, 'patientUpdate'])->name('doctor.patient.update');
-    Route::post('/doctor/patient/search', [DoctorController::class, 'patientSearch'])->name('doctor.patient.search');
-    Route::post('/doctor/admitted/patient/search', [DoctorController::class, 'admittedPatientSearch'])->name('doctor.admitted.search');
-    Route::post('/doctor/outpatient/search', [DoctorController::class, 'outpatientSearch'])->name('doctor.outpatient.search');
+    Route::get('/doctor/patient/search', [DoctorController::class, 'patientSearch'])->name('doctor.patient.search');
+    Route::get('/doctor/admitted/patient/search', [DoctorController::class, 'admittedPatientSearch'])->name('doctor.admitted.search');
+    Route::get('/doctor/outpatient/search', [DoctorController::class, 'outpatientSearch'])->name('doctor.outpatient.search');
     Route::get('/doctor/patient/{id}/diagnoses', [DoctorController::class, 'getDiagnoses'])->name('doctor.patient.diagnoses');
     Route::get('/doctor/patient/{id}/medications', [DoctorController::class, 'getMedications'])->name('doctor.patient.medications');
 

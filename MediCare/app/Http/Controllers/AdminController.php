@@ -396,7 +396,6 @@ class AdminController extends Controller
 
                 $request->validate([
                     'first_name' => 'required|string|max:255',
-                    'middle_name' => 'required|string|max:255',
                     'last_name' => 'required|string|max:255',
                     'physician' => 'required|string|max:255',
                 ]);
@@ -561,7 +560,6 @@ class AdminController extends Controller
 
                 $request->validate([
                     'first_name' => 'required|string|max:255',
-                    'middle_name' => 'required|string|max:255',
                     'last_name' => 'required|string|max:255',
                     'admitted_date' => 'required|date',
                     'physician' => 'required|string|max:255',

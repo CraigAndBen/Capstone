@@ -41,16 +41,25 @@ class DoctorController extends Controller
         // Get the current year
         $currentYear = Carbon::now()->year;
 
-        $patientsByMonth = DB::table('patients')
-            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+        $admittedPatientsByMonth = DB::table('patients')
+        ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+        ->where('physician', $profile->id)
+        ->whereYear('admitted_date', $currentYear)
+        ->groupBy('month')
+        ->get();
+    
+        $outpatientPatientsByMonth = DB::table('patients')
+            ->select(DB::raw('DATE_FORMAT(date, "%M") as month'), DB::raw('COUNT(*) as count'))
             ->where('physician', $profile->id)
-            ->whereYear('admitted_date', $currentYear)
+            ->whereYear('date', $currentYear)
             ->groupBy('month')
             ->get();
+
 
         $patientsByYear = DB::table('patients')
             ->where('physician', $profile->id)
             ->whereYear('admitted_date', $currentYear)
+            ->orWhereYear('date', $currentYear)
             ->get();
 
         $patientCount = $patientsByYear->count();
@@ -85,7 +94,7 @@ class DoctorController extends Controller
 
 
 
-        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'patientsByMonth', 'patientCount', 'limitCurrentMonthAppointments', 'months', 'appointmentCounts', 'appointmentCount', 'currentDate', 'currentTime'));
+        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'admittedPatientsByMonth','outpatientPatientsByMonth', 'patientCount', 'limitCurrentMonthAppointments', 'months', 'appointmentCounts', 'appointmentCount', 'currentDate', 'currentTime'));
     }
 
     public function profile(Request $request): View
@@ -1036,7 +1045,7 @@ class DoctorController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where('physician', $profile->id)->paginate(5);
+        $patients = Patient::where('physician', $profile->id)->orderBy('created_at', 'desc')->paginate(5);
 
         return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
@@ -1103,7 +1112,6 @@ class DoctorController extends Controller
             ->where(function ($query) use ($searchTerm) {
                 $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
             })->paginate(5);
 
         return view('doctor.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
@@ -1130,7 +1138,6 @@ class DoctorController extends Controller
             ->where(function ($query) use ($searchTerm) {
                 $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
             })->paginate(5);
 
         return view('doctor.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
@@ -1157,7 +1164,6 @@ class DoctorController extends Controller
             ->where(function ($query) use ($searchTerm) {
                 $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
                 $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('diagnosis', 'LIKE', '%' . $searchTerm . '%');
             })->paginate(5);
 
         return view('doctor.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
@@ -1165,27 +1171,247 @@ class DoctorController extends Controller
 
     public function patientUpdate(Request $request)
     {
-
         $patient = Patient::where('id', $request->id)->first();
 
-        $patientUpdatedData = [
-            'medical_condition' => $request->input('medical_condition'),
-            'diagnosis' => $request->input('diagnosis'),
-            'medication' => $request->input('medication'),
-        ];
+        switch ($patient) {
+            case $patient->type == 'outpatient':
 
-        $patientChange = $this->hasChanges($patient, $patientUpdatedData);
+                $patientUpdatedData = [
+                    'medical_condition' => $request->input('medical_condition'),
+                ];
 
-        if ($patientChange) {
-            $patient->medical_condition = $request->input('medical_condition');
-            $patient->diagnosis = $request->input('diagnosis');
-            $patient->medication = $request->input('medication');
+                 // Retrieve the request data
+                 $diagnosisDates = $request->input('diagnosesDate');
+                 $diagnosisTimes = $request->input('diagnosesTime');
+                 $diagnoses = $request->input('diagnoses');
+ 
+                 // Retrieve the existing data from the database
+                 $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
+ 
+                 // Initialize a boolean variable to track changes
+                 $diagnoseChangesDetected = false;
+ 
+                 foreach ($diagnoses as $index => $newDiagnosis) {
+                     $existingDiagnosis = $existingDiagnoses->get($index);
+                     $newDiagnoseDate = $diagnosisDates[$index];
+                     $newDiagnoseTime = $diagnosisTimes[$index];
+ 
+                     // Check if an existing record exists for this index
+                     if ($existingDiagnosis) {
+                         // Compare both the new diagnosis and new diagnoseDate with the existing ones
+                         if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime ])) {
+                             // At least one of the fields has been updated
+                             $diagnoseChangesDetected = true;
+                             // You can log or perform other actions here
+ 
+                             // Update the existing record with the new data
+                             $existingDiagnosis->diagnose = $newDiagnosis;
+                             $existingDiagnosis->date = $newDiagnoseDate;
+                             $existingDiagnosis->time = $newDiagnoseTime;
+                             $existingDiagnosis->save(); // Save the changes to the database
+                         }
+                     } else {
+                         // No existing record for this index, this may mean a new diagnosis was added
+                         // Handle new diagnoses here if needed
+                         $newDiagnosisRecord = new Diagnose(); // Assuming Diagnosis is your Eloquent model or equivalent
+                         $newDiagnosisRecord->patient_id = $patient->id; // Assuming Diagnosis is your Eloquent model or equivalent
+                         $newDiagnosisRecord->diagnose = $newDiagnosis;
+                         $newDiagnosisRecord->date = $newDiagnoseDate;
+                         $newDiagnosisRecord->time = $newDiagnoseTime;
+                         $newDiagnosisRecord->save(); // Save the new dia
+                         $diagnoseChangesDetected = true;
+                     }
+                 }
+ 
+                 // Retrieve the request data
+                 $medicationNames = $request->input('medicationName');
+                 $medicationDates = $request->input('medicationDate');
+                 $dosages = $request->input('medicationDosage');
+                 $durations = $request->input('medicationDuration');
+                 $medicationTimes = $request->input('medicationTime');
+ 
+                 // Retrieve the existing medication data from the database
+                 $existingMedications = Medication::where('patient_id', $request->id)->get();
+ 
+                 // Initialize a boolean variable to track changes
+                 $medicationChangesDetected = false;
+ 
+                 foreach ($medicationNames as $index => $newMedicationName) {
+                     $existingMedication = $existingMedications->get($index);
+                     $newMedicationDate = $medicationDates[$index];
+                     $newDosage = $dosages[$index];
+                     $newDuration = $durations[$index];
+                     $newMedicationTime = $medicationTimes[$index];
+ 
+                     // Check if an existing record exists for this index
+                     if ($existingMedication) {
+                         // Compare both the new medication data with the existing ones
+                         if (
+                             $this->hasChanges($existingMedication, [
+                                 'medication_name' => $newMedicationName,
+                                 'date' => $newMedicationDate,
+                                 'dosage' => $newDosage,
+                                 'duration' => $newDuration,
+                                 'time' => $newMedicationTime,
+                             ])
+                         ) {
+                             // At least one of the fields has been updated
+                             $medicationChangesDetected = true;
+                             // You can log or perform other actions here
+ 
+                             // Update the existing record with the new data
+                             $existingMedication->medication_name = $newMedicationName;
+                             $existingMedication->date = $newMedicationDate;
+                             $existingMedication->dosage = $newDosage;
+                             $existingMedication->duration = $newDuration;
+                             $existingMedication->time = $newMedicationTime;
+                             $existingMedication->save(); // Save the changes to the database
+                         }
+                     } else {
+                         // No existing record for this index, this may mean a new medication was added
+                         $newMedicationRecord = new Medication(); // Assuming Medication is your Eloquent model or equivalent
+                         $newMedicationRecord->patient_id = $patient->id; // Assuming Medication is your Eloquent model or equivalent
+                         $newMedicationRecord->medication_name = $newMedicationName;
+                         $newMedicationRecord->date = $newMedicationDate;
+                         $newMedicationRecord->dosage = $newDosage;
+                         $newMedicationRecord->duration = $newDuration;
+                         $newMedicationRecord->time = $newMedicationTime;
+                         $newMedicationRecord->save(); // Save the new medication
+                         $medicationChangesDetected = true;
+                     }
+                 }
 
-            $patient->save();
+                $patientChange = $this->hasChanges($patient, $patientUpdatedData);
 
-            return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
-        } else {
-            return redirect()->back()->with('info', 'No changes were made.');
+                if ($patientChange || $diagnoseChangesDetected || $medicationChangesDetected) {
+                    $patient->medical_condition = $request->input('medical_condition');
+
+                    $patient->save();
+
+                    return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'No changes were made.');
+                }
+
+            case $patient->type == 'admitted_patient':
+
+                $patientUpdatedData = [
+                    'medical_condition' => $request->input('medical_condition'),
+                ];
+
+                // Retrieve the request data
+                $diagnosisDates = $request->input('diagnosesDate');
+                $diagnosisTimes = $request->input('diagnosesTime');
+                $diagnoses = $request->input('diagnoses');
+
+                // Retrieve the existing data from the database
+                $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
+
+                // Initialize a boolean variable to track changes
+                $diagnoseChangesDetected = false;
+
+                foreach ($diagnoses as $index => $newDiagnosis) {
+                    $existingDiagnosis = $existingDiagnoses->get($index);
+                    $newDiagnoseDate = $diagnosisDates[$index];
+                    $newDiagnoseTime = $diagnosisTimes[$index];
+
+                    // Check if an existing record exists for this index
+                    if ($existingDiagnosis) {
+                        // Compare both the new diagnosis and new diagnoseDate with the existing ones
+                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime ])) {
+                            // At least one of the fields has been updated
+                            $diagnoseChangesDetected = true;
+                            // You can log or perform other actions here
+
+                            // Update the existing record with the new data
+                            $existingDiagnosis->diagnose = $newDiagnosis;
+                            $existingDiagnosis->date = $newDiagnoseDate;
+                            $existingDiagnosis->time = $newDiagnoseTime;
+                            $existingDiagnosis->save(); // Save the changes to the database
+                        }
+                    } else {
+                        // No existing record for this index, this may mean a new diagnosis was added
+                        // Handle new diagnoses here if needed
+                        $newDiagnosisRecord = new Diagnose(); // Assuming Diagnosis is your Eloquent model or equivalent
+                        $newDiagnosisRecord->patient_id = $patient->id; // Assuming Diagnosis is your Eloquent model or equivalent
+                        $newDiagnosisRecord->diagnose = $newDiagnosis;
+                        $newDiagnosisRecord->date = $newDiagnoseDate;
+                        $newDiagnosisRecord->time = $newDiagnoseTime;
+                        $newDiagnosisRecord->save(); // Save the new dia
+                        $diagnoseChangesDetected = true;
+                    }
+                }
+
+                // Retrieve the request data
+                $medicationNames = $request->input('medicationName');
+                $medicationDates = $request->input('medicationDate');
+                $dosages = $request->input('medicationDosage');
+                $durations = $request->input('medicationDuration');
+                $medicationTimes = $request->input('medicationTime');
+
+                // Retrieve the existing medication data from the database
+                $existingMedications = Medication::where('patient_id', $request->id)->get();
+
+                // Initialize a boolean variable to track changes
+                $medicationChangesDetected = false;
+
+                foreach ($medicationNames as $index => $newMedicationName) {
+                    $existingMedication = $existingMedications->get($index);
+                    $newMedicationDate = $medicationDates[$index];
+                    $newDosage = $dosages[$index];
+                    $newDuration = $durations[$index];
+                    $newMedicationTime = $medicationTimes[$index];
+
+                    // Check if an existing record exists for this index
+                    if ($existingMedication) {
+                        // Compare both the new medication data with the existing ones
+                        if (
+                            $this->hasChanges($existingMedication, [
+                                'medication_name' => $newMedicationName,
+                                'date' => $newMedicationDate,
+                                'dosage' => $newDosage,
+                                'duration' => $newDuration,
+                                'time' => $newMedicationTime,
+                            ])
+                        ) {
+                            // At least one of the fields has been updated
+                            $medicationChangesDetected = true;
+                            // You can log or perform other actions here
+
+                            // Update the existing record with the new data
+                            $existingMedication->medication_name = $newMedicationName;
+                            $existingMedication->date = $newMedicationDate;
+                            $existingMedication->dosage = $newDosage;
+                            $existingMedication->duration = $newDuration;
+                            $existingMedication->time = $newMedicationTime;
+                            $existingMedication->save(); // Save the changes to the database
+                        }
+                    } else {
+                        // No existing record for this index, this may mean a new medication was added
+                        $newMedicationRecord = new Medication(); // Assuming Medication is your Eloquent model or equivalent
+                        $newMedicationRecord->patient_id = $patient->id; // Assuming Medication is your Eloquent model or equivalent
+                        $newMedicationRecord->medication_name = $newMedicationName;
+                        $newMedicationRecord->date = $newMedicationDate;
+                        $newMedicationRecord->dosage = $newDosage;
+                        $newMedicationRecord->duration = $newDuration;
+                        $newMedicationRecord->time = $newMedicationTime;
+                        $newMedicationRecord->save(); // Save the new medication
+                        $medicationChangesDetected = true;
+                    }
+                }
+
+                $patientChange = $this->hasChanges($patient, $patientUpdatedData);
+
+                if ($patientChange || $diagnoseChangesDetected || $medicationChangesDetected) {
+
+                    $patient->medical_condition = $request->input('medical_condition');
+
+                    $patient->save();
+
+                    return redirect()->back()->with('success', 'Patient Information Updated Successfully.');
+                } else {
+                    return redirect()->back()->with('info', 'No changes were made.');
+                }
         }
     }
 
