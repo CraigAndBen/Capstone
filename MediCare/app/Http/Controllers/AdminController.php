@@ -31,43 +31,51 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        // $patientsByMonth = DB::table('patients')
-        //     ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-        //     ->whereYear('admitted_date', $currentYear)
-        //     ->groupBy('month')
-        //     ->get();
+       // Get the current year
+       $currentYear = Carbon::now()->year;
 
-        // $patientsByYear = DB::table('patients')
-        //     ->whereYear('admitted_date', $currentYear)
-        //     ->get();
-
-        // $patientCount = $patientsByYear->count();
-
-        // $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
-        //     ->selectRaw('COUNT(*) as total_occurrences')
-        //     ->whereYear('admitted_date', $currentYear)
-        //     ->whereNotNull('diagnosis')
-        //     ->groupBy('diagnosis', 'month')
-        //     ->orderByDesc('total_occurrences')
-        //     ->get();
+       $admittedPatientsByMonth = DB::table('patients')
+       ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+       ->whereYear('admitted_date', $currentYear)
+       ->groupBy('month')
+       ->get();
+   
+       $outpatientPatientsByMonth = DB::table('patients')
+           ->select(DB::raw('DATE_FORMAT(date, "%M") as month'), DB::raw('COUNT(*) as count'))
+           ->whereYear('date', $currentYear)
+           ->groupBy('month')
+           ->get();
 
 
-        // $diagnosesWithOccurrences = Patient::select('diagnosis')
-        //     ->selectRaw('COUNT(*) as total_occurrences')
-        //     ->whereYear('admitted_date', $currentYear)
-        //     ->groupBy('diagnosis')
-        //     ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
-        //     ->take(5) // Limit the result to the top 5 diagnoses
-        //     ->get();
+       $patientsByYear = DB::table('patients')
+           ->whereYear('admitted_date', $currentYear)
+           ->orWhereYear('date', $currentYear)
+           ->get();
 
-        // $diagnosisCount = $diagnosesWithOccurrences->count();
+       $patientCount = $patientsByYear->count();
 
-        // // $limitDiagnosis = $rankedDiagnosis->take(5);
+       $rankedDiagnosis = Diagnose::select('diagnose', DB::raw('MONTH(date) as month'))
+       ->selectRaw('COUNT(*) as total_occurrences')
+       ->whereYear('date', $currentYear)
+       ->whereNotNull('diagnose')
+       ->groupBy('diagnose', 'month')
+       ->orderByDesc('total_occurrences')
+       ->get();
 
-        // // Retrieve the rank 1 diagnosis for the current year
-        // $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
+        $diagnosesWithOccurrences = Diagnose::select('diagnose')
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('date', $currentYear)
+            ->groupBy('diagnose')
+            ->orderBy('total_occurrences', 'desc') // Order by occurrences in descending order
+            ->take(5) // Limit the result to the top 5 diagnoses
+            ->get();
 
-        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
+        $diagnosisCount = $diagnosesWithOccurrences->count();
+
+        // Retrieve the rank 1 diagnosis for the current year
+        $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
+
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'admittedPatientsByMonth','outpatientPatientsByMonth','patientCount','rankedDiagnosis','diagnosesWithOccurrences','diagnosisCount','rank1Diagnosis'));
     }
 
     public function profile(Request $request): View

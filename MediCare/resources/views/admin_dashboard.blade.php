@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 
 </head>
 <!-- [Head] end -->
@@ -221,29 +223,48 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Patient</label>
+                        <label>Analytics</label>
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
+                                class="pc-mtext">Patient</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.patient') }}">Patient</a>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
                             </li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.patient.admitted') }}">Patient Admitted</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.patient.outpatient') }}">Outpatient</a></li>
+                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
                         </ul>
-                    </li>
-                    <li class="pc-item pc-caption">
-                        <label>Demographics</label>
-                        <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient Demographics</span><span class="pc-arrow"><i
+                                class="pc-mtext">Admitted Patient</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Outpatient</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
@@ -287,7 +308,7 @@
             <div class="row">
                 <!-- [ sample-page ] start -->
 
-                {{-- <div class="col-xl-6 col-md-12 mt-4">
+                <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             @if ($patientCount)
@@ -298,6 +319,83 @@
                                     </div>
                                 </div>
                                 <canvas id="patientChart" width="100%" height="85"></canvas>
+                                <script>
+                                    // PHP arrays to JavaScript variables
+                                    const admittedMonths = @json($admittedPatientsByMonth->pluck('month'));
+                                    const admittedCounts = @json($admittedPatientsByMonth->pluck('count'));
+
+                                    const outpatientMonths = @json($outpatientPatientsByMonth->pluck('month'));
+                                    const outpatientCounts = @json($outpatientPatientsByMonth->pluck('count'));
+
+                                    // Create an array for all months
+                                    const allMonths = [
+                                        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                        'August', 'September', 'October', 'November', 'December'
+                                    ];
+
+                                    // Initialize arrays to store counts for admitted and outpatient data
+                                    const admittedMonthCounts = Array.from({
+                                        length: 12
+                                    }, () => 0);
+                                    const outpatientMonthCounts = Array.from({
+                                        length: 12
+                                    }, () => 0);
+
+                                    // Fill in the counts for the corresponding months for admitted patients
+                                    for (let i = 0; i < admittedMonths.length; i++) {
+                                        const monthIndex = allMonths.indexOf(admittedMonths[i]);
+                                        if (monthIndex !== -1) {
+                                            admittedMonthCounts[monthIndex] = admittedCounts[i];
+                                        }
+                                    }
+
+                                    // Fill in the counts for the corresponding months for outpatient patients
+                                    for (let i = 0; i < outpatientMonths.length; i++) {
+                                        const monthIndex = allMonths.indexOf(outpatientMonths[i]);
+                                        if (monthIndex !== -1) {
+                                            outpatientMonthCounts[monthIndex] = outpatientCounts[i];
+                                        }
+                                    }
+
+                                    var ctx = document.getElementById('patientChart').getContext('2d');
+                                    var myChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: allMonths,
+                                            datasets: [{
+                                                    label: 'Admitted Patient',
+                                                    data: admittedMonthCounts,
+                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                    borderWidth: 1
+                                                },
+                                                {
+                                                    label: 'Outpatient',
+                                                    data: outpatientMonthCounts,
+                                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                                    borderWidth: 1
+                                                }
+                                            ]
+                                        },
+                                        options: {
+                                            title: {
+                                                text: 'Patient Visits by Month'
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    ticks: {
+                                                        stepSize: 2
+                                                    }
+                                                }
+                                            },
+                                            legend: {
+                                                display: true
+                                            }
+                                        }
+                                    });
+                                </script>
                             @else
                                 <div class="text-center">
                                     <h3>No Patient Yet.</h3>
@@ -305,15 +403,15 @@
                             @endif
                         </div>
                     </div>
-                </div> --}}
+                </div>
 
-                {{-- <div class="col-xl-6 col-md-12 mt-4">
+                <div class="col-xl-6 col-md-12 mt-4">
                     <div class="card">
                         <div class="card-body">
                             @if ($diagnosisCount)
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
-                                        <h5>Patient Diagnosis This Year</h5>
+                                        <h5>Patient Diagnoses This Year</h5>
                                     </div>
                                     <div class="col-auto"> </div>
                                 </div>
@@ -324,7 +422,7 @@
                                         <li class="list-group-item px-0">
                                             <div class="row align-items-start">
                                                 <div class="col">
-                                                    <h5 class="mb-0">{{ ucwords($diagnosis->diagnosis) }}</h5>
+                                                    <h5 class="mb-0">{{ ucwords($diagnosis->diagnose) }}</h5>
                                                 </div>
                                                 <div class="col-auto">
                                                     <h5 class="mb-0">{{ $diagnosis->total_occurrences }}<span
@@ -347,7 +445,7 @@
 
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 <!-- [ sample-page ] end -->
             </div>
             <!-- [ Main Content ] end -->
@@ -380,13 +478,74 @@
 
     <!-- [Page Specific JS] start -->
     <!-- Apex Chart -->
-    <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script>
+    {{-- <script src="{{ asset('admin_assets/js/plugins/apexcharts.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('admin_assets/js/pages/dashboard-default.js') }}"></script> --}}
     <!-- [Page Specific JS] end -->
 </body>
+
 <!-- [Body] end -->
 <script>
+    var diagnosisData = @json($rankedDiagnosis);
+    // Get the canvas element
+    var ctx = document.getElementById('diagnosisChart').getContext('2d');
 
+    // Extract data from PHP variable
+    var months = [];
+    var datasets = [];
+
+    // Create an array with all months in the year
+    for (let i = 1; i <= 12; i++) {
+        months.push(moment(i, "M").format("MMMM"));
+    }
+
+    // Extract unique diagnoses from the data
+    const uniqueDiagnoses = [...new Set(diagnosisData.map(item => item.diagnose))];
+
+    // Create a dataset for each unique diagnosis
+    uniqueDiagnoses.forEach(diagnose => {
+        const data = [];
+        for (let i = 1; i <= 12; i++) {
+            const monthData = diagnosisData.find(item => item.month === i && item.diagnose === diagnose);
+            if (monthData) {
+                data.push(monthData.total_occurrences);
+            } else {
+                data.push(0);
+            }
+        }
+
+        datasets.push({
+            label: diagnose,
+            data: data,
+            fill: false,
+            borderColor: getRandomColor(), // You can define a function to get different colors
+        });
+    });
+
+    // Create the line chart
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: datasets,
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Function to generate random colors for each diagnosis
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 </script>
 
 </html>
