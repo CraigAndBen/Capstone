@@ -13,6 +13,7 @@ use App\Models\Medication;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Browsershot\Browsershot;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1098,7 +1099,10 @@ class AdminController extends Controller
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
@@ -1136,7 +1140,32 @@ class AdminController extends Controller
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
-        return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts'));
+           // Create a temporary file path for the chart image
+        $chartImage = public_path('chart.png');
+
+        // Capture a screenshot of the chart using Browsershot
+        Browsershot::url(route('admin.gender.report')) // Adjust the route to display the chart
+            ->save($chartImage);
+
+        $data = [
+            'genderCountsByMonth' => $genderCountsByMonth,
+            'year' => $year,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+            'totalGenderCounts' => $totalGenderCounts,
+            'reference' => $reference,
+            'chartImage' => $chartImage,
+        ];
+
+        // Generate the PDF with the chart image
+        $pdf = app('dompdf.wrapper')->loadView('admin.report.gender_report', $data);
+
+        // Delete the temporary chart image file
+        unlink($chartImage);
+
+        return $pdf->download('patient_information.pdf');
+
+        // return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts'));
 
     }
 

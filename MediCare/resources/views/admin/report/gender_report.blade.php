@@ -1,4 +1,4 @@
-@extends('layouts.analytics_report')
+{{-- @extends('layouts.analytics_report')
 @section('style')
     <style>
         @media print {
@@ -171,4 +171,154 @@
             });
         });
     </script>
-@endsection
+@endsection --}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <title>Patient Information</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background-color: #2E8BC0;
+            color: #fff;
+            padding: 3px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .patient-info {
+            padding: 20px;
+        }
+
+        .patient-info h2 {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #333;
+        }
+
+        th {
+            padding: 10px;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .footer {
+            text-align: center;
+            background-color: #2E8BC0;
+            color: #fff;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
+            <br>
+            C98V+GR4, Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
+            <br>
+            Phone: +1 5589 55488 55
+            <br>
+            Email: medicare@example.com
+            <br>
+            Reference No: {{ $reference }}
+        </p>
+        <hr>
+
+        <div class="header">
+            <h2>Patient Information</h2>
+        </div>
+        <div class="patient-info">
+            <canvas id="genderDemographicsChart"></canvas>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2023 MediCare
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Prepare data for the bar graph
+    var months = {!! json_encode(array_column($genderCountsByMonth, 'month')) !!};
+        var maleData = {!! json_encode(array_column($genderCountsByMonth, 'male')) !!};
+        var femaleData = {!! json_encode(array_column($genderCountsByMonth, 'female')) !!};
+
+        // Get the chart context and create the bar graph
+        var ctx = document.getElementById('genderDemographicsChart').getContext('2d');
+        var genderDemographicsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Male',
+                    data: maleData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderWidth: 1,
+                }, {
+                    label: 'Female',
+                    data: femaleData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)', // Red
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: true, // Stack the bars on the x-axis for each month
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Gender Count'
+                        }
+                    }
+                }
+            }
+        });
+</script>
+</html>
+

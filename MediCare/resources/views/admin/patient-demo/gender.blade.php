@@ -84,7 +84,7 @@
                             </div>
                             <hr>
                             <div class="my-5">
-                                <h3>Gender Total - <i>{{$totalGenderCounts}}</i></h3>
+                                <h3>Gender Total - <i>{{ $totalGenderCounts }}</i></h3>
                             </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
@@ -139,16 +139,19 @@
                         x: {
                             stacked: true, // Stack the bars on the x-axis for each month
                             title: {
-                            display: true,
-                            text: 'Months'
-                        }
+                                display: true,
+                                text: 'Months'
+                            }
                         },
                         y: {
                             beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            },
                             title: {
-                            display: true,
-                            text: 'Gender Count'
-                        }
+                                display: true,
+                                text: 'Gender Count'
+                            }
                         }
                     }
                 }

@@ -386,7 +386,7 @@
                                                 y: {
                                                     beginAtZero: true,
                                                     ticks: {
-                                                        stepSize: 2
+                                                        stepSize: 1
                                                     }
                                                 }
                                             },
@@ -531,7 +531,10 @@
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
                 }
             }
         }
