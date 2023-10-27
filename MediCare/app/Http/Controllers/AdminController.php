@@ -949,7 +949,7 @@ class AdminController extends Controller
     }
 
 
-    public function genderDemo()
+    public function patientGenderDemo()
     {
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
@@ -1016,11 +1016,130 @@ class AdminController extends Controller
 
 
 
-        return view('admin.patient-demo.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+        return view('admin.demographics.gender.patient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
     }
 
+    public function admittedGenderDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-    public function genderSearch(Request $request)
+        // Current year
+        $year = Carbon::now()->year;
+
+        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->whereNotNull('admitted_date')
+            ->pluck('year')
+            ->toArray();
+
+        $uniqueCombinedYears = $admittedYears;
+
+
+        // Initialize an array to store gender counts for each month
+        $genderCountsByMonth = [];
+        $totalMaleCount = 0;
+        $totalFemaleCount = 0;
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $patients = Patient::select('gender')
+                ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->get();
+
+            // Count the number of male and female patients for the current month
+            $maleCount = $patients->where('gender', 'male')->count();
+            $femaleCount = $patients->where('gender', 'female')->count();
+
+            $totalMaleCount += $maleCount;
+            $totalFemaleCount += $femaleCount;
+
+            // Store the gender counts for the current month in the array
+            $genderCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'male' => $maleCount,
+                'female' => $femaleCount,
+            ];
+        }
+
+        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+
+        return view('admin.demographics.gender.admitted.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+    }
+
+    public function outpatientGenderDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Current year
+        $year = Carbon::now()->year;
+
+        $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $uniqueCombinedYears = $admittedYears;
+
+
+        // Initialize an array to store gender counts for each month
+        $genderCountsByMonth = [];
+        $totalMaleCount = 0;
+        $totalFemaleCount = 0;
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $patients = Patient::select('gender')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
+
+            // Count the number of male and female patients for the current month
+            $maleCount = $patients->where('gender', 'male')->count();
+            $femaleCount = $patients->where('gender', 'female')->count();
+
+            $totalMaleCount += $maleCount;
+            $totalFemaleCount += $femaleCount;
+
+            // Store the gender counts for the current month in the array
+            $genderCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'male' => $maleCount,
+                'female' => $femaleCount,
+            ];
+        }
+
+        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+
+        return view('admin.demographics.gender.outpatient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+    }
+
+    public function patientGenderSearch(Request $request)
     {
         $request->validate([
             'year' => 'required',
@@ -1089,25 +1208,34 @@ class AdminController extends Controller
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
 
-        return view('admin.patient-demo.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+        return view('admin.demographics.gender.patient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
     }
 
-    public function genderReport(Request $request)
+    public function admittedGenderSearch(Request $request)
     {
-        $year = $request->input('year');
-        $currentYear = Carbon::now()->year; // Get current year
+        $request->validate([
+            'year' => 'required',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
-        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
-        $randomNumber = mt_rand(100, 999);
-        $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        //Selected Year
+        $year = $request->input('year');
 
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
+            ->whereNotNull('admitted_date')
             ->pluck('year')
             ->toArray();
+
+        $uniqueCombinedYears = $admittedYears;
 
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
@@ -1123,12 +1251,14 @@ class AdminController extends Controller
             // Retrieve admitted patient data for the current month
             $patients = Patient::select('gender')
                 ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->orWhereBetween('date', [$startDate, $endDate])
                 ->get();
 
             // Count the number of male and female patients for the current month
             $maleCount = $patients->where('gender', 'male')->count();
             $femaleCount = $patients->where('gender', 'female')->count();
+
+            $totalMaleCount += $maleCount;
+            $totalFemaleCount += $femaleCount;
 
             // Store the gender counts for the current month in the array
             $genderCountsByMonth[] = [
@@ -1140,36 +1270,194 @@ class AdminController extends Controller
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
-           // Create a temporary file path for the chart image
-        $chartImage = public_path('chart.png');
 
-        // Capture a screenshot of the chart using Browsershot
-        Browsershot::url(route('admin.gender.report')) // Adjust the route to display the chart
-            ->save($chartImage);
-
-        $data = [
-            'genderCountsByMonth' => $genderCountsByMonth,
-            'year' => $year,
-            'currentTime' => $currentTime,
-            'currentDate' => $currentDate,
-            'totalGenderCounts' => $totalGenderCounts,
-            'reference' => $reference,
-            'chartImage' => $chartImage,
-        ];
-
-        // Generate the PDF with the chart image
-        $pdf = app('dompdf.wrapper')->loadView('admin.report.gender_report', $data);
-
-        // Delete the temporary chart image file
-        unlink($chartImage);
-
-        return $pdf->download('patient_information.pdf');
-
-        // return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts'));
-
+        return view('admin.demographics.gender.patient.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
     }
 
-    public function ageDemo()
+    public function outpatientGenderSearch(Request $request)
+    {
+        $request->validate([
+            'year' => 'required',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        //Selected Year
+        $year = $request->input('year');
+
+        $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $uniqueCombinedYears = $admittedYears;
+
+        // Initialize an array to store gender counts for each month
+        $genderCountsByMonth = [];
+        $totalMaleCount = 0;
+        $totalFemaleCount = 0;
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $patients = Patient::select('gender')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
+
+            // Count the number of male and female patients for the current month
+            $maleCount = $patients->where('gender', 'male')->count();
+            $femaleCount = $patients->where('gender', 'female')->count();
+
+            $totalMaleCount += $maleCount;
+            $totalFemaleCount += $femaleCount;
+
+            // Store the gender counts for the current month in the array
+            $genderCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'male' => $maleCount,
+                'female' => $femaleCount,
+            ];
+        }
+
+        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+
+        return view('admin.demographics.gender.outpatient.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+    }
+
+
+    public function genderReport(Request $request)
+    {
+        $year = $request->input('year');
+        $type = $request->input('type');
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        switch($type){
+            case $type == 'patient':
+
+                // Initialize an array to store gender counts for each month
+                $genderCountsByMonth = [];
+                $totalMaleCount = 0;
+                $totalFemaleCount = 0;
+
+                // Loop through each month of the current year
+                for ($month = 1; $month <= 12; $month++) {
+                    // Get the start and end dates of the current month
+                    $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+                    $endDate = $startDate->copy()->endOfMonth();
+
+                    // Retrieve admitted patient data for the current month
+                    $patients = Patient::select('gender')
+                        ->whereBetween('admitted_date', [$startDate, $endDate])
+                        ->orWhereBetween('date', [$startDate, $endDate])
+                        ->get();
+
+                    // Count the number of male and female patients for the current month
+                    $maleCount = $patients->where('gender', 'male')->count();
+                    $femaleCount = $patients->where('gender', 'female')->count();
+
+                    // Store the gender counts for the current month in the array
+                    $genderCountsByMonth[] = [
+                        'month' => $startDate->format('F'),
+                        'male' => $maleCount,
+                        'female' => $femaleCount,
+                    ];
+                }
+
+                $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts','reference'));
+
+            case $type == 'admitted':
+
+                // Initialize an array to store gender counts for each month
+                $genderCountsByMonth = [];
+                $totalMaleCount = 0;
+                $totalFemaleCount = 0;
+
+                // Loop through each month of the current year
+                for ($month = 1; $month <= 12; $month++) {
+                    // Get the start and end dates of the current month
+                    $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+                    $endDate = $startDate->copy()->endOfMonth();
+
+                    // Retrieve admitted patient data for the current month
+                    $patients = Patient::select('gender')
+                        ->whereBetween('admitted_date', [$startDate, $endDate])
+                        ->get();
+
+                    // Count the number of male and female patients for the current month
+                    $maleCount = $patients->where('gender', 'male')->count();
+                    $femaleCount = $patients->where('gender', 'female')->count();
+
+                    // Store the gender counts for the current month in the array
+                    $genderCountsByMonth[] = [
+                        'month' => $startDate->format('F'),
+                        'male' => $maleCount,
+                        'female' => $femaleCount,
+                    ];
+                }
+
+                $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts','reference'));
+            
+            case $type == 'outpatient':
+
+                // Initialize an array to store gender counts for each month
+                $genderCountsByMonth = [];
+                $totalMaleCount = 0;
+                $totalFemaleCount = 0;
+
+                // Loop through each month of the current year
+                for ($month = 1; $month <= 12; $month++) {
+                    // Get the start and end dates of the current month
+                    $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+                    $endDate = $startDate->copy()->endOfMonth();
+
+                    // Retrieve admitted patient data for the current month
+                    $patients = Patient::select('gender')
+                        ->whereBetween('date', [$startDate, $endDate])
+                        ->get();
+
+                    // Count the number of male and female patients for the current month
+                    $maleCount = $patients->where('gender', 'male')->count();
+                    $femaleCount = $patients->where('gender', 'female')->count();
+
+                    // Store the gender counts for the current month in the array
+                    $genderCountsByMonth[] = [
+                        'month' => $startDate->format('F'),
+                        'male' => $maleCount,
+                        'female' => $femaleCount,
+                    ];
+                }
+
+                $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+
+                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts','reference'));
+        }
+    }
+
+    public function patientAgeDemo()
     {
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
@@ -1260,7 +1548,7 @@ class AdminController extends Controller
         return view('admin.patient-demo.age', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount'));
     }
 
-    public function ageSearch(Request $request)
+    public function patientAgeSearch(Request $request)
     {
         $request->validate([
             'year' => 'required',

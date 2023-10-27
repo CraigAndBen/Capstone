@@ -185,11 +185,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Demographics
     // Gender
-    Route::get('/admin/demographics/gender', [AdminController::class, 'genderDemo'])->name('admin.demographics.gender');
-    Route::get('/admin/demogrpahics/gender/search', [AdminController::class, 'genderSearch'])->name('admin.demographics.gender.search');
+    Route::get('/admin/demographics/patient/gender', [AdminController::class, 'patientGenderDemo'])->name('admin.demographics.patient.gender');
+    Route::get('/admin/demographics/admitted/gender', [AdminController::class, 'admittedGenderDemo'])->name('admin.demographics.admitted.gender');
+    Route::get('/admin/demographics/outpatient/gender', [AdminController::class, 'outpatientGenderDemo'])->name('admin.demographics.outpatient.gender');
+    Route::get('/admin/demogrpahics/patient/gender/search', [AdminController::class, 'patientGenderSearch'])->name('admin.demographics.patient.gender.search');
+    Route::get('/admin/demogrpahics/admitted/gender/search', [AdminController::class, 'admittedGenderSearch'])->name('admin.demographics.admitted.gender.search');
+    Route::get('/admin/demogrpahics/outpatient/gender/search', [AdminController::class, 'outpatientGenderSearch'])->name('admin.demographics.outpatient.gender.search');
     //Age
-    Route::get('/admin/demographics/age', [AdminController::class, 'ageDemo'])->name('admin.demographics.age');
-    Route::get('/admin/demogrpahics/age/search', [AdminController::class, 'ageSearch'])->name('admin.demographics.age.search');
+    Route::get('/admin/demographics/patient/age', [AdminController::class, 'patientAgeDemo'])->name('admin.demographics.patient.age');
+    Route::get('/admin/demogrpahics/patient/age/search', [AdminController::class, 'patientAgeSearch'])->name('admin.demographics.patient.age.search');
     //Admit
     Route::get('/admin/demographics/admitted', [AdminController::class, 'admittedDemo'])->name('admin.demographics.admitted');
     Route::get('/admin/demogrpahics/admit/search', [AdminController::class, 'admittedDemoSearch'])->name('admin.demographics.admitted.search');

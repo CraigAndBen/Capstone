@@ -68,77 +68,77 @@
                             <h5><i>{{ date('M j, Y', strtotime($currentDate)) }} | {{ $currentTime }}</i></h5>
                         </div>
                     </li>
-                  <li class="dropdown pc-h-item">
-                    <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
-                        data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
-                        aria-expanded="false">
-                        <i class="ti ti-bell"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
-                        @if ($count > 0)
-                            <div class="dropdown-header">
-                                <h5>All Notification <span
-                                        class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    @foreach ($limitNotifications as $notification)
-                                        <a class="list-group-item list-group-item-action"
-                                            href="{{ route('admin.notification') }}">
+                    <li class="dropdown pc-h-item">
+                        <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
+                            data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                            aria-expanded="false">
+                            <i class="ti ti-bell"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+                            @if ($count > 0)
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span
+                                            class="badge bg-warning rounded-pill ms-1">{{ $count }}</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        @foreach ($limitNotifications as $notification)
+                                            <a class="list-group-item list-group-item-action"
+                                                href="{{ route('admin.notification') }}">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0">
+                                                        <br>
+                                                        <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                            alt="user-image" class="user-avtar" />
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-1">
+                                                        <span class="float-end text-muted">
+                                                            {{ date('M j, Y', strtotime($notification->date)) }}
+                                                            {{ date('h:i A', strtotime($notification->time)) }}
+                                                        </span>
+                                                        <br>
+                                                        <h5>{{ ucwords($notification->title) }}</h5>
+                                                        <p class="text-body fs-6">
+                                                            {{ Str::words($notification->message, $limit = 10, $end = '...') }}
+                                                        </p>
+                                                        @if ($notification->is_read == 0)
+                                                            <div class="badge rounded-pill bg-light-danger">Unread</div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="text-center py-2">
+                                    <a href="{{ route('admin.notification') }}" class="btn btn-primary">Show all</a>
+                                </div>
+                            @else
+                                <div class="dropdown-header">
+                                    <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
+                                </div>
+                                <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 215px)">
+                                    <div class="list-group list-group-flush w-100">
+                                        <a class="list-group-item list-group-item-action">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
-                                                    <br>
                                                     <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">
-                                                    <span class="float-end text-muted">
-                                                        {{ date('M j, Y', strtotime($notification->date)) }}
-                                                        {{ date('h:i A', strtotime($notification->time)) }}
-                                                    </span>
-                                                    <br>
-                                                    <h5>{{ ucwords($notification->title) }}</h5>
-                                                    <p class="text-body fs-6">
-                                                        {{ Str::words($notification->message, $limit = 10, $end = '...') }}
-                                                    </p>
-                                                    @if ($notification->is_read == 0)
-                                                        <div class="badge rounded-pill bg-light-danger">Unread</div>
-                                                    @endif
+                                                    <h5>No Notification Yet.</h5>
                                                 </div>
                                             </div>
                                         </a>
-                                    @endforeach
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="text-center py-2">
-                                <a href="{{ route('admin.notification') }}" class="btn btn-primary">Show all</a>
-                            </div>
-                        @else
-                            <div class="dropdown-header">
-                                <h5>All Notification <span class="badge bg-warning rounded-pill ms-1">0</span></h5>
-                            </div>
-                            <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
-                                style="max-height: calc(100vh - 215px)">
-                                <div class="list-group list-group-flush w-100">
-                                    <a class="list-group-item list-group-item-action">
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0">
-                                                <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
-                                                    alt="user-image" class="user-avtar" />
-                                            </div>
-                                            <div class="flex-grow-1 ms-1">
-                                                <h5>No Notification Yet.</h5>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
+                            @endif
 
-                    </div>
-                </li>
+                        </div>
+                    </li>
                     <li class="dropdown pc-h-item header-user-profile">
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
@@ -151,7 +151,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
-                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span></h4>
+                                <h4>Good Morning, <span class="small text-muted">{{ $profile->first_name }}</span>
+                                </h4>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('admin.profile') }}" class="dropdown-item">
@@ -199,24 +200,24 @@
                         <label>Account Settings</label>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update Account</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Update
+                                Account</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.profile') }}">Update
+                                    Profile</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.profile')}}">Update Profile</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.profile.password')}}">Update Password</a></li>
+                                    href="{{ route('admin.profile.password') }}">Update Password</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
                         <label>Notification</label>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Notification List</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Notification
+                                List</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.notification')}}">Notification List</a></li>
+                                    href="{{ route('admin.notification') }}">Notification List</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -224,15 +225,15 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient List</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient
+                                List</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.patient') }}">Patient</a>
+                            </li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.patient')}}">Patient</a></li>
+                                    href="{{ route('admin.patient.admitted') }}">Patient Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.patient.admitted')}}">Patient Admitted</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                        href="{{route('admin.patient.outpatient')}}">Outpatient</a></li>
+                                    href="{{ route('admin.patient.outpatient') }}">Outpatient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -240,28 +241,100 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient Demographics</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Gender</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.demographics.gender')}}">Gender Demographics</a></li>
+                                    href="{{ route('admin.demographics.patient.gender') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.demographics.age')}}">Age Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.admitted')}}">Admit Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.outpatient')}}">Outpatient Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{route('admin.demographics.diagnose')}}">Diagnose Demographics</a></li>
+                                    href="{{ route('admin.demographics.admitted.gender') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient.gender') }}">Outpatient</a></li>
                         </ul>
                     </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Age</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.patient.age') }}">All Patient</a></li>
+                            {{-- <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.admitted.gender') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient.gender') }}">Outpatient</a></li> --}}
+                        </ul>
+                    </li>
+                    {{-- <li class="pc-item pc-caption">
+                        <label>Analytics</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Patient</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Admitted Patient</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Outpatient</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
+                                    Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                        </ul>
+                    </li> --}}
                     <li class="pc-item pc-caption">
                         <label>Trend</label>
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose Trend</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Diagnose Trend</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{route('admin.trend.diagnose')}}">Diagnose Rising Trend</a></li>
+                                    href="{{ route('admin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
                         </ul>
                     </li>
                 </ul>
