@@ -32,36 +32,36 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-       // Get the current year
-       $currentYear = Carbon::now()->year;
+        // Get the current year
+        $currentYear = Carbon::now()->year;
 
-       $admittedPatientsByMonth = DB::table('patients')
-       ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-       ->whereYear('admitted_date', $currentYear)
-       ->groupBy('month')
-       ->get();
-   
-       $outpatientPatientsByMonth = DB::table('patients')
-           ->select(DB::raw('DATE_FORMAT(date, "%M") as month'), DB::raw('COUNT(*) as count'))
-           ->whereYear('date', $currentYear)
-           ->groupBy('month')
-           ->get();
+        $admittedPatientsByMonth = DB::table('patients')
+            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('month')
+            ->get();
+
+        $outpatientPatientsByMonth = DB::table('patients')
+            ->select(DB::raw('DATE_FORMAT(date, "%M") as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('date', $currentYear)
+            ->groupBy('month')
+            ->get();
 
 
-       $patientsByYear = DB::table('patients')
-           ->whereYear('admitted_date', $currentYear)
-           ->orWhereYear('date', $currentYear)
-           ->get();
+        $patientsByYear = DB::table('patients')
+            ->whereYear('admitted_date', $currentYear)
+            ->orWhereYear('date', $currentYear)
+            ->get();
 
-       $patientCount = $patientsByYear->count();
+        $patientCount = $patientsByYear->count();
 
-       $rankedDiagnosis = Diagnose::select('diagnose', DB::raw('MONTH(date) as month'))
-       ->selectRaw('COUNT(*) as total_occurrences')
-       ->whereYear('date', $currentYear)
-       ->whereNotNull('diagnose')
-       ->groupBy('diagnose', 'month')
-       ->orderByDesc('total_occurrences')
-       ->get();
+        $rankedDiagnosis = Diagnose::select('diagnose', DB::raw('MONTH(date) as month'))
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->whereYear('date', $currentYear)
+            ->whereNotNull('diagnose')
+            ->groupBy('diagnose', 'month')
+            ->orderByDesc('total_occurrences')
+            ->get();
 
         $diagnosesWithOccurrences = Diagnose::select('diagnose')
             ->selectRaw('COUNT(*) as total_occurrences')
@@ -76,7 +76,7 @@ class AdminController extends Controller
         // Retrieve the rank 1 diagnosis for the current year
         $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
 
-        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'admittedPatientsByMonth','outpatientPatientsByMonth','patientCount','rankedDiagnosis','diagnosesWithOccurrences','diagnosisCount','rank1Diagnosis'));
+        return view('admin_dashboard', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'admittedPatientsByMonth', 'outpatientPatientsByMonth', 'patientCount', 'rankedDiagnosis', 'diagnosesWithOccurrences', 'diagnosisCount', 'rank1Diagnosis'));
     }
 
     public function profile(Request $request): View
@@ -433,106 +433,106 @@ class AdminController extends Controller
 
                 ];
 
-                 // Retrieve the request data
-                 $diagnosisDates = $request->input('diagnosesDate');
-                 $diagnosisTimes = $request->input('diagnosesTime');
-                 $diagnoses = $request->input('diagnoses');
- 
-                 // Retrieve the existing data from the database
-                 $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
- 
-                 // Initialize a boolean variable to track changes
-                 $diagnoseChangesDetected = false;
- 
-                 foreach ($diagnoses as $index => $newDiagnosis) {
-                     $existingDiagnosis = $existingDiagnoses->get($index);
-                     $newDiagnoseDate = $diagnosisDates[$index];
-                     $newDiagnoseTime = $diagnosisTimes[$index];
- 
-                     // Check if an existing record exists for this index
-                     if ($existingDiagnosis) {
-                         // Compare both the new diagnosis and new diagnoseDate with the existing ones
-                         if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime ])) {
-                             // At least one of the fields has been updated
-                             $diagnoseChangesDetected = true;
-                             // You can log or perform other actions here
- 
-                             // Update the existing record with the new data
-                             $existingDiagnosis->diagnose = $newDiagnosis;
-                             $existingDiagnosis->date = $newDiagnoseDate;
-                             $existingDiagnosis->time = $newDiagnoseTime;
-                             $existingDiagnosis->save(); // Save the changes to the database
-                         }
-                     } else {
-                         // No existing record for this index, this may mean a new diagnosis was added
-                         // Handle new diagnoses here if needed
-                         $newDiagnosisRecord = new Diagnose(); // Assuming Diagnosis is your Eloquent model or equivalent
-                         $newDiagnosisRecord->patient_id = $patient->id; // Assuming Diagnosis is your Eloquent model or equivalent
-                         $newDiagnosisRecord->diagnose = $newDiagnosis;
-                         $newDiagnosisRecord->date = $newDiagnoseDate;
-                         $newDiagnosisRecord->time = $newDiagnoseTime;
-                         $newDiagnosisRecord->save(); // Save the new dia
-                         $diagnoseChangesDetected = true;
-                     }
-                 }
- 
-                 // Retrieve the request data
-                 $medicationNames = $request->input('medicationName');
-                 $medicationDates = $request->input('medicationDate');
-                 $dosages = $request->input('medicationDosage');
-                 $durations = $request->input('medicationDuration');
-                 $medicationTimes = $request->input('medicationTime');
- 
-                 // Retrieve the existing medication data from the database
-                 $existingMedications = Medication::where('patient_id', $request->id)->get();
- 
-                 // Initialize a boolean variable to track changes
-                 $medicationChangesDetected = false;
- 
-                 foreach ($medicationNames as $index => $newMedicationName) {
-                     $existingMedication = $existingMedications->get($index);
-                     $newMedicationDate = $medicationDates[$index];
-                     $newDosage = $dosages[$index];
-                     $newDuration = $durations[$index];
-                     $newMedicationTime = $medicationTimes[$index];
- 
-                     // Check if an existing record exists for this index
-                     if ($existingMedication) {
-                         // Compare both the new medication data with the existing ones
-                         if (
-                             $this->hasChanges($existingMedication, [
-                                 'medication_name' => $newMedicationName,
-                                 'date' => $newMedicationDate,
-                                 'dosage' => $newDosage,
-                                 'duration' => $newDuration,
-                                 'time' => $newMedicationTime,
-                             ])
-                         ) {
-                             // At least one of the fields has been updated
-                             $medicationChangesDetected = true;
-                             // You can log or perform other actions here
- 
-                             // Update the existing record with the new data
-                             $existingMedication->medication_name = $newMedicationName;
-                             $existingMedication->date = $newMedicationDate;
-                             $existingMedication->dosage = $newDosage;
-                             $existingMedication->duration = $newDuration;
-                             $existingMedication->time = $newMedicationTime;
-                             $existingMedication->save(); // Save the changes to the database
-                         }
-                     } else {
-                         // No existing record for this index, this may mean a new medication was added
-                         $newMedicationRecord = new Medication(); // Assuming Medication is your Eloquent model or equivalent
-                         $newMedicationRecord->patient_id = $patient->id; // Assuming Medication is your Eloquent model or equivalent
-                         $newMedicationRecord->medication_name = $newMedicationName;
-                         $newMedicationRecord->date = $newMedicationDate;
-                         $newMedicationRecord->dosage = $newDosage;
-                         $newMedicationRecord->duration = $newDuration;
-                         $newMedicationRecord->time = $newMedicationTime;
-                         $newMedicationRecord->save(); // Save the new medication
-                         $medicationChangesDetected = true;
-                     }
-                 }
+                // Retrieve the request data
+                $diagnosisDates = $request->input('diagnosesDate');
+                $diagnosisTimes = $request->input('diagnosesTime');
+                $diagnoses = $request->input('diagnoses');
+
+                // Retrieve the existing data from the database
+                $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
+
+                // Initialize a boolean variable to track changes
+                $diagnoseChangesDetected = false;
+
+                foreach ($diagnoses as $index => $newDiagnosis) {
+                    $existingDiagnosis = $existingDiagnoses->get($index);
+                    $newDiagnoseDate = $diagnosisDates[$index];
+                    $newDiagnoseTime = $diagnosisTimes[$index];
+
+                    // Check if an existing record exists for this index
+                    if ($existingDiagnosis) {
+                        // Compare both the new diagnosis and new diagnoseDate with the existing ones
+                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime])) {
+                            // At least one of the fields has been updated
+                            $diagnoseChangesDetected = true;
+                            // You can log or perform other actions here
+
+                            // Update the existing record with the new data
+                            $existingDiagnosis->diagnose = $newDiagnosis;
+                            $existingDiagnosis->date = $newDiagnoseDate;
+                            $existingDiagnosis->time = $newDiagnoseTime;
+                            $existingDiagnosis->save(); // Save the changes to the database
+                        }
+                    } else {
+                        // No existing record for this index, this may mean a new diagnosis was added
+                        // Handle new diagnoses here if needed
+                        $newDiagnosisRecord = new Diagnose(); // Assuming Diagnosis is your Eloquent model or equivalent
+                        $newDiagnosisRecord->patient_id = $patient->id; // Assuming Diagnosis is your Eloquent model or equivalent
+                        $newDiagnosisRecord->diagnose = $newDiagnosis;
+                        $newDiagnosisRecord->date = $newDiagnoseDate;
+                        $newDiagnosisRecord->time = $newDiagnoseTime;
+                        $newDiagnosisRecord->save(); // Save the new dia
+                        $diagnoseChangesDetected = true;
+                    }
+                }
+
+                // Retrieve the request data
+                $medicationNames = $request->input('medicationName');
+                $medicationDates = $request->input('medicationDate');
+                $dosages = $request->input('medicationDosage');
+                $durations = $request->input('medicationDuration');
+                $medicationTimes = $request->input('medicationTime');
+
+                // Retrieve the existing medication data from the database
+                $existingMedications = Medication::where('patient_id', $request->id)->get();
+
+                // Initialize a boolean variable to track changes
+                $medicationChangesDetected = false;
+
+                foreach ($medicationNames as $index => $newMedicationName) {
+                    $existingMedication = $existingMedications->get($index);
+                    $newMedicationDate = $medicationDates[$index];
+                    $newDosage = $dosages[$index];
+                    $newDuration = $durations[$index];
+                    $newMedicationTime = $medicationTimes[$index];
+
+                    // Check if an existing record exists for this index
+                    if ($existingMedication) {
+                        // Compare both the new medication data with the existing ones
+                        if (
+                            $this->hasChanges($existingMedication, [
+                                'medication_name' => $newMedicationName,
+                                'date' => $newMedicationDate,
+                                'dosage' => $newDosage,
+                                'duration' => $newDuration,
+                                'time' => $newMedicationTime,
+                            ])
+                        ) {
+                            // At least one of the fields has been updated
+                            $medicationChangesDetected = true;
+                            // You can log or perform other actions here
+
+                            // Update the existing record with the new data
+                            $existingMedication->medication_name = $newMedicationName;
+                            $existingMedication->date = $newMedicationDate;
+                            $existingMedication->dosage = $newDosage;
+                            $existingMedication->duration = $newDuration;
+                            $existingMedication->time = $newMedicationTime;
+                            $existingMedication->save(); // Save the changes to the database
+                        }
+                    } else {
+                        // No existing record for this index, this may mean a new medication was added
+                        $newMedicationRecord = new Medication(); // Assuming Medication is your Eloquent model or equivalent
+                        $newMedicationRecord->patient_id = $patient->id; // Assuming Medication is your Eloquent model or equivalent
+                        $newMedicationRecord->medication_name = $newMedicationName;
+                        $newMedicationRecord->date = $newMedicationDate;
+                        $newMedicationRecord->dosage = $newDosage;
+                        $newMedicationRecord->duration = $newDuration;
+                        $newMedicationRecord->time = $newMedicationTime;
+                        $newMedicationRecord->save(); // Save the new medication
+                        $medicationChangesDetected = true;
+                    }
+                }
 
                 $patientChange = $this->hasChanges($patient, $patientUpdatedData);
 
@@ -621,7 +621,7 @@ class AdminController extends Controller
                     // Check if an existing record exists for this index
                     if ($existingDiagnosis) {
                         // Compare both the new diagnosis and new diagnoseDate with the existing ones
-                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime ])) {
+                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime])) {
                             // At least one of the fields has been updated
                             $diagnoseChangesDetected = true;
                             // You can log or perform other actions here
@@ -828,18 +828,18 @@ class AdminController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        if($patient->type == 'admitted_patient'){
+        if ($patient->type == 'admitted_patient') {
             $innerContent = '
                 Admission Details:
-                - Admitted Date and Time: '.$patient->admitted_date.' '. $patient->admitted_time.'
-                - Discharged Date and Time: '.$patient->discharged_date.' '. $patient->discharged_time.'
-                - Doctor: Dr. '.$doctor->first_name.' '.$doctor->last_name.'
+                - Admitted Date and Time: ' . $patient->admitted_date . ' ' . $patient->admitted_time . '
+                - Discharged Date and Time: ' . $patient->discharged_date . ' ' . $patient->discharged_time . '
+                - Doctor: Dr. ' . $doctor->first_name . ' ' . $doctor->last_name . '
             ';
         } else {
             $innerContent = '
             Appointment Details:
-            - Appointment Date and Time: '.$patient->admitted_date.' '. $patient->admitted_time.'
-            - Doctor: Dr. '.$doctor->first_name.' '.$doctor->last_name.'
+            - Appointment Date and Time: ' . $patient->admitted_date . ' ' . $patient->admitted_time . '
+            - Doctor: Dr. ' . $doctor->first_name . ' ' . $doctor->last_name . '
         ';
         }
 
@@ -847,21 +847,21 @@ class AdminController extends Controller
             '           Patient Information Report
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$currentDate.' '. $currentTime .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $currentDate . ' ' . $currentTime . '
 
             Patient Information:
-            - Name: '.$patient->first_name.' '. $patient->last_name .'
-            - Date of Birth: '.$patient->birthdate.'
+            - Name: ' . $patient->first_name . ' ' . $patient->last_name . '
+            - Date of Birth: ' . $patient->birthdate . '
               Address:
-                - Street: '.$patient->street.'
-                - Brgy: '.$patient->brgy.'
-                - City: '.$patient->city.'
-                - Province '.$patient->province.'
+                - Street: ' . $patient->street . '
+                - Brgy: ' . $patient->brgy . '
+                - City: ' . $patient->city . '
+                - Province ' . $patient->province . '
               Contact Information: 
-                - Email: '.$patient->email.'
-                - Phone: '.$patient->phone.'
-            '.$innerContent.'
+                - Email: ' . $patient->email . '
+                - Phone: ' . $patient->phone . '
+            ' . $innerContent . '
 
             Report Status: Finalized';
 
@@ -1351,7 +1351,7 @@ class AdminController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        switch($type){
+        switch ($type) {
             case $type == 'patient':
 
                 // Initialize an array to store gender counts for each month
@@ -1385,7 +1385,7 @@ class AdminController extends Controller
 
                 $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
-                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts','reference'));
+                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts', 'reference'));
 
             case $type == 'admitted':
 
@@ -1419,8 +1419,8 @@ class AdminController extends Controller
 
                 $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
-                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts','reference'));
-            
+                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts', 'reference'));
+
             case $type == 'outpatient':
 
                 // Initialize an array to store gender counts for each month
@@ -1453,7 +1453,7 @@ class AdminController extends Controller
 
                 $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
-                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts','reference'));
+                return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts', 'reference'));
         }
     }
 
@@ -1486,66 +1486,89 @@ class AdminController extends Controller
         $combinedYears = array_merge($admittedYears, $outpatientYears);
 
         $uniqueCombinedYears = array_unique($combinedYears);
-
-        // Initialize an array to store the age group counts for each month
-        $ageGroupsByMonth = [];
-
-        // Create an array of age group labels
-        $ageGroups = [
-            '0-9',
-            '10-19',
-            '20-29',
-            '30-39',
-            '40-49',
-            '50-59',
-            '60-69',
-            '70-79',
-            '80-89',
-            '90+',
-        ];
-
         $totalPatientCount = 0;
 
-        // Loop through each month of the current year
-        for ($month = 1; $month <= 12; $month++) {
-            // Get the start and end dates of the current month
-            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-            $endDate = $startDate->copy()->endOfMonth();
+        // // Initialize an array to store the age group counts for each month
+        // $ageGroupsByMonth = [];
 
-            // Retrieve admitted patient data for the current month
-            $patients = Patient::select('birthdate')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->orWhereBetween('date', [$startDate, $endDate])
-                ->get();
+        // // Create an array of age group labels
+        // $ageGroups = [
+        //     '0-9',
+        //     '10-19',
+        //     '20-29',
+        //     '30-39',
+        //     '40-49',
+        //     '50-59',
+        //     '60-69',
+        //     '70-79',
+        //     '80-89',
+        //     '90+',
+        // ];
 
-            // Increment the total patient count for this month
-            $totalPatientCount += $patients->count();
+        // $totalPatientCount = 0;
 
-            // Initialize the age group counts with zeros for the current month
-            $ageGroupCounts = [];
-            foreach ($ageGroups as $ageGroup) {
-                $ageGroupCounts[$ageGroup] = 0;
+        // // Loop through each month of the current year
+        // for ($month = 1; $month <= 12; $month++) {
+        //     // Get the start and end dates of the current month
+        //     $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        //     $endDate = $startDate->copy()->endOfMonth();
+
+        //     // Retrieve admitted patient data for the current month
+        //     $patients = Patient::select('birthdate')
+        //         ->whereBetween('admitted_date', [$startDate, $endDate])
+        //         ->orWhereBetween('date', [$startDate, $endDate])
+        //         ->get();
+
+        //     // Increment the total patient count for this month
+        //     $totalPatientCount += $patients->count();
+
+        //     // Initialize the age group counts with zeros for the current month
+        //     $ageGroupCounts = [];
+        //     foreach ($ageGroups as $ageGroup) {
+        //         $ageGroupCounts[$ageGroup] = 0;
+        //     }
+
+        //     // Calculate age groups for the current month and count occurrences
+        //     foreach ($patients as $patient) {
+        //         $age = Carbon::parse($patient->birthdate)->age;
+        //         $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
+        //         $ageGroupCounts[$ageGroup]++;
+        //     }
+
+        //     // Store the age group counts for the current month in the array
+        //     $ageGroupsByMonth[] = [
+        //         'month' => $startDate->format('F'),
+        //         'data' => array_values($ageGroupCounts),
+        //     ];
+        // }
+
+        // // Prepare data for the bar graph
+        // $labels = $ageGroups;
+        // $datasets = $ageGroupsByMonth;
+
+        $data = Patient::select(
+            DB::raw('YEAR(birthdate) as birth_year'),
+            DB::raw('MONTH(birthdate) as birth_month'),
+            DB::raw('YEAR(CURDATE()) - YEAR(birthdate) as age')
+        )
+        ->groupBy('birth_year', 'birth_month', 'age')
+        ->get();
+     
+        $ageData = [];
+        foreach ($data as $row) {
+            $ageData[$row->age][$row->birth_month] = $ageData[$row->age][$row->birth_month] ?? 0;
+            $ageData[$row->age][$row->birth_month]++;
+        }
+     
+        // Filter out age groups with 0 count for all months
+        $filteredAgeData = [];
+        foreach ($ageData as $age => $months) {
+            if (array_sum($months) >= 1) {
+                $filteredAgeData[$age] = $months;
             }
-
-            // Calculate age groups for the current month and count occurrences
-            foreach ($patients as $patient) {
-                $age = Carbon::parse($patient->birthdate)->age;
-                $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
-                $ageGroupCounts[$ageGroup]++;
-            }
-
-            // Store the age group counts for the current month in the array
-            $ageGroupsByMonth[] = [
-                'month' => $startDate->format('F'),
-                'data' => array_values($ageGroupCounts),
-            ];
         }
 
-        // Prepare data for the bar graph
-        $labels = $ageGroups;
-        $datasets = $ageGroupsByMonth;
-
-        return view('admin.patient-demo.age', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount'));
+        return view('admin.demographics.age.patient.age', compact('profile', 'limitNotifications', 'filteredAgeData', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count'));
     }
 
     public function patientAgeSearch(Request $request)

@@ -24,7 +24,7 @@
             <!-- [ breadcrumb ] end -->
 
 
-            <!-- [ Main Content ] start -->
+            <!-- [ Main Content ] start -->  
             <div class="row">
 
                 <!-- [ sample-page ] start -->
@@ -74,7 +74,6 @@
                                                     <option value="{{ $admittedYear }}">{{ $admittedYear }}</option>
                                                 @endif
                                             @endforeach
-
                                         </select>
                                 </div>
                                 <div class="col-md-2 mt-2">
@@ -84,7 +83,7 @@
                             </div>
                             <hr>
                             <div class="p-5">
-                                <h3>Age Total - <i>{{$totalPatientCount}}</i></h3>
+                                <h3>Age Total - <i>{{ $totalPatientCount }}</i></h3>
                             </div>
                             <div class="row m-5">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
@@ -111,61 +110,62 @@
 
     @section('scripts')
         <script>
-            // Prepare data for the bar graph
-            var labels = {!! json_encode($labels) !!};
-            var datasets = {!! json_encode($datasets) !!};
+            // Get age data from Laravel controller
+            var ageData = @json($filteredAgeData);
 
-            // Define a color palette for the bar graph
-            var colors = [
-                'rgba(54, 162, 235, 0.7)', // Blue
-                'rgba(255, 99, 132, 0.7)', // Red
-                'rgba(75, 192, 192, 0.7)', // Green
-                'rgba(255, 206, 86, 0.7)', // Yellow
-                'rgba(153, 102, 255, 0.7)', // Purple
-                'rgba(255, 159, 64, 0.7)', // Orange
-                'rgba(255, 0, 0, 0.7)', // Bright Red
-                'rgba(100, 190, 0, 0.7)', // Bright Green
-                'rgba(0, 0, 255, 0.7)', // Bright Blue
-                'rgba(128, 128, 0, 0.7)', // Olive
-                'rgba(128, 0, 128, 0.7)', // Purple
-                'rgba(0, 128, 128, 0.7)', // Teal
+            // Create labels for months
+            var months = [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
             ];
 
-            // Get the chart context and create the bar graph
+            // Define an array of custom colors for age groups
+            var customColors = [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                // Add more custom colors as needed
+            ];
+
+            // Create a chart
             var ctx = document.getElementById('ageDemographicsChart').getContext('2d');
-            var ageDemographicsChart = new Chart(ctx, {
+            var ageChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
-                    datasets: datasets.map(function(data, index) {
-                        return {
-                            label: data.month,
-                            data: data.data,
-                            backgroundColor: colors[index % colors
-                                .length], // Use the predefined colors from the palette
-                            borderWidth: 1,
-                        };
-                    })
+                    labels: months, // Use months as labels
+                    datasets: []
                 },
                 options: {
-                    responsive: true,
                     scales: {
-                        x: {
-                            stacked: true, // Stack the bars on the x-axis for each month
-                            title: {
-                            display: true,
-                            text: 'Months'
-                        }
-                        },
                         y: {
-                            beginAtZero: true,
-                            title: {
-                            display: true,
-                            text: 'Age Count'
-                        }
+                            beginAtZero: true
                         }
                     }
                 }
             });
+
+            // Add datasets to the chart for each age group
+            var i = 0; // Counter for custom colors
+            for (var age in ageData) {
+                var ageDataFiltered = months.map(function(month) {
+                    return ageData[age][months.indexOf(month) + 1] || 0;
+                });
+
+                if (ageDataFiltered.some(count => count >= 1)) {
+                    // Only add a dataset if there is at least one count of 1 or greater
+                    ageChart.data.datasets.push({
+                        label: age + ' years old',
+                        data: ageDataFiltered,
+                        backgroundColor: customColors[i], // Assign a custom color
+                        borderColor: customColors[i], // Assign a custom border color
+                        borderWidth: 1
+                    });
+                }
+
+                i++; // Move to the next custom color
+            }
+
+            // Update the chart
+            ageChart.update();
         </script>
     @endsection
