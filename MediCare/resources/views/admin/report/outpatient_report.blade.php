@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: legal landscape;
         }
 
         .page-break {
@@ -24,26 +24,33 @@
 @endsection
 @section('content')
     <div class="container mt-2">
-        <div class="row justify-content-first align-items-first my-3">
-            <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Admitted Patient Analytics Report</b></i></h5>
+        <div class="row justify-content-first align-items-first">
+            <div class="col-7">
+                <h5>Report Type: <i><b>Age Analytics Report</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
-            <div class="col-2">
+            <div class="col-3">
 
             </div>
-            <div class="col-1 my-3">
+            <div class="col-1 my-2">
                 <img src="{{ asset('logo.jpg') }}" alt="" class="" style="max-width: 200px; max-height: 160px">
             </div>
-
         </div>
+        <hr style="border-top: 1px solid #000;">
 
+        <div class="row justify-content-center mt-5">
+            <h3><i>Admitted Bar Graph</i></h3>
+            <br>
+        </div>
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
-                <h3><i>Outpatient Bar Graph</i></h3>
-                <br>
+            <div class="col-1">
+
+            </div>
+            <div class="col-7 text-center">
+
                 <canvas id="admitPatientDemographicsChart"></canvas>
             </div>
             <div class="col-1">
@@ -87,7 +94,7 @@
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('admin.demographics.outpatient') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('admin.analytics.outpatient') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>
@@ -110,7 +117,7 @@
                 datasets: [{
                     label: 'Outpatient',
                     data: admitPatientCounts,
-                    backgroundColor: 'rgba(255, 0, 0, 0.7)', // Red
+                    backgroundColor: 'rgba(153, 102, 255, 0.7)', // Purple
                     borderWidth: 1,
                 }]
             },
@@ -126,6 +133,9 @@
                     },
                     y: {
                         beginAtZero: true,
+                        ticks: {
+                                stepSize: 1
+                            },
                         title: {
                             display: true,
                             text: 'Outpatient Count'

@@ -185,30 +185,33 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Analytics
     // Gender
-    Route::get('/admin/demographics/patient/gender', [AdminController::class, 'patientGenderDemo'])->name('admin.analytics.patient.gender');
-    Route::get('/admin/demographics/admitted/gender', [AdminController::class, 'admittedGenderDemo'])->name('admin.analytics.admitted.gender');
-    Route::get('/admin/demographics/outpatient/gender', [AdminController::class, 'outpatientGenderDemo'])->name('admin.analytics.outpatient.gender');
-    Route::get('/admin/demogrpahics/patient/gender/search', [AdminController::class, 'patientGenderSearch'])->name('admin.analytics.patient.gender.search');
+    Route::get('/admin/analytics/patient/gender', [AdminController::class, 'patientGenderDemo'])->name('admin.analytics.patient.gender');
+    Route::get('/admin/analytics/admitted/gender', [AdminController::class, 'admittedGenderDemo'])->name('admin.analytics.admitted.gender');
+    Route::get('/admin/analytics/outpatient/gender', [AdminController::class, 'outpatientGenderDemo'])->name('admin.analytics.outpatient.gender');
+    Route::get('/admin/analytics/patient/gender/search', [AdminController::class, 'patientGenderSearch'])->name('admin.analytics.patient.gender.search');
     
     //Age
-    Route::get('/admin/demographics/patient/age', [AdminController::class, 'patientAgeDemo'])->name('admin.analytics.patient.age');
-    Route::get('/admin/demographics/admitted/age', [AdminController::class, 'admittedAgeDemo'])->name('admin.analytics.admitted.age');
-    Route::get('/admin/demographics/outpatient/age', [AdminController::class, 'outpatientAgeDemo'])->name('admin.analytics.outpatient.age');
-    Route::get('/admin/demogrpahics/patient/age/search', [AdminController::class, 'patientAgeSearch'])->name('admin.analytics.patient.age.search');
-    //Admit
-    Route::get('/admin/demographics/admitted', [AdminController::class, 'admittedDemo'])->name('admin.demographics.admitted');
-    Route::get('/admin/demogrpahics/admit/search', [AdminController::class, 'admittedDemoSearch'])->name('admin.demographics.admitted.search');
-    //Admit
-    Route::get('/admin/demographics/outpatient', [AdminController::class, 'outpatientDemo'])->name('admin.demographics.outpatient');
-    Route::get('/admin/demogrpahics/outpatient/search', [AdminController::class, 'outpatientDemoSearch'])->name('admin.demographics.outpatient.search');
+    Route::get('/admin/analytics/patient/age', [AdminController::class, 'patientAgeDemo'])->name('admin.analytics.patient.age');
+    Route::get('/admin/analytics/admitted/age', [AdminController::class, 'admittedAgeDemo'])->name('admin.analytics.admitted.age');
+    Route::get('/admin/analytics/outpatient/age', [AdminController::class, 'outpatientAgeDemo'])->name('admin.analytics.outpatient.age');
+    Route::get('/admin/analytics/patient/age/search', [AdminController::class, 'patientAgeSearch'])->name('admin.analytics.patient.age.search');
+
+    //Admitted
+    Route::get('/admin/analytics/admitted', [AdminController::class, 'admittedDemo'])->name('admin.analytics.admitted');
+    Route::get('/admin/analytics/admit/search', [AdminController::class, 'admittedDemoSearch'])->name('admin.analytics.admitted.search');
+
+    //Outpatient
+    Route::get('/admin/analytics/outpatient', [AdminController::class, 'outpatientDemo'])->name('admin.analytics.outpatient');
+    Route::get('/admin/analytics/outpatient/search', [AdminController::class, 'outpatientDemoSearch'])->name('admin.analytics.outpatient.search');
+
     //Diagnose
-    Route::get('/admin/demographics/diagnose', [AdminController::class, 'diagnoseDemo'])->name('admin.demographics.diagnose');
-    Route::get('/admin/demogrpahics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.demographics.diagnose.search');
+    Route::get('/admin/analytics/diagnose', [AdminController::class, 'diagnoseDemo'])->name('admin.analytics.diagnose');
+    Route::get('/admin/analytics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.analytics.diagnose.search');
 
     //Trend
-    //Diagnose Rising Trend
-    Route::get('/admin/trend/diagnose', [AdminController::class, 'diagnoseTrend'])->name('admin.trend.diagnose');
-    Route::get('/admin/trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.trend.diagnose.search');
+    //Diagnose Trend
+    Route::get('/admin/analytics/trend/diagnose', [AdminController::class, 'diagnoseTrend'])->name('admin.analytics.trend.diagnose');
+    Route::get('/admin/analytics/trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.analytics.trend.diagnose.search');
 
     //Report
     Route::post('/admin/gender/report', [AdminController::class, 'genderReport'])->name('admin.gender.report');

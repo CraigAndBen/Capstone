@@ -266,75 +266,40 @@
                                     href="{{ route('admin.analytics.outpatient.age') }}">Outpatient</a></li>
                         </ul>
                     </li>
-                    {{-- <li class="pc-item pc-caption">
-                        <label>Analytics</label>
-                        <i class="ti ti-apps"></i>
-                    </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient</span><span class="pc-arrow"><i
+                        <a class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Admitted</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
-                                    Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
-                            </li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                                    href="{{ route('admin.analytics.admitted') }}">All Patient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Admitted Patient</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
-                                    Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
-                            </li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
-                        </ul>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                        <a class="pc-link"><span class="pc-micon"></span><span
                                 class="pc-mtext">Outpatient</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.gender') }}">Gender Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.demographics.age') }}">Age
-                                    Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.admitted') }}">Admit Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.outpatient') }}">Outpatient Demographics</a>
-                            </li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.diagnose') }}">Diagnose Demographics</a></li>
+                                    href="{{ route('admin.analytics.outpatient') }}">All Patient</a></li>
                         </ul>
-                    </li> --}}
-                    <li class="pc-item pc-caption">
-                        <label>Trend</label>
-                        <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Diagnose Trend</span><span class="pc-arrow"><i
+                        <a class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Diagnose</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
+                                    href="{{ route('admin.analytics.diagnose') }}">All Patient</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Trend</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.trend.diagnose') }}">Diagnose Trend</a></li>
                         </ul>
                     </li>
                 </ul>
