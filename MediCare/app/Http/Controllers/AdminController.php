@@ -1013,10 +1013,10 @@ class AdminController extends Controller
         }
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+        $type = 'patient';
 
 
-
-        return view('admin.demographics.gender.patient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
     }
 
     public function admittedGenderDemo()
@@ -1074,9 +1074,10 @@ class AdminController extends Controller
         }
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+        $type = 'admitted';
 
 
-        return view('admin.demographics.gender.admitted.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
     }
 
     public function outpatientGenderDemo()
@@ -1134,9 +1135,11 @@ class AdminController extends Controller
         }
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
+        $type = 'outpatient';
 
 
-        return view('admin.demographics.gender.outpatient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
     }
 
     public function patientGenderSearch(Request $request)
@@ -1153,25 +1156,47 @@ class AdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        //Selected Year
+        $type = $request->input('type');
         $year = $request->input('year');
 
-        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->whereNotNull('admitted_date')
-            ->pluck('year')
-            ->toArray();
+        if ($type == 'patient') {
 
-        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
-            ->distinct()
-            ->whereNotNull('date')
-            ->pluck('year')
-            ->toArray();
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
 
-        $combinedYears = array_merge($admittedYears, $outpatientYears);
+            $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
 
-        $uniqueCombinedYears = array_unique($combinedYears);
+            $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+            $uniqueCombinedYears = array_unique($combinedYears);
+
+        } else if ($type == 'admitted') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = array_unique($admittedYears);
+
+        } else if ($type == 'outpatient') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = array_unique($admittedYears);
+        }
 
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
@@ -1184,12 +1209,20 @@ class AdminController extends Controller
             $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
             $endDate = $startDate->copy()->endOfMonth();
 
-            // Retrieve admitted patient data for the current month
-            $patients = Patient::select('gender')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->orWhereBetween('date', [$startDate, $endDate])
-                ->get();
-
+            if ($type == 'patient') {
+                $patients = Patient::select('gender')
+                    ->whereBetween('admitted_date', [$startDate, $endDate])
+                    ->orWhereBetween('date', [$startDate, $endDate])
+                    ->get();
+            } else if ($type == 'admitted') {
+                $patients = Patient::select('gender')
+                    ->whereBetween('admitted_date', [$startDate, $endDate])
+                    ->get();
+            } else if ($type == 'outpatient') {
+                $patients = Patient::select('gender')
+                    ->whereBetween('date', [$startDate, $endDate])
+                    ->get();
+            }
             // Count the number of male and female patients for the current month
             $maleCount = $patients->where('gender', 'male')->count();
             $femaleCount = $patients->where('gender', 'female')->count();
@@ -1208,135 +1241,8 @@ class AdminController extends Controller
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
 
-        return view('admin.demographics.gender.patient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
+        return view('admin.analytics.gender.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
     }
-
-    public function admittedGenderSearch(Request $request)
-    {
-        $request->validate([
-            'year' => 'required',
-        ]);
-
-        $profile = auth()->user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        //Selected Year
-        $year = $request->input('year');
-
-        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->whereNotNull('admitted_date')
-            ->pluck('year')
-            ->toArray();
-
-        $uniqueCombinedYears = $admittedYears;
-
-        // Initialize an array to store gender counts for each month
-        $genderCountsByMonth = [];
-        $totalMaleCount = 0;
-        $totalFemaleCount = 0;
-
-        // Loop through each month of the current year
-        for ($month = 1; $month <= 12; $month++) {
-            // Get the start and end dates of the current month
-            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-            $endDate = $startDate->copy()->endOfMonth();
-
-            // Retrieve admitted patient data for the current month
-            $patients = Patient::select('gender')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->get();
-
-            // Count the number of male and female patients for the current month
-            $maleCount = $patients->where('gender', 'male')->count();
-            $femaleCount = $patients->where('gender', 'female')->count();
-
-            $totalMaleCount += $maleCount;
-            $totalFemaleCount += $femaleCount;
-
-            // Store the gender counts for the current month in the array
-            $genderCountsByMonth[] = [
-                'month' => $startDate->format('F'),
-                'male' => $maleCount,
-                'female' => $femaleCount,
-            ];
-        }
-
-        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
-
-
-        return view('admin.demographics.gender.patient.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
-    }
-
-    public function outpatientGenderSearch(Request $request)
-    {
-        $request->validate([
-            'year' => 'required',
-        ]);
-
-        $profile = auth()->user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        //Selected Year
-        $year = $request->input('year');
-
-        $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
-            ->distinct()
-            ->whereNotNull('date')
-            ->pluck('year')
-            ->toArray();
-
-        $uniqueCombinedYears = $admittedYears;
-
-        // Initialize an array to store gender counts for each month
-        $genderCountsByMonth = [];
-        $totalMaleCount = 0;
-        $totalFemaleCount = 0;
-
-        // Loop through each month of the current year
-        for ($month = 1; $month <= 12; $month++) {
-            // Get the start and end dates of the current month
-            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-            $endDate = $startDate->copy()->endOfMonth();
-
-            // Retrieve admitted patient data for the current month
-            $patients = Patient::select('gender')
-                ->whereBetween('date', [$startDate, $endDate])
-                ->get();
-
-            // Count the number of male and female patients for the current month
-            $maleCount = $patients->where('gender', 'male')->count();
-            $femaleCount = $patients->where('gender', 'female')->count();
-
-            $totalMaleCount += $maleCount;
-            $totalFemaleCount += $femaleCount;
-
-            // Store the gender counts for the current month in the array
-            $genderCountsByMonth[] = [
-                'month' => $startDate->format('F'),
-                'male' => $maleCount,
-                'female' => $femaleCount,
-            ];
-        }
-
-        $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
-
-
-        return view('admin.demographics.gender.outpatient.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts'));
-    }
-
 
     public function genderReport(Request $request)
     {
@@ -1488,195 +1394,6 @@ class AdminController extends Controller
         $uniqueCombinedYears = array_unique($combinedYears);
         $totalPatientCount = 0;
 
-        // // Initialize an array to store the age group counts for each month
-        // $ageGroupsByMonth = [];
-
-        // // Create an array of age group labels
-        // $ageGroups = [
-        //     '0-9',
-        //     '10-19',
-        //     '20-29',
-        //     '30-39',
-        //     '40-49',
-        //     '50-59',
-        //     '60-69',
-        //     '70-79',
-        //     '80-89',
-        //     '90+',
-        // ];
-
-        // $totalPatientCount = 0;
-
-        // // Loop through each month of the current year
-        // for ($month = 1; $month <= 12; $month++) {
-        //     // Get the start and end dates of the current month
-        //     $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-        //     $endDate = $startDate->copy()->endOfMonth();
-
-        //     // Retrieve admitted patient data for the current month
-        //     $patients = Patient::select('birthdate')
-        //         ->whereBetween('admitted_date', [$startDate, $endDate])
-        //         ->orWhereBetween('date', [$startDate, $endDate])
-        //         ->get();
-
-        //     // Increment the total patient count for this month
-        //     $totalPatientCount += $patients->count();
-
-        //     // Initialize the age group counts with zeros for the current month
-        //     $ageGroupCounts = [];
-        //     foreach ($ageGroups as $ageGroup) {
-        //         $ageGroupCounts[$ageGroup] = 0;
-        //     }
-
-        //     // Calculate age groups for the current month and count occurrences
-        //     foreach ($patients as $patient) {
-        //         $age = Carbon::parse($patient->birthdate)->age;
-        //         $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
-        //         $ageGroupCounts[$ageGroup]++;
-        //     }
-
-        //     // Store the age group counts for the current month in the array
-        //     $ageGroupsByMonth[] = [
-        //         'month' => $startDate->format('F'),
-        //         'data' => array_values($ageGroupCounts),
-        //     ];
-        // }
-
-        // // Prepare data for the bar graph
-        // $labels = $ageGroups;
-        // $datasets = $ageGroupsByMonth;
-
-        $data = Patient::select(
-            DB::raw('YEAR(birthdate) as birth_year'),
-            DB::raw('MONTH(birthdate) as birth_month'),
-            DB::raw('YEAR(CURDATE()) - YEAR(birthdate) as age')
-        )
-        ->groupBy('birth_year', 'birth_month', 'age')
-        ->get();
-     
-        $ageData = [];
-        foreach ($data as $row) {
-            $ageData[$row->age][$row->birth_month] = $ageData[$row->age][$row->birth_month] ?? 0;
-            $ageData[$row->age][$row->birth_month]++;
-        }
-     
-        // Filter out age groups with 0 count for all months
-        $filteredAgeData = [];
-        foreach ($ageData as $age => $months) {
-            if (array_sum($months) >= 1) {
-                $filteredAgeData[$age] = $months;
-            }
-        }
-
-        return view('admin.demographics.age.patient.age', compact('profile', 'limitNotifications', 'filteredAgeData', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count'));
-    }
-
-    public function patientAgeSearch(Request $request)
-    {
-        $request->validate([
-            'year' => 'required',
-        ]);
-
-        $profile = auth()->user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        // Get the current year
-        $year = $request->input('year');
-        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->whereNotNull('admitted_date')
-            ->pluck('year')
-            ->toArray();
-
-        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
-            ->distinct()
-            ->whereNotNull('date')
-            ->pluck('year')
-            ->toArray();
-
-        $combinedYears = array_merge($admittedYears, $outpatientYears);
-
-        $uniqueCombinedYears = array_unique($combinedYears);
-        // Initialize an array to store the age group counts for each month
-        $ageGroupsByMonth = [];
-
-        // Create an array of age group labels
-        $ageGroups = [
-            '0-9',
-            '10-19',
-            '20-29',
-            '30-39',
-            '40-49',
-            '50-59',
-            '60-69',
-            '70-79',
-            '80-89',
-            '90+',
-        ];
-
-        $totalPatientCount = 0;
-
-        // Loop through each month of the current year
-        for ($month = 1; $month <= 12; $month++) {
-            // Get the start and end dates of the current month
-            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-            $endDate = $startDate->copy()->endOfMonth();
-
-            // Retrieve admitted patient data for the current month
-            $patients = Patient::select('birthdate')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->get();
-
-            // Increment the total patient count for this month
-            $totalPatientCount += $patients->count();
-
-            // Initialize the age group counts with zeros for the current month
-            $ageGroupCounts = [];
-            foreach ($ageGroups as $ageGroup) {
-                $ageGroupCounts[$ageGroup] = 0;
-            }
-
-            // Calculate age groups for the current month and count occurrences
-            foreach ($patients as $patient) {
-                $age = Carbon::parse($patient->birthdate)->age;
-                $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
-                $ageGroupCounts[$ageGroup]++;
-            }
-
-            // Store the age group counts for the current month in the array
-            $ageGroupsByMonth[] = [
-                'month' => $startDate->format('F'),
-                'data' => array_values($ageGroupCounts),
-            ];
-        }
-
-        // Prepare data for the bar graph
-        $labels = $ageGroups;
-        $datasets = $ageGroupsByMonth;
-
-        return view('admin.patient-demo.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'totalPatientCount', 'uniqueCombinedYears', 'currentTime', 'currentDate'));
-    }
-
-    public function ageReport(Request $request)
-    {
-        $year = $request->input('year');
-        $currentYear = Carbon::now()->year; // Get current year
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->pluck('year')
-            ->toArray();
-
         // Initialize an array to store the age group counts for each month
         $ageGroupsByMonth = [];
 
@@ -1734,8 +1451,435 @@ class AdminController extends Controller
         // Prepare data for the bar graph
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
+        $type = 'patient';
 
-        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount'));
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type'));
+    }
+
+    public function admittedAgeDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Get the current year
+        $year = Carbon::now()->year;
+
+        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->whereNotNull('admitted_date')
+            ->pluck('year')
+            ->toArray();
+
+        $uniqueCombinedYears = array_unique($admittedYears);
+        $totalPatientCount = 0;
+
+        // Initialize an array to store the age group counts for each month
+        $ageGroupsByMonth = [];
+
+        // Create an array of age group labels
+        $ageGroups = [
+            '0-9',
+            '10-19',
+            '20-29',
+            '30-39',
+            '40-49',
+            '50-59',
+            '60-69',
+            '70-79',
+            '80-89',
+            '90+',
+        ];
+
+        $totalPatientCount = 0;
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $patients = Patient::select('birthdate')
+                ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->get();
+
+            // Increment the total patient count for this month
+            $totalPatientCount += $patients->count();
+
+            // Initialize the age group counts with zeros for the current month
+            $ageGroupCounts = [];
+            foreach ($ageGroups as $ageGroup) {
+                $ageGroupCounts[$ageGroup] = 0;
+            }
+
+            // Calculate age groups for the current month and count occurrences
+            foreach ($patients as $patient) {
+                $age = Carbon::parse($patient->birthdate)->age;
+                $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
+                $ageGroupCounts[$ageGroup]++;
+            }
+
+            // Store the age group counts for the current month in the array
+            $ageGroupsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'data' => array_values($ageGroupCounts),
+            ];
+        }
+
+        // Prepare data for the bar graph
+        $labels = $ageGroups;
+        $datasets = $ageGroupsByMonth;
+        $type = 'admitted';
+
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type'));
+    }
+
+    public function outpatientAgeDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Get the current year
+        $year = Carbon::now()->year;
+
+        $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $uniqueCombinedYears = array_unique($admittedYears);
+        $totalPatientCount = 0;
+
+        // Initialize an array to store the age group counts for each month
+        $ageGroupsByMonth = [];
+
+        // Create an array of age group labels
+        $ageGroups = [
+            '0-9',
+            '10-19',
+            '20-29',
+            '30-39',
+            '40-49',
+            '50-59',
+            '60-69',
+            '70-79',
+            '80-89',
+            '90+',
+        ];
+
+        $totalPatientCount = 0;
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            // Retrieve admitted patient data for the current month
+            $patients = Patient::select('birthdate')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
+
+            // Increment the total patient count for this month
+            $totalPatientCount += $patients->count();
+
+            // Initialize the age group counts with zeros for the current month
+            $ageGroupCounts = [];
+            foreach ($ageGroups as $ageGroup) {
+                $ageGroupCounts[$ageGroup] = 0;
+            }
+
+            // Calculate age groups for the current month and count occurrences
+            foreach ($patients as $patient) {
+                $age = Carbon::parse($patient->birthdate)->age;
+                $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
+                $ageGroupCounts[$ageGroup]++;
+            }
+
+            // Store the age group counts for the current month in the array
+            $ageGroupsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'data' => array_values($ageGroupCounts),
+            ];
+        }
+
+        // Prepare data for the bar graph
+        $labels = $ageGroups;
+        $datasets = $ageGroupsByMonth;
+        $type = 'outpatient';
+
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type'));
+    }
+
+    public function patientAgeSearch(Request $request)
+    {
+        $request->validate([
+            'year' => 'required',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Get the current year
+        $year = $request->input('year');
+        $type = $request->input('type');
+
+        if ($type == 'patient') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
+
+            $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
+
+            $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+            $uniqueCombinedYears = array_unique($combinedYears);
+
+        } else if ($type == 'admitted') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = array_unique($admittedYears);
+
+        } else if ($type == 'outpatient') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = array_unique($admittedYears);
+        }
+
+        $totalPatientCount = 0;
+
+        // Initialize an array to store the age group counts for each month
+        $ageGroupsByMonth = [];
+
+        // Create an array of age group labels
+        $ageGroups = [
+            '0-9',
+            '10-19',
+            '20-29',
+            '30-39',
+            '40-49',
+            '50-59',
+            '60-69',
+            '70-79',
+            '80-89',
+            '90+',
+        ];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            if ($type == 'patient') {
+                $patients = Patient::select('birthdate')
+                ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->orWhereBetween('date', [$startDate, $endDate])
+                ->get();
+            } else if ($type == 'admitted') {
+                $patients = Patient::select('birthdate')
+                ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->get();
+            } else if ($type == 'outpatient') {
+                $patients = Patient::select('birthdate')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
+            }
+
+            // Retrieve admitted patient data for the current month
+   
+
+            // Increment the total patient count for this month
+            $totalPatientCount += $patients->count();
+
+            // Initialize the age group counts with zeros for the current month
+            $ageGroupCounts = [];
+            foreach ($ageGroups as $ageGroup) {
+                $ageGroupCounts[$ageGroup] = 0;
+            }
+
+            // Calculate age groups for the current month and count occurrences
+            foreach ($patients as $patient) {
+                $age = Carbon::parse($patient->birthdate)->age;
+                $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
+                $ageGroupCounts[$ageGroup]++;
+            }
+
+            // Store the age group counts for the current month in the array
+            $ageGroupsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'data' => array_values($ageGroupCounts),
+            ];
+        }
+
+        // Prepare data for the bar graph
+        $labels = $ageGroups;
+        $datasets = $ageGroupsByMonth;
+        $type = 'patient';
+
+        return view('admin.analytics.age.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'totalPatientCount', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
+    }
+
+    public function ageReport(Request $request)
+    {
+        $year = $request->input('year');
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+        
+        $type = $request->input('type');
+
+        if ($type == 'patient') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
+
+            $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
+
+            $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+            $uniqueCombinedYears = array_unique($combinedYears);
+
+        } else if ($type == 'admitted') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = array_unique($admittedYears);
+
+        } else if ($type == 'outpatient') {
+
+            $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = array_unique($admittedYears);
+        }
+
+        $totalPatientCount = 0;
+
+        // Initialize an array to store the age group counts for each month
+        $ageGroupsByMonth = [];
+
+        // Create an array of age group labels
+        $ageGroups = [
+            '0-9',
+            '10-19',
+            '20-29',
+            '30-39',
+            '40-49',
+            '50-59',
+            '60-69',
+            '70-79',
+            '80-89',
+            '90+',
+        ];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            if ($type == 'patient') {
+                $patients = Patient::select('birthdate')
+                ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->orWhereBetween('date', [$startDate, $endDate])
+                ->get();
+            } else if ($type == 'admitted') {
+                $patients = Patient::select('birthdate')
+                ->whereBetween('admitted_date', [$startDate, $endDate])
+                ->get();
+            } else if ($type == 'outpatient') {
+                $patients = Patient::select('birthdate')
+                ->whereBetween('date', [$startDate, $endDate])
+                ->get();
+            }
+
+            // Retrieve admitted patient data for the current month
+   
+
+            // Increment the total patient count for this month
+            $totalPatientCount += $patients->count();
+
+            // Initialize the age group counts with zeros for the current month
+            $ageGroupCounts = [];
+            foreach ($ageGroups as $ageGroup) {
+                $ageGroupCounts[$ageGroup] = 0;
+            }
+
+            // Calculate age groups for the current month and count occurrences
+            foreach ($patients as $patient) {
+                $age = Carbon::parse($patient->birthdate)->age;
+                $ageGroup = floor($age / 10) * 10 . '-' . (floor($age / 10) * 10 + 9);
+                $ageGroupCounts[$ageGroup]++;
+            }
+
+            // Store the age group counts for the current month in the array
+            $ageGroupsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'data' => array_values($ageGroupCounts),
+            ];
+        }
+
+        // Prepare data for the bar graph
+        $labels = $ageGroups;
+        $datasets = $ageGroupsByMonth;
+
+        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount','reference'));
 
     }
 

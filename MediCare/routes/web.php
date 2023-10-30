@@ -183,17 +183,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/notification/delete', [AdminController::class, 'deleteNotification'])->name('admin.notification.delete');
     Route::post('/admin/notification/delete/all', [AdminController::class, 'deleteNotificationAll'])->name('admin.notification.delete.all');
 
-    // Demographics
+    // Analytics
     // Gender
-    Route::get('/admin/demographics/patient/gender', [AdminController::class, 'patientGenderDemo'])->name('admin.demographics.patient.gender');
-    Route::get('/admin/demographics/admitted/gender', [AdminController::class, 'admittedGenderDemo'])->name('admin.demographics.admitted.gender');
-    Route::get('/admin/demographics/outpatient/gender', [AdminController::class, 'outpatientGenderDemo'])->name('admin.demographics.outpatient.gender');
-    Route::get('/admin/demogrpahics/patient/gender/search', [AdminController::class, 'patientGenderSearch'])->name('admin.demographics.patient.gender.search');
-    Route::get('/admin/demogrpahics/admitted/gender/search', [AdminController::class, 'admittedGenderSearch'])->name('admin.demographics.admitted.gender.search');
-    Route::get('/admin/demogrpahics/outpatient/gender/search', [AdminController::class, 'outpatientGenderSearch'])->name('admin.demographics.outpatient.gender.search');
+    Route::get('/admin/demographics/patient/gender', [AdminController::class, 'patientGenderDemo'])->name('admin.analytics.patient.gender');
+    Route::get('/admin/demographics/admitted/gender', [AdminController::class, 'admittedGenderDemo'])->name('admin.analytics.admitted.gender');
+    Route::get('/admin/demographics/outpatient/gender', [AdminController::class, 'outpatientGenderDemo'])->name('admin.analytics.outpatient.gender');
+    Route::get('/admin/demogrpahics/patient/gender/search', [AdminController::class, 'patientGenderSearch'])->name('admin.analytics.patient.gender.search');
+    
     //Age
-    Route::get('/admin/demographics/patient/age', [AdminController::class, 'patientAgeDemo'])->name('admin.demographics.patient.age');
-    Route::get('/admin/demogrpahics/patient/age/search', [AdminController::class, 'patientAgeSearch'])->name('admin.demographics.patient.age.search');
+    Route::get('/admin/demographics/patient/age', [AdminController::class, 'patientAgeDemo'])->name('admin.analytics.patient.age');
+    Route::get('/admin/demographics/admitted/age', [AdminController::class, 'admittedAgeDemo'])->name('admin.analytics.admitted.age');
+    Route::get('/admin/demographics/outpatient/age', [AdminController::class, 'outpatientAgeDemo'])->name('admin.analytics.outpatient.age');
+    Route::get('/admin/demogrpahics/patient/age/search', [AdminController::class, 'patientAgeSearch'])->name('admin.analytics.patient.age.search');
     //Admit
     Route::get('/admin/demographics/admitted', [AdminController::class, 'admittedDemo'])->name('admin.demographics.admitted');
     Route::get('/admin/demogrpahics/admit/search', [AdminController::class, 'admittedDemoSearch'])->name('admin.demographics.admitted.search');

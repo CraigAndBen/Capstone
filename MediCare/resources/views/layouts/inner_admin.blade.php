@@ -237,7 +237,7 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Demographics</label>
+                        <label>Analytics</label>
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
@@ -246,11 +246,11 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.patient.gender') }}">All Patient</a></li>
+                                    href="{{ route('admin.analytics.patient.gender') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.admitted.gender') }}">Admitted</a></li>
+                                    href="{{ route('admin.analytics.admitted.gender') }}">Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.outpatient.gender') }}">Outpatient</a></li>
+                                    href="{{ route('admin.analytics.outpatient.gender') }}">Outpatient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
@@ -259,11 +259,11 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.patient.age') }}">All Patient</a></li>
-                            {{-- <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.admitted.gender') }}">Admitted</a></li>
+                                    href="{{ route('admin.analytics.patient.age') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.demographics.outpatient.gender') }}">Outpatient</a></li> --}}
+                                    href="{{ route('admin.analytics.admitted.age') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.outpatient.age') }}">Outpatient</a></li>
                         </ul>
                     </li>
                     {{-- <li class="pc-item pc-caption">

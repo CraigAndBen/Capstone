@@ -62,8 +62,9 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('admin.demographics.outpatient.gender.search') }}" method="GET">
+                                    <form action="{{ route('admin.analytics.patient.gender.search') }}" method="GET">
                                         @csrf
+                                        <input type="hidden" name="type" value="{{$type}}">
                                         <select class="form-control p-3" id="year" name="year">
                                             <option value="">Select Year</option>
                                             @foreach ($uniqueCombinedYears as $admittedYear)
@@ -74,7 +75,6 @@
                                                     <option value="{{ $admittedYear }}">{{ $admittedYear }}</option>
                                                 @endif
                                             @endforeach
-
                                         </select>
                                 </div>
                                 <div class="col-md-2 mt-2">
@@ -82,17 +82,19 @@
                                 </div>
                                 </form>
                             </div>
-                            <hr>
+                            <hr style="border-top: 2px solid #000;">
+
                             <div class="my-5">
-                                <h3>Gender Total - <i>{{$totalGenderCounts}}</i></h3>
+                                <h3>Patient Total - <i>{{ $totalGenderCounts }}</i></h3>
                             </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
-                                <div class="col-md-2 text-right"> <!-- Adjust the column width as needed -->
+                                <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
                                     <form action="{{ route('admin.gender.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                        <input type="hidden" name="type" id="type" value="{{$type}}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>
                                     </form>
                                 </div>
@@ -150,7 +152,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Gender Count'
+                                text: 'Count'
                             }
                         }
                     }
