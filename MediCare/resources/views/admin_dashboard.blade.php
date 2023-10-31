@@ -227,9 +227,8 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Gender</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Gender</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.analytics.patient.gender') }}">All Patient</a></li>
@@ -240,9 +239,8 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Age</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Age</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.analytics.patient.age') }}">All Patient</a></li>
@@ -253,9 +251,8 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Admitted</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Admitted</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.analytics.admitted') }}">All Patient</a></li>
@@ -271,21 +268,23 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Diagnose</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.analytics.diagnose') }}">All Patient</a></li>
+                                    href="{{ route('admin.analytics.patient.diagnose') }}">All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.admitted.diagnose') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.outpatient.diagnose') }}">Outpatient</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Trend</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose
+                                Trend</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.analytics.trend.diagnose') }}">Diagnose Trend</a></li>
+                                    href="{{ route('admin.analytics.patient.diagnose_trend') }}">All Patient</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -429,7 +428,7 @@
                                     @endforeach
                                 </ul>
                                 <div class="text-center my-3">
-                                    <a href="{{ route('admin.analytics.diagnose') }}" class="btn btn-primary">View
+                                    <a href="{{ route('admin.analytics.patient.diagnose') }}" class="btn btn-primary">View
                                         all</a>
                                 </div>
                             @else

@@ -64,6 +64,7 @@
                                 <div class="col-md-4">
                                     <form action="{{ route('admin.analytics.diagnose.search') }}" method="GET">
                                         @csrf
+                                        <input type="hidden" name="type" value="{{$type}}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option value="">Select Diagnose</option>
                                             @foreach ($AdmittedDiagnoseData as $diagnose)
@@ -103,6 +104,7 @@
                                 <form action="{{ route('admin.diagnose.report') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="diagnose" id="diagnose" value="{{ $specificDiagnosis }}">
+                                    <input type="hidden" name="type" value="{{ $type }}">
                                     <input type="hidden" name="year" id="year" value="{{ $year }}">
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>

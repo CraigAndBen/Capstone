@@ -69,6 +69,7 @@
                                 <div class="col-md-8">
                                     <form action="{{ route('admin.analytics.trend.diagnose.search') }}" method="GET">
                                         @csrf
+                                        <input type="hidden" name="type" id="type" value="{{$type}}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option>Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)

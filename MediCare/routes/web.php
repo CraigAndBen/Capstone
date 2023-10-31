@@ -205,13 +205,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/analytics/outpatient/search', [AdminController::class, 'outpatientDemoSearch'])->name('admin.analytics.outpatient.search');
 
     //Diagnose
-    Route::get('/admin/analytics/diagnose', [AdminController::class, 'diagnoseDemo'])->name('admin.analytics.diagnose');
+    Route::get('/admin/analytics/patient/diagnose', [AdminController::class, 'patientDiagnoseDemo'])->name('admin.analytics.patient.diagnose');
+    Route::get('/admin/analytics/admitted/diagnose', [AdminController::class, 'admittedDiagnoseDemo'])->name('admin.analytics.admitted.diagnose');
+    Route::get('/admin/analytics/outpatient/diagnose', [AdminController::class, 'outpatientDiagnoseDemo'])->name('admin.analytics.outpatient.diagnose');
     Route::get('/admin/analytics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.analytics.diagnose.search');
 
     //Trend
     //Diagnose Trend
-    Route::get('/admin/analytics/trend/diagnose', [AdminController::class, 'diagnoseTrend'])->name('admin.analytics.trend.diagnose');
-    Route::get('/admin/analytics/trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.analytics.trend.diagnose.search');
+    Route::get('/admin/analytics/diagnose_trend/patient', [AdminController::class, 'patientDiagnoseTrend'])->name('admin.analytics.patient.diagnose_trend');
+    Route::get('/admin/analytics/diagnose_trend/admitted', [AdminController::class, 'admittedDiagnoseTrend'])->name('admin.analytics.admitted.diagnose_trend');
+    Route::get('/admin/analytics/diagnose_trend/outpatient', [AdminController::class, 'outpatientDiagnoseTrend'])->name('admin.analytics.outpatient.diagnose_trend');
+    Route::get('/admin/analytics/diagnose_trend/diagnose/search', [AdminController::class, 'diagnoseTrendSearch'])->name('admin.analytics.trend.diagnose.search');
 
     //Report
     Route::post('/admin/gender/report', [AdminController::class, 'genderReport'])->name('admin.gender.report');

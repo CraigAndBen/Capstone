@@ -2158,7 +2158,7 @@ class AdminController extends Controller
         return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients','reference'));
 
     }
-    public function diagnoseDemo()
+    public function patientDiagnoseDemo()
     {
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
@@ -2192,8 +2192,9 @@ class AdminController extends Controller
         $combinedYears = array_merge($admittedYears, $outpatientYears);
 
         $uniqueCombinedYears = array_unique($combinedYears);
+        $type = 'patient';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate','type'));
     }
     public function diagnoseSearch(Request $request)
     {
@@ -2259,8 +2260,9 @@ class AdminController extends Controller
                 'count' => $diagnosePatientCounts,
             ];
         }
+        $type = 'patient';
 
-        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate'));
+        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate','type'));
     }
 
     public function diagnoseReport(Request $request)

@@ -64,6 +64,7 @@
                                 <div class="col-md-4">
                                     <form action="{{ route('admin.analytics.diagnose.search') }}" method="GET">
                                         @csrf
+                                        <input type="hidden" name="type" value="{{$type}}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option value="">Select Diagnose</option>
                                             @foreach ($AdmittedDiagnoseData as $diagnose)
