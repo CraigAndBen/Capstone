@@ -211,6 +211,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/analytics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.analytics.diagnose.search');
 
     //Trend
+    
     //Diagnose Trend
     Route::get('/admin/analytics/diagnose_trend/patient', [AdminController::class, 'patientDiagnoseTrend'])->name('admin.analytics.patient.diagnose_trend');
     Route::get('/admin/analytics/diagnose_trend/admitted', [AdminController::class, 'admittedDiagnoseTrend'])->name('admin.analytics.admitted.diagnose_trend');

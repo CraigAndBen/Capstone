@@ -62,7 +62,7 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('admin.demographics.patient.gender.search') }}" method="GET">
+                                    <form action="{{ route('admin.analytics.patient.gender.search') }}" method="GET">
                                         @csrf
                                         <input type="hidden" name="type" value="{{$type}}">
                                         <select class="form-control p-3" id="year" name="year">

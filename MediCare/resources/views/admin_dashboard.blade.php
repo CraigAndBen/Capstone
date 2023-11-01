@@ -223,6 +223,22 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
+                        <label>Patient</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Patient
+                                List</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link" href="{{ route('admin.patient') }}">Patient</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.patient.admitted') }}">Patient Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.patient.outpatient') }}">Outpatient</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-caption">
                         <label>Analytics</label>
                         <i class="ti ti-apps"></i>
                     </li>
@@ -432,8 +448,8 @@
                                         all</a>
                                 </div>
                             @else
-                                <div class="text-center my-3">
-                                    <h3>No Diagnosis Yet.</h3>
+                                <div class="text-center">
+                                    <h3>No Diagnoses Yet.</h3>
                                 </div>
                             @endif
 
