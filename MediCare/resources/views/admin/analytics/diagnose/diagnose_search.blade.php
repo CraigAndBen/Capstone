@@ -134,7 +134,7 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: {!! json_encode(ucwords($diagnose)) !!},
+                    label: {!! json_encode(ucwords($specificDiagnosis)) !!},
                     data: diagnosePatientCounts,
                     fill: false,
                     borderColor: 'rgba(54, 162, 235, 0.7)', // Blue

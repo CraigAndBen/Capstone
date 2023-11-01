@@ -1709,21 +1709,21 @@ class AdminController extends Controller
 
             if ($type == 'patient') {
                 $patients = Patient::select('birthdate')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->orWhereBetween('date', [$startDate, $endDate])
-                ->get();
+                    ->whereBetween('admitted_date', [$startDate, $endDate])
+                    ->orWhereBetween('date', [$startDate, $endDate])
+                    ->get();
             } else if ($type == 'admitted') {
                 $patients = Patient::select('birthdate')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->get();
+                    ->whereBetween('admitted_date', [$startDate, $endDate])
+                    ->get();
             } else if ($type == 'outpatient') {
                 $patients = Patient::select('birthdate')
-                ->whereBetween('date', [$startDate, $endDate])
-                ->get();
+                    ->whereBetween('date', [$startDate, $endDate])
+                    ->get();
             }
 
             // Retrieve admitted patient data for the current month
-   
+
 
             // Increment the total patient count for this month
             $totalPatientCount += $patients->count();
@@ -1767,7 +1767,7 @@ class AdminController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
         $reference = 'AAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
-        
+
         $type = $request->input('type');
 
         if ($type == 'patient') {
@@ -1836,21 +1836,21 @@ class AdminController extends Controller
 
             if ($type == 'patient') {
                 $patients = Patient::select('birthdate')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->orWhereBetween('date', [$startDate, $endDate])
-                ->get();
+                    ->whereBetween('admitted_date', [$startDate, $endDate])
+                    ->orWhereBetween('date', [$startDate, $endDate])
+                    ->get();
             } else if ($type == 'admitted') {
                 $patients = Patient::select('birthdate')
-                ->whereBetween('admitted_date', [$startDate, $endDate])
-                ->get();
+                    ->whereBetween('admitted_date', [$startDate, $endDate])
+                    ->get();
             } else if ($type == 'outpatient') {
                 $patients = Patient::select('birthdate')
-                ->whereBetween('date', [$startDate, $endDate])
-                ->get();
+                    ->whereBetween('date', [$startDate, $endDate])
+                    ->get();
             }
 
             // Retrieve admitted patient data for the current month
-   
+
 
             // Increment the total patient count for this month
             $totalPatientCount += $patients->count();
@@ -1879,7 +1879,7 @@ class AdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
 
-        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount','reference'));
+        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount', 'reference'));
 
     }
 
@@ -2020,7 +2020,7 @@ class AdminController extends Controller
 
         $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
 
-        return view('admin.report.admit_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients','reference'));
+        return view('admin.report.admit_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference'));
     }
 
     public function outpatientDemo()
@@ -2155,7 +2155,7 @@ class AdminController extends Controller
 
         $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
 
-        return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients','reference'));
+        return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference'));
 
     }
     public function patientDiagnoseDemo()
@@ -2168,14 +2168,13 @@ class AdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentYear = Carbon::now()->year;
 
         $AdmittedDiagnoseData = Diagnose::select('diagnose')
             ->distinct()
             ->whereNotNull('diagnose')
             ->pluck('diagnose')
             ->toArray();
-
-        $currentYear = Carbon::now()->year;
 
         $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
             ->distinct()
@@ -2194,10 +2193,76 @@ class AdminController extends Controller
         $uniqueCombinedYears = array_unique($combinedYears);
         $type = 'patient';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate','type'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
     }
+
+    public function admittedDiagnoseDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentYear = Carbon::now()->year;
+
+        $AdmittedDiagnoseData = Diagnose::select('diagnose')
+            ->distinct()
+            ->where('patient_type', 'admitted_patient')
+            ->whereNotNull('diagnose')
+            ->pluck('diagnose')
+            ->toArray();
+
+        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+            ->distinct()
+            ->whereNotNull('admitted_date')
+            ->pluck('year')
+            ->toArray();
+
+        $uniqueCombinedYears = $admittedYears;
+
+        $type = 'admitted';
+
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
+    }
+
+    public function outpatientDiagnoseDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentYear = Carbon::now()->year;
+
+        $AdmittedDiagnoseData = Diagnose::select('diagnose')
+            ->distinct()
+            ->where('patient_type', 'outpatient')
+            ->whereNotNull('diagnose')
+            ->pluck('diagnose')
+            ->toArray();
+
+        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        $uniqueCombinedYears = $outpatientYears;
+
+        $type = 'outpatient';
+
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
+    }
+
     public function diagnoseSearch(Request $request)
     {
+
         $request->validate([
             'diagnose' => 'required',
             'year' => 'required',
@@ -2211,34 +2276,68 @@ class AdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        $AdmittedDiagnoseData = Diagnose::select('diagnose')
-            ->distinct()
-            ->whereNotNull('diagnose')
-            ->pluck('diagnose')
-            ->toArray();
-
-        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->whereNotNull('admitted_date')
-            ->pluck('year')
-            ->toArray();
-
-        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
-            ->distinct()
-            ->whereNotNull('date')
-            ->pluck('year')
-            ->toArray();
-
-        $combinedYears = array_merge($admittedYears, $outpatientYears);
-
-        $uniqueCombinedYears = array_unique($combinedYears);
-
-        // Define the specific diagnosis you want to analyze
         $specificDiagnosis = $request->input('diagnose');
-
-        // Get the current year
         $selectedYear = $request->input('year');
+        $type = $request->input('type');
+
+        if ($type == 'patient') {
+
+            $AdmittedDiagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->whereNotNull('diagnose')
+                ->pluck('diagnose')
+                ->toArray();
+
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
+
+            $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
+
+            $combinedYears = array_merge($admittedYears, $outpatientYears);
+
+            $uniqueCombinedYears = array_unique($combinedYears);
+
+        } else if ($type == 'admitted') {
+
+            $AdmittedDiagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->where('patient_type', 'admitted_patient')
+                ->whereNotNull('diagnose')
+                ->pluck('diagnose')
+                ->toArray();
+
+            $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+                ->distinct()
+                ->whereNotNull('admitted_date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = $admittedYears;
+
+        } else if ($type == 'outpatient') {
+
+            $AdmittedDiagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->where('patient_type', 'outpatient')
+                ->whereNotNull('diagnose')
+                ->pluck('diagnose')
+                ->toArray();
+
+            $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+                ->distinct()
+                ->whereNotNull('date')
+                ->pluck('year')
+                ->toArray();
+
+            $uniqueCombinedYears = $outpatientYears;
+        }
 
         // Initialize an array to store diagnose patient counts for each month
         $diagnosePatientCountsByMonth = [];
@@ -2249,26 +2348,44 @@ class AdminController extends Controller
             $startDate = Carbon::createFromDate($selectedYear, $month, 1)->startOfMonth();
             $endDate = $startDate->copy()->endOfMonth();
 
-            // Retrieve patients with the specific diagnosis for the current month
-            $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
-                ->where('diagnose', $specificDiagnosis)
-                ->count();
+            if ($type == 'patient') {
 
+                $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
+                    ->where('diagnose', $specificDiagnosis)
+                    ->count();
+
+            } else if ($type == 'admitted') {
+
+                $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
+                    ->where('patient_type', 'admitted_patient')
+                    ->where('diagnose', $specificDiagnosis)
+                    ->count();
+
+            } else if ($type == 'outpatient') {
+
+                $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
+                    ->where('patient_type', 'outpatient')
+                    ->where('diagnose', $specificDiagnosis)
+                    ->count();
+
+            }
+            
             // Store the diagnose patient count for the current month in the array
             $diagnosePatientCountsByMonth[] = [
                 'month' => $startDate->format('F'),
                 'count' => $diagnosePatientCounts,
             ];
         }
+
         $type = 'patient';
 
-        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate','type'));
+        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate', 'type'));
     }
 
     public function diagnoseReport(Request $request)
     {
         $year = $request->input('year');
-        $diagnose = $request->input('diagnose');
+        $specificDiagnosis = $request->input('diagnose');
         $currentYear = Carbon::now()->year; // Get current year
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -2278,34 +2395,25 @@ class AdminController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'DPAP-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        // Define the specific diagnosis you want to analyze
-        $specificDiagnosis = $request->input('diagnose');
-
-        // Get the current year
-        $year = $request->input('year');
-
         // Initialize an array to store diagnose patient counts for each month
         $diagnosePatientCountsByMonth = [];
 
-        // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
-            // Get the start and end dates of the current month
             $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
             $endDate = $startDate->copy()->endOfMonth();
 
-            // Retrieve patients with the specific diagnosis for the current month
-            $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
-                ->where('diagnose', $specificDiagnosis)
+            // Ensure the column names and values match your database
+            $diagnosePatientCounts = Diagnose::where('diagnose', $specificDiagnosis)
+                ->whereBetween('date', [$startDate, $endDate])
                 ->count();
 
-            // Store the diagnose patient count for the current month in the array
             $diagnosePatientCountsByMonth[] = [
                 'month' => $startDate->format('F'),
                 'count' => $diagnosePatientCounts,
             ];
         }
 
-        return view('admin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'diagnose', 'specificDiagnosis','reference'));
+        return view('admin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'specificDiagnosis', 'reference'));
     }
 
     public function diagnoseTrend()
