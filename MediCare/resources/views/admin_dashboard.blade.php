@@ -301,6 +301,10 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.analytics.patient.diagnose_trend') }}">All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.admitted.diagnose_trend') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.outpatient.diagnose_trend') }}">Outpatient</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -444,7 +448,8 @@
                                     @endforeach
                                 </ul>
                                 <div class="text-center my-3">
-                                    <a href="{{ route('admin.analytics.patient.diagnose') }}" class="btn btn-primary">View
+                                    <a href="{{ route('admin.analytics.patient.diagnose') }}"
+                                        class="btn btn-primary">View
                                         all</a>
                                 </div>
                             @else

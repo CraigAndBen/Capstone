@@ -83,7 +83,7 @@
                             </div>
                             <hr>
                             <div class="my-5">
-                                <h3>Admitted Patient Total - <i>{{$totalAdmittedPatients}}</i></h3>
+                                <h3>Outpatient Total - <i>{{$totalAdmittedPatients}}</i></h3>
                             </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->

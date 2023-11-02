@@ -976,7 +976,7 @@ class AdminController extends Controller
         $combinedYears = array_merge($admittedYears, $outpatientYears);
 
         $uniqueCombinedYears = array_unique($combinedYears);
-        
+
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
         $totalMaleCount = 0;
@@ -996,7 +996,7 @@ class AdminController extends Controller
                 ->whereBetween('admitted_date', [$startDate, $endDate])
                 ->orWhereBetween('date', [$startDate, $endDate])
                 ->get();
-            
+
             // Count the number of male and female patients for the current month
             $maleCount = $patients->where('gender', 'male')->count();
             $femaleCount = $patients->where('gender', 'female')->count();
@@ -1015,8 +1015,9 @@ class AdminController extends Controller
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
         $type = 'patient';
+        $title = 'Patient Gender Analytics';
 
-        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
     }
 
     public function admittedGenderDemo()
@@ -1075,9 +1076,9 @@ class AdminController extends Controller
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
         $type = 'admitted';
+        $title = 'Admitted Patient Gender Analytics';
 
-
-        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type', 'title'));
     }
 
     public function outpatientGenderDemo()
@@ -1136,10 +1137,9 @@ class AdminController extends Controller
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
         $type = 'outpatient';
+        $title = 'Outpatient Gender Analytics';
 
-
-
-        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
     }
 
     public function patientGenderSearch(Request $request)
@@ -1177,6 +1177,8 @@ class AdminController extends Controller
 
             $uniqueCombinedYears = array_unique($combinedYears);
 
+            $title = 'Patient Gender Analytics';
+
         } else if ($type == 'admitted') {
 
             $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
@@ -1187,6 +1189,9 @@ class AdminController extends Controller
 
             $uniqueCombinedYears = array_unique($admittedYears);
 
+            $title = 'Admitted Patient Gender Analytics';
+
+
         } else if ($type == 'outpatient') {
 
             $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
@@ -1196,6 +1201,9 @@ class AdminController extends Controller
                 ->toArray();
 
             $uniqueCombinedYears = array_unique($admittedYears);
+
+            $title = 'Outpatient Gender Analytics';
+
         }
 
         // Initialize an array to store gender counts for each month
@@ -1241,7 +1249,7 @@ class AdminController extends Controller
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
 
-        return view('admin.analytics.gender.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type'));
+        return view('admin.analytics.gender.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
     }
 
     public function genderReport(Request $request)
@@ -1452,8 +1460,9 @@ class AdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
         $type = 'patient';
+        $title = 'Patient Age Analytics';
 
-        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type'));
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type','title'));
     }
 
     public function admittedAgeDemo()
@@ -1536,8 +1545,10 @@ class AdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
         $type = 'admitted';
+        $title = 'Admitted Patient Age Analytics';
 
-        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type'));
+
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type','title'));
     }
 
     public function outpatientAgeDemo()
@@ -1620,8 +1631,9 @@ class AdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
         $type = 'outpatient';
+        $title = 'Patient Age Analytics';
 
-        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type'));
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type','title'));
     }
 
     public function patientAgeSearch(Request $request)
@@ -1660,6 +1672,7 @@ class AdminController extends Controller
             $combinedYears = array_merge($admittedYears, $outpatientYears);
 
             $uniqueCombinedYears = array_unique($combinedYears);
+            $title = 'Patient Age Analytics';
 
         } else if ($type == 'admitted') {
 
@@ -1670,6 +1683,8 @@ class AdminController extends Controller
                 ->toArray();
 
             $uniqueCombinedYears = array_unique($admittedYears);
+            $title = 'Admitted Patient Age Analytics';
+
 
         } else if ($type == 'outpatient') {
 
@@ -1680,6 +1695,8 @@ class AdminController extends Controller
                 ->toArray();
 
             $uniqueCombinedYears = array_unique($admittedYears);
+            $title = 'Outpatient Age Analytics';
+
         }
 
         $totalPatientCount = 0;
@@ -1753,7 +1770,7 @@ class AdminController extends Controller
         $datasets = $ageGroupsByMonth;
         $type = 'patient';
 
-        return view('admin.analytics.age.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'totalPatientCount', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
+        return view('admin.analytics.age.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'totalPatientCount', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
     }
 
     public function ageReport(Request $request)
@@ -2369,7 +2386,7 @@ class AdminController extends Controller
                     ->count();
 
             }
-            
+
             // Store the diagnose patient count for the current month in the array
             $diagnosePatientCountsByMonth[] = [
                 'month' => $startDate->format('F'),
@@ -2396,43 +2413,43 @@ class AdminController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'DPAP-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-       // Initialize an array to store diagnose patient counts for each month
-       $diagnosePatientCountsByMonth = [];
+        // Initialize an array to store diagnose patient counts for each month
+        $diagnosePatientCountsByMonth = [];
 
-       // Loop through each month of the current year
-       for ($month = 1; $month <= 12; $month++) {
-           // Get the start and end dates of the current month
-           $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-           $endDate = $startDate->copy()->endOfMonth();
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
 
-           if ($type == 'patient') {
+            if ($type == 'patient') {
 
-               $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
-                   ->where('diagnose', $specificDiagnosis)
-                   ->count();
+                $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
+                    ->where('diagnose', $specificDiagnosis)
+                    ->count();
 
-           } else if ($type == 'admitted') {
+            } else if ($type == 'admitted') {
 
-               $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
-                   ->where('patient_type', 'admitted_patient')
-                   ->where('diagnose', $specificDiagnosis)
-                   ->count();
+                $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
+                    ->where('patient_type', 'admitted_patient')
+                    ->where('diagnose', $specificDiagnosis)
+                    ->count();
 
-           } else if ($type == 'outpatient') {
+            } else if ($type == 'outpatient') {
 
-               $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
-                   ->where('patient_type', 'outpatient')
-                   ->where('diagnose', $specificDiagnosis)
-                   ->count();
+                $diagnosePatientCounts = Diagnose::whereBetween('date', [$startDate, $endDate])
+                    ->where('patient_type', 'outpatient')
+                    ->where('diagnose', $specificDiagnosis)
+                    ->count();
 
-           }
-           
-           // Store the diagnose patient count for the current month in the array
-           $diagnosePatientCountsByMonth[] = [
-               'month' => $startDate->format('F'),
-               'count' => $diagnosePatientCounts,
-           ];
-       }
+            }
+
+            // Store the diagnose patient count for the current month in the array
+            $diagnosePatientCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $diagnosePatientCounts,
+            ];
+        }
 
         return view('admin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'specificDiagnosis', 'reference'));
     }
@@ -2479,16 +2496,13 @@ class AdminController extends Controller
             ->toArray();
 
         $type = 'patient';
+        $title = 'Patient Diagnose Trend Analytics';
 
-        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis','rankedDiagnosis', 'currentTime', 'currentDate', 'type'));
+        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type','title'));
     }
 
-    public function diagnoseTrendSearch(Request $request)
+    public function admittedDiagnoseTrend()
     {
-        $request->validate([
-            'diagnose' => 'required',
-        ]);
-
         $profile = auth()->user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
@@ -2498,10 +2512,10 @@ class AdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $type = $request->input('type');
 
         $admittedDiagnoses = Diagnose::select('diagnose')
             ->selectRaw('COUNT(*) as total_occurrences')
+            ->where('patient_type', 'admitted_patient')
             ->whereYear('date', $currentYear)
             ->groupBy('diagnose')
             ->get();
@@ -2524,83 +2538,203 @@ class AdminController extends Controller
 
         $limitDiagnosis = $rankedDiagnosis->take(5);
 
-        // Retrieve the unique years from the "admitted" column
-        $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
+        $diagnoseData = Diagnose::select('diagnose')
             ->distinct()
-            ->get()
-            ->pluck('year')
+            ->where('patient_type', 'admitted_patient')
+            ->pluck('diagnose')
             ->toArray();
 
-        // Count the number of unique years
-        $countUniqueYears = count($uniqueYears);
+        $type = 'admitted';
+        $title = 'Admitted Patient Diagnose Trend Analytics';
+
+        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type','title'));
+    }
+
+    public function outpatientDiagnoseTrend()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentYear = Carbon::now()->year;
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $admittedDiagnoses = Diagnose::select('diagnose')
+            ->selectRaw('COUNT(*) as total_occurrences')
+            ->where('patient_type', 'outpatient')
+            ->whereYear('date', $currentYear)
+            ->groupBy('diagnose')
+            ->get();
+
+        // Merge the two collections and sort them by total_occurrences in descending order
+        $mergedDiagnoses = $admittedDiagnoses;
+
+        $rankedDiagnosis = $mergedDiagnoses->groupBy('diagnose')
+            ->map(function ($group) {
+                $firstItem = $group->first();
+                return [
+                    'diagnose' => $firstItem['diagnose'],
+                    'total_occurrences' => $group->sum('total_occurrences'),
+                ];
+            })
+            ->sortByDesc('total_occurrences')
+            ->values();
+
+        $diagnosisCount = $rankedDiagnosis->count();
+
+        $limitDiagnosis = $rankedDiagnosis->take(5);
 
         $diagnoseData = Diagnose::select('diagnose')
+            ->where('patient_type', 'outpatient')
             ->distinct()
             ->pluck('diagnose')
             ->toArray();
-        // The specific diagnosis you want to analyze
+
+        $type = 'outpatient';
+
+        $title = 'Outpatient Diagnose Trend Analytics';
+
+
+        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type', 'title'));
+    }
+
+    public function diagnoseTrendSearch(Request $request)
+    {
+        $request->validate([
+            'diagnose' => 'required',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentYear = Carbon::now()->year;
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $type = $request->input('type');
         $specificDiagnosis = $request->input('diagnose');
 
-        // Retrieve admitted patient data for the specific diagnosis
-        $patients = Diagnose::where('diagnose', $specificDiagnosis)
-            ->get();
-
-        $admittedYearData = DB::table('diagnoses')
-            ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
-            ->where('diagnose', $specificDiagnosis)
-            ->groupBy(DB::raw('YEAR(date)'))
-            ->get();
-    
-        dd($admittedYearData);
-
-        $outpatientYearData = DB::table('diagnoses')
-            ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
-            ->where('diagnose', $specificDiagnosis)
-            ->where('patient_type', 'outpatient')
-            ->groupBy(DB::raw('YEAR(date)'))
-            ->get();
-
-        // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
-        $admittedMonthData = DB::table('diagnoses')
-            ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+        $admittedDiagnoses = Diagnose::select('diagnose')
+            ->selectRaw('COUNT(*) as total_occurrences')
             ->whereYear('date', $currentYear)
-            ->where('diagnose', $specificDiagnosis)
-            ->where('patient_type', 'admitted_patient')
-            ->groupBy(DB::raw('MONTH(date)'))
+            ->groupBy('diagnose')
             ->get();
 
-        $outpatientMonthData = DB::table('diagnoses')
-            ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
-            ->whereYear('date', $currentYear)
-            ->where('diagnose', $specificDiagnosis)
-            ->where('patient_type', 'outpatient')
-            ->groupBy(DB::raw('MONTH(date)'))
-            ->get();
+        // Merge the two collections and sort them by total_occurrences in descending order
+        $mergedDiagnoses = $admittedDiagnoses;
+
+        $rankedDiagnosis = $mergedDiagnoses->groupBy('diagnose')
+            ->map(function ($group) {
+                $firstItem = $group->first();
+                return [
+                    'diagnose' => $firstItem['diagnose'],
+                    'total_occurrences' => $group->sum('total_occurrences'),
+                ];
+            })
+            ->sortByDesc('total_occurrences')
+            ->values();
+
+        $diagnosisCount = $rankedDiagnosis->count();
+        $limitDiagnosis = $rankedDiagnosis->take(5);
+
+        if ($type == 'patient') {
+
+            $diagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->pluck('diagnose')
+                ->toArray();
+
+            $patientYearData = DB::table('diagnoses')
+                ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('YEAR(date)'))
+                ->get();
+
+            // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+            $patientMonthData = DB::table('diagnoses')
+                ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+                ->whereYear('date', $currentYear)
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('MONTH(date)'))
+                ->get();
+
+            $title = 'Patient Diagnose Trend Analytics';
+
+        } else if ($type == 'admitted') {
+
+            $diagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->where('patient_type', 'admitted_patient')
+                ->pluck('diagnose')
+                ->toArray();
+
+            $patientYearData = DB::table('diagnoses')
+                ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'admitted_patient')
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('YEAR(date)'))
+                ->get();
+
+            // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+            $patientMonthData = DB::table('diagnoses')
+                ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'admitted_patient')
+                ->whereYear('date', $currentYear)
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('MONTH(date)'))
+                ->get();
+            
+            $title = 'Admitted Patient Diagnose Trend Analytics';
+            
+
+        } else if ($type == 'outpatient') {
+
+                $diagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->where('patient_type', 'outpatient')
+                ->pluck('diagnose')
+                ->toArray();
+
+            $patientYearData = DB::table('diagnoses')
+                ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'outpatient')
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('YEAR(date)'))
+                ->get();
+
+            // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+            $patientMonthData = DB::table('diagnoses')
+                ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'outpatient')
+                ->whereYear('date', $currentYear)
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('MONTH(date)'))
+                ->get();
+
+            $title = 'Outpatient Diagnose Trend Analytics';
+            
+        }
 
         // Create an array of years
         $years = [];
-        $admittedYearCounts = [];
-        $outpatientYearCounts = [];
+        $patientYearCounts = [];
 
         // Initialize counts for each year
-        foreach (range(date('Y') - 10, date('Y')) as $year) {
+        foreach (range(date('Y') - 1, date('Y')) as $year) {
             $years[] = $year;
-            $admittedYearCounts[] = 0;
-            $outpatientYearCounts[] = 0;
+            $patientYearCounts[] = 0;
         }
 
         // Fill in the data for the available years
-        foreach ($admittedYearData as $admitted) {
+        foreach ($patientYearData as $admitted) {
             $yearIndex = array_search($admitted->year, $years);
             if ($yearIndex !== false) {
-                $admittedYearCounts[$yearIndex] = $admitted->count;
-            }
-        }
-
-        foreach ($outpatientYearData as $outpatient) {
-            $yearIndex = array_search($outpatient->year, $years);
-            if ($yearIndex !== false) {
-                $outpatientYearCounts[$yearIndex] = $outpatient->count;
+                $patientYearCounts[$yearIndex] = $admitted->count;
             }
         }
 
@@ -2631,22 +2765,16 @@ class AdminController extends Controller
         }
 
         // Fill in the data for the available months
-        foreach ($admittedMonthData as $admitted) {
+        foreach ($patientMonthData as $admitted) {
             $month = date('F', mktime(0, 0, 0, $admitted->month, 1));
             $combinedData[$month]['admitted_count'] = $admitted->count;
         }
 
-        foreach ($outpatientMonthData as $outpatient) {
-            $month = date('F', mktime(0, 0, 0, $outpatient->month, 1));
-            $combinedData[$month]['outpatient_count'] = $outpatient->count;
-        }
-
         // Prepare the data for the chart
         $months = array_keys($combinedData);
-        $admittedMonthCounts = array_column($combinedData, 'admitted_count');
-        $outpatientMonthCounts = array_column($combinedData, 'outpatient_count');
+        $patientMonthCounts = array_column($combinedData, 'admitted_count');
 
-        return view('admin.analytics.trend.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'years', 'admittedYearCounts', 'outpatientYearCounts', 'months', 'admittedMonthCounts', 'outpatientMonthCounts', 'specificDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate','type'));
+        return view('admin.analytics.diagnose_trend.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'years', 'patientYearCounts', 'months', 'patientMonthCounts', 'specificDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type','title'));
     }
 
 
@@ -2657,89 +2785,107 @@ class AdminController extends Controller
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'DTR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        $rankedDiagnosis = Patient::select('diagnosis', DB::raw('MONTH(admitted_date) as month'))
-            ->selectRaw('COUNT(*) as total_occurrences')
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy('diagnosis', 'month')
-            ->orderByDesc('total_occurrences')
-            ->get();
-
-        $limitDiagnosis = $rankedDiagnosis->take(5);
-
-        // Retrieve the unique years from the "admitted" column
-        $uniqueYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->get()
-            ->pluck('year')
-            ->toArray();
-
-        // Count the number of unique years
-        $countUniqueYears = count($uniqueYears);
-
-        $diagnoseData = Patient::select('diagnosis')
-            ->distinct()
-            ->pluck('diagnosis')
-            ->toArray();
         // The specific diagnosis you want to analyze
         $specificDiagnosis = $request->input('diagnose');
+        $type = $request->input('type');
 
-        // Retrieve admitted patient data for the specific diagnosis
-        $patients = Patient::where('diagnosis', $specificDiagnosis)
-            ->get();
 
-        $admittedYearData = DB::table('patients')
-            ->select(DB::raw('YEAR(admitted_date) as year'), DB::raw('COUNT(*) as count'))
-            ->where('diagnosis', $specificDiagnosis)
-            ->groupBy(DB::raw('YEAR(admitted_date)'))
-            ->get();
+        if ($type == 'patient') {
 
-        $outpatientYearData = DB::table('patients')
-            ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
-            ->where('diagnosis', $specificDiagnosis)
-            ->groupBy(DB::raw('YEAR(date)'))
-            ->get();
+            $diagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->pluck('diagnose')
+                ->toArray();
 
-        // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
-        $admittedMonthData = DB::table('patients')
-            ->select(DB::raw('MONTH(admitted_date) as month'), DB::raw('COUNT(*) as count'))
-            ->whereYear('admitted_date', $currentYear)
-            ->where('diagnosis', $specificDiagnosis)
-            ->groupBy(DB::raw('MONTH(admitted_date)'))
-            ->get();
+            $patientYearData = DB::table('diagnoses')
+                ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('YEAR(date)'))
+                ->get();
 
-        $outpatientMonthData = DB::table('patients')
-            ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
-            ->whereYear('date', $currentYear)
-            ->where('diagnosis', $specificDiagnosis)
-            ->groupBy(DB::raw('MONTH(date)'))
-            ->get();
+            // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+            $patientMonthData = DB::table('diagnoses')
+                ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+                ->whereYear('date', $currentYear)
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('MONTH(date)'))
+                ->get();
+            
+            $title = 'Patient Diagnose Trend Report';
+
+        } else if ($type == 'admitted') {
+
+            $diagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->where('patient_type', 'admitted_patient')
+                ->pluck('diagnose')
+                ->toArray();
+
+            $patientYearData = DB::table('diagnoses')
+                ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'admitted_patient')
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('YEAR(date)'))
+                ->get();
+
+            // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+            $patientMonthData = DB::table('diagnoses')
+                ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'admitted_patient')
+                ->whereYear('date', $currentYear)
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('MONTH(date)'))
+                ->get();
+            
+            $title = 'Admitted Patient Diagnose Trend Report';
+            
+        } else if ($type == 'outpatient') {
+
+                $diagnoseData = Diagnose::select('diagnose')
+                ->distinct()
+                ->where('patient_type', 'outpatient')
+                ->pluck('diagnose')
+                ->toArray();
+
+            $patientYearData = DB::table('diagnoses')
+                ->select(DB::raw('YEAR(date) as year'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'outpatient')
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('YEAR(date)'))
+                ->get();
+
+            // Query the database to get the monthly trend data for the specific diagnosis and year for both admitted_date and date
+            $patientMonthData = DB::table('diagnoses')
+                ->select(DB::raw('MONTH(date) as month'), DB::raw('COUNT(*) as count'))
+                ->where('patient_type', 'outpatient')
+                ->whereYear('date', $currentYear)
+                ->where('diagnose', $specificDiagnosis)
+                ->groupBy(DB::raw('MONTH(date)'))
+                ->get();  
+            
+            $title = 'Outpatient Diagnose Trend Report';
+        }
 
         // Create an array of years
         $years = [];
-        $admittedYearCounts = [];
-        $outpatientYearCounts = [];
+        $patientYearCounts = [];
 
         // Initialize counts for each year
-        foreach (range(date('Y') - 10, date('Y')) as $year) {
+        foreach (range(date('Y') - 1, date('Y')) as $year) {
             $years[] = $year;
-            $admittedYearCounts[] = 0;
-            $outpatientYearCounts[] = 0;
+            $patientYearCounts[] = 0;
         }
 
         // Fill in the data for the available years
-        foreach ($admittedYearData as $admitted) {
+        foreach ($patientYearData as $admitted) {
             $yearIndex = array_search($admitted->year, $years);
             if ($yearIndex !== false) {
-                $admittedYearCounts[$yearIndex] = $admitted->count;
-            }
-        }
-
-        foreach ($outpatientYearData as $outpatient) {
-            $yearIndex = array_search($outpatient->year, $years);
-            if ($yearIndex !== false) {
-                $outpatientYearCounts[$yearIndex] = $outpatient->count;
+                $patientYearCounts[$yearIndex] = $admitted->count;
             }
         }
 
@@ -2770,22 +2916,16 @@ class AdminController extends Controller
         }
 
         // Fill in the data for the available months
-        foreach ($admittedMonthData as $admitted) {
+        foreach ($patientMonthData as $admitted) {
             $month = date('F', mktime(0, 0, 0, $admitted->month, 1));
             $combinedData[$month]['admitted_count'] = $admitted->count;
         }
 
-        foreach ($outpatientMonthData as $outpatient) {
-            $month = date('F', mktime(0, 0, 0, $outpatient->month, 1));
-            $combinedData[$month]['outpatient_count'] = $outpatient->count;
-        }
-
         // Prepare the data for the chart
         $months = array_keys($combinedData);
-        $admittedMonthCounts = array_column($combinedData, 'admitted_count');
-        $outpatientMonthCounts = array_column($combinedData, 'outpatient_count');
+        $patientMonthCounts = array_column($combinedData, 'admitted_count');
 
-        return view('admin.report.diagnose_trend_report', compact('year', 'currentTime', 'currentDate', 'specificDiagnosis', 'years', 'admittedYearCounts', 'outpatientYearCounts', 'months', 'admittedMonthCounts', 'outpatientMonthCounts'));
+        return view('admin.report.diagnose_trend_report', compact('year', 'currentTime', 'currentDate', 'specificDiagnosis', 'years', 'patientYearCounts', 'months', 'patientMonthCounts','type','reference','title'));
     }
 
 

@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Age Demographics</h5>
+                                <h5 class="m-b-10">{{$title}}</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Age Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">{{$title}}</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Gender Demographics</h1>
+                            <h1>{{$title}}</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -85,7 +85,7 @@
                             </div>
                             <hr>
                             <div class="p-5">
-                                <h3>Age Total - <i>{{ $totalPatientCount }}</i></h3>
+                                <h3>Patient Total - <i>{{ $totalPatientCount }}</i></h3>
                             </div>
                             <div class="row m-5">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->

@@ -300,7 +300,12 @@
                                 Trend</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.analytics.patient.diagnose_trend') }}">All patient</a></li>
+                                    href="{{ route('admin.analytics.patient.diagnose_trend') }}">All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.admitted.diagnose_trend') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('admin.analytics.outpatient.diagnose_trend') }}">Outpatient</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

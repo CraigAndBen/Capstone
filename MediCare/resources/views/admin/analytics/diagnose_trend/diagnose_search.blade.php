@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Diagnose Trend Trend</h5>
+                                <h5 class="m-b-10">{{$title}}</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Diagnose Trend</li>
+                                <li class="breadcrumb-item" aria-current="page">{{$title}}</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Diagnose Trend</h1>
+                             <h1>{{$title}}</h1>
                         </div>
                         <div class="card-body">
                             <h3>Ranked Diagnose This Year</h3>
@@ -69,7 +69,7 @@
                                 <div class="col-md-8">
                                     <form action="{{ route('admin.analytics.trend.diagnose.search') }}" method="GET">
                                         @csrf
-                                        <input type="hidden" name="type" id="type" value="{{$type}}">
+                                        <input type="hidden" name="type" id="type" value="{{ $type }}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option>Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
@@ -98,7 +98,8 @@
                             <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
                                 <form action="{{ route('admin.diagnose.trend.report') }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="diagnose" id="diagnose" value="{{ $specificDiagnosis }}">
+                                    <input type="hidden" name="diagnose" value="{{ $specificDiagnosis }}">
+                                    <input type="hidden" name="type" value="{{ $type }}">
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>
                             </div>
@@ -132,8 +133,8 @@
     <script>
         // Get the data passed from the controller
         var years = @json($years);
-        var admittedCounts = @json($admittedYearCounts);
-        var outpatientCounts = @json($outpatientYearCounts);
+        var patientCounts = @json($patientYearCounts);
+        var type = @json($type);
 
         // Create a chart using Chart.js
         var ctx = document.getElementById('yearlyTrendChart').getContext('2d');
@@ -142,64 +143,54 @@
             data: {
                 labels: years,
                 datasets: [{
-                        label: 'Admitted',
-                        data: admittedCounts,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false // Ensure the line chart is not filled
-                    },
-                    {
-                        label: 'Outpatient',
-                        data: outpatientCounts,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        fill: false // Ensure the line chart is not filled
-                    }
-                ]
+                    label: 'Patient',
+                    data: patientCounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false // Ensure the line chart is not filled
+                }]
             },
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
                     }
                 }
             }
         });
-        // Get the data passed from the controller
-    var months = @json($months);
-    var admittedCounts = @json($admittedMonthCounts);
-    var outpatientCounts = @json($outpatientMonthCounts);
 
-    // Create a chart using Chart.js
-    var ctx = document.getElementById('monthlyTrendChart').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'line', // Change chart type to line
-        data: {
-            labels: months,
-            datasets: [{
-                label: 'Admitted',
-                data: admittedCounts,
-                borderColor: 'rgba(75, 192, 192, 1)', // Remove backgroundColor
-                borderWidth: 2, // Increase borderWidth for lines
-                fill: false // Do not fill the area under the line
+        // Get the data passed from the controller
+        var months = @json($months);
+        var patientCounts = @json($patientMonthCounts);
+
+        // Create a chart using Chart.js
+        var ctx = document.getElementById('monthlyTrendChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line', // Change chart type to line
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Patient',
+                    data: patientCounts,
+                    borderColor: 'rgba(75, 192, 192, 1)', // Remove backgroundColor
+                    borderWidth: 2, // Increase borderWidth for lines
+                    fill: false // Do not fill the area under the line
+                }]
             },
-            {
-                label: 'Outpatient',
-                data: outpatientCounts,
-                borderColor: 'rgba(255, 99, 132, 1)', // Remove backgroundColor
-                borderWidth: 2, // Increase borderWidth for lines
-                fill: false // Do not fill the area under the line
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
+                    }
                 }
             }
-        }
-    });
+        });
     </script>
 @endsection
