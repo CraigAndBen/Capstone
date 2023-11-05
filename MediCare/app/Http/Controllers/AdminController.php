@@ -2175,6 +2175,7 @@ class AdminController extends Controller
         return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference'));
 
     }
+    
     public function patientDiagnoseDemo()
     {
         $profile = auth()->user();

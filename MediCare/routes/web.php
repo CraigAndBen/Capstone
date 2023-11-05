@@ -301,43 +301,40 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/super_admin/pharmacist/update', [SuperAdminController::class, 'updatePharmacist'])->name('superadmin.update.pharmacist');
     Route::post('/super_admin/pharmacist/update/password', [SuperAdminController::class, 'updatePharmacistPassword'])->name('superadmin.pharmacist.password.update');
 
-    // Patient
-    Route::get('/superadmin/patient', [SuperAdminController::class, 'patientList'])->name('superadmin.patient');
-    Route::get('/superadmin/patient/admitted', [SuperAdminController::class, 'patienAdmittedtList'])->name('superadmin.patient.admitted');
-    Route::get('/superadmin/patient/outpatient', [SuperAdminController::class, 'outpatientList'])->name('superadmin.patient.outpatient');
-    Route::get('/superadmin/patient/search', [SuperAdminController::class, 'patientSearch'])->name('superadmin.patient.search');
-    Route::get('/superadmin/patient/admitted/search', [SuperAdminController::class, 'patientAdmittedSearch'])->name('superadmin.patient.admitted.search');
-    Route::get('/superadmin/patient/outpatient/search', [SuperAdminController::class, 'outpatientSearch'])->name('superadmin.patient.outpatient.search');
-    Route::post('/superadmin/patient/store', [SuperAdminController::class, 'patientStore'])->name('superadmin.patient.store');
-    Route::post('/superadmin/outpatient/store', [SuperAdminController::class, 'outpatientStore'])->name('superadmin.outpatient.store');
-    Route::post('/superadmin/patient/update', [SuperAdminController::class, 'patientUpdate'])->name('superadmin.patient.update');
-    Route::get('/superadmin/patient/report', [SuperAdminController::class, 'patientReport'])->name('superadmin.patient.report');
-
-
-    // Demographics
+    // Analytics
     // Gender
-    Route::get('/superadmin/demographics/gender', [SuperAdminController::class, 'genderDemo'])->name('superadmin.demographics.gender');
-    Route::get('/superadmin/demogrpahics/gender/search', [SuperAdminController::class, 'genderSearch'])->name('superadmin.demographics.gender.search');
+    Route::get('/super_admin/analytics/patient/gender', [SuperAdminController::class, 'patientGenderDemo'])->name('superadmin.analytics.patient.gender');
+    Route::get('/super_admin/analytics/admitted/gender', [SuperAdminController::class, 'admittedGenderDemo'])->name('superadmin.analytics.admitted.gender');
+    Route::get('/super_admin/analytics/outpatient/gender', [SuperAdminController::class, 'outpatientGenderDemo'])->name('superadmin.analytics.outpatient.gender');
+    Route::get('/super_admin/analytics/patient/gender/search', [SuperAdminController::class, 'patientGenderSearch'])->name('superadmin.analytics.patient.gender.search');
+    
     //Age
-    Route::get('/superadmin/demographics/age', [SuperAdminController::class, 'ageDemo'])->name('superadmin.demographics.age');
-    Route::get('/superadmin/demogrpahics/age/search', [SuperAdminController::class, 'ageSearch'])->name('superadmin.demographics.age.search');
-    //Admit
-    Route::get('/superadmin/demographics/admitted', [SuperAdminController::class, 'admittedDemo'])->name('superadmin.demographics.admitted');
-    Route::get('/superadmin/demogrpahics/admit/search', [SuperAdminController::class, 'admittedDemoSearch'])->name('superadmin.demographics.admitted.search');
+    Route::get('/super_admin/analytics/patient/age', [SuperAdminController::class, 'patientAgeDemo'])->name('superadmin.analytics.patient.age');
+    Route::get('/super_admin/analytics/admitted/age', [SuperAdminController::class, 'admittedAgeDemo'])->name('superadmin.analytics.admitted.age');
+    Route::get('/super_admin/analytics/outpatient/age', [SuperAdminController::class, 'outpatientAgeDemo'])->name('superadmin.analytics.outpatient.age');
+    Route::get('/super_admin/analytics/patient/age/search', [SuperAdminController::class, 'patientAgeSearch'])->name('superadmin.analytics.patient.age.search');
+
+    //Admitted
+    Route::get('/super_admin/analytics/admitted', [SuperAdminController::class, 'admittedDemo'])->name('superadmin.analytics.admitted');
+    Route::get('/super_admin/analytics/admit/search', [SuperAdminController::class, 'admittedDemoSearch'])->name('superadmin.analytics.admitted.search');
+
     //Outpatient
-    Route::get('/superadmin/demographics/outpatient', [SuperAdminController::class, 'outpatientDemo'])->name('superadmin.demographics.outpatient');
-    Route::get('/superadmin/demogrpahics/outpatient/search', [SuperAdminController::class, 'outpatientDemoSearch'])->name('superadmin.demographics.outpatient.search');
+    Route::get('/super_admin/analytics/outpatient', [SuperAdminController::class, 'outpatientDemo'])->name('superadmin.analytics.outpatient');
+    Route::get('/super_admin/analytics/outpatient/search', [SuperAdminController::class, 'outpatientDemoSearch'])->name('superadmin.analytics.outpatient.search');
+
     //Diagnose
-    Route::get('/superadmin/demographics/diagnose', [SuperAdminController::class, 'diagnoseDemo'])->name('superadmin.demographics.diagnose');
-    Route::get('/superadmin/demogrpahics/diagnose/search', [SuperAdminController::class, 'diagnoseSearch'])->name('superadmin.demographics.diagnose.search');
-    //Appointment
-    Route::get('/superadmin/demographics/appointment', [SuperAdminController::class, 'appointmentDemo'])->name('superadmin.demographics.appointment');
-    Route::get('/superadmin/demogrpahics/appointment/search', [SuperAdminController::class, 'appointmentDemoSearch'])->name('superadmin.demographics.appointment.search');
+    Route::get('/super_admin/analytics/patient/diagnose', [SuperAdminController::class, 'patientDiagnoseDemo'])->name('superadmin.analytics.patient.diagnose');
+    Route::get('/super_admin/analytics/admitted/diagnose', [SuperAdminController::class, 'admittedDiagnoseDemo'])->name('superadmin.analytics.admitted.diagnose');
+    Route::get('/super_admin/analytics/outpatient/diagnose', [SuperAdminController::class, 'outpatientDiagnoseDemo'])->name('superadmin.analytics.outpatient.diagnose');
+    Route::get('/super_admin/analytics/diagnose/search', [SuperAdminController::class, 'diagnoseSearch'])->name('superadmin.analytics.diagnose.search');
 
     //Trend
-    //Diagnose Rising Trend
-    Route::get('/superadmin/trend/diagnose', [SuperAdminController::class, 'diagnoseTrend'])->name('superadmin.trend.diagnose');
-    Route::get('/superadmin/trend/diagnose/search', [SuperAdminController::class, 'diagnoseTrendSearch'])->name('superadmin.trend.diagnose.search');
+    
+    //Diagnose Trend
+    Route::get('/super_admin/analytics/diagnose_trend/patient', [SuperAdminController::class, 'patientDiagnoseTrend'])->name('superadmin.analytics.patient.diagnose_trend');
+    Route::get('/super_admin/analytics/diagnose_trend/admitted', [SuperAdminController::class, 'admittedDiagnoseTrend'])->name('superadmin.analytics.admitted.diagnose_trend');
+    Route::get('/super_admin/analytics/diagnose_trend/outpatient', [SuperAdminController::class, 'outpatientDiagnoseTrend'])->name('superadmin.analytics.outpatient.diagnose_trend');
+    Route::get('/super_admin/analytics/diagnose_trend/diagnose/search', [SuperAdminController::class, 'diagnoseTrendSearch'])->name('superadmin.analytics.trend.diagnose.search');
 
     //Report
     Route::post('/superadmin/gender/report', [SuperAdminController::class, 'genderReport'])->name('superadmin.gender.report');

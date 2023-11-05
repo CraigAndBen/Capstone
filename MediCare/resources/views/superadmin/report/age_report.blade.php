@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: legal landscape;
         }
 
         .page-break {
@@ -24,26 +24,34 @@
 @endsection
 @section('content')
     <div class="container mt-2">
-        <div class="row justify-content-first align-items-first my-3">
-            <div class="col-7 my-4">
+        <div class="row justify-content-first align-items-first">
+            <div class="col-7">
                 <h5>Report Type: <i><b>Age Analytics Report</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
-            <div class="col-2">
+            <div class="col-3">
 
             </div>
-            <div class="col-1 my-3">
+            <div class="col-1 my-2">
                 <img src="{{ asset('logo.jpg') }}" alt="" class="" style="max-width: 200px; max-height: 160px">
             </div>
-
         </div>
+        <hr style="border-top: 1px solid #000;">
 
+
+        <div class="row justify-content-center mt-5">
+            <h3><i>Age Bar Graph</i></h3>
+            <br>
+        </div>
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
-                <h3><i>Age Bar Graph</i></h3>
-                <br>
+            <div class="col-1">
+
+            </div>
+            <div class="col-7 text-center">
+
                 <canvas id="ageDemographicsChart"></canvas>
             </div>
             <div class="col-1">
@@ -106,7 +114,7 @@
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('superadmin.demographics.age') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('superadmin.analytics.patient.age') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>
@@ -116,11 +124,10 @@
 @endsection
 @section('scripts')
     <script>
-        // Prepare data for the bar graph
-        var labels = {!! json_encode($labels) !!};
-        var datasets = {!! json_encode($datasets) !!};
+        const datasets = @json($datasets);
+        const labels = @json($labels);
 
-        // Define a color palette for the bar graph
+        // Define an array of colors for each age group
         var colors = [
             'rgba(54, 162, 235, 0.7)', // Blue
             'rgba(255, 99, 132, 0.7)', // Red
@@ -129,48 +136,57 @@
             'rgba(153, 102, 255, 0.7)', // Purple
             'rgba(255, 159, 64, 0.7)', // Orange
             'rgba(255, 0, 0, 0.7)', // Bright Red
-            'rgba(0, 255, 0, 0.7)', // Bright Green
+            'rgba(100, 190, 0, 0.7)', // Bright Green
             'rgba(0, 0, 255, 0.7)', // Bright Blue
             'rgba(128, 128, 0, 0.7)', // Olive
             'rgba(128, 0, 128, 0.7)', // Purple
             'rgba(0, 128, 128, 0.7)', // Teal
         ];
 
-        // Get the chart context and create the bar graph
-        var ctx = document.getElementById('ageDemographicsChart').getContext('2d');
-        var ageDemographicsChart = new Chart(ctx, {
+        // Filter out datasets with 0 counts
+        const filteredDatasets = labels.map((label, index) => {
+            const data = datasets.map(data => data.data[index]);
+            if (data.some(count => count > 0)) {
+                return {
+                    label: `Age Group: ${label}`,
+                    data: data,
+                    backgroundColor: colors[index], // Use the corresponding color
+                    borderColor: colors[index], // Use the corresponding color
+                    borderWidth: 1,
+                };
+            }
+            return null;
+        }).filter(dataset => dataset !== null);
+
+        // Create a Chart.js chart
+        const ctx = document.getElementById('ageDemographicsChart').getContext('2d');
+        new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
-                datasets: datasets.map(function(data, index) {
-                    return {
-                        label: data.month,
-                        data: data.data,
-                        backgroundColor: colors[index % colors
-                            .length], // Use the predefined colors from the palette
-                        borderWidth: 1,
-                    };
-                })
+                labels: datasets.map(data => data.month),
+                datasets: filteredDatasets,
             },
             options: {
-                responsive: true,
                 scales: {
                     x: {
-                        stacked: true, // Stack the bars on the x-axis for each month
+                        stacked: false,
                         title: {
                             display: true,
-                            text: 'Months'
+                            text: 'Month'
                         }
                     },
                     y: {
                         beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
                         title: {
                             display: true,
-                            text: 'Age Count'
+                            text: 'Count'
                         }
-                    }
-                }
-            }
+                    },
+                },
+            },
         });
         $(document).ready(function() {
             // Attach a click event handler to the button

@@ -304,7 +304,8 @@
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('admin.analytics.admitted.diagnose_trend') }}">Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('admin.analytics.outpatient.diagnose_trend') }}">Outpatient</a></li>
+                                    href="{{ route('admin.analytics.outpatient.diagnose_trend') }}">Outpatient</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -516,6 +517,9 @@
     // Extract unique diagnoses from the data
     const uniqueDiagnoses = [...new Set(diagnosisData.map(item => item.diagnose))];
 
+    const predefinedColors = ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#e67e22', '#9b59b6'];
+    let colorIndex = 0;
+
     // Create a dataset for each unique diagnosis
     uniqueDiagnoses.forEach(diagnose => {
         const data = [];
@@ -527,13 +531,17 @@
                 data.push(0);
             }
         }
+        
+        const predefinedColors = ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#e67e22', '#9b59b6'];
 
         datasets.push({
-            label: diagnose,
+            label: diagnose.charAt(0).toUpperCase() + diagnose.slice(1),
             data: data,
             fill: false,
-            borderColor: getRandomColor(), // You can define a function to get different colors
+            borderColor: predefinedColors[colorIndex],
         });
+
+        colorIndex = (colorIndex + 1) % predefinedColors.length;
     });
 
     // Create the line chart
@@ -555,15 +563,6 @@
         }
     });
 
-    // Function to generate random colors for each diagnosis
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
 </script>
 
 </html>

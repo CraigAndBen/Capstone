@@ -31,7 +31,13 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Diagnose Demographics</h1>
+                            @if ($type == 'patient')
+                                <h1>Patient Diagnose Analytics</h1>
+                            @elseif ($type == 'admitted')
+                                <h1>Admitted Patient Diagnose Analytics</h1>
+                            @elseif ($type == 'outpatient')
+                                <h1>Outpatient Diagnose Analytics</h1>
+                            @endif
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -62,17 +68,13 @@
 
                                 </div>
                                 <div class="col-md-4">
-                                    <form action="{{ route('superadmin.demographics.diagnose.search') }}" method="GET">
+                                    <form action="{{ route('superadmin.analytics.diagnose.search') }}" method="GET">
                                         @csrf
+                                        <input type="hidden" name="type" value="{{ $type }}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option value="">Select Diagnose</option>
                                             @foreach ($AdmittedDiagnoseData as $diagnose)
-                                                @if ($diagnose == $specificDiagnosis)
-                                                    <option value="{{ $diagnose }}" selected>{{ ucwords($diagnose) }}
-                                                    </option>
-                                                @else
-                                                    <option value="{{ $diagnose }}">{{ ucwords($diagnose) }}</option>
-                                                @endif
+                                                <option value="{{ $diagnose }}">{{ ucwords($diagnose) }}</option>
                                             @endforeach
                                         </select>
                                 </div>
@@ -80,11 +82,7 @@
                                     <select class="form-control p-3" id="year" name="year">
                                         <option value="">Select Year</option>
                                         @foreach ($uniqueCombinedYears as $year)
-                                            @if ($year == $selectedYear)
-                                                <option value="{{ $year }}" selected>{{ $year }}</option>
-                                            @else
-                                                <option value="{{ $year }}">{{ $year }}</option>
-                                            @endif
+                                            <option value="{{ $year }}">{{ $year }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -96,20 +94,12 @@
                             </form>
                         </div>
                         <hr>
-                        <div class="row mb-5 p-3">
-                            <div class="col-md-10"> <!-- Adjust the column width as needed -->
+                        <div class="container">
+                            <div class="alert alert-success">
+                                Select Diagnose and Year First.
                             </div>
-                            <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
-                                <form action="{{ route('superadmin.diagnose.report') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="diagnose" id="diagnose" value="{{ $specificDiagnosis }}">
-                                    <input type="hidden" name="year" id="year" value="{{ $year }}">
-                                    <button type="submit" class="btn btn-success">Generate Report</button>
-                                </form>
-                            </div>
-                            <canvas id="diagnosePatientDemographicsChart" width="100%" height="40"></canvas>
                         </div>
-                    </div>  
+                    </div>
                 </div>
 
                 <!-- [ sample-page ] end -->
@@ -120,46 +110,4 @@
 @endsection
 
 @section('scripts')
-    <script>
-        // Prepare data for the line graph
-        var months = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'month')) !!};
-        var diagnosePatientCounts = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'count')) !!};
-
-        // Get the chart context and create the line graph
-        var ctx = document.getElementById('diagnosePatientDemographicsChart').getContext('2d');
-        var diagnosePatientDemographicsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: {!! json_encode(ucwords($diagnose)) !!},
-                    data: diagnosePatientCounts,
-                    fill: false,
-                    borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                    borderWidth: 2,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        grid: {
-                            display: false,
-                        },
-                        title: {
-                            display: true,
-                            text: 'Months'
-                        }
-                    },
-                    y: { 
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Diagnose Count'
-                        }
-                    }
-                }
-            }
-        });
-    </script>
 @endsection

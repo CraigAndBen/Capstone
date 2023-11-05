@@ -274,60 +274,73 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Patient</label>
+                        <label>Patient Analytics</label>
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Gender</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.patient') }}">Patient</a>
-                            </li>
+                                    href="{{ route('superadmin.analytics.patient.gender') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.patient.admitted') }}">Patient Admitted</a></li>
+                                    href="{{ route('superadmin.analytics.admitted.gender') }}">Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.patient.outpatient') }}">Outpatient</a></li>
+                                    href="{{ route('superadmin.analytics.outpatient.gender') }}">Outpatient</a></li>
                         </ul>
                     </li>
-                    <li class="pc-item pc-caption">
-                        <label>Demographics</label>
-                        <i class="ti ti-apps"></i>
-                    </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient Demographics</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Age</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.gender') }}">Gender Demographics</a></li>
+                                    href="{{ route('superadmin.analytics.patient.age') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.age') }}">Age
-                                    Demographics</a></li>
+                                    href="{{ route('superadmin.analytics.admitted.age') }}">Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.admitted') }}">Admitted Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                        href="{{ route('superadmin.demographics.outpatient') }}">Outpatient Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.appointment') }}">Appointment
-                                    Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a>
-                            </li>
+                                    href="{{ route('superadmin.analytics.outpatient.age') }}">Outpatient</a></li>
                         </ul>
                     </li>
-                    <li class="pc-item pc-caption">
-                        <label>Trend</label>
-                        <i class="ti ti-apps"></i>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Admitted</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.admitted') }}">All Patient</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Diagnose Trend</span><span class="pc-arrow"><i
+                        <a class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Outpatient</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
+                                    href="{{ route('superadmin.analytics.outpatient') }}">All Patient</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.patient.diagnose') }}">All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.admitted.diagnose') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.outpatient.diagnose') }}">Outpatient</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose
+                                Trend</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.patient.diagnose_trend') }}">All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.admitted.diagnose_trend') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.outpatient.diagnose_trend') }}">Outpatient</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">

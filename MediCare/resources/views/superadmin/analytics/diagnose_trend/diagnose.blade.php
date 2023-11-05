@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Diagnose Demographics</h5>
+                                <h5 class="m-b-10">{{ $title }}</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Diagnose Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">{{ $title }}</li>
                             </ul>
                         </div>
                     </div>
@@ -31,9 +31,37 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Diagnose Demographics</h1>
+                            <h1>{{ $title }}</h1>
                         </div>
                         <div class="card-body">
+                            <h3>Ranked Diagnose</h3>
+                            <div class="row">
+                                <div class="col-md-2">
+
+                                </div>
+                                <div class="col-md-8">
+                                    <ul class="list-group list-group-flush mt-3">
+                                        @foreach ($limitDiagnosis as $diagnosis)
+                                            <li class="list-group-item px-0">
+                                                <div class="row align-items-start">
+                                                    <div class="col">
+                                                        <h5 class="mb-0">{{ ucwords($diagnosis['diagnose']) }}</h5>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <h5 class="mb-0">{{ $diagnosis['total_occurrences'] }}<span
+                                                                class="ms-2 align-top avtar avtar-xxs bg-light-success"><i
+                                                                    class="ti ti-chevron-up text-success"></i></span></h5>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                                <div class="col-md-2">
+
+                                </div>
+                            </div>
+
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -46,38 +74,22 @@
                                 </div>
                             @endif
 
-                            @if (session('success'))
-                                <div class="alert alert-success">
-                                    <span class="fa fa-check-circle"></span> {{ session('success') }}
-                                </div>
-                            @endif
-
-                            @if (session('info'))
-                                <div class="alert alert-info">
-                                    {{ session('info') }}
-                                </div>
-                            @endif
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-md-2">
 
                                 </div>
-                                <div class="col-md-4">
-                                    <form action="{{ route('superadmin.demographics.diagnose.search') }}" method="GET">
+                                <div class="col-md-8">
+                                    <form action="{{ route('superadmin.analytics.trend.diagnose.search') }}"
+                                        method="GET">
                                         @csrf
+                                        <input type="hidden" name="type" value="{{ $type }}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option value="">Select Diagnose</option>
-                                            @foreach ($AdmittedDiagnoseData as $diagnose)
-                                                <option value="{{ $diagnose }}">{{ ucwords($diagnose) }}</option>
+                                            @foreach ($rankedDiagnosis as $diagnose)
+                                                <option value="{{ $diagnose['diagnose'] }}">
+                                                    {{ ucwords($diagnose['diagnose']) }}</option>
                                             @endforeach
                                         </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-control p-3" id="year" name="year">
-                                        <option value="">Select Year</option>
-                                        @foreach ($uniqueCombinedYears as $year)
-                                            <option value="{{ $year }}">{{ $year }}</option>
-                                        @endforeach
-                                    </select>
                                 </div>
                                 <div class="col-md-2 mt-2">
                                     <button type="submit" class="btn btn-primary">Select</button>
@@ -89,7 +101,7 @@
                         <hr>
                         <div class="container">
                             <div class="alert alert-success">
-                                Select Diagnose and Year First.
+                                Select Diagnose and number of years to analyze first.
                             </div>
                         </div>
                     </div>

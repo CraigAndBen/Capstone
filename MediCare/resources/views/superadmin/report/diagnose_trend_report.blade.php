@@ -14,7 +14,7 @@
         }
 
         @page {
-            size: landscape;
+            size: legal landscape;
         }
 
         .page-break {
@@ -24,26 +24,33 @@
 @endsection
 @section('content')
     <div class="container mt-2">
-        <div class="row justify-content-first align-items-first my-3">
-            <div class="col-8 my-4">
-                <h5>Report Type: <i><b>Yearly Trend Analytics Report</b></i></h5>
+        <div class="row justify-content-first align-items-first">
+            <div class="col-7">
+                <h5>Report Type: <i><b>{{$title}}</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
-            <div class="col-2">
+            <div class="col-3">
 
             </div>
-            <div class="col-1 my-3">
+            <div class="col-1 my-2">
                 <img src="{{ asset('logo.jpg') }}" alt="" class="" style="max-width: 200px; max-height: 160px">
             </div>
-
         </div>
-        
+        <hr style="border-top: 1px solid #000;">
+
+        <div class="row justify-content-center mt-5">
+            <h3><i>{{ucwords($specificDiagnosis)}} Yearly Trend Graph</i></h3>
+            <br>
+        </div>
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
-                <h3><i>{{ucwords($specificDiagnosis)}} Yearly Trend Line Graph</i></h3>
-                <br>
+            <div class="col-1">
+
+            </div>
+            <div class="col-7 text-center">
+
                 <canvas id="yearlyTrendChart"></canvas>
             </div>
             <div class="col-1">
@@ -58,42 +65,33 @@
             <div class="col-1">
 
             </div>
-            <div class="col-9 text-center">
+            <div class="col-8 text-center">
                 <h3><i>{{ucwords($specificDiagnosis)}} Yearly Trend Table</i></h3>
                 <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th>Admitted</th>
-                            <th>Outpatient</th>
-                            <th>Total</th>
+                            <th>Patient</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                            $totalAdmitted = 0;
-                            $totalOutpatient = 0;
+                            $totalPatient = 0;
                         @endphp
 
                         @foreach ($years as $key => $year)
                             <tr>
                                 <td>{{ $year }}</td>
-                                <td>{{ $admittedYearCounts[$key] }}</td>
-                                <td>{{ $outpatientYearCounts[$key] }}</td>
-                                <td>{{ $admittedYearCounts[$key] + $outpatientYearCounts[$key] }}</td>
+                                <td>{{ $patientYearCounts[$key] }}</td>
                             </tr>
                             @php
-                                $totalAdmitted += $admittedYearCounts[$key];
-                                $totalOutpatient += $outpatientYearCounts[$key];
+                                $totalPatient += $patientYearCounts[$key];
                             @endphp
                         @endforeach
-
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>{{ $totalAdmitted }}</strong></td>
-                            <td><strong>{{ $totalOutpatient }}</strong></td>
-                            <td><strong>{{ $totalAdmitted + $totalOutpatient }}</strong></td>
+                            <td><strong>{{ $totalPatient }}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -104,29 +102,20 @@
         </div>
     </div>
 
-    <div class="page-break my-5"></div>
+    <div class="page-break my-5 p-5"></div>
 
-    <div class="container mt-2">
-        <div class="row justify-content-first align-items-first my-3">
-            <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Monthly Trend Analytics Report</b></i></h5>
-                <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
-            </div>
-            <div class="col-2">
-
-            </div>
-            <div class="col-1 my-3">
-                <img src="{{ asset('logo.jpg') }}" alt="" class=""
-                    style="max-width: 200px; max-height: 160px">
-            </div>
-
+    <div class="container my-5">
+        <br><br><br>
+        <div class="row justify-content-center mt-5">
+            <h3><i>{{ucwords($specificDiagnosis)}} Monthly Trend Graph</i></h3>
+            <br>
         </div>
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
-                <h3><i>{{ucwords($specificDiagnosis)}} Monthly Trend Table</i></h3>
-                <br>
+            <div class="col-1">
+
+            </div>
+            <div class="col-7 text-center">
+
                 <canvas id="monthlyTrendChart"></canvas>
             </div>
             <div class="col-1">
@@ -135,7 +124,8 @@
         </div>
 
         <div class="page-break my-5"></div>
-        <div style="height: 80px"></div>
+        <div style="height: 30px"></div>
+
 
         <div class="row justify-content-center">
             <div class="col-1">
@@ -148,35 +138,26 @@
                     <thead>
                         <tr>
                             <th>Month</th>
-                            <th>Admitted</th>
-                            <th>Outpatient</th>
-                            <th>Total</th>
+                            <th>Patient</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
-                            $totalAdmitted = 0;
-                            $totalOutpatient = 0;
+                            $totalPatient = 0;
                         @endphp
 
                         @foreach ($months as $key => $month)
                             <tr>
                                 <td>{{ $month }}</td>
-                                <td>{{ $admittedMonthCounts[$key] }}</td>
-                                <td>{{ $outpatientMonthCounts[$key] }}</td>
-                                <td>{{ $admittedMonthCounts[$key] + $outpatientMonthCounts[$key] }}</td>
+                                <td>{{ $patientMonthCounts[$key] }}</td>
                             </tr>
                             @php
-                                $totalAdmitted += $admittedMonthCounts[$key];
-                                $totalOutpatient += $outpatientMonthCounts[$key];
+                                $totalPatient += $patientMonthCounts[$key];
                             @endphp
                         @endforeach
-
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>{{ $totalAdmitted }}</strong></td>
-                            <td><strong>{{ $totalOutpatient }}</strong></td>
-                            <td><strong>{{ $totalAdmitted + $totalOutpatient }}</strong></td>
+                            <td><strong>{{ $totalPatient }}</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -188,7 +169,7 @@
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
                 <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('superadmin.trend.diagnose') }}" class="btn btn-danger">Back</a>
+                <a id="back" href="{{ route('superadmin.analytics.patient.diagnose_trend') }}" class="btn btn-danger">Back</a>
             </div>
             <div class="col-2">
             </div>
@@ -207,8 +188,8 @@
         });
         // Get the data passed from the controller
         var years = @json($years);
-        var admittedCounts = @json($admittedYearCounts);
-        var outpatientCounts = @json($outpatientYearCounts);
+        var patientCounts = @json($patientYearCounts);
+        var type = @json($type);
 
         // Create a chart using Chart.js
         var ctx = document.getElementById('yearlyTrendChart').getContext('2d');
@@ -217,35 +198,29 @@
             data: {
                 labels: years,
                 datasets: [{
-                        label: 'Admitted',
-                        data: admittedCounts,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false // Ensure the line chart is not filled
-                    },
-                    {
-                        label: 'Outpatient',
-                        data: outpatientCounts,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        fill: false // Ensure the line chart is not filled
-                    }
-                ]
+                    label: 'Patient',
+                    data: patientCounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false // Ensure the line chart is not filled
+                }]
             },
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
                     }
                 }
             }
         });
+
         // Get the data passed from the controller
         var months = @json($months);
-        var admittedCounts = @json($admittedMonthCounts);
-        var outpatientCounts = @json($outpatientMonthCounts);
+        var patientCounts = @json($patientMonthCounts);
 
         // Create a chart using Chart.js
         var ctx = document.getElementById('monthlyTrendChart').getContext('2d');
@@ -254,25 +229,20 @@
             data: {
                 labels: months,
                 datasets: [{
-                        label: 'Admitted',
-                        data: admittedCounts,
-                        borderColor: 'rgba(75, 192, 192, 1)', // Remove backgroundColor
-                        borderWidth: 2, // Increase borderWidth for lines
-                        fill: false // Do not fill the area under the line
-                    },
-                    {
-                        label: 'Outpatient',
-                        data: outpatientCounts,
-                        borderColor: 'rgba(255, 99, 132, 1)', // Remove backgroundColor
-                        borderWidth: 2, // Increase borderWidth for lines
-                        fill: false // Do not fill the area under the line
-                    }
-                ]
+                    label: 'Patient',
+                    data: patientCounts,
+                    borderColor: 'rgba(75, 192, 192, 1)', // Remove backgroundColor
+                    borderWidth: 2, // Increase borderWidth for lines
+                    fill: false // Do not fill the area under the line
+                }]
             },
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
                     }
                 }
             }

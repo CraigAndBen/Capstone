@@ -1,4 +1,4 @@
-@extends('layouts.inner_admin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Admitted Patient Demographics</h5>
+                                <h5 class="m-b-10">Outpatient Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Admitted Patient Demographics</li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item" aria-current="page">Outpatient Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Admitted Patient Demographics</h1>
+                            <h1>Outpatient Demographics</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -62,7 +62,7 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('admin.demographics.admitted.search') }}" method="GET">
+                                    <form action="{{ route('superadmin.analytics.outpatient.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
                                             <option value="">Select Year</option>
@@ -83,13 +83,13 @@
                             </div>
                             <hr>
                             <div class="my-5">
-                                <h3>Admitted Patient Total - <i>{{$totalAdmittedPatients}}</i></h3>
+                                <h3>Outpatient Total - <i>{{$totalAdmittedPatients}}</i></h3>
                             </div>
                             <div class="row">
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
                                 <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
-                                    <form action="{{ route('admin.admitted.report') }}" method="POST">
+                                    <form action="{{ route('superadmin.outpatient.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>
@@ -122,7 +122,7 @@
                     datasets: [{
                         label: 'Admit Patients',
                         data: admitPatientCounts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                        backgroundColor: 'rgba(153, 102, 255, 0.7)', // Purple
                         borderWidth: 1,
                     }]
                 },
@@ -138,9 +138,12 @@
                         },
                         y: {
                             beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            },
                             title: {
                             display: true,
-                            text: 'Admitted Patient Count'
+                            text: 'Outpatient Count'
                         }
                         }
                     }

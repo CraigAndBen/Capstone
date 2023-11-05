@@ -1,4 +1,4 @@
-@extends('layouts.inner_admin')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -13,8 +13,8 @@
                                 <h5 class="m-b-10">Diagnose Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item" aria-current="page">Diagnose Demographics</li>
                             </ul>
                         </div>
@@ -31,7 +31,13 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Diagnose Demographics</h1>
+                            @if ($type == 'patient')
+                                <h1>Patient Diagnose Analytics</h1>
+                            @elseif ($type == 'admitted')
+                                <h1>Admitted Patient Diagnose Analytics</h1>
+                            @elseif ($type == 'outpatient')
+                                <h1>Outpatient Diagnose Analytics</h1>
+                            @endif
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -62,8 +68,9 @@
 
                                 </div>
                                 <div class="col-md-4">
-                                    <form action="{{ route('admin.demographics.diagnose.search') }}" method="GET">
+                                    <form action="{{ route('superadmin.analytics.diagnose.search') }}" method="GET">
                                         @csrf
+                                        <input type="hidden" name="type" value="{{ $type }}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
                                             <option value="">Select Diagnose</option>
                                             @foreach ($AdmittedDiagnoseData as $diagnose)
@@ -100,16 +107,17 @@
                             <div class="col-md-10"> <!-- Adjust the column width as needed -->
                             </div>
                             <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
-                                <form action="{{ route('admin.diagnose.report') }}" method="POST">
+                                <form action="{{ route('superadmin.diagnose.report') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="diagnose" id="diagnose" value="{{ $specificDiagnosis }}">
+                                    <input type="hidden" name="type" value="{{ $type }}">
                                     <input type="hidden" name="year" id="year" value="{{ $year }}">
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>
                             </div>
                             <canvas id="diagnosePatientDemographicsChart" width="100%" height="40"></canvas>
                         </div>
-                    </div>  
+                    </div>
                 </div>
 
                 <!-- [ sample-page ] end -->
@@ -132,7 +140,7 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: {!! json_encode(ucwords($diagnose)) !!},
+                    label: {!! json_encode(ucwords($specificDiagnosis)) !!},
                     data: diagnosePatientCounts,
                     fill: false,
                     borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
@@ -151,8 +159,11 @@
                             text: 'Months'
                         }
                     },
-                    y: { 
+                    y: {
                         beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
                         title: {
                             display: true,
                             text: 'Diagnose Count'

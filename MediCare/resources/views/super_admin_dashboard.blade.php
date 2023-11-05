@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 
 </head>
 <!-- [Head] end -->
@@ -278,62 +280,75 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
-                        <label>Patient</label>
+                        <label>Patient Analytics</label>
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient List</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Gender</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.patient') }}">Patient</a>
-                            </li>
+                                    href="{{ route('superadmin.analytics.patient.gender') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.patient.admitted') }}">Patient Admitted</a></li>
+                                    href="{{ route('superadmin.analytics.admitted.gender') }}">Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.patient.outpatient') }}">Outpatient</a></li>
+                                    href="{{ route('superadmin.analytics.outpatient.gender') }}">Outpatient</a></li>
                         </ul>
                     </li>
-                    <li class="pc-item pc-caption">
-                        <label>Demographics</label>
-                        <i class="ti ti-apps"></i>
-                    </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Patient Demographics</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Age</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.gender') }}">Gender Demographics</a></li>
+                                    href="{{ route('superadmin.analytics.patient.age') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.age') }}">Age
-                                    Demographics</a></li>
+                                    href="{{ route('superadmin.analytics.admitted.age') }}">Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.admitted') }}">Admitted Demographics</a>
-                            </li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.outpatient') }}">Outpatient
-                                    Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.appointment') }}">Appointment
-                                    Demographics</a></li>
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.demographics.diagnose') }}">Diagnose Demographics</a>
-                            </li>
+                                    href="{{ route('superadmin.analytics.outpatient.age') }}">Outpatient</a></li>
                         </ul>
                     </li>
-                    <li class="pc-item pc-caption">
-                        <label>Trend</label>
-                        <i class="ti ti-apps"></i>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Admitted</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.admitted') }}">All Patient</a></li>
+                        </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Diagnose Trend</span><span class="pc-arrow"><i
+                        <a class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Outpatient</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.trend.diagnose') }}">Diagnose Rising Trend</a></li>
+                                    href="{{ route('superadmin.analytics.outpatient') }}">All Patient</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.patient.diagnose') }}">All Patient</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.admitted.diagnose') }}">Admitted</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.outpatient.diagnose') }}">Outpatient</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Diagnose
+                                Trend</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.patient.diagnose_trend') }}">All Patient</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.admitted.diagnose_trend') }}">Admitted</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.analytics.outpatient.diagnose_trend') }}">Outpatient</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -383,7 +398,7 @@
             <div class="row mt-2">
                 <!-- [ sample-page ] start -->
 
-                {{-- <div class="col-xl-6 col-md-12 mt-2">
+                <div class="col-xl-6 col-md-12 mt-2">
                     <div class="card">
                         <div class="card-body">
                             @if ($patientCount)
@@ -393,7 +408,84 @@
                                         <h3>{{ $patientCount }}</h3>
                                     </div>
                                 </div>
-                                <canvas id="patientChart" width="100%" height="40"></canvas>
+                                <canvas id="patientChart" width="90%" height="36"></canvas>
+                                <script>
+                                    // PHP arrays to JavaScript variables
+                                    const admittedMonths = @json($admittedPatientsByMonth->pluck('month'));
+                                    const admittedCounts = @json($admittedPatientsByMonth->pluck('count'));
+
+                                    const outpatientMonths = @json($outpatientPatientsByMonth->pluck('month'));
+                                    const outpatientCounts = @json($outpatientPatientsByMonth->pluck('count'));
+
+                                    // Create an array for all months
+                                    const allMonths = [
+                                        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                                        'August', 'September', 'October', 'November', 'December'
+                                    ];
+
+                                    // Initialize arrays to store counts for admitted and outpatient data
+                                    const admittedMonthCounts = Array.from({
+                                        length: 12
+                                    }, () => 0);
+                                    const outpatientMonthCounts = Array.from({
+                                        length: 12
+                                    }, () => 0);
+
+                                    // Fill in the counts for the corresponding months for admitted patients
+                                    for (let i = 0; i < admittedMonths.length; i++) {
+                                        const monthIndex = allMonths.indexOf(admittedMonths[i]);
+                                        if (monthIndex !== -1) {
+                                            admittedMonthCounts[monthIndex] = admittedCounts[i];
+                                        }
+                                    }
+
+                                    // Fill in the counts for the corresponding months for outpatient patients
+                                    for (let i = 0; i < outpatientMonths.length; i++) {
+                                        const monthIndex = allMonths.indexOf(outpatientMonths[i]);
+                                        if (monthIndex !== -1) {
+                                            outpatientMonthCounts[monthIndex] = outpatientCounts[i];
+                                        }
+                                    }
+
+                                    var ctx = document.getElementById('patientChart').getContext('2d');
+                                    var myChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: allMonths,
+                                            datasets: [{
+                                                    label: 'Admitted Patient',
+                                                    data: admittedMonthCounts,
+                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                    borderWidth: 1
+                                                },
+                                                {
+                                                    label: 'Outpatient',
+                                                    data: outpatientMonthCounts,
+                                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                                    borderWidth: 1
+                                                }
+                                            ]
+                                        },
+                                        options: {
+                                            title: {
+                                                text: 'Patient Visits by Month'
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    ticks: {
+                                                        stepSize: 1
+                                                    }
+                                                }
+                                            },
+                                            legend: {
+                                                display: true
+                                            }
+                                        }
+                                    });
+                                </script>
                             @else
                                 <div class="text-center">
                                     <h3>No Patient Yet.</h3>
@@ -409,37 +501,16 @@
                             @if ($diagnosisCount)
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
-                                        <h5>Patient Diagnosis This Year</h5>
+                                        <h5>Patient Diagnoses This Year</h5>
                                     </div>
                                     <div class="col-auto"> </div>
                                 </div>
 
-                                <canvas id="diagnosisChart" width="100%" height="23"></canvas>
-                                <ul class="list-group list-group-flush mt-3">
-                                    @foreach ($diagnosesWithOccurrences as $diagnosis)
-                                        <li class="list-group-item px-0">
-                                            <div class="row align-items-center">
-                                                <!-- Use align-items-center for vertical alignment -->
-                                                <div class="col">
-                                                    <h6 class="mb-0"> <!-- Use h6 for smaller text -->
-                                                        {{ ucwords($diagnosis->diagnosis) }}
-                                                    </h6>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <h6 class="mb-0"> <!-- Use h6 for smaller text -->
-                                                        {{ $diagnosis->total_occurrences }}
-                                                        <span class="ms-1 avtar avtar-xxs bg-light-success">
-                                                            <i class="ti ti-chevron-up text-success"></i>
-                                                        </span>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                                <div class="text-center">
-                                    <a href="{{ route('superadmin.demographics.diagnose') }}"
-                                        class="btn btn-primary">View all</a>
+                                <canvas id="diagnosisChart" width="100%" height="35"></canvas>
+                                <div class="text-center my-3">
+                                    <a href="{{ route('admin.analytics.patient.diagnose') }}"
+                                        class="btn btn-primary">View
+                                        all</a>
                                 </div>
                             @else
                                 <div class="text-center">
@@ -449,7 +520,7 @@
 
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 <!-- [ sample-page ] end -->
             </div>
 
@@ -467,6 +538,50 @@
                                     </div>
                                 </div>
                                 <canvas id="appointmentChart" width="100%" height="42"></canvas>
+                                <script>
+                                    var ctx = document.getElementById('appointmentChart').getContext('2d');
+                                    var labels = @json($appointmentLabels);
+                                    var data = @json($appointmentData);
+                                
+                                
+                                    // Initialize an array to hold the data for all months, initially filled with zeros
+                                    var allMonthsData = Array.from({
+                                        length: 12
+                                    }, () => 0);
+                                
+                                    // Fill in the data for the corresponding months
+                                    for (var i = 0; i < labels.length; i++) {
+                                        var date = new Date(labels[i]);
+                                        var monthIndex = date.getMonth();
+                                        allMonthsData[monthIndex] = data[i];
+                                    }
+                                
+                                    new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: allMonths, // Use allMonths as labels
+                                            datasets: [{
+                                                label: 'Appointment Count',
+                                                data: allMonthsData, // Use allMonthsData as data
+                                                borderColor: 'rgba(75, 192, 192, 1)',
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                x: {
+                                                    type: 'category',
+                                                    beginAtZero: true,
+                                                    min: 'January', // Specify the minimum label
+                                                    max: 'December', // Specify the maximum label
+                                                },
+                                                y: {
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        }
+                                    });
+                                </script>
                             @else
                                 <div class="text-center">
                                     <h3>No Appointment Yet.</h3>
@@ -489,6 +604,32 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6 mx-auto">
                                         <canvas id="userRolesChart"></canvas>
+                                        <script>
+                                            var ctx = document.getElementById('userRolesChart').getContext('2d');
+                                            var labels = @json($usersLabels);
+                                            var data = @json($usersData);
+
+                                            new Chart(ctx, {
+                                                type: 'pie',
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [{
+                                                        data: data,
+                                                        backgroundColor: [
+                                                            'rgba(255, 99, 132, 0.8)',
+                                                            'rgba(54, 162, 235, 0.8)',
+                                                            'rgba(255, 206, 86, 0.8)',
+                                                            'rgba(75, 192, 192, 0.8)',
+                                                            'rgba(153, 102, 255, 0.8)',
+                                                        ]
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false // Allow the chart to resize based on the container
+                                                }
+                                            });
+                                        </script>
                                     </div>
                                 </div>
                             @else
@@ -499,6 +640,13 @@
                         </div>
                     </div>
                 </div>
+
+
+
+                <!-- [ sample-page ] end -->
+            </div>
+
+            <div class="row mt-2">
                 <div class="col-xl-6 col-md-12">
                     <div class="card">
                         <div class="card-body">
@@ -551,7 +699,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             @else
                                 <div class="text-center">
@@ -561,9 +709,6 @@
                         </div>
                     </div>
                 </div>
-               
-
-                <!-- [ sample-page ] end -->
             </div>
             <!-- [ Main Content ] end -->
         </div>
@@ -600,111 +745,103 @@
     <!-- [Page Specific JS] end -->
 </body>
 <!-- [Body] end -->
+
 <script>
+    var diagnosisData = @json($rankedDiagnosis);
+    // Get the canvas element
+    var ctx = document.getElementById('diagnosisChart').getContext('2d');
 
-    var ctx = document.getElementById('appointmentChart').getContext('2d');
-    var labels = @json($appointmentLabels);
-    var data = @json($appointmentData);
+    // Extract data from PHP variable
+    var months = [];
+    var datasets = [];
 
-
-    // Initialize an array to hold the data for all months, initially filled with zeros
-    var allMonthsData = Array.from({
-        length: 12
-    }, () => 0);
-
-    // Fill in the data for the corresponding months
-    for (var i = 0; i < labels.length; i++) {
-        var date = new Date(labels[i]);
-        var monthIndex = date.getMonth();
-        allMonthsData[monthIndex] = data[i];
+    // Create an array with all months in the year
+    for (let i = 1; i <= 12; i++) {
+        months.push(moment(i, "M").format("MMMM"));
     }
 
-    new Chart(ctx, {
+    // Extract unique diagnoses from the data
+    const uniqueDiagnoses = [...new Set(diagnosisData.map(item => item.diagnose))];
+
+    const predefinedColors = ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#e67e22', '#9b59b6'];
+    let colorIndex = 0;
+
+    // Create a dataset for each unique diagnosis
+    uniqueDiagnoses.forEach(diagnose => {
+        const data = [];
+        for (let i = 1; i <= 12; i++) {
+            const monthData = diagnosisData.find(item => item.month === i && item.diagnose === diagnose);
+            if (monthData) {
+                data.push(monthData.total_occurrences);
+            } else {
+                data.push(0);
+            }
+        }
+
+        const predefinedColors = ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#e67e22', '#9b59b6'];
+
+        datasets.push({
+            label: diagnose.charAt(0).toUpperCase() + diagnose.slice(1),
+            data: data,
+            fill: false,
+            borderColor: predefinedColors[colorIndex],
+        });
+
+        colorIndex = (colorIndex + 1) % predefinedColors.length;
+    });
+
+    // Create the line chart
+    var chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: allMonths, // Use allMonths as labels
-            datasets: [{
-                label: 'Appointment Count',
-                data: allMonthsData, // Use allMonthsData as data
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
+            labels: months,
+            datasets: datasets,
         },
         options: {
             scales: {
-                x: {
-                    type: 'category',
-                    beginAtZero: true,
-                    min: 'January', // Specify the minimum label
-                    max: 'December', // Specify the maximum label
-                },
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
                 }
             }
         }
     });
 </script>
 <script>
-    var ctx = document.getElementById('userRolesChart').getContext('2d');
-    var labels = @json($usersLabels);
-    var data = @json($usersData);
-
-    console.log('yow');
-
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.8)',
-                    'rgba(54, 162, 235, 0.8)',
-                    'rgba(255, 206, 86, 0.8)',
-                    'rgba(75, 192, 192, 0.8)',
-                    'rgba(153, 102, 255, 0.8)',
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false // Allow the chart to resize based on the container
-        }
-    });
+    // var ctx = document.getElementById('medicineGraph').getContext('2d');
+    // var medicineGraph = new Chart(ctx, {
+    //     type: 'pie',
+    //     data: {
+    //         labels: [
+    //             'Most Valued ' + {{ $mostValuedPercentage }} + '%',
+    //             'Medium Valued ' + {{ $mediumValuedPercentage }} + '%',
+    //             'Low Valued ' + {{ $lowValuedPercentage }} + '%'
+    //         ],
+    //         datasets: [{
+    //             data: [
+    //                 {{ $mostValuedPercentage }},
+    //                 {{ $mediumValuedPercentage }},
+    //                 {{ $lowValuedPercentage }}
+    //             ],
+    //             backgroundColor: [
+    //                 'rgba(75, 192, 192, 0.7)', // Green for Most Valued
+    //                 'rgba(54, 162, 235, 0.7)', // Blue for Medium Valued
+    //                 'rgba(255, 99, 132, 0.7)' // Red for Low Valued
+    //             ],
+    //             borderColor: [
+    //                 'rgba(75, 192, 192, 1)',
+    //                 'rgba(54, 162, 235, 1)',
+    //                 'rgba(255, 99, 132, 1)'
+    //             ]
+    //         }]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //     }
+    // });
 </script>
-<script>
-    var ctx = document.getElementById('medicineGraph').getContext('2d');
-    var medicineGraph = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: [
-                'Most Valued ' + {{ $mostValuedPercentage }} + '%',
-                'Medium Valued ' + {{ $mediumValuedPercentage }} + '%',
-                'Low Valued ' + {{ $lowValuedPercentage }} + '%'
-            ],
-            datasets: [{
-                data: [
-                    {{ $mostValuedPercentage }},
-                    {{ $mediumValuedPercentage }},
-                    {{ $lowValuedPercentage }}
-                ],
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.7)', // Green for Most Valued
-                    'rgba(54, 162, 235, 0.7)', // Blue for Medium Valued
-                    'rgba(255, 99, 132, 0.7)'  // Red for Low Valued
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-        }
-    });
-</script>
+
 </html>
