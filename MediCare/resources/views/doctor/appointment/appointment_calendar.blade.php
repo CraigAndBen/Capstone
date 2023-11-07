@@ -496,11 +496,14 @@
                 calendar.render();
 
                 function openEventModal(date) {
-                    // Example: Open a modal for event creation and set the date
+
+                    const dateObj = new Date(date);
+                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const formattedDate = dateObj.toLocaleDateString('en-US', options);
+
                     $('#availabilityModal').modal('show');
-                    $('#date').text(date);
+                    $('#date').text(formattedDate);
                     $('#availabilityDate').val(date);
-                    // $('#date').val(date);
                 }
 
                 function displayEventDetails(event) {

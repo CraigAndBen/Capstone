@@ -82,14 +82,6 @@
                                 <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 215px)">
                                     <div class="list-group list-group-flush w-100">
-                                        <div class="list-group-item">
-                                            <select class="form-select">
-                                                <option value="all">All Notification</option>
-                                                <option value="new">New</option>
-                                                <option value="unread">Unread</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
                                         @foreach ($limitNotifications as $notification)
                                             <a class="list-group-item list-group-item-action"
                                                 href="{{ route('superadmin.notification') }}">
@@ -125,14 +117,6 @@
                                 <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 215px)">
                                     <div class="list-group list-group-flush w-100">
-                                        <div class="list-group-item">
-                                            <select class="form-select">
-                                                <option value="all">All Notification</option>
-                                                <option value="new">New</option>
-                                                <option value="unread">Unread</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
                                         <a class="list-group-item list-group-item-action">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
@@ -254,23 +238,15 @@
                                 class="pc-mtext">Accounts</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.admin') }}">Admin
-                                    Account</a>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.admin') }}">Admin</a>
                             </li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.doctor') }}">Doctor
-                                    Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.nurse') }}">Nurse
-                                    Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User
-                                    Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.supply_officer') }}">Supply Officer
-                                        Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.staff') }}">Staff
-                                            Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.cashier') }}">Cashier
-                                                Account</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.pharmacist') }}">Pharmacist
-                                                    Account</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.doctor') }}">Doctor</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.nurse') }}">Nurse</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.supply_officer') }}">Supply Officer</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.staff') }}">Staff</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.cashier') }}">Cashier</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.pharmacist') }}">Pharmacist</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
