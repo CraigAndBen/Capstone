@@ -68,7 +68,11 @@
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
+                            @if ($notificationsAlert->isEmpty())
                             <i class="ti ti-bell"></i>
+                            @else    
+                            <i class="ti ti-bell"  style="color: red;"></i>
+                            @endif
                         </a>
                         <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">

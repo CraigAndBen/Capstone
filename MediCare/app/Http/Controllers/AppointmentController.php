@@ -69,7 +69,8 @@ class AppointmentController extends Controller
 
             // Calculate the end time by adding a fixed duration (e.g., 1 hour)
             $endDateTime = clone $appointmentDateTime;
-            $endDateTime->modify('+1 hour'); // Add exactly 1 hour
+            $interval = new DateInterval('PT30M'); // PT30M represents 30 minutes
+            $endDateTime->add($interval);
 
             $events[] = [
                 'title' => ucwords($appointment->appointment_type),

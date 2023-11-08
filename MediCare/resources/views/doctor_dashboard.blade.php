@@ -73,7 +73,12 @@
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
+                            @if ($notificationsAlert->isEmpty())
                             <i class="ti ti-bell"></i>
+                            @else    
+                            <i class="ti ti-bell"  style="color: red;"></i>
+                            @endif
+   
                         </a>
                         <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
@@ -284,7 +289,7 @@
                             <div class="card-body">
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
-                                        <small>Total Admitted Patient This Year</small>
+                                        <small>Total Patient This Year</small>
                                         <h3>{{ $patientCount }}</h3>
                                     </div>
                                 </div>
@@ -439,22 +444,6 @@
         </div>
     </div>
 
-    <div class="modal" id="autoPopupModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Auto-Pop-Up Modal</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Modal content goes here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
@@ -489,11 +478,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <!-- [Body] end -->
-<script>
-    $(document).ready(function (){
-        $('#autoPopupModal').modal('show');
-    });
-</script>
 <script>
     // Convert the PHP array to JavaScript variables
     const appointmentMonths = @json($months);
