@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\User_info;
 use Illuminate\View\View;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,14 +23,18 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $user_info = User_info::where('account_id',$user->id)->first();
-        return view('user.profile.profile', compact('user','user_info'));
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
+
+        return view('user.profile.profile', compact('user','user_info','notificationsAlert'));
     }
 
     public function passwordProfile(Request $request): View
     {
         $user = $request->user();
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
 
-        return view('user.profile.profile_password', compact('user'));
+
+        return view('user.profile.profile_password', compact('user','notificationsAlert'));
     }
 
     /**

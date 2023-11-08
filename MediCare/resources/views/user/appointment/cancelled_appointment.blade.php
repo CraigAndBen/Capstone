@@ -222,7 +222,7 @@
                     </div>
                     <hr>
                     <div class="form-floating mb-3">
-                        <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone"
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone"
                             disabled />
                         <label for="floatingInput">Phone</label>
                     </div>
@@ -338,5 +338,15 @@
                 modal.find('#reason').val(reason);
             });
         });
+
+        function formatPhoneNumber(input) {
+            // Remove any non-numeric characters
+            input.value = input.value.replace(/[^0-9+]/g, '');
+
+            // Check if the input starts with "09" and change it to "+639"
+            if (input.value.startsWith('09')) {
+                input.value = '+639' + input.value.substring(2);
+            }
+        }
     </script>
 @endsection

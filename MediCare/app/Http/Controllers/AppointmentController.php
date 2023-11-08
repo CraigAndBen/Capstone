@@ -42,6 +42,7 @@ class AppointmentController extends Controller
 
         // Fetch appointment data here
         $appointments = Appointment::where('account_id', $user->id)->get(); // Replace with your own query to fetch the data
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
 
         $events = [];
         foreach ($appointments as $appointment) {
@@ -53,7 +54,7 @@ class AppointmentController extends Controller
             ];
         }
 
-        return view('user.appointment.appointment_create', compact('users', 'infos', 'timeList', 'availability'))->with('events', json_encode($events));
+        return view('user.appointment.appointment_create', compact('users', 'infos', 'timeList', 'availability','notificationsAlert'))->with('events', json_encode($events));
     }
 
     public function appointmentEvents()
@@ -382,8 +383,9 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->orderBy('appointment_date', 'desc')->paginate(5);
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
 
-        return view('user.appointment.appointment', compact('appointments', 'infos', 'timeList'));
+        return view('user.appointment.appointment', compact('appointments', 'infos', 'timeList','notificationsAlert'));
     }
 
     public function confirmedAppointmentList()
@@ -409,7 +411,9 @@ class AppointmentController extends Controller
         $infos = Doctor::all();
         $doctors = User::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'confirmed')->paginate(5);
-        return view('user.appointment.confirmed_appointment', compact('appointments', 'infos', 'timeList', 'doctors'));
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
+
+        return view('user.appointment.confirmed_appointment', compact('appointments', 'infos', 'timeList', 'doctors','notificationsAlert'));
     }
 
     public function doneAppointmentList()
@@ -434,8 +438,9 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->paginate(5);
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
 
-        return view('user.appointment.done_appointment', compact('appointments', 'infos', 'timeList'));
+        return view('user.appointment.done_appointment', compact('appointments', 'infos', 'timeList','notificationsAlert'));
     }
 
     public function cancelledAppointmentList()
@@ -459,8 +464,9 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->paginate(5);
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
 
-        return view('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList'));
+        return view('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList','notificationsAlert'));
     }
 
     public function unavailableAppointmentList()
@@ -484,8 +490,9 @@ class AppointmentController extends Controller
         $user = Auth::user();
         $infos = Doctor::all();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'unavailable')->paginate(5);
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
 
-        return view('user.appointment.unavailable_appointment', compact('appointments', 'infos', 'timeList'));
+        return view('user.appointment.unavailable_appointment', compact('appointments', 'infos', 'timeList','notificationsAlert'));
     }
     public function updateAppointment(Request $request)
     {

@@ -70,7 +70,13 @@
                   <li><a href="{{route('user.profile.password')}}">Update Password</a></li>
                 </ul>
               </li>
-              <li><a href="{{route('user.notification')}}">Notification</a></li>
+
+              @if ($notificationsAlert->isEmpty())
+                <li><a href="{{ route('user.notification') }}">Notification</a></li>
+              @else
+                <li><a href="{{ route('user.notification') }}" style="color: red;">Notification	&#9679;</a></li>
+              @endif
+
               <li><a href="{{route('user.logout')}}">Logout</a></li>
             </ul>
           </li>

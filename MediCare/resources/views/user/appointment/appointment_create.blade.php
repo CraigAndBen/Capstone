@@ -131,7 +131,7 @@
                                                                 <input type="text" class="form-control ml-2"
                                                                     id="floatingInput first_name" placeholder="First Name"
                                                                     name="first_name" />
-                                                                <label for="floatingInput">First Name</label>
+                                                                <label for="floatingInput">First Name <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -139,7 +139,7 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput middle_name" placeholder="Middle Name"
                                                                     name="middle_name" />
-                                                                <label for="floatingInput">Middle Name</label>
+                                                                <label for="floatingInput">Middle Name <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -147,7 +147,7 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput last_name" placeholder="Last Name"
                                                                     name="last_name" />
-                                                                <label for="floatingInput">Last Name</label>
+                                                                <label for="floatingInput">Last Name <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -158,7 +158,7 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput street" name="street"
                                                                     placeholder="Street" />
-                                                                <label for="floatingInput">Street</label>
+                                                                <label for="floatingInput">Street <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -166,7 +166,7 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput brgy" name="brgy"
                                                                     placeholder="Brgy" />
-                                                                <label for="floatingInput">State/Barangay</label>
+                                                                <label for="floatingInput">State/Barangay <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -176,7 +176,7 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput city" name="city"
                                                                     placeholder="City" />
-                                                                <label for="floatingInput">City</label>
+                                                                <label for="floatingInput">City <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -184,7 +184,7 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput province" name="province"
                                                                     placeholder="Province" />
-                                                                <label for="floatingInput">Province</label>
+                                                                <label for="floatingInput">Province <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -195,13 +195,13 @@
                                                                 <input type="date" class="form-control"
                                                                     id="floatingInput birthdate" name="birthdate"
                                                                     placeholder="Date of Birth" />
-                                                                <label for="floatingInput">Date of Birth</label>
+                                                                <label for="floatingInput">Date of Birth <span style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 col-md-6">
                                                             <select class="form-control  p-3" id="gender"
                                                                 name="gender">
-                                                                <option value="">Select Gender</option>
+                                                                <option value="">Select Gender *</option>
                                                                 <option value="male">Male</option>
                                                                 <option value="female">Female</option>
                                                             </select>
@@ -212,18 +212,18 @@
                                                         <input type="text" class="form-control" id="phoneInput"
                                                             name="phone" placeholder="Phone"
                                                             oninput="formatPhoneNumber(this);" />
-                                                        <label for="phoneInput">Phone</label>
+                                                        <label for="phoneInput">Phone <span style="color: red;">*</span></label>
                                                     </div>
                                                     <hr>
                                                     <div class="form-floating mb-3">
                                                         <input type="email" class="form-control"
                                                             id="floatingInput email" name="email"
                                                             placeholder="Email Address" />
-                                                        <label for="floatingInput">Email Address</label>
+                                                        <label for="floatingInput">Email Address <span style="color: red;">*</span></label>
                                                     </div>
                                                     <hr>
                                                     <div class="row mt-4">
-                                                        <h5>Which specialist do you want to appoint of?</h5>
+                                                        <h5>Which specialist do you want to appoint of? <span style="color: red;">*</span></h5>
                                                         <div class="form-floating mb-3">
                                                             <select class="form-control p-3" id="specialties"
                                                                 name="specialties">
@@ -234,7 +234,7 @@
                                                     <hr>
                                                     <div class="row mt-4">
                                                         <div class="form-floating mb-3">
-                                                            <h5>Which procedure do you want to make an appointment for?
+                                                            <h5>Which procedure do you want to make an appointment for? <span style="color: red;">*</span>
                                                             </h5>
                                                             <select class="form-control  p-3" id="appointment_type"
                                                                 name="appointment_type">
@@ -259,7 +259,7 @@
                                                         <div class="form-floating mb-3">
                                                             <select class="form-control  p-3" id="appointment_time"
                                                                 name="appointment_time">
-                                                                <option>Select Time of Appointment</option>
+                                                                <option>Select Time of Appointment *</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -269,7 +269,7 @@
                                                         <input type="text" class="form-control"
                                                             id="floatingInput reason" name="reason"
                                                             placeholder="Reason For Appointment" />
-                                                        <label for="floatingInput">Reason for Appointment</label>
+                                                        <label for="floatingInput">Reason for Appointment <span style="color: red;">*</span></label>
                                                     </div>
                                                     <div class="d-flex mt-1 justify-content-between">
                                                         <div class="form-check">
