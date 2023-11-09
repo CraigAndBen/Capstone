@@ -113,12 +113,13 @@
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
 
-                <form action="{{route('admin.report.save')}}" method="POST">
+                <form action="{{route('admin.gender.report.save')}}" method="POST">
                     @csrf
                     <input type="hidden" name="reference" value="{{$reference}}">
                     <input type="hidden" name="date" value="{{$currentDate}}">
                     <input type="hidden" name="time" value="{{$currentTime}}">
                     <input type="hidden" name="title" value="{{$title}}">
+                    <input type="hidden" name="type" value="gender">
                     <input type="hidden" name="route" value="admin.analytics.patient.gender">
                     <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
                     <button type="submit" class="btn btn-success">Done</button>

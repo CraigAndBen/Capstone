@@ -100,8 +100,18 @@
         </div>
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('admin.analytics.patient.diagnose') }}" class="btn btn-danger">Back</a>
+                <form action="{{route('admin.diagnose.report.save')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="reference" value="{{$reference}}">
+                    <input type="hidden" name="date" value="{{$currentDate}}">
+                    <input type="hidden" name="time" value="{{$currentTime}}">
+                    <input type="hidden" name="title" value="{{$title}}">
+                    <input type="hidden" name="type" value="gender">
+                    <input type="hidden" name="route" value="admin.analytics.patient.gender">
+                    <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
+                    <button type="submit" class="btn btn-success">Done</button>
+                    <a id="back" href="{{ route('admin.analytics.patient.diagnose') }}" class="btn btn-danger">Back</a>
+                </form>
             </div>
             <div class="col-2">
             </div>

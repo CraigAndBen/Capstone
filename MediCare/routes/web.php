@@ -220,12 +220,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     //Report
     Route::post('/admin/gender/report', [AdminController::class, 'genderReport'])->name('admin.gender.report');
+    Route::post('/admin/gender/report/save', [AdminController::class, 'genderReportSave'])->name('admin.gender.report.save');
     Route::post('/admin/age/report', [AdminController::class, 'ageReport'])->name('admin.age.report');
+    Route::post('/admin/age/report/save', [AdminController::class, 'ageReportSave'])->name('admin.age.report.save');
     Route::post('/admin/admitted/report', [AdminController::class, 'admittedDemoReport'])->name('admin.admitted.report');
+    Route::post('/admin/admitted/report/save', [AdminController::class, 'admittedDemoReportSave'])->name('admin.admitted.report.save');
     Route::post('/admin/outpatient/report', [AdminController::class, 'outpatientDemoReport'])->name('admin.outpatient.report');
+    Route::post('/admin/outpatient/report/save', [AdminController::class, 'outpatientDemoReportSave'])->name('admin.outpatient.report.save');
     Route::post('/admin/diagnose/report', [AdminController::class, 'diagnoseReport'])->name('admin.diagnose.report');
+    Route::post('/admin/diagnose/report/save', [AdminController::class, 'diagnoseReportSave'])->name('admin.diagnose.report.save');
     Route::post('/admin/diagnose_trend/report', [AdminController::class, 'diagnoseTrendReport'])->name('admin.diagnose.trend.report');
-    Route::post('/admin/report/save', [AdminController::class, 'saveReport'])->name('admin.report.save');
+    Route::post('/admin/diagnose_trend/report/save', [AdminController::class, 'diagnoseTrendReportSave'])->name('admin.diagnose.trend.report.save');
 
 
 });
