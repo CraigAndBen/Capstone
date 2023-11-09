@@ -26,9 +26,9 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first">
             <div class="col-7">
-                <h5>Report Type: <i><b>Age Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>{{$title}}</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
+                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate))}}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
                 <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>

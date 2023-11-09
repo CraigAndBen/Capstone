@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use auth;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Report;
@@ -13,6 +12,7 @@ use App\Models\Medication;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -1263,7 +1263,6 @@ class AdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
-        $reference = 'GAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
@@ -1283,14 +1282,25 @@ class AdminController extends Controller
                     ->whereBetween('admitted_date', [$startDate, $endDate])
                     ->orWhereBetween('date', [$startDate, $endDate])
                     ->get();
+
+                $title = 'Patient Gendar Analytics Report';
+                $reference = 'PGAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
             } else if ($type == 'admitted') {
                 $patients = Patient::select('gender')
                     ->whereBetween('admitted_date', [$startDate, $endDate])
                     ->get();
+
+                $title = 'Admitted Patient Gendar Analytics Report';
+                $reference = 'APGAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+                
             } else if ($type == 'outpatient') {
                 $patients = Patient::select('gender')
                     ->whereBetween('date', [$startDate, $endDate])
                     ->get();
+                
+                $title = 'Outpatient Gendar Analytics Report';
+                $reference = 'OGAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
             }
             // Count the number of male and female patients for the current month
             $maleCount = $patients->where('gender', 'male')->count();
@@ -1312,7 +1322,7 @@ class AdminController extends Controller
 
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
-        return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts', 'reference'));
+        return view('admin.report.gender_report', compact('genderCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalGenderCounts', 'reference', 'title'));
     }
 
     public function patientAgeDemo()
@@ -1727,7 +1737,6 @@ class AdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
-        $reference = 'AAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $type = $request->input('type');
 
@@ -1749,6 +1758,9 @@ class AdminController extends Controller
 
             $uniqueCombinedYears = array_unique($combinedYears);
 
+            $title = 'Patient Age Analytics Report';
+            $reference = 'PAAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         } else if ($type == 'admitted') {
 
             $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
@@ -1759,6 +1771,9 @@ class AdminController extends Controller
 
             $uniqueCombinedYears = array_unique($admittedYears);
 
+            $title = 'Admitted Patient Age Analytics Report';
+            $reference = 'APAAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         } else if ($type == 'outpatient') {
 
             $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
@@ -1768,6 +1783,10 @@ class AdminController extends Controller
                 ->toArray();
 
             $uniqueCombinedYears = array_unique($admittedYears);
+
+            $title = 'Outpatient Age Analytics Report';
+            $reference = 'OAAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         }
 
         $totalPatientCount = 0;
@@ -1840,7 +1859,7 @@ class AdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
 
-        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount', 'reference'));
+        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount', 'reference','title'));
 
     }
 
@@ -1979,9 +1998,11 @@ class AdminController extends Controller
             ];
         }
 
+        $title = 'Admitted Patient Analytics Report';
+
         $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
 
-        return view('admin.report.admit_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference'));
+        return view('admin.report.admit_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference', 'title'));
     }
 
     public function outpatientDemo()
@@ -2086,7 +2107,7 @@ class AdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
-        $reference = 'APAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+        $reference = 'OAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $admittedYears = Patient::select(DB::raw('YEAR(date) as year'))
             ->distinct()
@@ -2116,7 +2137,9 @@ class AdminController extends Controller
 
         $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
 
-        return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference'));
+        $title = 'Outpatient Analytics Report';
+
+        return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference','title'));
 
     }
     
@@ -2154,8 +2177,9 @@ class AdminController extends Controller
 
         $uniqueCombinedYears = array_unique($combinedYears);
         $type = 'patient';
+        $title = 'Patient Diagnose Analytics';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
     }
 
     public function admittedDiagnoseDemo()
@@ -2186,8 +2210,9 @@ class AdminController extends Controller
         $uniqueCombinedYears = $admittedYears;
 
         $type = 'admitted';
+        $title = 'Admitted Patient Diagnose Analytics';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
     }
 
     public function outpatientDiagnoseDemo()
@@ -2218,8 +2243,9 @@ class AdminController extends Controller
         $uniqueCombinedYears = $outpatientYears;
 
         $type = 'outpatient';
+        $title = 'Outpatient Diagnose Analytics';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
     }
 
     public function diagnoseSearch(Request $request)
@@ -2265,6 +2291,8 @@ class AdminController extends Controller
             $combinedYears = array_merge($admittedYears, $outpatientYears);
 
             $uniqueCombinedYears = array_unique($combinedYears);
+            
+            $title = 'Patient Diagnose Analytics';
 
         } else if ($type == 'admitted') {
 
@@ -2283,6 +2311,8 @@ class AdminController extends Controller
 
             $uniqueCombinedYears = $admittedYears;
 
+            $title = 'Admitted Patient Diagnose Analytics';
+
         } else if ($type == 'outpatient') {
 
             $AdmittedDiagnoseData = Diagnose::select('diagnose')
@@ -2299,6 +2329,9 @@ class AdminController extends Controller
                 ->toArray();
 
             $uniqueCombinedYears = $outpatientYears;
+
+            $title = 'Outpatient Diagnose Analytics';
+
         }
 
         // Initialize an array to store diagnose patient counts for each month
@@ -2339,9 +2372,7 @@ class AdminController extends Controller
             ];
         }
 
-        $type = 'patient';
-
-        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate', 'type'));
+        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate', 'type','title'));
     }
 
     public function diagnoseReport(Request $request)
@@ -2356,10 +2387,20 @@ class AdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
-        $reference = 'DPAP-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         // Initialize an array to store diagnose patient counts for each month
         $diagnosePatientCountsByMonth = [];
+
+        if($type == 'patient'){
+            $title = 'Patient Diagnose Analytics Report';
+            $reference = 'PDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+        } else if ($type == 'admitted'){
+            $title = 'Admitted Patient Diagnose Analytics Report';
+            $reference = 'APDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+        } else if($type == 'outpatient'){
+            $title = 'Outpatient Diagnose Analytics Report';
+            $reference = 'ODAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+        }
 
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
@@ -2386,7 +2427,6 @@ class AdminController extends Controller
                     ->where('patient_type', 'outpatient')
                     ->where('diagnose', $specificDiagnosis)
                     ->count();
-
             }
 
             // Store the diagnose patient count for the current month in the array
@@ -2396,7 +2436,7 @@ class AdminController extends Controller
             ];
         }
 
-        return view('admin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'specificDiagnosis', 'reference'));
+        return view('admin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'specificDiagnosis', 'reference','title'));
     }
 
     public function patientDiagnoseTrend()
@@ -2733,7 +2773,6 @@ class AdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
-        $reference = 'DTR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         // The specific diagnosis you want to analyze
         $specificDiagnosis = $request->input('diagnose');
@@ -2762,6 +2801,7 @@ class AdminController extends Controller
                 ->get();
             
             $title = 'Patient Diagnose Trend Report';
+            $reference = 'PDTAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         } else if ($type == 'admitted') {
 
@@ -2788,7 +2828,8 @@ class AdminController extends Controller
                 ->get();
             
             $title = 'Admitted Patient Diagnose Trend Report';
-            
+            $reference = 'APDTAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         } else if ($type == 'outpatient') {
 
                 $diagnoseData = Diagnose::select('diagnose')
@@ -2814,6 +2855,7 @@ class AdminController extends Controller
                 ->get();  
             
             $title = 'Outpatient Diagnose Trend Report';
+            $reference = 'ODTAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         }
 
         // Create an array of years
@@ -2871,6 +2913,36 @@ class AdminController extends Controller
         $patientMonthCounts = array_column($combinedData, 'admitted_count');
 
         return view('admin.report.diagnose_trend_report', compact('year', 'currentTime', 'currentDate', 'specificDiagnosis', 'years', 'patientYearCounts', 'months', 'patientMonthCounts','type','reference','title'));
+    }
+
+    public function saveReport(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $title = $request->input('title');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $content =
+            '             Appointment Report
+            ------------------------
+
+            Report Reference Number: '.$reference.'
+            Report Date and Time: '.$readableDate.' '. $time .'
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => $title,
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
     }
 
 

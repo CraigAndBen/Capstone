@@ -225,6 +225,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/outpatient/report', [AdminController::class, 'outpatientDemoReport'])->name('admin.outpatient.report');
     Route::post('/admin/diagnose/report', [AdminController::class, 'diagnoseReport'])->name('admin.diagnose.report');
     Route::post('/admin/diagnose_trend/report', [AdminController::class, 'diagnoseTrendReport'])->name('admin.diagnose.trend.report');
+    Route::post('/admin/report/save', [AdminController::class, 'saveReport'])->name('admin.report.save');
 
 
 });

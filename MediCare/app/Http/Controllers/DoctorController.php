@@ -78,7 +78,7 @@ class DoctorController extends Controller
             ->get();
 
         $appointmentCount = $currentMonthAppointments->count();
-        $limitCurrentMonthAppointments = $currentMonthAppointments->take(5);
+        $limitCurrentMonthAppointments = $currentMonthAppointments->take(3);
 
         // Retrieve the monthly appointments for the specific doctor for the current year
         $monthlyAppointments = DB::table('appointments')
