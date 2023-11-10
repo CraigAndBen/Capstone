@@ -356,6 +356,10 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/super_admin/diagnose_trend/report', [SuperAdminController::class, 'diagnoseTrendReport'])->name('superadmin.diagnose.trend.report');
     Route::post('/super_admin/diagnose_trend/report/save', [SuperAdminController::class, 'diagnoseTrendReportSave'])->name('superadmin.diagnose.trend.report.save');
 
+    // Report History
+    Route::get('/superadmin/report/history', [SuperAdminController::class, 'reportHistory'])->name('superadmin.report.history');
+    Route::get('/superadmin/report/history/search', [SuperAdminController::class, 'reportHistorySearch'])->name('superadmin.report.history.search');
+
     // Delete User
     Route::post('/superadmin/account/delete', [SuperAdminController::class, 'deleteUser'])->name('superadmin.delete');
 

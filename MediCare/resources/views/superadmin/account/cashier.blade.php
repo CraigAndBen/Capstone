@@ -382,5 +382,14 @@
                     modal.find('#user_id').val(user_id);
                 });
             });
+            function formatPhoneNumber(input) {
+                    // Remove any non-numeric characters
+                    input.value = input.value.replace(/[^0-9+]/g, '');
+
+                    // Check if the input starts with "09" and change it to "+639"
+                    if (input.value.startsWith('09')) {
+                        input.value = '+639' + input.value.substring(2);
+                    }
+                }
         </script>
     @endsection

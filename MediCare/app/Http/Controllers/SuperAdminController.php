@@ -4380,6 +4380,24 @@ class SuperAdminController extends Controller
 
     }
 
+    public function reportHistory()
+    {
+
+        $profile = Auth::user();
+        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $doctors = Doctor::all();
+        $reports = Report::orderBy('date', 'desc')->paginate(5);
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        return view('superadmin.appointment.appointment', compact('profile', 'reports', 'limitNotifications','count', 'currentTime', 'currentDate', 'doctors'));
+
+    }
+
     public function notificationRead(Request $request)
     {
 
