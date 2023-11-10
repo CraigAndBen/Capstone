@@ -307,7 +307,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/super_admin/pharmacist/update', [SuperAdminController::class, 'updatePharmacist'])->name('superadmin.update.pharmacist');
     Route::post('/super_admin/pharmacist/update/password', [SuperAdminController::class, 'updatePharmacistPassword'])->name('superadmin.pharmacist.password.update');
 
-    // Analytics
+     // Analytics
     // Gender
     Route::get('/super_admin/analytics/patient/gender', [SuperAdminController::class, 'patientGenderDemo'])->name('superadmin.analytics.patient.gender');
     Route::get('/super_admin/analytics/admitted/gender', [SuperAdminController::class, 'admittedGenderDemo'])->name('superadmin.analytics.admitted.gender');
@@ -343,13 +343,18 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/super_admin/analytics/diagnose_trend/diagnose/search', [SuperAdminController::class, 'diagnoseTrendSearch'])->name('superadmin.analytics.trend.diagnose.search');
 
     //Report
-    Route::post('/superadmin/gender/report', [SuperAdminController::class, 'genderReport'])->name('superadmin.gender.report');
-    Route::post('/superadmin/age/report', [SuperAdminController::class, 'ageReport'])->name('superadmin.age.report');
-    Route::post('/superadmin/admitted/report', [SuperAdminController::class, 'admittedDemoReport'])->name('superadmin.admitted.report');
-    Route::post('/superadmin/outpatient/report', [SuperAdminController::class, 'outpatientDemoReport'])->name('superadmin.outpatient.report');
-    Route::post('/superadmin/appointment/report', [SuperAdminController::class, 'appointmentReport'])->name('superadmin.appointment.report');
-    Route::post('/superadmin/diagnose/report', [SuperAdminController::class, 'diagnoseReport'])->name('superadmin.diagnose.report');
-    Route::post('/superadmin/diagnose_trend/report', [SuperAdminController::class, 'diagnoseTrendReport'])->name('superadmin.diagnose.trend.report');
+    Route::post('/super_admin/gender/report', [SuperAdminController::class, 'genderReport'])->name('superadmin.gender.report');
+    Route::post('/super_admin/gender/report/save', [SuperAdminController::class, 'genderReportSave'])->name('superadmin.gender.report.save');
+    Route::post('/super_admin/age/report', [SuperAdminController::class, 'ageReport'])->name('superadmin.age.report');
+    Route::post('/super_admin/age/report/save', [SuperAdminController::class, 'ageReportSave'])->name('superadmin.age.report.save');
+    Route::post('/super_admin/admitted/report', [SuperAdminController::class, 'admittedDemoReport'])->name('superadmin.admitted.report');
+    Route::post('/super_admin/admitted/report/save', [SuperAdminController::class, 'admittedDemoReportSave'])->name('superadmin.admitted.report.save');
+    Route::post('/super_admin/outpatient/report', [SuperAdminController::class, 'outpatientDemoReport'])->name('superadmin.outpatient.report');
+    Route::post('/super_admin/outpatient/report/save', [SuperAdminController::class, 'outpatientDemoReportSave'])->name('superadmin.outpatient.report.save');
+    Route::post('/super_admin/diagnose/report', [SuperAdminController::class, 'diagnoseReport'])->name('superadmin.diagnose.report');
+    Route::post('/super_admin/diagnose/report/save', [SuperAdminController::class, 'diagnoseReportSave'])->name('superadmin.diagnose.report.save');
+    Route::post('/super_admin/diagnose_trend/report', [SuperAdminController::class, 'diagnoseTrendReport'])->name('superadmin.diagnose.trend.report');
+    Route::post('/super_admin/diagnose_trend/report/save', [SuperAdminController::class, 'diagnoseTrendReportSave'])->name('superadmin.diagnose.trend.report.save');
 
     // Delete User
     Route::post('/superadmin/account/delete', [SuperAdminController::class, 'deleteUser'])->name('superadmin.delete');

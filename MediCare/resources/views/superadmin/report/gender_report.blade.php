@@ -11,6 +11,9 @@
             #back {
                 display: none;
             }
+            #done {
+                display: none;
+            }
         }
 
         @page {
@@ -26,9 +29,9 @@
     <div class="container">
         <div class="row justify-content-first align-items-first">
             <div class="col-7">
-                <h5>Report Type: <i><b>Gender Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>{{$title}}</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
+                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate)) }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
                 <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
@@ -82,7 +85,7 @@
                             $totalMaleCount = 0;
                             $totalFemaleCount = 0;
                         @endphp
-                
+
                         @foreach ($genderCountsByMonth as $data)
                             <tr>
                                 <td>{{ $data['month'] }}</td>
@@ -95,7 +98,7 @@
                                 $totalFemaleCount += $data['female'];
                             @endphp
                         @endforeach
-                
+
                         <tr>
                             <td>Total</td>
                             <td>{{ $totalMaleCount }}</td>
@@ -104,7 +107,7 @@
                         </tr>
                     </tbody>
                 </table>
-                
+
             </div>
             <div class="col-1">
 
@@ -112,8 +115,19 @@
         </div>
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('superadmin.analytics.patient.gender') }}" class="btn btn-danger">Back</a>
+
+                <form action="{{route('superadmin.gender.report.save')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="reference" value="{{$reference}}">
+                    <input type="hidden" name="date" value="{{$currentDate}}">
+                    <input type="hidden" name="time" value="{{$currentTime}}">
+                    <input type="hidden" name="title" value="{{$title}}">
+                    <input type="hidden" name="type" value="gender">
+                    <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
+                    <button id="done" type="submit" class="btn btn-success">Done</button>
+                    <a id="back" href="{{ route('superadmin.analytics.patient.gender') }}" class="btn btn-danger">Back</a>
+                </form>
+
             </div>
             <div class="col-2">
             </div>
@@ -123,52 +137,52 @@
 @endsection
 @section('scripts')
     <script>
-       // Prepare data for the bar graph
-       var months = {!! json_encode(array_column($genderCountsByMonth, 'month')) !!};
-            var maleData = {!! json_encode(array_column($genderCountsByMonth, 'male')) !!};
-            var femaleData = {!! json_encode(array_column($genderCountsByMonth, 'female')) !!};
+        // Prepare data for the bar graph
+        var months = {!! json_encode(array_column($genderCountsByMonth, 'month')) !!};
+        var maleData = {!! json_encode(array_column($genderCountsByMonth, 'male')) !!};
+        var femaleData = {!! json_encode(array_column($genderCountsByMonth, 'female')) !!};
 
-            // Get the chart context and create the bar graph
-            var ctx = document.getElementById('genderDemographicsChart').getContext('2d');
-            var genderDemographicsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Male',
-                        data: maleData,
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
-                        borderWidth: 1,
-                    }, {
-                        label: 'Female',
-                        data: femaleData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.7)', // Red
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Months'
-                            }
+        // Get the chart context and create the bar graph
+        var ctx = document.getElementById('genderDemographicsChart').getContext('2d');
+        var genderDemographicsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Male',
+                    data: maleData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderWidth: 1,
+                }, {
+                    label: 'Female',
+                    data: femaleData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)', // Red
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
                         },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            },
-                            title: {
-                                display: true,
-                                text: 'Gender Count'
-                            }
+                        title: {
+                            display: true,
+                            text: 'Gender Count'
                         }
                     }
                 }
-            });
+            }
+        });
         $(document).ready(function() {
             // Attach a click event handler to the button
             $("#printButton").click(function() {
@@ -178,5 +192,3 @@
         });
     </script>
 @endsection
-
-

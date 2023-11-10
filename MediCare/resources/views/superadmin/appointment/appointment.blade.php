@@ -104,7 +104,7 @@
                                                     <td>{{ ucwords($appointment->last_name) }}</td>
                                                     <td>{{ ucwords($appointment->specialties) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                    <td>{{ ucwords($appointment->appointment_date) }}</td>
+                                                    <td>{{ date('F j, Y', strtotime($appointment->appointment_date)) }}</td>
                                                     <td>{{ ucwords($appointment->appointment_time) }}</td>
                                                     <td>{{ ucwords($appointment->status) }}</td>
                                                     <td class="text-center">
@@ -155,7 +155,7 @@
                         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary text-light">
-                                    <h3 class="modal-title" id="staticBackdropLabel">Appointment Update</h3>
+                                    <h3 class="modal-title text-light" id="staticBackdropLabel">Appointment Information</h3>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -227,16 +227,16 @@
                                         </div>
                                         <div class="mb-3 col-md-6">
                                             <select class="form-control  p-3" id="gender" name="gender" disabled>
-                                                <option>Select Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
+                                                <option value="">Select Gender</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
                                                 <option value="diagnostic appointment">Others</option>
                                             </select>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" id="phone" name="phone"
+                                        <input type="text" class="form-control" id="phone" name="phone"
                                             placeholder="Phone" disabled />
                                         <label for="floatingInput">Phone</label>
                                     </div>

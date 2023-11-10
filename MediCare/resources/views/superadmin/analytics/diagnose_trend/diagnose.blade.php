@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">{{ $title }}</h5>
+                                <h5 class="m-b-10">{{$title}}</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">{{ $title }}</li>
+                                <li class="breadcrumb-item" aria-current="page">{{$title}}</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>{{ $title }}</h1>
+                            <h1>{{$title}}</h1>
                         </div>
                         <div class="card-body">
                             <h3>Ranked Diagnose</h3>
@@ -61,7 +61,7 @@
 
                                 </div>
                             </div>
-
+                            
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -79,12 +79,11 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('superadmin.analytics.trend.diagnose.search') }}"
-                                        method="GET">
+                                    <form action="{{ route('superadmin.analytics.trend.diagnose.search') }}" method="GET">
                                         @csrf
                                         <input type="hidden" name="type" value="{{ $type }}">
                                         <select class="form-control p-3" id="diagnose" name="diagnose">
-                                            <option value="">Select Diagnose</option>
+                                            <option>Select Diagnose</option>
                                             @foreach ($rankedDiagnosis as $diagnose)
                                                 <option value="{{ $diagnose['diagnose'] }}">
                                                     {{ ucwords($diagnose['diagnose']) }}</option>

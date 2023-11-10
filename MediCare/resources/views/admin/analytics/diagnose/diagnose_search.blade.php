@@ -93,7 +93,6 @@
                                     <button type="submit" class="btn btn-primary">Select</button>
                                 </div>
                             </div>
-
                             </form>
                         </div>
                         <hr>

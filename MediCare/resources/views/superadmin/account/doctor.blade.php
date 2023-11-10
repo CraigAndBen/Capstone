@@ -254,7 +254,6 @@
                                                     <option value="">Select a Gender</option>
                                                     <option value="female">Female</option>
                                                     <option value="male">Male</option>
-                                                    <option value="other">Other</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -268,9 +267,10 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="number" class="form-control" id="phone"
-                                                        placeholder="Phone" name="phone" />
-                                                    <label for="floatingInput">Phone</label>
+                                                    <input type="text" class="form-control" id="phone"
+                                                        name="phone" placeholder="Phone"
+                                                        oninput="formatPhoneNumber(this);" />
+                                                    <label for="phoneInput">Phone</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -441,7 +441,6 @@
                                                 <option>Select a Gender</option>
                                                 <option value="female">Female</option>
                                                 <option value="male">Male</option>
-                                                <option value="other">Other</option>
                                             </select>
                                         </div>
                                     </div>
@@ -455,9 +454,10 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
-                                                <input type="number" class="form-control" id="phone"
-                                                    placeholder="Phone" name="phone" disabled/>
-                                                <label for="floatingInput">Phone</label>
+                                                <input type="text" class="form-control" id="phone"
+                                                    name="phone" placeholder="Phone"
+                                                    oninput="formatPhoneNumber(this);" disabled/>
+                                                <label for="phoneInput">Phone</label>
                                             </div>
                                         </div>
                                     </div>
@@ -629,14 +629,14 @@
                                                     <option value="">Select a Gender</option>
                                                     <option value="female">Female</option>
                                                     <option value="male">Male</option>
-                                                    <option value="other">Other</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-floating">
-                                                    <input type="number" class="form-control mb-3" id="floatingInput phone"
-                                                        placeholder="Last Name" name="phone" />
-                                                    <label for="floatingInput">Phone</label>
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="phone"
+                                                        name="phone" placeholder="Phone"
+                                                        oninput="formatPhoneNumber(this);" />
+                                                    <label for="phoneInput">Phone</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -667,7 +667,7 @@
                                         <div class="form-floating my-2">
                                             <input type="text" name="specialties" class="form-control mb-3"
                                                 id="floatingInput specialties" placeholder="Specialties" />
-                                            <label for="floatingInput">Speacialties</label>
+                                            <label for="floatingInput">Specialties</label>
                                         </div>
                                         <hr>
                                         <div class="row my-2">
@@ -889,5 +889,14 @@
                     modal.find('#user_id').val(user_id);
                 });
             });
+            function formatPhoneNumber(input) {
+                    // Remove any non-numeric characters
+                    input.value = input.value.replace(/[^0-9+]/g, '');
+
+                    // Check if the input starts with "09" and change it to "+639"
+                    if (input.value.startsWith('09')) {
+                        input.value = '+639' + input.value.substring(2);
+                    }
+                }
         </script>
     @endsection

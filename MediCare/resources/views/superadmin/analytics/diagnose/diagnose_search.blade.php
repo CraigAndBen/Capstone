@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Diagnose Demographics</h5>
+                                <h5 class="m-b-10">{{$title}}</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Diagnose Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">{{$title}}</li>
                             </ul>
                         </div>
                     </div>
@@ -31,13 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            @if ($type == 'patient')
-                                <h1>Patient Diagnose Analytics</h1>
-                            @elseif ($type == 'admitted')
-                                <h1>Admitted Patient Diagnose Analytics</h1>
-                            @elseif ($type == 'outpatient')
-                                <h1>Outpatient Diagnose Analytics</h1>
-                            @endif
+                            <h1>{{$title}}</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -99,7 +93,6 @@
                                     <button type="submit" class="btn btn-primary">Select</button>
                                 </div>
                             </div>
-
                             </form>
                         </div>
                         <hr>

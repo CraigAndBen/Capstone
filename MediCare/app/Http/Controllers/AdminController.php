@@ -357,6 +357,7 @@ class AdminController extends Controller
         return response()->json($medications);
     }
 
+    // Patient
     public function outpatientList()
     {
         $profile = auth()->user();
@@ -888,6 +889,8 @@ class AdminController extends Controller
 
         return $pdf->download('patient_report.pdf');
     }
+
+    // Notification
     public function notification()
     {
 
@@ -946,7 +949,7 @@ class AdminController extends Controller
         }
     }
 
-
+    // Gender Analytics
     public function patientGenderDemo()
     {
         $profile = auth()->user();
@@ -1017,8 +1020,6 @@ class AdminController extends Controller
 
         return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
     }
-
- 
 
     public function admittedGenderDemo()
     {
@@ -1424,6 +1425,7 @@ class AdminController extends Controller
 
     }
 
+    // Age Analytics
     public function patientAgeDemo()
     {
         $profile = auth()->user();
@@ -2084,6 +2086,7 @@ class AdminController extends Controller
 
     }
 
+    // Admitted Analytics
     public function admittedDemo()
     {
         $profile = auth()->user();
@@ -2129,7 +2132,6 @@ class AdminController extends Controller
 
         return view('admin.analytics.admitted.admitted', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
     }
-
 
     public function admittedDemoSearch(Request $request)
     {
@@ -2300,7 +2302,7 @@ class AdminController extends Controller
     }
 
     
-
+    // Outpatient Analytics
     public function outpatientDemo()
     {
         $profile = auth()->user();
@@ -2509,9 +2511,10 @@ class AdminController extends Controller
 
         $totalAdmittedPatients = array_sum(array_column($admitPatientCountsByMonth, 'count'));
 
-        return redirect()->route('admin.analytics.admitted', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
+        return redirect()->route('admin.analytics.outpatient', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
     }
     
+    // Diagnose Analytics
     public function patientDiagnoseDemo()
     {
         $profile = auth()->user();
@@ -2740,6 +2743,7 @@ class AdminController extends Controller
                 'count' => $diagnosePatientCounts,
             ];
         }
+        
 
         return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate', 'type','title'));
     }
@@ -2874,6 +2878,7 @@ class AdminController extends Controller
         return redirect()->route('admin.analytics.patient.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
     }
 
+    // Diagnose Trend Analytics
     public function patientDiagnoseTrend()
     {
         $profile = auth()->user();

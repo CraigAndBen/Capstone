@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Admitted Patient Demographics</h5>
+                                <h5 class="m-b-10">Admitted Patient Analytics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Admitted Patient Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Admitted Patient Analytics</li>
                             </ul>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
 
                                 </div>
                                 <div class="col-md-8">
-                                    <form action="{{ route('admin.analytics.admitted.search') }}" method="GET">
+                                    <form action="{{ route('superadmin.analytics.admitted.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="year" name="year">
                                             <option value="">Select Year</option>
@@ -89,7 +89,7 @@
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
                                 <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
-                                    <form action="{{ route('admin.admitted.report') }}" method="POST">
+                                    <form action="{{ route('superadmin.admitted.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>

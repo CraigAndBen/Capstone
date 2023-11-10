@@ -333,11 +333,9 @@
                                 Trend</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.analytics.patient.diagnose_trend') }}">All Patient</a>
-                            </li>
+                                    href="{{ route('superadmin.analytics.patient.diagnose_trend') }}">All Patient</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.analytics.admitted.diagnose_trend') }}">Admitted</a>
-                            </li>
+                                    href="{{ route('superadmin.analytics.admitted.diagnose_trend') }}">Admitted</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.analytics.outpatient.diagnose_trend') }}">Outpatient</a>
                             </li>

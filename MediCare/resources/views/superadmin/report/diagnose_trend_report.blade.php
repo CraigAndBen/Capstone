@@ -11,6 +11,9 @@
             #back {
                 display: none;
             }
+            #done {
+                display: none;
+            }
         }
 
         @page {
@@ -28,7 +31,7 @@
             <div class="col-7">
                 <h5>Report Type: <i><b>{{$title}}</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
+                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate))}}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
                 <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
@@ -168,8 +171,17 @@
         </div>
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('superadmin.analytics.patient.diagnose_trend') }}" class="btn btn-danger">Back</a>
+                <form action="{{route('superadmin.diagnose.trend.report.save')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="reference" value="{{$reference}}">
+                    <input type="hidden" name="date" value="{{$currentDate}}">
+                    <input type="hidden" name="time" value="{{$currentTime}}">
+                    <input type="hidden" name="title" value="{{$title}}">
+                    <input type="hidden" name="type" value="gender">
+                    <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
+                    <button id="done" type="submit" class="btn btn-success">Done</button>
+                    <a id="back" href="{{ route('superadmin.analytics.patient.diagnose_trend') }}" class="btn btn-danger">Back</a>
+                </form>
             </div>
             <div class="col-2">
             </div>

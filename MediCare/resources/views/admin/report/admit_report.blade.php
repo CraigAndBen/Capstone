@@ -11,6 +11,9 @@
             #back {
                 display: none;
             }
+            #done {
+                display: none;
+            }
         }
 
         @page {
@@ -103,7 +106,7 @@
                     <input type="hidden" name="type" value="gender">
                     <input type="hidden" name="route" value="admin.analytics.patient.gender">
                     <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
-                    <button type="submit" class="btn btn-success">Done</button>
+                    <button id="done" type="submit" class="btn btn-success">Done</button>
                     <a id="back" href="{{ route('admin.analytics.admitted') }}" class="btn btn-danger">Back</a>
                 </form>
             </div>
