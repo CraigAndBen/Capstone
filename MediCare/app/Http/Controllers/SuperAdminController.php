@@ -4387,14 +4387,14 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $doctors = Doctor::all();
-        $reports = Report::orderBy('date', 'desc')->paginate(5);
+        $users = User::all();
+        $reports = Report::orderBy('date', 'desc')->paginate(6);
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('superadmin.appointment.appointment', compact('profile', 'reports', 'limitNotifications','count', 'currentTime', 'currentDate', 'doctors'));
+        return view('superadmin.reports.report', compact('profile', 'reports', 'users','limitNotifications','count', 'currentTime', 'currentDate'));
 
     }
 

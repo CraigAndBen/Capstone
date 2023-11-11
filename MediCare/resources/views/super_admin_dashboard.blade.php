@@ -373,6 +373,18 @@
 
                         </ul>
                     </li>
+                    <li class="pc-item pc-caption">
+                        <label>Report</label>
+                        <i class="ti ti-apps"></i>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Report List</span><span
+                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.report.history') }}">Report History</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
