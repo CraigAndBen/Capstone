@@ -189,7 +189,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/analytics/admitted/gender', [AdminController::class, 'admittedGenderDemo'])->name('admin.analytics.admitted.gender');
     Route::get('/admin/analytics/outpatient/gender', [AdminController::class, 'outpatientGenderDemo'])->name('admin.analytics.outpatient.gender');
     Route::get('/admin/analytics/patient/gender/search', [AdminController::class, 'patientGenderSearch'])->name('admin.analytics.patient.gender.search');
-    
+
     //Age
     Route::get('/admin/analytics/patient/age', [AdminController::class, 'patientAgeDemo'])->name('admin.analytics.patient.age');
     Route::get('/admin/analytics/admitted/age', [AdminController::class, 'admittedAgeDemo'])->name('admin.analytics.admitted.age');
@@ -211,7 +211,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/analytics/diagnose/search', [AdminController::class, 'diagnoseSearch'])->name('admin.analytics.diagnose.search');
 
     //Trend
-    
+
     //Diagnose Trend
     Route::get('/admin/analytics/diagnose_trend/patient', [AdminController::class, 'patientDiagnoseTrend'])->name('admin.analytics.patient.diagnose_trend');
     Route::get('/admin/analytics/diagnose_trend/admitted', [AdminController::class, 'admittedDiagnoseTrend'])->name('admin.analytics.admitted.diagnose_trend');
@@ -307,13 +307,13 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/super_admin/pharmacist/update', [SuperAdminController::class, 'updatePharmacist'])->name('superadmin.update.pharmacist');
     Route::post('/super_admin/pharmacist/update/password', [SuperAdminController::class, 'updatePharmacistPassword'])->name('superadmin.pharmacist.password.update');
 
-     // Analytics
+    // Analytics
     // Gender
     Route::get('/super_admin/analytics/patient/gender', [SuperAdminController::class, 'patientGenderDemo'])->name('superadmin.analytics.patient.gender');
     Route::get('/super_admin/analytics/admitted/gender', [SuperAdminController::class, 'admittedGenderDemo'])->name('superadmin.analytics.admitted.gender');
     Route::get('/super_admin/analytics/outpatient/gender', [SuperAdminController::class, 'outpatientGenderDemo'])->name('superadmin.analytics.outpatient.gender');
     Route::get('/super_admin/analytics/patient/gender/search', [SuperAdminController::class, 'patientGenderSearch'])->name('superadmin.analytics.patient.gender.search');
-    
+
     //Age
     Route::get('/super_admin/analytics/patient/age', [SuperAdminController::class, 'patientAgeDemo'])->name('superadmin.analytics.patient.age');
     Route::get('/super_admin/analytics/admitted/age', [SuperAdminController::class, 'admittedAgeDemo'])->name('superadmin.analytics.admitted.age');
@@ -335,7 +335,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/super_admin/analytics/diagnose/search', [SuperAdminController::class, 'diagnoseSearch'])->name('superadmin.analytics.diagnose.search');
 
     //Trend
-    
+
     //Diagnose Trend
     Route::get('/super_admin/analytics/diagnose_trend/patient', [SuperAdminController::class, 'patientDiagnoseTrend'])->name('superadmin.analytics.patient.diagnose_trend');
     Route::get('/super_admin/analytics/diagnose_trend/admitted', [SuperAdminController::class, 'admittedDiagnoseTrend'])->name('superadmin.analytics.admitted.diagnose_trend');
@@ -408,7 +408,8 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/superadmin/product/list/report', [SuperAdminController::class, 'requestListReport'])->name('superadmin.request.list.report');
     Route::get('/superadmin/medicines_report/report', [SuperAdminController::class, 'medicineReport'])->name('superadmin.medicines.report');
     Route::get('/superadmin/products_report/report', [SuperAdminController::class, 'productsReport'])->name('superadmin.products.report');
-    Route::get('/superadmin/expiry/report', [SuperAdminController::class, 'expiryReport'])->name('superadmin.product.expiry.report');
+    Route::get('/superadmin/expiry/report/view', [SupplyOfficerController::class, 'viewExpiryReport'])->name('superadmin.product.expiry.report.view');
+    Route::get('/superadmin/expiry/report/download', [SupplyOfficerController::class, 'downloadExpiryReport'])->name('superadmin.product.expiry.report.download');
 
     // Super Admin Logout
     Route::get('/super_admin/logout', [SuperAdminController::class, 'superAdminLogout'])->name('superadmin.logout');
@@ -473,11 +474,16 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::post('/supply_officer/inventorydemo/report', [SupplyOfficerController::class, 'inventoryReport'])->name('supply_officer.inventory.report');
     Route::post('/supply_officer/saledemo/report', [SupplyOfficerController::class, 'saleReport'])->name('supply_officer.sale.report');
     Route::post('/supply_officer/requestdemo/report', [SupplyOfficerController::class, 'requestReport'])->name('supply_officer.request.report');
-    Route::get('/supply_officer/product/report', [SupplyOfficerController::class, 'productReport'])->name('supply_officer.product.report');
-    Route::get('/supply_officer/request/list/report', [SupplyOfficerController::class, 'requestListReport'])->name('supply_officer.request.list.report');
+    Route::get('/supply_officer/product/report/view', [SupplyOfficerController::class, 'viewProductReport'])->name('supply_officer.product.report.view');
+    Route::get('/supply_officer/product/report/download', [SupplyOfficerController::class, 'downloadProductReport'])->name('supply_officer.product.report.download');
+    Route::get('/supply_officer/category/report/view', [SupplyOfficerController::class, 'viewCategoryReport'])->name('supply_officer.category.report.view');
+    Route::get('/supply_officer/category/report/download', [SupplyOfficerController::class, 'downloadCategoryReport'])->name('supply_officer.category.report.download');
+    Route::get('/supply_officer/request/list/report/view', [SupplyOfficerController::class, 'viewRequestListReport'])->name('supply_officer.request.list.report.view');
+    Route::get('/supply_officer/request/list/report/download', [SupplyOfficerController::class, 'downloadRequestListReport'])->name('supply_officer.request.list.report.download');
     Route::get('/supply_officer/medicines_report/report', [SupplyOfficerController::class, 'medicineReport'])->name('supply_officer.medicines.report');
     Route::get('/supply_officer/products_report/report', [SupplyOfficerController::class, 'productsReport'])->name('supply_officer.products.report');
-    Route::get('/supply_officer/expiry/report', [SupplyOfficerController::class, 'expiryReport'])->name('supply_officer.product.expiry.report');
+    Route::get('/supply_officer/expiry/report/view', [SupplyOfficerController::class, 'viewExpiryReport'])->name('supply_officer.product.expiry.report.view');
+    Route::get('/supply_officer/expiry/report/download', [SupplyOfficerController::class, 'downloadExpiryReport'])->name('supply_officer.product.expiry.report.download');
 
     // Logout
     Route::get('/supply_officer/logout', [SupplyOfficerController::class, 'supplyOfficerLogout'])->name('supply_officer.logout');
@@ -535,8 +541,10 @@ Route::middleware(['auth', 'role:pharmacist'])->group(function () {
     Route::delete('/pharmacist/product/delete/{id}', [PharmacistController::class, 'productDelete'])->name('pharmacist.product.delete');
 
     // report
-    Route::get('/pharmacist/product/report', [PharmacistController::class, 'productReport'])->name('pharmacist.product.report');
-    Route::get('/pharmacist/product/medicine_report', [PharmacistController::class, 'medicineReport'])->name('pharmacist.medicine.report');
+    Route::get('/pharmacist/product/report/view', [PharmacistController::class, 'viewProductReport'])->name('pharmacist.product.report.view');
+    Route::get('/pharmacist/product/report/download', [PharmacistController::class, 'downloadProductReport'])->name('pharmacist.product.report.download');
+    Route::get('/pharmacist/product/medicine_report/view', [PharmacistController::class, 'viewMedicineReport'])->name('pharmacist.medicine.report.view');
+    Route::get('/pharmacist/product/medicine_report/download', [PharmacistController::class, 'downloadMedicineReport'])->name('pharmacist.medicine.report.download');
 
 
 
@@ -569,8 +577,13 @@ Route::middleware(['auth', 'role:cashier'])->group(function () {
     Route::delete('/cashier/product/purchase/remove/{key}', [CashierController::class, 'removeProduct'])->name('cashier.product.purchase.remove');
     Route::post('/cashier/product/purchase/receipt', [CashierController::class, 'receipt'])->name('cashier.product.purchase.receipt');
 
+
+
+
+
     // Report
-    Route::get('/cashier/purchase/report', [CashierController::class, 'purchaseReport'])->name('cashier.purchase.report');
+    Route::get('/cashier/purchase/report/view', [CashierController::class, 'viewPurchaseReport'])->name('cashier.purchase.report.view');
+    Route::get('/cashier/purchase/report/download', [CashierController::class, 'downloadPurchaseReport'])->name('cashier.purchase.report.download');
 
 
     // Logout

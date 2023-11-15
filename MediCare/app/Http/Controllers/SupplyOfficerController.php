@@ -228,7 +228,7 @@ class SupplyOfficerController extends Controller
 
     }
 
-    public function productReport(Request $request)
+    public function viewProductReport(Request $request)
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -236,11 +236,50 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $today = Carbon::now();
         $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
-        
+
         $products = Product::orderBy('expiration', 'asc')->get();
         $categories = Category::all();
 
-        return view('supply_officer.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories'));
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.product_report', $data);
+
+        return $pdf->stream('item_list_report.pdf');
+
+        //return view('supply_officer.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories'));
+    }
+
+    public function downloadProductReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $today = Carbon::now();
+        $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
+
+        $products = Product::orderBy('expiration', 'asc')->get();
+        $categories = Category::all();
+
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.product_report', $data);
+
+        return $pdf->download('item_list_report.pdf');
+
+        //return view('supply_officer.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories'));
     }
 
     public function productStore(Request $request)
@@ -351,7 +390,7 @@ class SupplyOfficerController extends Controller
 
     }
 
-    public function expiryReport()
+    public function viewExpiryReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -372,8 +411,57 @@ class SupplyOfficerController extends Controller
             ->get();
 
         // Display the list of products
-        return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
+
+        $data = [
+            'categories' => $categories,
+            'products' => $products,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.expiry_report', $data);
+
+        return $pdf->stream('expiry_item_report.pdf');
+        //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
+
+    public function downloadExpiryReport()
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $categories = Product::paginate(5);
+
+        $currentDate = Carbon::now();
+
+        // Calculate the date three month from the current date
+        $threeMonthFromNow = $currentDate->copy()->addMonths(3);
+
+        // Retrieve products with expiration dates within the date range
+        $products = Product::where('expiration', '>', $currentDate)
+            ->where('expiration', '<=', $threeMonthFromNow)
+            ->orderBy('expiration', 'asc')
+            ->get();
+
+        // Display the list of products
+
+        $data = [
+            'categories' => $categories,
+            'products' => $products,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.expiry_report', $data);
+
+        return $pdf->download('expiry_item_report.pdf');
+        //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
+    }
+    
     //Category
     public function categoryList()
     {
@@ -436,6 +524,58 @@ class SupplyOfficerController extends Controller
         return redirect('/supply_officer/category')->with('success', 'Category Deleted');
     }
 
+    public function viewCategoryReport()
+    {
+
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $products = Product::with('category')->get();
+        $categories = Category::with('products')->get();
+
+
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.category_report', $data);
+
+        return $pdf->stream('category_list_report.pdf');
+        //return view('supply_officer.inventory.category', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
+
+    }
+
+    public function downloadCategoryReport()
+    {
+
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $products = Product::with('category')->get();
+        $categories = Category::with('products')->get();
+
+
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.category_report', $data);
+
+        return $pdf->download('category_list_report.pdf');
+        //return view('supply_officer.inventory.category', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
+
+    }
+
     public function requestlist()
     {
 
@@ -453,8 +593,8 @@ class SupplyOfficerController extends Controller
 
     }
 
-    
-    public function requestListReport()
+
+    public function viewRequestListReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -463,7 +603,44 @@ class SupplyOfficerController extends Controller
         $requests = Request_Form::all();
         $products = Product::all();
 
-        return view('supply_officer.report.request_list_report', compact( 'currentTime', 'currentDate', 'requests','products'));
+        $data = [
+            'requests' => $requests,
+            'products' => $products,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.request_list_report', $data);
+
+        return $pdf->stream('request_list_report.pdf');
+
+        //return view('supply_officer.report.request_list_report', compact( 'currentTime', 'currentDate', 'requests','products'));
+
+    }
+
+    public function downloadRequestListReport()
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $requests = Request_Form::all();
+        $products = Product::all();
+
+        $data = [
+            'requests' => $requests,
+            'products' => $products,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.request_list_report', $data);
+
+        return $pdf->download('request_list_report.pdf');
+
+        //return view('supply_officer.report.request_list_report', compact( 'currentTime', 'currentDate', 'requests','products'));
 
     }
 
@@ -642,9 +819,9 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
 
         $fromDate = $request->input('start');
-        $formattedFromDate = date("F j, Y", strtotime($fromDate));
+        $formattedFromDate = date("M j, Y", strtotime($fromDate));
         $toDate = $request->input('end');
-        $formattedToDate = date("F j, Y", strtotime($toDate));
+        $formattedToDate = date("M j, Y", strtotime($toDate));
         $selectedOption = $request->input('select');
         $range = $formattedFromDate . " - " . $formattedToDate;
 
@@ -671,16 +848,17 @@ class SupplyOfficerController extends Controller
         }
 
 
-        // Prepare the data for the chart
-
+        
         $chartData = [
 
             'labels' => $result->pluck('label'),
             'data' => $result->pluck('data'),
         ];
 
+
         // Return the view with the chart data
-        return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData', 'range','selectedOption','fromDate','toDate'));
+        return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 
+        'chartData', 'range',      'selectedOption', 'fromDate', 'toDate'));
     }
 
     //Request
@@ -692,179 +870,56 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
 
         $fromDate = $request->input('start');
-        $formattedFromDate = date("F j, Y", strtotime($fromDate));
+        $formattedFromDate = date("M j, Y", strtotime($fromDate));
         $toDate = $request->input('end');
-        $formattedToDate = date("F j, Y", strtotime($toDate));
+        $formattedToDate = date("M j, Y", strtotime($toDate));
         $selectedOption = $request->input('select');
         $range = $formattedFromDate . " - " . $formattedToDate;
 
         // Query your database to get the most requested products or departments based on the selected date range and category
-        if ($selectedOption === 'Item') {
-            // Get the most requested products
-            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
-                ->whereBetween('requests.date', [$fromDate, $toDate])
-                ->groupBy('requests.product_id', 'products.p_name') // Group by product name
-                ->selectRaw('products.p_name as label, COUNT(*) as data')
-                ->orderByDesc('data')
-                ->get();
+     
 
-        } elseif ($selectedOption === 'Department') {
-            // Get the most requested departments
-            $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
-                ->groupBy('department')
-                ->selectRaw('department as label, COUNT(*) as data')
-                ->orderByDesc('data')
-                ->get();
-        } else {
-            // Invalid selection, handle accordingly
-            return redirect()->back()->with('info', 'Invalid selection.');
-        }
+if ($selectedOption === 'Item') {
+    // Get the most requested products with their creation dates
+    $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+        ->whereBetween('requests.created_at', [$fromDate, $toDate])
+        ->groupBy('requests.product_id', 'products.p_name', 'requests.created_at') // Group by product ID and creation date
+        ->selectRaw('products.p_name as label, requests.created_at as request_date, COUNT(*) as data')
+        ->orderByDesc('data')
+        ->get();
+    $reportType = 'item'; // Set the report type to 'item'
 
-        $chartData = [
+} elseif ($selectedOption === 'Department') {
+    // Get the most requested departments with their creation dates
+    $result = Request_Form::whereBetween('created_at', [$fromDate, $toDate])
+        ->groupBy('department', 'created_at') // Group by department and creation date
+        ->selectRaw('department as label, created_at as request_date, COUNT(*) as data')
+        ->orderByDesc('data')
+        ->get();
+    $reportType = 'department'; // Set the report type to 'department'
 
-            'labels' => $result->pluck('label'),
-            'data' => $result->pluck('data'),
-        ];
+} else {
+    // Invalid selection, handle accordingly
+    return redirect()->back()->with('info', 'Invalid selection.');
+}
 
-        // Return the view with the chart data
-        return view('supply_officer.report.request_report', compact('currentTime', 'currentDate', 'chartData', 'range', 'result'));
+// Modify the label generation in the controller
+$labels = $result->map(function ($item) {
+    return date("M j, Y", strtotime($item->request_date)) . ' - ' . $item->label;
+});
+
+$chartData = [
+    'labels' => $labels,
+    'data' => $result->pluck('data'),
+];
+
+// Return the view with the chart data
+return view('supply_officer.report.request_report', compact('currentTime', 'currentDate', 'chartData', 'range', 'result', 'reportType'));
+
     }
 
-     //Salaes Demo
-     public function saleDemo()
-     {
-         $profile = Auth::user();
-         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-         $limitNotifications = $notifications->take(5);
-         $count = $notifications->count();
-         $currentDate = date('Y-m-d');
-         $currentDateTime = Carbon::now();
-         $currentDateTime->setTimezone('Asia/Manila');
-         $currentTime = $currentDateTime->format('h:i A');
- 
-         $requests = Purchase::all();
- 
- 
-         return view('supply_officer.inventory_demo.saledemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
-     }
- 
-     public function saleDemoSearch(Request $request)
-     {
- 
-         $profile = Auth::user();
-         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-         $limitNotifications = $notifications->take(5);
-         $count = $notifications->count();
-         $currentDate = date('Y-m-d');
-         $currentDateTime = Carbon::now();
-         $currentDateTime->setTimezone('Asia/Manila');
-         $currentTime = $currentDateTime->format('h:i A');
- 
-         $fromDate = $request->input('start');
-         $formattedFromDate = date("M j, Y", strtotime($fromDate));
-         $toDate = $request->input('end');
-         $formattedToDate = date("M j, Y", strtotime($toDate));
-         $selectedOption = $request->input('select');
-         $range = $formattedFromDate . " - " . $formattedToDate;
- 
-         // Create an array to store the date range
-         $dateRange = [];
-         $currentDate = $fromDate;
- 
-         while ($currentDate <= $toDate) {
-             $dateRange[] = $currentDate;
-             $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-         }
- 
-         // Fetch data from the purchases table for each product on each day
-         $products = Purchase::select('product_id')
-             ->distinct()
-             ->get();
- 
-         $salesData = [];
- 
-         foreach ($products as $product) {
-             $productId = $product->product_id;
-             $productInfo = Product::find($productId); // Fetch product info from the products table
- 
-             if ($productInfo) {
-                 $productName = $productInfo->p_name;
-                 $salesData[$productName] = [];
- 
-                 foreach ($dateRange as $date) {
-                     $quantity = Purchase::where('product_id', $productId)
-                         ->whereDate('created_at', $date)
-                         ->sum('quantity');
- 
-                     $salesData[$productName][] = $quantity;
-                 }
-             }
-         }
- 
- 
-         return view('supply_officer.inventory_demo.saledemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'fromDate', 'toDate', 'selectedOption'));
-     }
-
-     public function saleReport(Request $request)
-     {
-         $currentDate = date('Y-m-d');
-         $currentDateTime = Carbon::now();
-         $currentDateTime->setTimezone('Asia/Manila');
-         $currentTime = $currentDateTime->format('h:i A');
- 
-         $fromDate = $request->input('start');
-         $formattedFromDate = date("M, j Y", strtotime($fromDate));
-         $toDate = $request->input('end');
-         $formattedToDate = date("M, j Y", strtotime($toDate));
-         $selectedOption = $request->input('select');
-         $range = $formattedFromDate . " - " . $formattedToDate;
- 
-         // Create an array to store the date range
-         $dateRange = [];
-         $currentDate = $fromDate;
- 
-         while ($currentDate <= $toDate) {
-             $dateRange[] = $currentDate;
-             $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-         }
- 
-         // Fetch data from the purchases table for each product on each day
-         $products = Purchase::select('product_id')
-             ->distinct()
-             ->get();
- 
-         $salesData = [];
- 
-         foreach ($products as $product) {
-             $productId = $product->product_id;
-             $productInfo = Product::find($productId); // Fetch product info from the products table
- 
-             if ($productInfo) {
-                 $productName = $productInfo->p_name;
-                 $salesData[$productName] = [];
- 
-                 foreach ($dateRange as $date) {
-                     $quantity = Purchase::where('product_id', $productId)
-                         ->whereDate('created_at', $date)
-                         ->sum('quantity');
- 
-                     $salesData[$productName][] = $quantity;
-                 }
-             }
-         }
- 
- 
-         return view('supply_officer.report.sale_report', compact(
-            'currentTime',
-            'currentDate',
-            'range', 
-            'dateRange', 
-            'salesData', 
-            'products'));
-     }
-
-     //Medicine Demo
-     public function medicineDemo()
+    //Salaes Demo
+    public function saleDemo()
     {
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
@@ -875,7 +930,143 @@ class SupplyOfficerController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-                  // Fetch product prices from the product_price table
+        $requests = Purchase::all();
+
+
+        return view('supply_officer.inventory_demo.saledemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
+    }
+
+    public function saleDemoSearch(Request $request)
+    {
+
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId); // Fetch product info from the products table
+
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+
+                foreach ($dateRange as $date) {
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereDate('created_at', $date)
+                        ->sum('quantity');
+
+                    $salesData[$productName][] = $quantity;
+                }
+            }
+        }
+
+
+        return view('supply_officer.inventory_demo.saledemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'fromDate', 'toDate', 'selectedOption'));
+    }
+
+    public function saleReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M, j Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M, j Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId); // Fetch product info from the products table
+
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+
+                foreach ($dateRange as $date) {
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereDate('created_at', $date)
+                        ->sum('quantity');
+
+                    $salesData[$productName][] = $quantity;
+                }
+            }
+        }
+        
+
+
+        return view('supply_officer.report.sale_report', compact(
+            'currentTime',
+            'currentDate',
+            'range',
+            'dateRange',
+            'salesData',
+            'products'
+        )
+        );
+    }
+
+    //Medicine Demo
+    public function medicineDemo()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Fetch product prices from the product_price table
         $productPrices = Product_price::all();
 
         // Define price range thresholds for categorization
@@ -890,13 +1081,15 @@ class SupplyOfficerController extends Controller
         // Categorize product prices and collect product names
         foreach ($productPrices as $productPrice) {
             $product = $productPrice->product; // Access the related product
-    
+
             if ($product) {
                 $productInfo = [
-                    'name' => $product->p_name, // Use the product's name
-                    'price' => $productPrice->price, // Use the product's price
+                    'name' => $product->p_name,
+                    // Use the product's name
+                    'price' => $productPrice->price,
+                    // Use the product's price
                 ];
-    
+
                 if ($productPrice->price >= $mostThreshold) {
                     $mostValuedProducts[] = $productInfo;
                 } elseif ($productPrice->price >= $mediumThreshold) {
@@ -906,7 +1099,7 @@ class SupplyOfficerController extends Controller
                 }
             }
         }
-    
+
 
         // Calculate the percentages based on counts
         $totalCount = count($productPrices);
@@ -935,7 +1128,8 @@ class SupplyOfficerController extends Controller
             'mostValuedProducts',
             'mediumValuedProducts',
             'lowValuedProducts'
-        ));
+        )
+        );
     }
 
     public function medicineReport(Request $request)
@@ -948,43 +1142,43 @@ class SupplyOfficerController extends Controller
         $selectedOption = $request->input('select');
         $chartData = [];
 
-               // Fetch product prices from the product_price table
-               $productPrices = Product_price::all();
+        // Fetch product prices from the product_price table
+        $productPrices = Product_price::all();
 
-               // Define price range thresholds for categorization
-               $mostThreshold = 100; // Adjust as needed
-               $mediumThreshold = 50; // Adjust as needed
-       
-               // Initialize arrays to store product names in each category
-               $mostValuedProducts = [];
-               $mediumValuedProducts = [];
-               $lowValuedProducts = [];
-       
-               // Categorize product prices and collect product names
-               foreach ($productPrices as $productPrice) {
-                   $product = $productPrice->product; // Access the related product
-       
-                   if ($product) {
-                       if ($productPrice->price >= $mostThreshold) {
-                           $mostValuedProducts[] = $product->p_name; // Use the product's name
-                       } elseif ($productPrice->price >= $mediumThreshold) {
-                           $mediumValuedProducts[] = $product->p_name; // Use the product's name
-                       } else {
-                           $lowValuedProducts[] = $product->p_name; // Use the product's name
-                       }
-                   }
-               }
-       
-               // Calculate the percentages based on counts
-               $totalCount = count($productPrices);
-               $mostValuedCount = count($mostValuedProducts);
-               $mediumValuedCount = count($mediumValuedProducts);
-               $lowValuedCount = count($lowValuedProducts);
-       
-               $mostValuedPercentage = ($totalCount > 0) ? round(($mostValuedCount / $totalCount) * 100) : 0;
-               $mediumValuedPercentage = ($totalCount > 0) ? round(($mediumValuedCount / $totalCount) * 100) : 0;
-               $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
-       
+        // Define price range thresholds for categorization
+        $mostThreshold = 100; // Adjust as needed
+        $mediumThreshold = 50; // Adjust as needed
+
+        // Initialize arrays to store product names in each category
+        $mostValuedProducts = [];
+        $mediumValuedProducts = [];
+        $lowValuedProducts = [];
+
+        // Categorize product prices and collect product names
+        foreach ($productPrices as $productPrice) {
+            $product = $productPrice->product; // Access the related product
+
+            if ($product) {
+                if ($productPrice->price >= $mostThreshold) {
+                    $mostValuedProducts[] = $product->p_name; // Use the product's name
+                } elseif ($productPrice->price >= $mediumThreshold) {
+                    $mediumValuedProducts[] = $product->p_name; // Use the product's name
+                } else {
+                    $lowValuedProducts[] = $product->p_name; // Use the product's name
+                }
+            }
+        }
+
+        // Calculate the percentages based on counts
+        $totalCount = count($productPrices);
+        $mostValuedCount = count($mostValuedProducts);
+        $mediumValuedCount = count($mediumValuedProducts);
+        $lowValuedCount = count($lowValuedProducts);
+
+        $mostValuedPercentage = ($totalCount > 0) ? round(($mostValuedCount / $totalCount) * 100) : 0;
+        $mediumValuedPercentage = ($totalCount > 0) ? round(($mediumValuedCount / $totalCount) * 100) : 0;
+        $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
+
 
         return view('supply_officer.report.medicines_report', compact(
             'chartData',
@@ -999,7 +1193,8 @@ class SupplyOfficerController extends Controller
             'mostValuedProducts',
             'mediumValuedProducts',
             'lowValuedProducts'
-        ));
+        )
+        );
     }
     public function productDemo()
     {
@@ -1011,23 +1206,23 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-    
+
         // Retrieve all products with their prices
         $products = Product::all();
-    
+
         // Initialize arrays to store categorized products
         $fastProducts = [];
         $slowProducts = [];
         $nonMovingProducts = [];
-    
+
         // Create an array to store product prices
         $productPrices = [];
-    
+
         // Categorize products based on request and sales and store them in arrays with ranking
         foreach ($products as $product) {
             $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
             $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
-    
+
             if ($totalRequestQuantity > 0) {
                 $fastProducts[] = [
                     'name' => $product->p_name,
@@ -1044,20 +1239,20 @@ class SupplyOfficerController extends Controller
                     'price' => $product->price,
                 ];
             }
-    
+
             // Store product price in the productPrices array
             $productPrices[$product->p_name] = $product->price;
         }
-    
+
         // Sort the products within the "Fast" and "Slow" categories
         usort($fastProducts, function ($a, $b) {
             return $b['price'] - $a['price'];
         });
-    
+
         usort($slowProducts, function ($a, $b) {
             return $b['price'] - $a['price'];
         });
-    
+
         // Create an array with category names and counts
         $categories = ['Fast', 'Slow', 'Non-Moving'];
         $counts = [
@@ -1065,7 +1260,7 @@ class SupplyOfficerController extends Controller
             'Slow' => count($slowProducts),
             'Non-Moving' => count($nonMovingProducts),
         ];
-    
+
         return view('supply_officer.inventory_demo.productdemo', compact(
             'profile',
             'notifications',
@@ -1079,15 +1274,10 @@ class SupplyOfficerController extends Controller
             'slowProducts',
             'nonMovingProducts',
             'productPrices' // Pass the product prices to the view
-        ));
+        )
+        );
     }
-    
 
-
-    
-
-    
-    
     public function productsReport(Request $request)
     {
         $currentDate = date('Y-m-d');
@@ -1098,7 +1288,7 @@ class SupplyOfficerController extends Controller
         $selectedOption = $request->input('select');
         $chartData = [];
 
-        
+
         // Retrieve all products
         $products = Product::all();
 
@@ -1138,7 +1328,8 @@ class SupplyOfficerController extends Controller
             'slowProducts',
             'nonMovingProducts'
 
-        ));
+        )
+        );
     }
     public function supplyOfficerLogout(Request $request): RedirectResponse
     {

@@ -26,7 +26,7 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h8>Report Type: <i><b>Sale Analytics Report</b></i></h8>
+                <h8>Report Type: <i><b>Inventory Analytics Report</b></i></h8>
                 <br>
                 <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
                 <br>

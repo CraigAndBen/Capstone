@@ -11,12 +11,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Item Price List</h5>
+                                <h5 class="m-b-10">Medicine Price List</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('pharmacist.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('pharmacist.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Item Price List</li>
+                                <li class="breadcrumb-item" aria-current="page">Medicine Price List</li>
                             </ul>
                         </div>
                     </div>
@@ -32,20 +32,24 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Item Price List</h1>
+                            <h1>Medicine Price List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
-
-                                <div class="d-flex justify-content-end">
-                                    <div class="m-1">
-                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
-                                            Price</button>
-                                        <a href="{{ route('pharmacist.product.report') }}" class="btn btn-success">Generate
-                                            Report</a>
-
+                                <div class="d-flex mb-3 justify-content-end">
+                                    <div class="m-1 form-group">
+                                        <a href="{{ route('pharmacist.product.report.view') }}"
+                                        class="btn btn-success" target="_blank">View Report</a>
+                                        <a href="{{ route('pharmacist.product.report.download') }}" 
+                                        class="btn btn-success" target="_blank">Download Report</a>
                                     </div>
                                 </div>
+
+                                <div class="d-flex mb-3 justify-content-end">
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Add
+                                        Price</button>
+                                </div>
+
                                 <hr>
 
                                 @if ($errors->any())
@@ -77,7 +81,7 @@
                                         <span class="fa fa-check-circle"></span> No Item Yet.
                                     </div>
                                 @else
-                                    <table  class="table table-bordered">
+                                    <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th>Item Name</th>
@@ -195,7 +199,8 @@
 
 
                     {{-- Update modal --}}
-                    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">

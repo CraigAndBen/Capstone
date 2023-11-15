@@ -26,7 +26,12 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Sale Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>
+                    @if ($chartTitle === 'category')
+                    Category Analytics Report
+                @elseif ($chartTitle === 'brand')
+                   Brand Analytics Report
+                @endif</b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
@@ -41,7 +46,13 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Inventory Bar Graph</i></h3>
+                <h3><i>
+                    @if ($chartTitle === 'category')
+                            Category Data
+                        @elseif ($chartTitle === 'brand')
+                           Brand Data
+                        @endif
+                </i></h3>
                 <br>
                 <canvas id="productChart"></canvas>
             </div>
@@ -54,7 +65,13 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Inventory Table</i></h3>
+                <h3><i>
+                    @if ($chartTitle === 'category')
+                            Category Data
+                        @elseif ($chartTitle === 'brand')
+                           Brand Data
+                        @endif
+                </i></h3>
                 <br>
                 <table class="table table-bordered">
                     <thead>

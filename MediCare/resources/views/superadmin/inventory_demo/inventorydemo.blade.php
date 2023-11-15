@@ -81,7 +81,7 @@
                         <hr>
                         <div class="container">
                             <div class="alert alert-success">
-                                Select Product and Year First.
+                                Select Brand or Category.
                             </div>
                         </div>
                     </div>

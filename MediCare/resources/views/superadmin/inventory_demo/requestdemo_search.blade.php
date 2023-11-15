@@ -80,7 +80,7 @@
                                         <label for="select">Most request</label>
                                         <select class="form-control" name="select" id="select">
                                             <option value="">Select</option>
-                                            <option value="Product">Product</option>
+                                            <option value="Item">Item</option>
                                             <option value="Department">Department</option>
                                         </select>
                                     </div>
@@ -129,11 +129,10 @@
                     new Chart(ctx, {
                         type: 'bar',
                         data: {
-                            labels: chartData.labels,
-
+                            labels: @json($chartData['labels']),
                             datasets: [{
                                 label: @json($range),
-                                data: chartData.data, // Ensure this points to the data array
+                                data: @json($chartData['data']),
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                 borderColor: 'rgba(75, 192, 192, 1)',
                                 borderWidth: 1
@@ -146,8 +145,6 @@
                                 }
                             }
                         }
-
-
                     });
                 </script>
             @endif

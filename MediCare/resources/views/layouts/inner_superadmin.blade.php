@@ -338,7 +338,7 @@
                                     href="{{ route('superadmin.medicine.demo') }}">Medicine</a>
                             </li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.product.demo') }}">Product</a></li>
+                                    href="{{ route('superadmin.product.demo') }}">Item</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">
@@ -347,7 +347,7 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.product.expiration') }}">Expiring Product</a></li>
+                                    href="{{ route('superadmin.product.expiration') }}">Expiring Items</a></li>
 
                         </ul>
                     </li>

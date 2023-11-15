@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>MediCare | Request List Report</title>
+    <title>MediCare | Catgeory Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,6 +58,7 @@
             text-align: center; /* Center-align content within table cells */
             font-size: 12px;
             font-family: 'DejaVu Sans', sans-serif;
+            
 
         }
 
@@ -94,30 +95,18 @@
         </p>
 
         <div class="purchase-detail">
-            <h3>Request List Report</h3>
+            <h3>Catgeory Report</h3>
             <table>
                 <tr>
-                    <th>Requester Name</th>
-                    <th>Department</th>
-                    <th>Date</th>
-                    <th>Item</th>
-                    <th>Brand</th>
-                    <th>Quantity</th>
+                    <th>CATGEORY NAME</th>
+                    <th>CATEGORY CODE</th>
                 </tr>
-                @foreach ($requests as $request)
-                    <tr>
-                        <td>{{ $request->name_requester }}</td>
-                        <td>{{ $request->department }}</td>
-                        <td>{{ date('M j, Y', strtotime($request->date)) }}</td>
-                        @foreach ($products as $product)
-                            @if ($product->id === $request->product_id)
-                                <td>{{ $product->p_name }}</td>
-                            @endif
+                @foreach ($categories as $catgeory)
+                            <tr>
+                                <td>{{ $catgeory->category_name }}</td>
+                                <td>{{ $catgeory->category_code }}</td>
+                            </tr>
                         @endforeach
-                        <td>{{ $request->brand }}</td>
-                        <td>{{ $request->quantity }}</td>
-                    </tr>
-                @endforeach
             </table>
         </div>
         <div class="footer">

@@ -61,7 +61,7 @@
                     <thead>
                         <tr>
                             <th>Classification</th>
-                            <th>Products</th>
+                            <th>Items</th>
                             <th>Count</th>
                         </tr>
                     </thead>

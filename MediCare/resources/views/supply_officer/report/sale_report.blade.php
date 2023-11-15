@@ -64,7 +64,7 @@
                             <tr>
                                 <th>Item</th>
                                 @foreach ($dateRange as $date)
-                                    <th>{{ $date }}</th>
+                                    <th>{{ date('M j, Y', strtotime($date)) }}</th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -73,12 +73,19 @@
                                 <tr>
                                     <td>{{ $productName }}</td>
                                     @foreach ($productSales as $quantity)
-                                        <td>{{ $quantity }}</td>
+                                        <td>
+                                            @if ($quantity > 0)
+                                                {{ $quantity }}
+                                            @else
+                                                {{-- Display something else or leave it empty --}}
+                                            @endif
+                                        </td>
                                     @endforeach
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
         </div>
@@ -103,6 +110,19 @@
     // Get the PHP data from the PHP variables
     var dateRange = <?php echo json_encode($dateRange); ?>;
     var salesData = <?php echo json_encode($salesData); ?>;
+
+    // Define an array to store formatted dates
+    var formattedDates = dateRange.map(function(dateString) {
+        // Parse the date string
+        var date = new Date(dateString);
+
+        // Format the date as "MMM d, yyyy" (e.g., "Jan 1, 2023")
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    });
 
     // Define an array of static colors
     var staticColors = [
@@ -134,7 +154,7 @@
     var salesGraph = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: dateRange,
+            labels: formattedDates, // Use the formatted dates
             datasets: datasets
         },
         options: {
@@ -146,13 +166,12 @@
             }
         }
     });
-
-        $(document).ready(function() {
+    $(document).ready(function() {
             // Attach a click event handler to the button
             $("#printButton").click(function() {
                 // Call the window.print() function to open the print dialog
                 window.print();
             });
         });
-    </script>
+</script>
 @endsection

@@ -40,13 +40,17 @@
 
                                 <div class="d-flex mb-3 justify-content-end">
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                            data-target="#createModal">Add Item</button>
-                                        <a href="{{ route('supply_officer.product.report') }}"
-                                            class="btn btn-success">Generate Report</a>
+                                        <a href="{{ route('supply_officer.product.report.view') }}"
+                                            class="btn btn-success" target="_blank">View Report</a>
+                                        <a href="{{ route('supply_officer.product.report.download') }}"
+                                            class="btn btn-success" target="_blank">Download Report</a>
                                     </div>
+                                   
                                 </div>
-
+                                <div class="d-flex mb-3 justify-content-end">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#createModal">Add Item</button>
+                                </div>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -77,7 +81,7 @@
                                         <span class="fa fa-check-circle"></span> No Item Yet.
                                     </div>
                                 @else
-                                    <table id="producttable" class="table table-bordered">
+                                    <table id="producttable" class="table table-bordered responsive">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th class="text-center">Item Name</th>

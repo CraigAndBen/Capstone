@@ -35,12 +35,16 @@
                         <div class="card-body">
                             <div class="container">
 
-                                
-                                <div class="d-flex mb-3 justify-content-end">
-                                    <div class="col"></div>
-                                    <a href="{{route('supply_officer.request.list.report')}}" class="btn btn-success">Generate Report</a>
 
+                                <div class="d-flex mb-3 justify-content-end">
+                                    <div class="form-group">
+                                        <a href="{{ route('supply_officer.request.list.report.view') }}"
+                                            class="btn btn-success" target="_blank">View Report</a>
+                                        <a href="{{ route('supply_officer.request.list.report.download') }}"
+                                            class="btn btn-success" target="_blank">Download Report</a>
+                                    </div>
                                 </div>
+
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -88,7 +92,8 @@
                                                 $counter = 1;
                                             @endphp
                                             @foreach ($requests as $request)
-                                                <tr @if($request->date == now()->format('Y-m-d')) style="background-color: yellow" @endif>
+                                                <tr
+                                                    @if ($request->date == now()->format('Y-m-d')) style="background-color: yellow" @endif>
                                                     <td style="text-align: center">{{ $counter++ }}</td>
                                                     <td style="text-align: center">{{ $request->name_requester }}</td>
                                                     <td style="text-align: center">{{ $request->department }}</td>
@@ -111,9 +116,9 @@
         </div>
     @endsection
     @section('scripts')
-    <script>
-        $(document).ready( function () {
-             $('#requesttable').DataTable();
-         });
-     </script>
+        <script>
+            $(document).ready(function() {
+                $('#requesttable').DataTable();
+            });
+        </script>
     @endsection
