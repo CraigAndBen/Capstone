@@ -26,7 +26,13 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h8>Report Type: <i><b>Inventory Analytics Report</b></i></h8>
+                <h8>Report Type: <i><b>
+                            @if ($chartTitle === 'category')
+                                Category Analytics Report
+                            @elseif ($chartTitle === 'brand')
+                                Brand Analytics Report
+                            @endif
+                        </b></i></h8>
                 <br>
                 <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
                 <br>
@@ -43,7 +49,13 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Inventory Bar Graph</i></h3>
+                <h3><i>
+                        @if ($chartTitle === 'category')
+                            Category Analytics
+                        @elseif ($chartTitle === 'brand')
+                            Brand Analytics
+                        @endif
+                    </i></h3>
                 <br>
                 <canvas id="productChart"></canvas>
             </div>
@@ -56,7 +68,13 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Inventory Table</i></h3>
+                <h3><i>
+                    @if ($chartTitle === 'category')
+                            Category Data
+                        @elseif ($chartTitle === 'brand')
+                            Brand Data
+                        @endif
+                </i></h3>
                 <br>
                 <table class="table table-bordered">
                     <thead>
@@ -105,65 +123,65 @@
 @endsection
 @section('scripts')
     @if (isset($chartData))
-    <script>
-        var ctx = document.getElementById('productChart').getContext('2d');
-        var productData = @json($chartData);
-    
-        // Define an array to store labels with both name and number
-        var labelsWithNamesAndNumbers = productData.map(data => `${data.label} (${data.count})`);
-    
-        // Dynamically generate an array of colors based on the number of data points
-        var colors = generateColors(productData.length);
-    
-        function generateColors(numColors) {
-            var colorsArray = [];
-            for (var i = 0; i < numColors; i++) {
-                // You can use any method to generate colors dynamically, e.g., random colors
-                var randomColor = 'rgba(' +
-                    Math.floor(Math.random() * 256) + ',' +
-                    Math.floor(Math.random() * 256) + ',' +
-                    Math.floor(Math.random() * 256) + ', 0.2)';
-                colorsArray.push(randomColor);
+        <script>
+            var ctx = document.getElementById('productChart').getContext('2d');
+            var productData = @json($chartData);
+
+            // Define an array to store labels with both name and number
+            var labelsWithNamesAndNumbers = productData.map(data => `${data.label} (${data.count})`);
+
+            // Dynamically generate an array of colors based on the number of data points
+            var colors = generateColors(productData.length);
+
+            function generateColors(numColors) {
+                var colorsArray = [];
+                for (var i = 0; i < numColors; i++) {
+                    // You can use any method to generate colors dynamically, e.g., random colors
+                    var randomColor = 'rgba(' +
+                        Math.floor(Math.random() * 256) + ',' +
+                        Math.floor(Math.random() * 256) + ',' +
+                        Math.floor(Math.random() * 256) + ', 0.2)';
+                    colorsArray.push(randomColor);
+                }
+                return colorsArray;
             }
-            return colorsArray;
-        }
-    
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labelsWithNamesAndNumbers, // Use labels with both name and number
-                datasets: [{
-                    label: 'Data',
-                    data: productData.map(data => data.count),
-                    backgroundColor: colors, // Use the dynamically generated colors array
-                    borderColor: colors.map(color => color.replace('0.2', '1')), // Set border color with full opacity
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labelsWithNamesAndNumbers, // Use labels with both name and number
+                    datasets: [{
+                        label: 'Data',
+                        data: productData.map(data => data.count),
+                        backgroundColor: colors, // Use the dynamically generated colors array
+                        borderColor: colors.map(color => color.replace('0.2',
+                        '1')), // Set border color with full opacity
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
-    
-        $(document).ready(function() {
-            // Attach a click event handler to the button
-            $("#printButton").click(function() {
-                // Call the window.print() function to open the print dialog
-                window.print();
             });
-        });
-        $(document).ready(function() {
+
+            $(document).ready(function() {
                 // Attach a click event handler to the button
                 $("#printButton").click(function() {
                     // Call the window.print() function to open the print dialog
                     window.print();
                 });
             });
-    </script>
-    
+            $(document).ready(function() {
+                // Attach a click event handler to the button
+                $("#printButton").click(function() {
+                    // Call the window.print() function to open the print dialog
+                    window.print();
+                });
+            });
+        </script>
     @endif
 @endsection

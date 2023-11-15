@@ -746,7 +746,7 @@ class SupplyOfficerController extends Controller
                 ->groupBy('categories.category_name')
                 ->orderByDesc('count')
                 ->get();
-            $chartTitle = 'Category Data';
+            $chartTitle = 'category';
 
             // Transform data into chart format
             foreach ($data as $item) {
@@ -763,7 +763,7 @@ class SupplyOfficerController extends Controller
                 ->orderByDesc('count')
                 ->get();
 
-            $chartTitle = 'Brand Data';
+            $chartTitle = 'brand';
 
             // Transform data into chart format
             foreach ($data as $item) {
@@ -1041,7 +1041,21 @@ return view('supply_officer.report.request_report', compact('currentTime', 'curr
             }
         }
         
-
+        // Create an array to store the dates with sales
+        $datesWithSales = [];
+        $itemCount = [];
+        
+        foreach ($salesData as $productName => $productSales) {
+            $count = 0; // Initialize the count for the current item
+            foreach ($productSales as $quantity) {
+                if ($quantity > 0) {
+                    $datesWithSales[] = $dateRange[$count]; // Add the corresponding date with sales
+                    $count++;
+                }
+            }
+            $itemCount[$productName] = $count; // Store the count for the current item
+        }
+        
 
         return view('supply_officer.report.sale_report', compact(
             'currentTime',
@@ -1049,7 +1063,9 @@ return view('supply_officer.report.request_report', compact('currentTime', 'curr
             'range',
             'dateRange',
             'salesData',
-            'products'
+            'products',
+            'datesWithSales',
+            'itemCount'
         )
         );
     }

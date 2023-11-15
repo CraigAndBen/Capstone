@@ -43,7 +43,7 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Sale Bar Graph</i></h3>
+                <h3><i>Sale Analytics</i></h3>
                 <br>
                 <canvas id="salesGraph"></canvas>
             </div>
@@ -64,28 +64,34 @@
                             <tr>
                                 <th>Item</th>
                                 @foreach ($dateRange as $date)
-                                    <th>{{ date('M j, Y', strtotime($date)) }}</th>
+                                    @if (in_array($date, $datesWithSales))
+                                        <th>{{ date('m/d/Y', strtotime($date)) }}</th>
+                                    @endif
                                 @endforeach
+                                <th>Total</th> <!-- Add a column for the total sales -->
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($salesData as $productName => $productSales)
                                 <tr>
                                     <td>{{ $productName }}</td>
-                                    @foreach ($productSales as $quantity)
-                                        <td>
-                                            @if ($quantity > 0)
-                                                {{ $quantity }}
-                                            @else
-                                                {{-- Display something else or leave it empty --}}
-                                            @endif
-                                        </td>
+                                    @php
+                                        $totalSales = 0; // Initialize total sales for the current item
+                                    @endphp
+                                    @foreach ($productSales as $date => $quantity)
+                                        @if ($quantity > 0)
+                                            <td>{{ $quantity }}</td>
+                                            @php
+                                                $totalSales += $quantity; // Update total sales for the current item
+                                            @endphp
+                                        @endif
                                     @endforeach
+                                    <td>{{ $totalSales }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
+                        
                     </table>
-                    
                 </div>
             </div>
         </div>

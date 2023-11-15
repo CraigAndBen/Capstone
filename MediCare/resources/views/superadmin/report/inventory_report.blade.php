@@ -31,7 +31,8 @@
                     Category Analytics Report
                 @elseif ($chartTitle === 'brand')
                    Brand Analytics Report
-                @endif</b></i></h5>
+                @endif
+            </b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>

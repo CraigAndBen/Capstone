@@ -26,7 +26,13 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Request Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>
+                            @if ($reportType === 'item')
+                                Most Requested Item Analytics Report
+                            @elseif ($reportType === 'department')
+                                Most Requesting Department Analytics Report
+                            @endif
+                        </b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
@@ -104,30 +110,30 @@
     </div>
 @endsection
 @section('scripts')
-            @if (isset($chartData))
-                <script>
-                    var ctx = document.getElementById('requestChart').getContext('2d');
-                    var chartData = @json($chartData);
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: @json($chartData['labels']),
-                            datasets: [{
-                                label: @json($range),
-                                data: @json($chartData['data']),
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
+    @if (isset($chartData))
+        <script>
+            var ctx = document.getElementById('requestChart').getContext('2d');
+            var chartData = @json($chartData);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @json($chartData['labels']),
+                    datasets: [{
+                        label: @json($range),
+                        data: @json($chartData['data']),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
-                    });
-                </script>
-            @endif
-        @endsection
+                    }
+                }
+            });
+        </script>
+    @endif
+@endsection
