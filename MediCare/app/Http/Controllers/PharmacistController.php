@@ -251,7 +251,7 @@ class PharmacistController extends Controller
 
     }
 
-    public function medicineReport(Request $request)
+    public function viewMedicineReport(Request $request)
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -263,7 +263,44 @@ class PharmacistController extends Controller
         $products = Product::orderBy('expiration', 'asc')->get();
         $categories = Category::all();
 
-        return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
+
+        return $pdf->stream('medicine report.pdf');
+    
+       // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
+    }
+
+    public function downloadMedicineReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $today = Carbon::now();
+        $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
+        
+        $products = Product::orderBy('expiration', 'asc')->get();
+        $categories = Category::all();
+
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
+
+        return $pdf->download('medicine report.pdf');
+    
+       // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
     }
 
     public function product()
@@ -283,7 +320,7 @@ class PharmacistController extends Controller
         return view('pharmacist.product.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories', 'products_price'));
     }
     
-    public function productReport()
+    public function viewProductReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -293,7 +330,46 @@ class PharmacistController extends Controller
         $products = Product::all();
         $categories = Category::where('category_name', 'pharmaceutical')->get();
 
-        return view('pharmacist.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories', 'products_price'));
+        $data = [
+            'products_price' => $products_price,
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
+
+        return $pdf->stream('medicine price report.pdf');
+    
+
+        //return view('pharmacist.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories', 'products_price'));
+    }
+
+    public function downloadProductReport()
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $products_price = Product_price::whereNotNull('price')->get();
+        $products = Product::all();
+        $categories = Category::where('category_name', 'pharmaceutical')->get();
+
+        $data = [
+            'products_price' => $products_price,
+            'products' => $products,
+            'categories' => $categories,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
+
+        return $pdf->download('medicine price report.pdf');
+    
+
+        //return view('pharmacist.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories', 'products_price'));
     }
 
     public function productCreate(Request $request)

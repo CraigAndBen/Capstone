@@ -43,7 +43,7 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Sale Bar Graph</i></h3>
+                <h3><i>Sale Analytics</i></h3>
                 <br>
                 <canvas id="salesGraph"></canvas>
             </div>
@@ -64,20 +64,33 @@
                             <tr>
                                 <th>Item</th>
                                 @foreach ($dateRange as $date)
-                                    <th>{{ $date }}</th>
+                                    @if (in_array($date, $datesWithSales))
+                                        <th>{{ date('m/d/Y', strtotime($date)) }}</th>
+                                    @endif
                                 @endforeach
+                                <th>Total</th> <!-- Add a column for the total sales -->
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($salesData as $productName => $productSales)
                                 <tr>
                                     <td>{{ $productName }}</td>
-                                    @foreach ($productSales as $quantity)
-                                        <td>{{ $quantity }}</td>
+                                    @php
+                                        $totalSales = 0; // Initialize total sales for the current item
+                                    @endphp
+                                    @foreach ($productSales as $date => $quantity)
+                                        @if ($quantity > 0)
+                                            <td>{{ $quantity }}</td>
+                                            @php
+                                                $totalSales += $quantity; // Update total sales for the current item
+                                            @endphp
+                                        @endif
                                     @endforeach
+                                    <td>{{ $totalSales }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
+                        
                     </table>
                 </div>
             </div>
@@ -103,6 +116,19 @@
     // Get the PHP data from the PHP variables
     var dateRange = <?php echo json_encode($dateRange); ?>;
     var salesData = <?php echo json_encode($salesData); ?>;
+
+    // Define an array to store formatted dates
+    var formattedDates = dateRange.map(function(dateString) {
+        // Parse the date string
+        var date = new Date(dateString);
+
+        // Format the date as "MMM d, yyyy" (e.g., "Jan 1, 2023")
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    });
 
     // Define an array of static colors
     var staticColors = [
@@ -134,7 +160,7 @@
     var salesGraph = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: dateRange,
+            labels: formattedDates, // Use the formatted dates
             datasets: datasets
         },
         options: {
@@ -146,13 +172,12 @@
             }
         }
     });
-
-        $(document).ready(function() {
+    $(document).ready(function() {
             // Attach a click event handler to the button
             $("#printButton").click(function() {
                 // Call the window.print() function to open the print dialog
                 window.print();
             });
         });
-    </script>
+</script>
 @endsection

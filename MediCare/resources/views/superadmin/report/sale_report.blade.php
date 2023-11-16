@@ -26,9 +26,11 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Sale Analytics Report</b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>Sale Analytics Report</b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -53,30 +55,41 @@
         <div style="height: 150px"></div>
 
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
+            <div class="col-12 col-md-10 text-center">
                 <h3><i>Sale Table</i></h3>
                 <br>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            @foreach ($dateRange as $date)
-                                <th>{{ $date }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($salesData as $productName => $productSales)
+                <div class="table-flex">
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td>{{ $productName }}</td>
-                                @foreach ($productSales as $quantity)
-                                    <td>{{ $quantity }}</td>
+                                <th>Item</th>
+                                @foreach ($dateRange as $date)
+                                    <th>{{ date('M j, Y', strtotime($date)) }}</th>
                                 @endforeach
                             </tr>
-                        @endforeach
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            @foreach ($salesData as $productName => $productSales)
+                                <tr>
+                                    <td>{{ $productName }}</td>
+                                    @foreach ($productSales as $quantity)
+                                        <td>
+                                            @if ($quantity > 0)
+                                                {{ $quantity }}
+                                            @else
+                                                {{-- Display something else or leave it empty --}}
+                                            @endif
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
+                    
+                </div>
             </div>
+        </div>
+        
             <div class="col-1">
 
             </div>
@@ -97,6 +110,19 @@
     // Get the PHP data from the PHP variables
     var dateRange = <?php echo json_encode($dateRange); ?>;
     var salesData = <?php echo json_encode($salesData); ?>;
+
+    // Define an array to store formatted dates
+    var formattedDates = dateRange.map(function(dateString) {
+        // Parse the date string
+        var date = new Date(dateString);
+
+        // Format the date as "MMM d, yyyy" (e.g., "Jan 1, 2023")
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    });
 
     // Define an array of static colors
     var staticColors = [
@@ -126,9 +152,9 @@
     // Create a chart using Chart.js
     var ctx = document.getElementById('salesGraph').getContext('2d');
     var salesGraph = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: dateRange,
+            labels: formattedDates, // Use the formatted dates
             datasets: datasets
         },
         options: {
@@ -140,13 +166,12 @@
             }
         }
     });
-
-        $(document).ready(function() {
+    $(document).ready(function() {
             // Attach a click event handler to the button
             $("#printButton").click(function() {
                 // Call the window.print() function to open the print dialog
                 window.print();
             });
         });
-    </script>
+</script>
 @endsection

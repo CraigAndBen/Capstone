@@ -26,7 +26,13 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Request Analytics Report</b></i></h5>
+                <h5>Report Type: <i><b>
+                    @if ($reportType === 'item')
+                            Most Requested Item Analytics Report
+                        @elseif ($reportType === 'department')
+                            Most Requesting Department Analytics Report
+                        @endif
+                </b></i></h5>
                 <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
@@ -41,7 +47,13 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Inventory Bar Graph</i></h3>
+                <h3><i>
+                        @if ($reportType === 'item')
+                            Most Requested Item
+                        @elseif ($reportType === 'department')
+                            Most Requesting Department
+                        @endif
+                    </i></h3>
                 <br>
                 <canvas id="requestChart"></canvas>
             </div>
@@ -54,12 +66,13 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Inventory Table</i></h3>
+                <h3><i>{{ $reportType === 'item' ? 'Item' : 'Department' }} Table</i></h3>
                 <br>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Product/Department</th>
+                            <th>{{ $reportType === 'item' ? 'Item' : 'Department' }}</th>
+                            <th>Date</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -67,13 +80,15 @@
                         @foreach ($result as $item)
                             <tr>
                                 <td>{{ $item->label }}</td>
+                                <td>{{ date('M j, Y', strtotime($item->request_date)) }}</td>
                                 <td>{{ $item->data }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Total</th>
+                            <th></th>
+                            <th></th>
                             <th>{{ $result->sum('data') }}</th>
                         </tr>
                     </tfoot>
@@ -95,39 +110,30 @@
     </div>
 @endsection
 @section('scripts')
-    @if (isset($chartData))
-    <script>
-        var ctx = document.getElementById('requestChart').getContext('2d');
-        var chartData = @json($chartData);
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: chartData.labels,
-
-                datasets: [{
-                    label: @json($range),
-                    data: chartData.data, // Ensure this points to the data array
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-        $(document).ready(function() {
-                // Attach a click event handler to the button
-                $("#printButton").click(function() {
-                    // Call the window.print() function to open the print dialog
-                    window.print();
-                });
-            });
-    </script>
-    
-    @endif
-@endsection
+            @if (isset($chartData))
+                <script>
+                    var ctx = document.getElementById('requestChart').getContext('2d');
+                    var chartData = @json($chartData);
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: @json($chartData['labels']),
+                            datasets: [{
+                                label: @json($range),
+                                data: @json($chartData['data']),
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                </script>
+            @endif
+        @endsection

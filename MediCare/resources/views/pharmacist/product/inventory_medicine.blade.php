@@ -40,13 +40,16 @@
 
                                 <div class="d-flex mb-3 justify-content-end">
                                     <div class="form-group">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#createMedicine">Add Item</button>
-                                    <a href="{{ route('pharmacist.medicine.report') }}" class="btn btn-success">Generate
-                                        Report</a>
+                                        <a href="{{ route('pharmacist.medicine.report.view') }}" 
+                                        class="btn btn-success" target="_blank">View Report</a>
+                                        <a href="{{ route('pharmacist.medicine.report.download') }}" 
+                                        class="btn btn-success" target="_blank">Download Report</a>
                                     </div>
                                 </div>
-
+                                <div class="d-flex mb-3 justify-content-end">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#createMedicine">Add Item</button>
+                                </div>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -99,7 +102,8 @@
                                                             </td>
                                                             <td class="text-center">{{ $product->stock }}</td>
                                                             <td class="text-center">{{ $product->brand }}</td>
-                                                            <td class="text-center">{{ date('M j, Y', strtotime($product->expiration)) }}</td>
+                                                            <td class="text-center">
+                                                                {{ date('M j, Y', strtotime($product->expiration)) }}</td>
                                                             <td class="text-center">{{ $product->status }}</td>
                                                             <td class="text-center">
                                                                 <a
@@ -130,7 +134,8 @@
 
 
                     {{-- Create modal --}}
-                    <div class="modal fade" id="createMedicine" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="createMedicine" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary">
@@ -144,18 +149,18 @@
                                                 <label>Item</label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3 p_name" name="p_name" required
-                                                    oninvalid="this.setCustomValidity('Please input a item.')"
-                                                    oninput="setCustomValidity('')">
+                                                        oninvalid="this.setCustomValidity('Please input a item.')"
+                                                        oninput="setCustomValidity('')">
                                                         <option value="">Select Item</option>
                                                         @foreach ($products as $product)
-                                                        @foreach ($categories as $category)
-                                                            @if ($product->category_id == $category->id)
-                                                                <option value="{{ $product->id }}">
-                                                                    {{ ucwords($product->p_name) }}
-                                                                </option>
-                                                            @endif
+                                                            @foreach ($categories as $category)
+                                                                @if ($product->category_id == $category->id)
+                                                                    <option value="{{ $product->id }}">
+                                                                        {{ ucwords($product->p_name) }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
                                                         @endforeach
-                                                    @endforeach
                                                     </select>
                                                 </div>
                                                 @error('p_name')
@@ -168,8 +173,8 @@
                                                 <label>Brand</label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3 brand" name="brand" required
-                                                    oninvalid="this.setCustomValidity('Please input a brand.')"
-                                                    oninput="setCustomValidity('')">
+                                                        oninvalid="this.setCustomValidity('Please input a brand.')"
+                                                        oninput="setCustomValidity('')">
                                                         <option></option>
                                                         <option value="Pfizer">Pfizer</option>
                                                         <option value="3M">3M</option>
@@ -203,9 +208,9 @@
                                                 <label>Category</label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" name="category_id" required
-                                                    oninvalid="this.setCustomValidity('Please input a category.')"
-                                                    oninput="setCustomValidity('')">
-                                                        <option value="" >Select a Category</option>
+                                                        oninvalid="this.setCustomValidity('Please input a category.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Select a Category</option>
                                                         @foreach ($categories as $category)
                                                             <option value="{{ $category->id }}">
                                                                 {{ $category->category_name }}</option>
@@ -223,9 +228,10 @@
                                             <div class="col-md-6">
                                                 <label>Expiration Date</label>
                                                 <div class="form-floating mb-3">
-                                                    <input type="date" name="expiration" class="form-control p-3"  required
-                                                    oninvalid="this.setCustomValidity('Please input a expiration date.')"
-                                                    oninput="setCustomValidity('')" />
+                                                    <input type="date" name="expiration" class="form-control p-3"
+                                                        required
+                                                        oninvalid="this.setCustomValidity('Please input a expiration date.')"
+                                                        oninput="setCustomValidity('')" />
                                                 </div>
                                                 @error('expiration')
                                                     <div class="alert alert-danger" role="alert">
@@ -237,9 +243,9 @@
                                                 <label>Status</label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" name="status" required
-                                                    oninvalid="this.setCustomValidity('Please select a status.')"
-                                                    oninput="setCustomValidity('')">
-                                                        <option value="" >Select Status</option>
+                                                        oninvalid="this.setCustomValidity('Please select a status.')"
+                                                        oninput="setCustomValidity('')">
+                                                        <option value="">Select Status</option>
                                                         <option value="Available">Available</option>
                                                         <option value="Unavailable">Unavailable</option>
                                                     </select>
@@ -400,6 +406,4 @@
                 });
             });
         </script>
-        
-         
     @endsection

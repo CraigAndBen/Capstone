@@ -11,7 +11,7 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Admin Account</h5>
+                                <h5 class="m-b-10">Pharmacist Account</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('pharmacist.dashboard') }}">Home</a></li>

@@ -60,7 +60,7 @@
                     <thead>
                         <tr>
                             <th>Label</th>
-                            <th>Products</th>
+                            <th>Items</th>
                             <th>Count</th>
                         </tr>
                     </thead>
@@ -83,7 +83,7 @@
                                         @endforeach
                                     @elseif ($value['label'] === 'Low Valued')
                                         @foreach ($lowValuedProducts as $product)
-                                            {{ $product }}<br>
+                                            {{ $product }} <br>
                                         @endforeach
                                     @endif
                                 </td>
@@ -123,7 +123,7 @@
                         @endphp
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>Total Products Here</strong></td>
+                            <td><strong>Total Item</strong></td>
                             <td><strong>{{ $total }}</strong></td>
                         </tr>
                 

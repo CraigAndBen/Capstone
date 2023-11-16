@@ -129,7 +129,7 @@
             }
         
             new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: labelsWithNamesAndNumbers, // Use labels with both name and number
                     datasets: [{
@@ -173,6 +173,7 @@
                             }
                         }
                     }
+                    
                 }
             });
         

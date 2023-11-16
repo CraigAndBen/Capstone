@@ -652,56 +652,61 @@
                 <div class="col-xl-6 col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            @if ($totalCount)
+                            @if ($counts)
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
-                                        <small>Medicine Value</small>
-                                        <h6>Based on medicine product price</h6>
+                                        <small>Item Movement</small>
+                                        <h6>Segregates and ranked the items based on their consumption rate</h6>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-md-6 mx-auto">
-                                        <canvas id="medicineGraph"></canvas>
+                                        <canvas id="productGraph"></canvas>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <strong style="font-size: 14px;">Most Valued:</strong>
-                                            @if (count($mostValuedProducts) > 0)
-                                                <ul style="font-size: 12px;">
-                                                    @foreach ($mostValuedProducts as $product)
-                                                        <li>{{ $product }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                No products in this classification.
-                                            @endif
+                                            <div class="classification">
+                                                <strong>Fast Moving</strong>
+                                                @if (count($fastProducts) > 0)
+                                                    <ul>
+                                                        @foreach ($fastProducts as $index => $product)
+                                                            <li><strong> {{ $index + 1 }} -</strong> {{ $product['name'] }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @else
+                                                    No items in this classification.
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <strong style="font-size: 14px;">Medium Valued:</strong>
-                                            @if (count($mediumValuedProducts) > 0)
-                                                <ul style="font-size: 12px;">
-                                                    @foreach ($mediumValuedProducts as $product)
-                                                        <li>{{ $product }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                No products in this classification.
-                                            @endif
+                                            <div class="classification">
+                                                <strong>Slow Moving:</strong>
+                                                @if (count($slowProducts) > 0)
+                                                    <ul>
+                                                        @foreach ($slowProducts as $index => $product)
+                                                            <li><strong>{{ $index + 1 }} - </strong>{{ $product['name'] }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @else
+                                                    No items in this classification.
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <strong style="font-size: 14px;">Low Valued:</strong>
-                                            @if (count($lowValuedProducts) > 0)
-                                                <ul style="font-size: 12px;">
-                                                    @foreach ($lowValuedProducts as $product)
-                                                        <li>{{ $product }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                No products in this classification.
-                                            @endif
+                                            <div class="classification">
+                                                <strong>Non-Moving:</strong>
+                                                @if (count($nonMovingProducts) > 0)
+                                                    <ul>
+                                                        @foreach ($nonMovingProducts as $product)
+                                                            <li>{{ $product['name'] }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @else
+                                                    No items in this classification.
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-
                                 </div>
                             @else
                                 <div class="text-center">
@@ -812,38 +817,74 @@
     });
 </script>
 <script>
-    // var ctx = document.getElementById('medicineGraph').getContext('2d');
-    // var medicineGraph = new Chart(ctx, {
-    //     type: 'pie',
-    //     data: {
-    //         labels: [
-    //             'Most Valued ' + {{ $mostValuedPercentage }} + '%',
-    //             'Medium Valued ' + {{ $mediumValuedPercentage }} + '%',
-    //             'Low Valued ' + {{ $lowValuedPercentage }} + '%'
-    //         ],
-    //         datasets: [{
-    //             data: [
-    //                 {{ $mostValuedPercentage }},
-    //                 {{ $mediumValuedPercentage }},
-    //                 {{ $lowValuedPercentage }}
-    //             ],
-    //             backgroundColor: [
-    //                 'rgba(75, 192, 192, 0.7)', // Green for Most Valued
-    //                 'rgba(54, 162, 235, 0.7)', // Blue for Medium Valued
-    //                 'rgba(255, 99, 132, 0.7)' // Red for Low Valued
-    //             ],
-    //             borderColor: [
-    //                 'rgba(75, 192, 192, 1)',
-    //                 'rgba(54, 162, 235, 1)',
-    //                 'rgba(255, 99, 132, 1)'
-    //             ]
-    //         }]
-    //     },
-    //     options: {
-    //         responsive: true,
-    //         maintainAspectRatio: false,
-    //     }
-    // });
+    var categories = @json($categories);
+    var counts = @json($counts);
+
+    var ctx = document.getElementById('productGraph').getContext('2d');
+
+    // Get the product counts as an array
+    var productCounts = Object.values(counts);
+
+    // Create an array to store the labels with counts
+    var labelsWithCounts = [];
+    for (var i = 0; i < categories.length; i++) {
+        labelsWithCounts.push(categories[i] + ' (' + productCounts[i] + ')');
+    }
+
+    var chartData = {
+        labels: labelsWithCounts, // Use labels with counts
+        datasets: [{
+            data: productCounts, // Use the product counts array
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(255, 205, 86, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                // Add more colors if needed
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 205, 86, 1)',
+                'rgba(54, 162, 235, 1)',
+                // Add more colors if needed
+            ],
+            borderWidth: 1, // Border width of the pie chart slices
+        }],
+    };
+
+    var myChart = new Chart(ctx, {
+        type: 'pie', // Use pie chart type
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: true,
+                text: 'Product Distribution',
+                fontSize: 16,
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    boxWidth: 12, // Adjust the box width of legend items
+                    fontSize: 12, // Adjust the font size of legend items
+                },
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index] || '';
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        return label + ': ' + value;
+                    },
+                },
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true,
+            },
+        },
+    });
 </script>
 
 </html>

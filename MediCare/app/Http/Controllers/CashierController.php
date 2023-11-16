@@ -195,11 +195,16 @@ class CashierController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $purchases = Purchase_detail::paginate(5); // Retrieve products from your database
+        $purchaseDetails = Purchase::get();
 
-        return view('cashier.product.purchase_list', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'purchases'));
+
+
+
+        return view('cashier.product.purchase_list', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'purchases', 'purchaseDetails'));
     }
 
-    public function purchaseReport()
+
+    public function viewPurchaseReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -207,7 +212,38 @@ class CashierController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $purchases = Purchase_detail::all(); // Retrieve products from your database
 
-        return view('cashier.report.purchase_report', compact('currentTime', 'currentDate', 'purchases'));
+        // return view('cashier.report.purchase_report', compact('currentTime', 'currentDate', 'purchases'));
+        $data = [
+            'purchases' => $purchases,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
+
+        return $pdf->stream('purchase_report.pdf');
+    }
+
+    public function downloadPurchaseReport()
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $purchases = Purchase_detail::all(); // Retrieve products from your database
+
+        // return view('cashier.report.purchase_report', compact('currentTime', 'currentDate', 'purchases'));
+        $data = [
+            'purchases' => $purchases,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+
+        ];
+
+        $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
+
+        return $pdf->download('purchase report.pdf');
     }
 
     public function purchase()
@@ -240,15 +276,15 @@ class CashierController extends Controller
         $product = Product::find($request->product_id);
         $price = Product_price::where('product_id', $request->product_id)->first();
 
-         // Check if the requested quantity exceeds available stock
-            if ($product->stock < $request->quantity) {
-                $remainingStock = $product->stock;
-                return redirect()->route('cashier.product.purchase')->with('error', "Insufficient stock for this product. Available stock: $remainingStock");
-            }
+        // Check if the requested quantity exceeds available stock
+        if ($product->stock < $request->quantity) {
+            $remainingStock = $product->stock;
+            return redirect()->route('cashier.product.purchase')->with('error', "Insufficient stock for this product. Available stock: $remainingStock");
+        }
 
-            // Reduce the stock of the product
-            $product->stock -= $request->input('quantity');
-            $product->save(); // Save the updated stock
+        // Reduce the stock of the product
+        $product->stock -= $request->input('quantity');
+        $product->save(); // Save the updated stock
 
         // Get the existing cart items from the session or initialize an empty array
         $cart = $request->session()->get('cart', []);
@@ -362,13 +398,14 @@ class CashierController extends Controller
         $totals->amount = $request->input('amount');
         $totals->change = $request->input('change');
         $totals->save();
-    
+
 
         // Clear the cart from the session
         $request->session()->forget('cart');
 
         return redirect()->route('cashier.product.purchase')->with('success', 'Payment confirmed and saved successfully');
     }
+
 
     public function cashierOfficerLogout(Request $request): RedirectResponse
     {
@@ -380,4 +417,7 @@ class CashierController extends Controller
 
         return redirect('/');
     }
+
+
+
 }

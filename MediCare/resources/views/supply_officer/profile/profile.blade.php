@@ -69,7 +69,7 @@
                                         <div class="row mt-2">
                                             <div class="col-md-6 offset-md-3">
                                                 <div class="form-floating mb-3 ">
-                                                    <input type="text" class="form-control ml-2"
+                                                    <input type="text" class="form-control"
                                                         id="floatingInput first_name"
                                                         placeholder="{{ $profile->first_name }}" name="first_name"
                                                         value="{{ $profile->first_name }}" />

@@ -59,16 +59,16 @@
                 <br>
                 <table class="table table-bordered">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th>Classification</th>
-                            <th>Products</th>
+                            <th>Items</th>
                             <th>Count</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($categories as $category)
                             <tr>
-                                <td>{{ $category }}</td>
+                                <td class="text-center">{{ $category }}</td>
                                 <td>
                                     @if ($category === 'Fast')
                                         @if (count($fastProducts) > 0)
@@ -102,7 +102,7 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td>{{ $counts[$category] }}</td>
+                                <td class="text-center">{{ $counts[$category] }}</td>
                             </tr>
                         @endforeach
                 
@@ -111,8 +111,8 @@
                         @endphp
                         <tr>
                             <td><strong>Total</strong></td>
-                            <td><strong>Total Products Here</strong></td>
-                            <td><strong>{{ $total }}</strong></td>
+                            <td><strong></strong></td>
+                            <td class="text-center"><strong>{{ $total }}</strong></td>
                         </tr>
                     </tbody>
                 </table>

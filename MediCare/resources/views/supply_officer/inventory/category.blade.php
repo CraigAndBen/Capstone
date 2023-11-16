@@ -39,8 +39,16 @@
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
+                                    <div class="form-group">
+                                        <a href="{{ route('supply_officer.category.report.view') }}"
+                                            class="btn btn-success" target="_blank">View Report</a>
+                                            <a href="{{ route('supply_officer.category.report.download') }}"
+                                            class="btn btn-success" target="_blank">Download Report</a>
+                                    </div>
+                                </div>
+                                <div class="d-flex mb-3 justify-content-end">
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#createCategory">Add Category</button>
+                                            data-target="#createCategory">Add Category</button>
                                 </div>
 
                                 @if ($errors->any())

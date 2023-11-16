@@ -233,7 +233,7 @@
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('pharmacist.inventory') }}">Medicine Inventory</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('pharmacist.product') }}">Item Price List</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('pharmacist.product') }}">Medicine Price List</a></li>
                         </ul>
                     </li>
                 </ul>

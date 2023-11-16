@@ -62,7 +62,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-3">
-                                    <form action="{{ route('supply_officer.sale.demo.search') }}" method="GET">
+                                    <form action="{{ route('superadmin.sale.demo.search') }}" method="GET">
                                         @csrf
                                         <div class="form-group">
                                             <label for="from">From</label>

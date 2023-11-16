@@ -11,5 +11,20 @@ class Purchase_detail extends Model
 
     protected $table = 'purchase_details';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'reference',
+        'total_quantity',
+        'total_price',
+        'amount',
+        'change'
+    ];
+
+    public function purchase()
+{
+    return $this->belongsTo(Purchase::class, 'reference', 'reference');
+}
+public function product()
+{
+    return $this->belongsTo(Product::class, 'product_id', 'id');
+}
 }
