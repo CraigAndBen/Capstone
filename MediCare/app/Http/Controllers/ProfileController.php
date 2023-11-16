@@ -55,6 +55,10 @@ class ProfileController extends Controller
             'first_name' => $request->input('first_name'),
             'middle_name' => $request->input('middle_name'),
             'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+        ];
+
+        $userInfoUpdatedData = [
             'gender' => $request->input('gender'),
             'age' => $request->input('age'),
             'phone' => $request->input('phone'),
@@ -64,12 +68,12 @@ class ProfileController extends Controller
             'city' => $request->input('city'),
             'province' => $request->input('province'),
             'occupation' => $request->input('occupation'),
-            'email' => $request->input('email'),
         ];
 
         $userChange = $this->hasChanges($user, $userUpdatedData);
+        $userInfoChange = $this->hasChanges($user_info, $userInfoUpdatedData);
 
-        if ($userChange) {
+        if ($userChange || $userInfoChange) {
 
             if ($user->email != $request->input('email')) {
 
@@ -156,7 +160,7 @@ class ProfileController extends Controller
 
             $user->save();
 
-            return redirect()->route('user.profile.password')->with('success', 'Password updated successfull.');
+            return redirect()->route('user.profile.password')->with('success', 'Password updated successfully.');
         }
     }
 

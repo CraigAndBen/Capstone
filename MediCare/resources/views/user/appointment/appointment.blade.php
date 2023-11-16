@@ -75,15 +75,17 @@
                                                     <tr class="p-3">
                                                         <td>{{ ucwords($appointment->appointment_type) }}</td>
                                                         <td>{{ ucwords($appointment->specialties) }}</td>
-                                                        <td>{{ ucwords($appointment->first_name) }} {{ ucwords($appointment->last_name) }}</td>
-                                                        <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}</td>
+                                                        <td>{{ ucwords($appointment->first_name) }}
+                                                            {{ ucwords($appointment->last_name) }}</td>
+                                                        <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}
+                                                        </td>
                                                         <td>{{ ucwords($appointment->appointment_time) }}</td>
                                                         @if ($appointment->status == 'pending')
                                                             <td>Waiting for confirmation</td>
                                                         @else
                                                             <td>{{ ucwords($appointment->status) }}</td>
                                                         @endif
-                                                        
+
                                                         <td class="text-center">
                                                             <div class="dropdown">
                                                                 <button class="btn btn-primary dropdown-toggle"
@@ -91,26 +93,6 @@
                                                                     Actions
                                                                 </button>
                                                                 <div class="dropdown-menu">
-                                                                    <a class="dropdown-item btn btn-primary"
-                                                                        data-toggle="modal" data-target="#updateModal"
-                                                                        data-appointment-id="{{ json_encode($appointment->id) }}"
-                                                                        data-first-name="{{ json_encode($appointment->first_name) }}"
-                                                                        data-middle-name="{{ json_encode($appointment->middle_name) }}"
-                                                                        data-last-name="{{ json_encode($appointment->last_name) }}"
-                                                                        data-street="{{ json_encode($appointment->street) }}"
-                                                                        data-brgy="{{ json_encode($appointment->brgy) }}"
-                                                                        data-city="{{ json_encode($appointment->city) }}"
-                                                                        data-province="{{ json_encode($appointment->province) }}"
-                                                                        data-email="{{ json_encode($appointment->email) }}"
-                                                                        data-birthdate="{{ json_encode($appointment->birthdate) }}"
-                                                                        data-gender="{{ json_encode($appointment->gender) }}"
-                                                                        data-phone="{{ json_encode($appointment->phone) }}"
-                                                                        data-specialties="{{ json_encode($appointment->specialties) }}"
-                                                                        data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
-                                                                        data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
-                                                                        data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
-                                                                        data-reason="{{ json_encode($appointment->reason) }}">Update
-                                                                    </a>
                                                                     <a class="dropdown-item btn btn-primary"
                                                                         data-toggle="modal" data-target="#viewModal"
                                                                         data-first-name="{{ json_encode($appointment->first_name) }}"
@@ -131,6 +113,27 @@
                                                                         data-reason="{{ json_encode($appointment->reason) }}">View</a>
 
                                                                     @if ($appointment->status != 'cancelled')
+                                                                        <a class="dropdown-item btn btn-primary"
+                                                                            data-toggle="modal" data-target="#updateModal"
+                                                                            data-appointment-id="{{ json_encode($appointment->id) }}"
+                                                                            data-first-name="{{ json_encode($appointment->first_name) }}"
+                                                                            data-middle-name="{{ json_encode($appointment->middle_name) }}"
+                                                                            data-last-name="{{ json_encode($appointment->last_name) }}"
+                                                                            data-street="{{ json_encode($appointment->street) }}"
+                                                                            data-brgy="{{ json_encode($appointment->brgy) }}"
+                                                                            data-city="{{ json_encode($appointment->city) }}"
+                                                                            data-province="{{ json_encode($appointment->province) }}"
+                                                                            data-email="{{ json_encode($appointment->email) }}"
+                                                                            data-birthdate="{{ json_encode($appointment->birthdate) }}"
+                                                                            data-gender="{{ json_encode($appointment->gender) }}"
+                                                                            data-phone="{{ json_encode($appointment->phone) }}"
+                                                                            data-specialties="{{ json_encode($appointment->specialties) }}"
+                                                                            data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
+                                                                            data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
+                                                                            data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
+                                                                            data-reason="{{ json_encode($appointment->reason) }}">Update
+                                                                        </a>
+
                                                                         <form
                                                                             action="{{ route('user.cancel.appointment') }}"
                                                                             method="POST">
@@ -315,14 +318,6 @@
                                 placeholder="Reason For Appointment" />
                             <label for="floatingInput">Reason for Appointment</label>
                         </div>
-                        <div class="d-flex mt-1 justify-content-between">
-                            <div class="form-check">
-                                <input class="form-check-input input-primary" type="checkbox" id="check"
-                                    name="check" />
-                                <label class="form-check-label text-muted" for="customCheckc1">I agree to the terms and
-                                    conditions</label>
-                            </div>
-                        </div>
                         <hr>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -488,6 +483,7 @@
             </div>
         </div>
     </div>
+
 
 @endsection
 

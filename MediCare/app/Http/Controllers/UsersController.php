@@ -28,15 +28,15 @@ class UsersController extends Controller
         $limitUser = $users->take(6);
         $limitDoctor = $doctor->take(6);
         $user = Auth::user();
-        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('type','user')->where('is_read',0)->get();
 
         return view('user_dashboard', compact('limitDoctor','limitUser','notificationsAlert'));
     }
     public function notification(){
         
         $user = Auth::user();
-        $notifications = Notification::where('account_id', $user->id)->orWhere('type','user')->orderBy('created_at','desc')->paginate(5);
-        $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
+        $notifications = Notification::where('account_id', $user->id)->where('type','user')->orderBy('created_at','desc')->paginate(5);
+        $notificationsAlert = Notification::where('account_id', $user->id)->where('type','user')->where('is_read',0)->get();
 
         return view('user.notification.notification', compact('notifications','notificationsAlert'));
 

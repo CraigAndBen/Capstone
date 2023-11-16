@@ -46,13 +46,13 @@
                     @endif
 
                       @if (session('success'))
-                      <div class="alert alert-success text-center">
+                      <div class="alert alert-success">
                           <span class="fa fa-check-circle"></span> {{ session('success') }}
                       </div>
                     @endif
 
                       @if (session('info'))
-                          <div class="alert alert-info text-center">
+                          <div class="alert alert-info">
                             {{ session('info') }}
                           </div>
                       @endif

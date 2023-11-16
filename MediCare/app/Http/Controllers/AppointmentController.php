@@ -61,7 +61,9 @@ class AppointmentController extends Controller
     {
 
         $user = Auth::user();
-        $appointments = Appointment::where('account_id', $user->id)->get(); // Replace with your own query to fetch the event data
+        $appointments = Appointment::where('account_id', $user->id)
+        ->whereNotIn('status', ['cancelled', 'unavailable'])
+        ->get();
 
         $events = [];
         foreach ($appointments as $appointment) {
@@ -280,7 +282,7 @@ class AppointmentController extends Controller
         $existingAppointments = Appointment::where('specialties', $request->input('specialties'))
             ->where('appointment_date', $request->input('appointment_date'))
             ->where('appointment_time', $request->input('appointment_time'))
-            ->whereNotIn('status', ['unavailable'])
+            ->whereNotIn('status', ['unavailable','cancelled'])
             ->get();
 
         if ($existingAppointments->count() > 0) {
@@ -466,7 +468,7 @@ class AppointmentController extends Controller
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read',0)->get();
 
-        return view('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList','notificationsAlert'));
+       return back()->with('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList','notificationsAlert'));
     }
 
     public function unavailableAppointmentList()
@@ -631,7 +633,7 @@ class AppointmentController extends Controller
 
             if ($info->{$key} != $value) {
 
-                return $value;
+                return true;
             }
         }
 

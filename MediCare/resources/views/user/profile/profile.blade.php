@@ -123,19 +123,18 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3 ">
-                                            <select class="form-control  p-3" id="gender" name="gender"
-                                                value="{{ $user_info->gender }}">
-                                                <option value="">Select Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
+                                            <select class="form-control  p-3" id="gender" name="gender">
+                                                <option value="" {{ $user_info->gender == '' ? 'selected' : '' }}>Select Gender</option>
+                                                <option value="male" {{ $user_info->gender == 'male' ? 'selected' : '' }}>Male</option>
+                                                <option value="female" {{ $user_info->gender == 'female' ? 'selected' : '' }}>Female</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3 ">
-                                            <input type="number" class="form-control" id="floatingInput phone"
+                                            <input type="text" class="form-control" id="floatingInput phone"
                                                 placeholder="{{ $user_info->phone }}" value="{{ $user_info->phone }}"
-                                                name="phone" />
+                                                name="phone" oninput="formatPhoneNumber(this);" />
                                             <label for="floatingInput">Phone</label>
                                         </div>
                                     </div>
@@ -162,8 +161,8 @@
                                     <div class="col-md-12">
                                         <div class="form-floating mb-3 ">
                                             <input type="text" class="form-control" id="floatingInput occupation"
-                                                placeholder="{{ $user_info->occupation }}" value="{{ $user_info->occupation }}"
-                                                name="occupation" />
+                                                placeholder="{{ $user_info->occupation }}"
+                                                value="{{ $user_info->occupation }}" name="occupation" />
                                             <label for="floatingInput">Occupation</label>
                                         </div>
                                     </div>
@@ -181,7 +180,7 @@
                                 </div>
                                 <div class="text-end mt-5 mb-3">
                                     <button type="submit" class="btn btn-primary">Update</button>
-                                    <a href="{{route('dashboard')}}" class="btn btn-danger">Cancel</a>
+                                    <a href="{{ route('dashboard') }}" class="btn btn-danger">Cancel</a>
                                 </div>
                             </form>
                         </div>
@@ -190,4 +189,15 @@
             </div>
 
     </section>
+    <script>
+        function formatPhoneNumber(input) {
+            // Remove any non-numeric characters
+            input.value = input.value.replace(/[^0-9+]/g, '');
+
+            // Check if the input starts with "09" and change it to "+639"
+            if (input.value.startsWith('09')) {
+                input.value = '+639' + input.value.substring(2);
+            }
+        }
+    </script>
 @endsection

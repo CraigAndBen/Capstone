@@ -789,6 +789,7 @@ class DoctorController extends Controller
         $appointments = Appointment::where('specialties', $info->specialties)
             ->where('doctor_id', $user->id)
             ->orWhereNull('doctor_id')
+            ->whereNotIn('status', ['cancelled', 'unavailable'])
             ->get(); // Replace with your own query to fetch the event data
 
         $events = [];
