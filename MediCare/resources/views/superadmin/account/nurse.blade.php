@@ -257,7 +257,7 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="phone"
                                                         name="phone" placeholder="Phone"
-                                                        oninput="formatPhoneNumber(this);" disabled/>
+                                                        oninput="formatPhoneNumber(this);"/>
                                                     <label for="phoneInput">Phone</label>
                                                 </div>
                                             </div>
@@ -557,7 +557,7 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="phone"
                                                         name="phone" placeholder="Phone"
-                                                        oninput="formatPhoneNumber(this);" disabled/>
+                                                        oninput="formatPhoneNumber(this);"/>
                                                     <label for="phoneInput">Phone</label>
                                                 </div>
                                             </div>

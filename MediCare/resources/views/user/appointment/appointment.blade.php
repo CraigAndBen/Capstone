@@ -112,7 +112,7 @@
                                                                         data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
                                                                         data-reason="{{ json_encode($appointment->reason) }}">View</a>
 
-                                                                    @if ($appointment->status != 'cancelled')
+                                                                    @if ($appointment->status != 'cancelled' && $appointment->status != 'unavailable')
                                                                         <a class="dropdown-item btn btn-primary"
                                                                             data-toggle="modal" data-target="#updateModal"
                                                                             data-appointment-id="{{ json_encode($appointment->id) }}"

@@ -35,8 +35,7 @@
                                     <div class="d-flex justify-content-center">
                                         <div class="auth-header text-center">
                                             <h2 class="text-primary mt-5"><b>Doctor Appointment Request Calendar</b></h2>
-                                            <p class="f-16 mt-2">Fill the form below and we will get back soon to you for
-                                                more updates and plan your appointment.</p>
+                                            <p class="f-16 mt-2">Select your preferred date, fill out the form below, and we will get back to you soon with more updates to plan your appointment.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +130,8 @@
                                                                 <input type="text" class="form-control ml-2"
                                                                     id="floatingInput first_name" placeholder="First Name"
                                                                     name="first_name" />
-                                                                <label for="floatingInput">First Name <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">First Name <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -139,7 +139,8 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput middle_name" placeholder="Middle Name"
                                                                     name="middle_name" />
-                                                                <label for="floatingInput">Middle Name <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">Middle Name <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -147,7 +148,8 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput last_name" placeholder="Last Name"
                                                                     name="last_name" />
-                                                                <label for="floatingInput">Last Name <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">Last Name <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -158,7 +160,8 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput street" name="street"
                                                                     placeholder="Street" />
-                                                                <label for="floatingInput">Street <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">Street <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -166,7 +169,8 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput brgy" name="brgy"
                                                                     placeholder="Brgy" />
-                                                                <label for="floatingInput">State/Barangay <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">State/Barangay <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -176,7 +180,8 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput city" name="city"
                                                                     placeholder="City" />
-                                                                <label for="floatingInput">City <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">City <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -184,7 +189,8 @@
                                                                 <input type="text" class="form-control"
                                                                     id="floatingInput province" name="province"
                                                                     placeholder="Province" />
-                                                                <label for="floatingInput">Province <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">Province <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -195,7 +201,8 @@
                                                                 <input type="date" class="form-control"
                                                                     id="floatingInput birthdate" name="birthdate"
                                                                     placeholder="Date of Birth" />
-                                                                <label for="floatingInput">Date of Birth <span style="color: red;">*</span></label>
+                                                                <label for="floatingInput">Date of Birth <span
+                                                                        style="color: red;">*</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3 col-md-6">
@@ -212,18 +219,21 @@
                                                         <input type="text" class="form-control" id="phoneInput"
                                                             name="phone" placeholder="Phone"
                                                             oninput="formatPhoneNumber(this);" />
-                                                        <label for="phoneInput">Phone <span style="color: red;">*</span></label>
+                                                        <label for="phoneInput">Phone <span
+                                                                style="color: red;">*</span></label>
                                                     </div>
                                                     <hr>
                                                     <div class="form-floating mb-3">
                                                         <input type="email" class="form-control"
                                                             id="floatingInput email" name="email"
                                                             placeholder="Email Address" />
-                                                        <label for="floatingInput">Email Address <span style="color: red;">*</span></label>
+                                                        <label for="floatingInput">Email Address <span
+                                                                style="color: red;">*</span></label>
                                                     </div>
                                                     <hr>
                                                     <div class="row mt-4">
-                                                        <h5>Which specialist do you want to appoint of? <span style="color: red;">*</span></h5>
+                                                        <h5>Which specialist do you want to appoint of? <span
+                                                                style="color: red;">*</span></h5>
                                                         <div class="form-floating mb-3">
                                                             <select class="form-control p-3" id="specialties"
                                                                 name="specialties">
@@ -234,7 +244,8 @@
                                                     <hr>
                                                     <div class="row mt-4">
                                                         <div class="form-floating mb-3">
-                                                            <h5>Which procedure do you want to make an appointment for? <span style="color: red;">*</span>
+                                                            <h5>Which procedure do you want to make an appointment for?
+                                                                <span style="color: red;">*</span>
                                                             </h5>
                                                             <select class="form-control  p-3" id="appointment_type"
                                                                 name="appointment_type">
@@ -269,7 +280,8 @@
                                                         <input type="text" class="form-control"
                                                             id="floatingInput reason" name="reason"
                                                             placeholder="Reason For Appointment" />
-                                                        <label for="floatingInput">Reason for Appointment <span style="color: red;">*</span></label>
+                                                        <label for="floatingInput">Reason for Appointment <span
+                                                                style="color: red;">*</span></label>
                                                     </div>
                                                     <div class="d-flex mt-1 justify-content-between">
                                                         <div class="form-check">
@@ -314,6 +326,38 @@
                                                 <button type="button" class="btn btn-danger"
                                                     data-bs-dismiss="modal">Close</button>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="cancelModal" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                                        <div class="modal-content">
+                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
+                                                    Appointment
+                                                </h3>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h4 id="cancelEventName" class="pb-3"></h4>
+                                                <p><strong>Appointment Start:</strong> <span id="cancelEventStartDate"></span>
+                                                </p>
+                                                <p><strong>Appointment End:</strong> <span id="cancelEventEndDate"></span>
+                                                <p><strong>Appointment Status:</strong> <span id="cancelStatus"></span>
+                                                </p>
+                                                <form action="{{route('user.appointment.calendar.cancel')}}" method="POST">
+                                                    @csrf
+                                                <input type="hidden" id="cancelId" name="appointment_id">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-danger"
+                                                data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -514,7 +558,7 @@
                     var currentDate = new Date();
                     var nextYearDate = new Date(currentDate.getFullYear() + 1, 0,
                         1); // January 1st of next year
-                    if (clickedDate.isAfter(nextYearDate)) {
+                    if (clickedDate.isAfter(nextYearDate)) {  
                         return; // Do nothing if it's in the next year
                     }
 
@@ -572,92 +616,98 @@
                         // For example, show holiday-related information
 
                         displayHolidayDetails(info.event);
+                    }
+
+                    var statusLowerCase = info.event.extendedProps.status.toLowerCase();
+
+                    if (statusLowerCase === 'pending') {
+                        cancelEventDetails(info.event);
                     } else {
-                        // This is a regular event, display event details in a modal
                         displayEventDetails(info.event);
                     }
                 },
                 eventContent: function(arg) {
-                        var event = arg.event;
-                        var containerEl = document.createElement('div');
+                    var event = arg.event;
+                    var containerEl = document.createElement('div');
 
-                        // Customize the appearance of events based on the 'type' property in event.extendedProps
-                        if (event.extendedProps.type === 'holiday') {
+                    // Customize the appearance of events based on the 'type' property in event.extendedProps
+                    if (event.extendedProps.type === 'holiday') {
+                        containerEl.style.backgroundColor =
+                            'green'; // Set a red background color for holiday events
+                    } else if (event.extendedProps.type === 'appointment') {
+
+                        var statusLowerCase = event.extendedProps.status.toLowerCase();
+
+                        if (statusLowerCase === 'pending') {
                             containerEl.style.backgroundColor =
-                                'green'; // Set a red background color for holiday events
-                        } else if (event.extendedProps.type === 'appointment') {
-
-                            var statusLowerCase = event.extendedProps.status.toLowerCase();
-
-                            if (statusLowerCase === 'pending') {
-                                containerEl.style.backgroundColor =
                                 '#E1AA74'; // Set a blue background color
-                                containerEl.style.color =
-                                    'white'; // Set the text color to white a green background color for availability events
-                            } else if (statusLowerCase === 'confirmed') {
-                                containerEl.style.backgroundColor =
+                            containerEl.style.color =
+                                'white'; // Set the text color to white a green background color for availability events
+                        } else if (statusLowerCase === 'confirmed') {
+                            containerEl.style.backgroundColor =
                                 '#3876BF'; // Set a blue background color
-                                containerEl.style.color =
-                                    'white'; // Set the text color to white a green background color for availability events
-                            } else if (statusLowerCase === 'done') {
-                                containerEl.style.backgroundColor =
+                            containerEl.style.color =
+                                'white'; // Set the text color to white a green background color for availability events
+                        } else if (statusLowerCase === 'done') {
+                            containerEl.style.backgroundColor =
                                 '#192655'; // Set a blue background color
-                                containerEl.style.color =
-                                    'white'; // Set the text color to white a green background color for availability events
-                            }
-
+                            containerEl.style.color =
+                                'white'; // Set the text color to white a green background color for availability events
                         }
-                        containerEl.style.textAlign = 'center'; // Center the event content
-                        containerEl.style.margin = '0 auto';
-                        containerEl.style.width = '100%';
 
-                        // Add a custom CSS class to the event container
-                        containerEl.classList.add(
-                            'custom-event'); // Add a custom CSS class to the event container
-
-                        // You can further customize the content inside the event container (e.g., event title)
-                        var titleEl = document.createElement('div');
-                        titleEl.innerText = event.title;
-
-                        // Apply padding to the title element
-                        titleEl.style.padding = '10px'; // Adjust the padding value as needed
-                        titleEl.style.textAlign = 'center'; // Center the text
-
-                        containerEl.appendChild(titleEl);
-
-                        // Return the customized event content
-                        return {
-                            domNodes: [containerEl]
-                        };
                     }
+                    containerEl.style.textAlign = 'center'; // Center the event content
+                    containerEl.style.margin = '0 auto';
+                    containerEl.style.width = '100%';
+
+                    // Add a custom CSS class to the event container
+                    containerEl.classList.add(
+                        'custom-event'); // Add a custom CSS class to the event container
+
+                    // You can further customize the content inside the event container (e.g., event title)
+                    var titleEl = document.createElement('div');
+                    titleEl.innerText = event.title;
+
+                    // Apply padding to the title element
+                    titleEl.style.padding = '10px'; // Adjust the padding value as needed
+                    titleEl.style.textAlign = 'center'; // Center the text
+
+                    containerEl.appendChild(titleEl);
+
+                    // Return the customized event content
+                    return {
+                        domNodes: [containerEl]
+                    };
+                }
             });
 
             calendar.render();
 
             function openEventModal(date) {
-                // Example: Open a modal for event creation and set the date
                 $('#createModal').modal('show');
                 $('#appointment_date').val(date);
             }
 
             function displayEventDetails(event) {
-                // Example: Display event details in a modal
                 $('#infoModal').modal('show');
                 displayEventInfo(event);
             }
 
+            function cancelEventDetails(event) {
+                $('#cancelModal').modal('show');
+                displayCancelEventInfo(event);
+            }
+
             function displayHolidayDetails(event) {
-                // Example: Display event details in a modal
                 $('#holidayModal').modal('show');
                 displayHolidayInfo(event);
             }
 
             function displayEventInfo(event) {
-                // Example: Populate and display event details
                 $('#eventName').text(event.title);
                 $('#eventStartDate').text(moment(event.start).format('LLLL'));
                 $('#eventEndDate').text(moment(event.end).format('LLLL'));
-                console.log(event.extendedProps.status)
+
                 if (event.extendedProps.status == 'Pending') {
                     $('#status').text('Waiting for confimation.');
                 } else {
@@ -665,8 +715,20 @@
                 }
             }
 
+            function displayCancelEventInfo(event) {
+                $('#cancelId').val(event.extendedProps.appointment_id);
+                $('#cancelEventName').text(event.title);
+                $('#cancelEventStartDate').text(moment(event.start).format('LLLL'));
+                $('#cancelEventEndDate').text(moment(event.end).format('LLLL'));
+
+                if (event.extendedProps.status == 'Pending') {
+                    $('#cancelStatus').text('Waiting for confimation.');
+                } else {
+                    $('#cancelStatus').text(event.extendedProps.status);
+                }
+            }
+
             function displayHolidayInfo(event) {
-                // Example: Populate and display event details
                 $('#holidayName').text(event.title);
                 $('#date').text(moment(event.start).format('LLLL'));
             }

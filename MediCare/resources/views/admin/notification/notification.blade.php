@@ -37,16 +37,6 @@
                         <div class="card-body">
                             <div class="container">
 
-                                <div class="d-flex justify-content-end">
-                                    <div class="m-1">
-                                        <form action="{{ route('admin.notification.delete.all') }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary">Delete All</button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <hr>
-
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -76,6 +66,17 @@
                                         <span class="fa fa-check-circle"></span> No Notification Yet.
                                     </div>
                                 @else
+                                
+                                <div class="d-flex justify-content-end">
+                                    <div class="m-1">
+                                        <form action="{{ route('admin.notification.delete.all') }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary">Delete All</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
+
                                     <table class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>

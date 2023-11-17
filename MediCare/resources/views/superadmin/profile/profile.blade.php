@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Admin Account</h5>
+                                <h5 class="m-b-10">Super Admin Account</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Admin Account</li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item" aria-current="page">Super Admin Account</li>
                             </ul>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                                                 address.</p>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('admin.profile.update') }}">
+                                    <form method="POST" action="{{ route('superadmin.profile.update') }}">
                                         @csrf
 
                                         @if ($errors->any())

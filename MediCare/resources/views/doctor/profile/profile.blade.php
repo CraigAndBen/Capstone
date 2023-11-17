@@ -139,11 +139,10 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <select class="form-control p-3" id="gender" name="gender">
-                                                    <option>Select a Gender</option>
-                                                    @foreach($genders as $value => $text)
-                                                        <option value="{{ $value }}" {{ $value == $info->gender ? 'selected' : '' }}>{{ $text }}</option>
-                                                    @endforeach
+                                                <select class="form-control p-3 my-2" id="gender" name="gender">
+                                                    <option value="" {{ $info->gender == '' ? 'selected' : '' }}>Select Gender</option>
+                                                    <option value="male" {{ $info->gender == 'male' ? 'selected' : '' }}>Male</option>
+                                                    <option value="female" {{ $info->gender == 'female' ? 'selected' : '' }}>Female</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -178,8 +177,8 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="number" class="form-control" id="phone"
-                                                        placeholder="Phone" name="phone"  value="{{$info->phone}}"/>
+                                                    <input type="text" class="form-control" id="phone"
+                                                        placeholder="Phone" name="phone"  value="{{$info->phone}}" oninput="formatPhoneNumber(this);"/>
                                                     <label for="floatingInput">Phone</label>
                                                 </div>
                                             </div>
@@ -206,4 +205,15 @@
         <!-- [ Main Content ] end -->
     </div>
     </div>
+    <script>
+        function formatPhoneNumber(input) {
+            // Remove any non-numeric characters
+            input.value = input.value.replace(/[^0-9+]/g, '');
+
+            // Check if the input starts with "09" and change it to "+639"
+            if (input.value.startsWith('09')) {
+                input.value = '+639' + input.value.substring(2);
+            }
+        }
+    </script>
 @endsection

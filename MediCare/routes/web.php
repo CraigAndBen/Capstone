@@ -47,6 +47,8 @@ Route::post('/user/create/appointment', [AppointmentController::class, 'createAp
 Route::post('/user/update/appointment', [AppointmentController::class, 'updateAppointment'])->name('user.update.appointment');
 Route::post('/user/cancel/appointment', [AppointmentController::class, 'cancelAppointment'])->name('user.cancel.appointment');
 Route::post('/user/appointment/delete', [AppointmentController::class, 'deleteAppointment'])->name('user.appointment.delete');
+Route::post('/user/appointment/calendar/cancel', [AppointmentController::class, 'calendarCancelAppointment'])->name('user.appointment.calendar.cancel');
+
 
 // User Notification
 Route::get('/user/notification', [UsersController::class, 'notification'])->name('user.notification');
@@ -292,19 +294,19 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     // Staff
     Route::get('/super_admin/staff', [SuperAdminController::class, 'staff'])->name('superadmin.staff');
     Route::post('/super_admin/staff/create', [SuperAdminController::class, 'createStaff'])->name('superadmin.store.staff');
-    Route::post('/super_admin/staff/update', [SuperAdminController::class, 'updateStaff'])->name('superadmin.update.staff');
+    Route::post('/super_admin/staff/update', [SuperAdminController::class, 'updateStaffInfo'])->name('superadmin.update.staff');
     Route::post('/super_admin/staff/update/password', [SuperAdminController::class, 'updateStaffPassword'])->name('superadmin.staff.password.update');
 
     // Cashier
     Route::get('/super_admin/cashier', [SuperAdminController::class, 'cashier'])->name('superadmin.cashier');
     Route::post('/super_admin/cashier/create', [SuperAdminController::class, 'createCashier'])->name('superadmin.store.cashier');
-    Route::post('/super_admin/cashier/update', [SuperAdminController::class, 'updateCashier'])->name('superadmin.update.cashier');
+    Route::post('/super_admin/cashier/update', [SuperAdminController::class, 'updateCashierInfo'])->name('superadmin.update.cashier');
     Route::post('/super_admin/cashier/update/password', [SuperAdminController::class, 'updateCashierPassword'])->name('superadmin.cashier.password.update');
 
     // Pharmacist
     Route::get('/super_admin/pharmacist', [SuperAdminController::class, 'pharmacist'])->name('superadmin.pharmacist');
     Route::post('/super_admin/pharmacist/create', [SuperAdminController::class, 'createPharmacist'])->name('superadmin.store.pharmacist');
-    Route::post('/super_admin/pharmacist/update', [SuperAdminController::class, 'updatePharmacist'])->name('superadmin.update.pharmacist');
+    Route::post('/super_admin/pharmacist/update', [SuperAdminController::class, 'updatePharmacistInfo'])->name('superadmin.update.pharmacist');
     Route::post('/super_admin/pharmacist/update/password', [SuperAdminController::class, 'updatePharmacistPassword'])->name('superadmin.pharmacist.password.update');
 
     // Analytics

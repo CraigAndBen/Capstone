@@ -76,14 +76,11 @@ class AppointmentController extends Controller
             $endDateTime->add($interval);
 
             $events[] = [
+                'appointment_id' => $appointment->id,
                 'title' => ucwords($appointment->appointment_type),
-                // Replace with the field containing the event title
                 'start' => $appointmentDateTime->format('Y-m-d H:i:s'),
-                // Format the start date and time
                 'end' => $endDateTime->format('Y-m-d H:i:s'),
-                // Format the end date and time
                 'status' => ucwords($appointment->status),
-                // Format the end date and time
                 'type' => 'appointment',
             ];
         }
@@ -612,6 +609,49 @@ class AppointmentController extends Controller
         ]);
 
         return redirect()->route('user.appointment')->with('info', 'Appoinment cancelled successfully.');
+
+    }
+
+    public function calendarCancelAppointment(Request $request)
+    {
+        $appointment = Appointment::findOrFail($request->input('appointment_id'));
+        $user = User::where('id', $appointment->account_id)->first();
+
+        $appointment->status = 'cancelled';
+        $appointment->save();
+
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
+        $rawDate = $request->input('appointment_date');
+        $dateTime = new DateTime($rawDate);
+        $readableDate = $dateTime->format('F j, Y');
+
+        $message = 'You have successfully canceled your appointment for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'Appointment Cancelled',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'user',
+            'specialties' => $request->input('specialties'),
+        ]);
+
+        $message = ucwords($user->first_name) . ' ' . ucwords($user->last_name) . ' has canceled their appointment for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+
+        Notification::create([
+            'account_id' => $appointment->account_id,
+            'title' => 'Appointment Cancelled',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
+            'specialties' => $request->input('specialties'),
+        ]);
+
+        return redirect()->route('user.show.appointment')->with('info', 'Appoinment cancelled successfully.');
 
     }
 

@@ -148,23 +148,21 @@
                                                 <div class="form-floating mb-3 ">
                                                     <input type="hidden" id="user_id" name="user_id" />
                                                     <input type="text" class="form-control ml-2 first_name"
-                                                        id="first_name" placeholder="First Name" name="first_name"
-                                                        required />
+                                                        id="first_name" placeholder="First Name" name="first_name"/>
                                                     <label for="floatingInput">First Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="text" class="form-control ml-2 middle_name"
-                                                        id="middle_name" placeholder="Middle Name" name="middle_name"
-                                                        required />
+                                                        id="middle_name" placeholder="Middle Name" name="middle_name"/>
                                                     <label for="floatingInput">Middle Name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 ">
                                                     <input type="phone" class="form-control" id="last_name"
-                                                        placeholder="Last Name" name="last_name" required />
+                                                        placeholder="Last Name" name="last_name" />
                                                     <label for="floatingInput">Last Name</label>
                                                 </div>
                                             </div>

@@ -103,12 +103,6 @@ class DoctorController extends Controller
 
     public function profile(Request $request): View
     {
-        $genders = [
-            'male' => 'Male',
-            'female' => 'Female',
-            'other' => 'Other',
-        ];
-
         $profile = $request->user();
         $info = Doctor::where('account_id', $profile->id)->first();
         $notifications = Notification::where('specialties', $info->specialties)
@@ -124,7 +118,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile', compact('profile', 'info', 'genders', 'limitNotifications', 'count', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.profile.profile', compact('profile', 'info','limitNotifications', 'count', 'currentTime', 'currentDate','notificationsAlert'));
     }
 
     public function socialProfile(Request $request): View

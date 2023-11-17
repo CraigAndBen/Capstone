@@ -915,7 +915,6 @@ class SuperAdminController extends Controller
 
         $request->validate([
             'first_name' => 'required|string|max:255',
-            'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
         ]);
 
@@ -1214,13 +1213,11 @@ class SuperAdminController extends Controller
     {
         $request->validate([
             'first_name' => 'required|string|max:255',
-            'middle_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
         ]);
 
         $user = User::findOrFail($request->input('user_id'));
-        $info = admin::where('account_id', $request->user_id)->first();
 
         $userUpdatedData = [
             'first_name' => $request->input('first_name'),
@@ -1230,8 +1227,7 @@ class SuperAdminController extends Controller
 
         $userChange = $this->hasChanges($user, $userUpdatedData);
 
-        // Check if any changes were made to the form data
-        if ($userChange == true) {
+        if ($userChange) {
 
             if ($request->input('email') !== $user->email) {
 

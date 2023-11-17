@@ -39,6 +39,7 @@ class NurseController extends Controller
     {
 
         $profile = $request->user();
+        $info = Nurse::where('account_id', $profile->id)->first();
         $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -47,7 +48,7 @@ class NurseController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('nurse.profile.profile', compact('profile','limitNotifications','count','currentTime','currentDate'));
+        return view('nurse.profile.profile', compact('profile','limitNotifications','count','currentTime','currentDate','info'));
     }
 
     public function passwordProfile(Request $request): View
@@ -73,7 +74,9 @@ class NurseController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
         ]);
+
         $user = $request->user();
+        $info = Nurse::where('account_id', $user->id)->first();
 
         $userUpdatedData = [
             'first_name' => $request->input('first_name'),
@@ -81,9 +84,25 @@ class NurseController extends Controller
             'email' => $request->input('email'),
         ];
 
-        $userChange = $this->hasChanges($user, $userUpdatedData);
+        $infoUpdatedData = [
+            'age' => $request->input('age'),
+            'gender' => $request->input('gender'),
+            'birthdate' => $request->input('birthdate'),
+            'employment_date' => $request->input('employment_date'),
+            'qualification' => $request->input('qualification'),
+            'years_of_experience' => $request->input('years_of_experience'),
+            'shift' => $request->input('shift'),
+            'phone' => $request->input('phone'),
+            'street' => $request->input('street'),
+            'brgy' => $request->input('brgy'),
+            'city' => $request->input('city'),
+            'province' => $request->input('province'),
+        ];
 
-        if ($userChange) {
+        $userChange = $this->hasChanges($user, $userUpdatedData);
+        $userInfoChange = $this->hasChanges($info, $infoUpdatedData);
+
+        if ($userChange || $userInfoChange) {
 
             if ($user->email != $request->input('email')) {
 
@@ -94,25 +113,46 @@ class NurseController extends Controller
                 $user->first_name = $request->input('first_name');
                 $user->last_name = $request->input('last_name');
                 $user->email = $request->input('email');
-                $saved = $user->save();
+                $info->age = $request->input('age');
+                $info->gender = $request->input('gender');
+                $info->qualification = $request->input('qualification');
+                $info->employment_date = $request->input('employment_date');
+                $info->shift = $request->input('shift');
+                $info->years_of_experience = $request->input('years_of_experience');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
+                $info->birthdate = $request->input('birthdate');
+                $info->phone = $request->input('phone');
 
-                if ($saved) {
-                    return redirect()->back()->with('success', 'Profile updated successfully.');
-                } else {
-                    return redirect()->back()->with('info', 'Profile not updated successfully.');
-                }
+                $user->save();
+                $info->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
 
             } else {
 
                 $user->first_name = $request->input('first_name');
                 $user->last_name = $request->input('last_name');
-                $saved = $user->save();
+                $user->email = $request->input('email');
+                $info->age = $request->input('age');
+                $info->gender = $request->input('gender');
+                $info->qualification = $request->input('qualification');
+                $info->employment_date = $request->input('employment_date');
+                $info->shift = $request->input('shift');
+                $info->years_of_experience = $request->input('years_of_experience');
+                $info->street = $request->input('street');
+                $info->brgy = $request->input('brgy');
+                $info->city = $request->input('city');
+                $info->province = $request->input('province');
+                $info->birthdate = $request->input('birthdate');
+                $info->phone = $request->input('phone');
 
-                if ($saved) {
-                    return redirect()->back()->with('success', 'Profile updated successfully.');
-                } else {
-                    return redirect()->back()->with('info', 'Profile not updated successfully.');
-                }
+                $user->save();
+                $info->save();
+
+                return redirect()->back()->with('success', 'Profile updated successfully.');
             }
 
         } else {
@@ -247,7 +287,7 @@ class NurseController extends Controller
 
             if ($info->{$key} != $value) {
 
-                return $value;
+                return true;
             }
         }
 
