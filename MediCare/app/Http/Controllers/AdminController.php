@@ -205,7 +205,7 @@ class AdminController extends Controller
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
         $patients = Patient::orderBy('created_at', 'desc')
-            ->paginate(5);
+            ->get();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -214,26 +214,6 @@ class AdminController extends Controller
 
         return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
 
-    }
-
-    public function patientSearch(Request $request)
-    {
-        $profile = auth()->user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = User::where('role', 'doctor')->get();
-        $searchTerm = $request->input('search');
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $patients = Patient::where('first_name', 'LIKE', '%' . $searchTerm . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%')
-            ->paginate(5);
-
-        return view('admin.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function patientStore(Request $request)

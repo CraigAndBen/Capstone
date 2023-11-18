@@ -151,10 +151,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
     Route::get('/generate/pdf', [AdminController::class, 'generatePdf'])->name('admin.generate.pdf');
-
-
 
     // Profile
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
@@ -169,9 +166,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/patient', [AdminController::class, 'patientList'])->name('admin.patient');
     Route::get('/admin/patient/admitted', [AdminController::class, 'patienAdmittedtList'])->name('admin.patient.admitted');
     Route::get('/admin/patient/outpatient', [AdminController::class, 'outpatientList'])->name('admin.patient.outpatient');
-    Route::get('/admin/patient/search', [AdminController::class, 'patientSearch'])->name('admin.patient.search');
-    Route::get('/admin/patient/admitted/search', [AdminController::class, 'patientAdmittedSearch'])->name('admin.patient.admitted.search');
-    Route::get('/admin/patient/outpatient/search', [AdminController::class, 'outpatientSearch'])->name('admin.patient.outpatient.search');
     Route::post('/admin/patient/store', [AdminController::class, 'patientStore'])->name('admin.patient.store');
     Route::post('/admin/patient/update', [AdminController::class, 'patientUpdate'])->name('admin.patient.update');
     Route::get('/admin/patient/report/view', [AdminController::class, 'viewPatientReport'])->name('admin.patient.report.view');
@@ -270,7 +264,6 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/super_admin/nurse/update', [SuperAdminController::class, 'updateNurseInfo'])->name('superadmin.update.nurse');
     Route::post('/super_admin/nurse/update/password', [SuperAdminController::class, 'updateNursePassword'])->name('superadmin.nurse.password.update');
     Route::post('/super_admin/nuser/update/status', [SuperAdminController::class, 'updateNurseStatus'])->name('superadmin.nurse.update.status');
-
 
     // User
     Route::get('/super_admin/user', [SuperAdminController::class, 'user'])->name('superadmin.user');

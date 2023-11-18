@@ -217,7 +217,7 @@
             </table>
             <br>
             @endif
-
+            <br>
             <h2>Diagnose List</h2>
             <table>
                 <tr>

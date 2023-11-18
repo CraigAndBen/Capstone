@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Patient Admitted List</h1>
+                            <h1 class="display-6">Admitted Patient List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -75,26 +75,9 @@
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
                                 @else
-                                    <form action="{{ route('admin.patient.admitted.search') }}" method="GET">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput search" placeholder="Search" name="search" />
-                                                    <label for="floatingInput">Search</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 mt-2">
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
+                                <div class="row my-4">
+                                    <table class="table table-bordered" id="patientTable">
+                                        <thead class="table-primary text-light text-center">
                                             <tr>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
@@ -182,9 +165,7 @@
 
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
-                                    </div>
+                                </div>
                                 @endif
                             </div>
                         </div>
