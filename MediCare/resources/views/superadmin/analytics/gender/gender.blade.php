@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>{{$title}}</h1>
+                            <h1 class="display-6">{{$title}}</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())

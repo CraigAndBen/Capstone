@@ -116,28 +116,31 @@
 @endsection
 @section('scripts')
     <script>
-        // Prepare data for the bar graph
+        // Prepare data for the line graph
         var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
         var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
 
-        // Get the chart context and create the bar graph
+        // Get the chart context and create the line graph
         var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
         var admitPatientDemographicsChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line', // Change this line to set the type to 'line'
             data: {
                 labels: months,
                 datasets: [{
                     label: 'Outpatient',
                     data: admitPatientCounts,
-                    backgroundColor: 'rgba(153, 102, 255, 0.7)', // Purple
+                    borderColor: 'rgba(153, 102, 255, 1)', // Purple
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)', // Lighter purple fill
                     borderWidth: 1,
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(153, 102, 255, 1)', // Purple data points
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
                     x: {
-                        stacked: true, // Stack the bars on the x-axis for each month
                         title: {
                             display: true,
                             text: 'Months'
@@ -146,8 +149,8 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                                stepSize: 1
-                            },
+                            stepSize: 1
+                        },
                         title: {
                             display: true,
                             text: 'Outpatient Count'

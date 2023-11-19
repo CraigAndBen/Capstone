@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                             <h1>{{$title}}</h1>
+                             <h1 class="display-6">{{$title}}</h1>
                         </div>
                         <div class="card-body">
                             <h3>Ranked Diagnose This Year</h3>
@@ -158,10 +158,12 @@
                 datasets: [{
                     label: 'Patient',
                     data: patientCounts,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
                     borderWidth: 1,
-                    fill: false // Ensure the line chart is not filled
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
                 }]
             },
             options: {
@@ -189,9 +191,12 @@
                 datasets: [{
                     label: 'Patient',
                     data: patientCounts,
-                    borderColor: 'rgba(75, 192, 192, 1)', // Remove backgroundColor
-                    borderWidth: 2, // Increase borderWidth for lines
-                    fill: false // Do not fill the area under the line
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
+                    borderWidth: 1,
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
                 }]
             },
             options: {

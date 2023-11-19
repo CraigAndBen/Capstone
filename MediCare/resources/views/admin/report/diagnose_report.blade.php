@@ -11,6 +11,7 @@
             #back {
                 display: none;
             }
+
             #done {
                 display: none;
             }
@@ -29,9 +30,9 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first">
             <div class="col-7">
-                <h5>Report Type: <i><b>{{$title}}</b></i></h5>
+                <h5>Report Type: <i><b>{{ $title }}</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate))}}</b></i></h5>
+                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate)) }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
                 <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
@@ -45,7 +46,7 @@
         <hr style="border-top: 1px solid #000;">
 
         <div class="row justify-content-center mt-5">
-            <h3><i>{{ucwords($specificDiagnosis)}} Line Graph</i></h3>
+            <h3><i>{{ ucwords($specificDiagnosis) }} Line Graph</i></h3>
             <br>
         </div>
         <div class="row justify-content-center">
@@ -68,13 +69,13 @@
 
             </div>
             <div class="col-8 text-center">
-                <h3><i>{{ucwords($specificDiagnosis)}} Table</i></h3>
+                <h3><i>{{ ucwords($specificDiagnosis) }} Table</i></h3>
                 <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead>
                         <tr>
                             <th>Month</th>
-                            <th>{{ucwords($specificDiagnosis)}} Count</th>
+                            <th>{{ ucwords($specificDiagnosis) }} Count</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,16 +104,17 @@
         </div>
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <form action="{{route('admin.diagnose.report.save')}}" method="POST">
+                <form action="{{ route('admin.diagnose.report.save') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="reference" value="{{$reference}}">
-                    <input type="hidden" name="date" value="{{$currentDate}}">
-                    <input type="hidden" name="time" value="{{$currentTime}}">
-                    <input type="hidden" name="title" value="{{$title}}">
+                    <input type="hidden" name="reference" value="{{ $reference }}">
+                    <input type="hidden" name="date" value="{{ $currentDate }}">
+                    <input type="hidden" name="time" value="{{ $currentTime }}">
+                    <input type="hidden" name="title" value="{{ $title }}">
                     <input type="hidden" name="type" value="gender">
                     <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
                     <button id="done" type="submit" class="btn btn-success">Done</button>
-                    <a id="back" href="{{ route('admin.analytics.patient.diagnose') }}" class="btn btn-danger">Back</a>
+                    <a id="back" href="{{ route('admin.analytics.patient.diagnose') }}"
+                        class="btn btn-danger">Back</a>
                 </form>
             </div>
             <div class="col-2">
@@ -134,11 +136,14 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: {!!json_encode(ucwords($specificDiagnosis))!!},
+                    label: {!! json_encode(ucwords($specificDiagnosis)) !!},
                     data: diagnosePatientCounts,
-                    fill: false,
-                    borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
                     borderWidth: 2,
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
                 }]
             },
             options: {

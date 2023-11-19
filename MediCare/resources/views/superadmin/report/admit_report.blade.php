@@ -11,7 +11,7 @@
             #back {
                 display: none;
             }
-            
+
             #done {
                 display: none;
             }
@@ -30,9 +30,9 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first">
             <div class="col-7">
-                <h5>Report Type: <i><b>{{$title}}</b></i></h5>
+                <h5>Report Type: <i><b>{{ $title }}</b></i></h5>
                 <h5>Year: <i><b>{{ $year }}</b></i></h5>
-                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate))}}</b></i></h5>
+                <h5>Date: <i><b>{{ date('F j, Y', strtotime($currentDate)) }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
                 <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
@@ -81,7 +81,7 @@
                     <tbody class="text-center">
                         @foreach ($admitPatientCountsByMonth as $data)
                             <tr>
-                                <td>{{ $data['month'] }}</td>  
+                                <td>{{ $data['month'] }}</td>
                                 <td>{{ $data['count'] }}</td>
                             </tr>
                         @endforeach
@@ -98,12 +98,12 @@
         </div>
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <form action="{{route('superadmin.admitted.report.save')}}" method="POST">
+                <form action="{{ route('superadmin.admitted.report.save') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="reference" value="{{$reference}}">
-                    <input type="hidden" name="date" value="{{$currentDate}}">
-                    <input type="hidden" name="time" value="{{$currentTime}}">
-                    <input type="hidden" name="title" value="{{$title}}">
+                    <input type="hidden" name="reference" value="{{ $reference }}">
+                    <input type="hidden" name="date" value="{{ $currentDate }}">
+                    <input type="hidden" name="time" value="{{ $currentTime }}">
+                    <input type="hidden" name="title" value="{{ $title }}">
                     <input type="hidden" name="type" value="gender">
                     <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
                     <button id="done" type="submit" class="btn btn-success">Done</button>
@@ -118,28 +118,31 @@
 @endsection
 @section('scripts')
     <script>
-        // Prepare data for the bar graph
+        // Prepare data for the line graph
         var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
         var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
 
-        // Get the chart context and create the bar graph
+        // Get the chart context and create the line graph
         var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
         var admitPatientDemographicsChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line', // Change this line to set the type to 'line'
             data: {
                 labels: months,
                 datasets: [{
                     label: 'Admit Patients',
                     data: admitPatientCounts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
                     borderWidth: 1,
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
                     x: {
-                        stacked: true, // Stack the bars on the x-axis for each month
                         title: {
                             display: true,
                             text: 'Months'

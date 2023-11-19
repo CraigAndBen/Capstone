@@ -4305,7 +4305,7 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)
             ->orWhere('type', 'admin')
             ->orWhere('type', 'supply_officer')
-            ->orderBy('date', 'desc')->paginate(10);
+            ->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');
@@ -4352,56 +4352,14 @@ class SuperAdminController extends Controller
 
     }
 
-    public function appointmentSearch(Request $request)
-    {
-
-        $amTime = [
-            '8:30',
-            '9:00',
-            '9:30',
-            '10:30',
-            '11:00',
-            '11:30',
-        ];
-
-        $pmTime = [
-            '1:30',
-            '2:00',
-            '2:30',
-            '3:00',
-            '3:30',
-            '4:00',
-        ];
-
-        $profile = Auth::user();
-        $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->paginate(10);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $doctors = Doctor::all();
-        $searchTerm = $request->input('search');
-        $appointments = Appointment::where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(10);
-
-
-        return view('superadmin.appointment.appointment_search', compact('profile', 'appointments', 'limitNotifications', 'amTime', 'pmTime', 'count', 'currentTime', 'currentDate', 'doctors'));
-
-    }
-
     public function reportHistory()
     {
-
         $profile = Auth::user();
         $notifications = Notification::where('type', 'admin')->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $users = User::all();
-        $reports = Report::orderBy('date', 'desc')->paginate(6);
+        $reports = Report::orderBy('date', 'desc')->get();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -4768,19 +4726,21 @@ class SuperAdminController extends Controller
 
 
         // Return the view with the chart data
-        return view('superadmin.inventory_demo.requestdemo_search', compact(
-            'profile',
-            'notifications',
-            'limitNotifications',
-            'count',
-            'currentTime',
-            'currentDate',
-            'chartData',
-            'range',
-            'selectedOption',
-            'fromDate',
-            'toDate'
-        )
+        return view(
+            'superadmin.inventory_demo.requestdemo_search',
+            compact(
+                'profile',
+                'notifications',
+                'limitNotifications',
+                'count',
+                'currentTime',
+                'currentDate',
+                'chartData',
+                'range',
+                'selectedOption',
+                'fromDate',
+                'toDate'
+            )
         );
     }
 

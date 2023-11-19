@@ -781,10 +781,12 @@ class DoctorController extends Controller
         $user = Auth::user();
         $info = Doctor::where('account_id', $user->id)->first();
         $appointments = Appointment::where('specialties', $info->specialties)
-            ->where('doctor_id', $user->id)
-            ->orWhereNull('doctor_id')
-            ->whereNotIn('status', ['cancelled', 'unavailable'])
-            ->get(); // Replace with your own query to fetch the event data
+        ->where(function ($query) use ($user) {
+            $query->where('doctor_id', $user->id)
+                ->orWhereNull('doctor_id');
+        })
+        ->whereNotIn('status', ['cancelled', 'unavailable'])
+        ->get();
 
         $events = [];
         foreach ($appointments as $appointment) {
@@ -1069,7 +1071,7 @@ class DoctorController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where('physician', $profile->id)->orderBy('created_at', 'desc')->paginate(5);
+        $patients = Patient::where('physician', $profile->id)->orderBy('created_at', 'desc')->get();
 
         return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
     }
@@ -1093,7 +1095,7 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
             ->where('type', 'admitted_patient')
-            ->paginate(5);
+            ->get();
 
         return view('doctor.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
     }
@@ -1117,95 +1119,9 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)
             ->where('type', 'outpatient')
-            ->paginate(5);
+            ->get();
 
         return view('doctor.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
-    }
-
-    public function patientSearch(Request $request)
-    {
-        $profile = auth()->user();
-        $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->where('is_read', 0)->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = User::where('role', 'doctor')->get();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $searchTerm = $request->input('search');
-
-        $patients = Patient::where('physician', $profile->id)
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(5);
-
-        return view('doctor.patient.patient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
-    }
-
-    public function admittedPatientSearch(Request $request)
-    {
-        $profile = auth()->user();
-        $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->where('is_read', 0)->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = User::where('role', 'doctor')->get();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $searchTerm = $request->input('search');
-
-        $patients = Patient::where('physician', $profile->id)
-            ->where('type', 'admitted_patient')
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(5);
-
-        return view('doctor.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
-    }
-
-    public function outpatientSearch(Request $request)
-    {
-        $profile = auth()->user();
-        $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->where('is_read', 0)->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = User::where('role', 'doctor')->get();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $searchTerm = $request->input('search');
-
-        $patients = Patient::where('physician', $profile->id)
-            ->where('type', 'outpatient')
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-                $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })->paginate(5);
-
-        return view('doctor.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
     }
 
     public function patientUpdate(Request $request)
@@ -1566,7 +1482,7 @@ class DoctorController extends Controller
         $info = Doctor::where('account_id', $profile->id)->first();
         $notifications = Notification::where('specialties', $info->specialties)
             ->where('type', 'doctor')
-            ->orderBy('created_at', 'desc')->paginate(5);
+            ->orderBy('created_at', 'desc')->get();
         $notificationsAlert = Notification::where('specialties', $info->specialties)
             ->where('type', 'doctor')
             ->where('is_read', 0)->get();

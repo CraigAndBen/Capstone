@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Outpatient Analytics</h1>
+                            <h1 class="display-6">Outpatient Analytics</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -109,45 +109,48 @@
 
     @section('scripts')
         <script>
-            // Prepare data for the bar graph
-            var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
-            var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
+             // Prepare data for the line graph
+        var months = {!! json_encode(array_column($admitPatientCountsByMonth, 'month')) !!};
+        var admitPatientCounts = {!! json_encode(array_column($admitPatientCountsByMonth, 'count')) !!};
 
-            // Get the chart context and create the bar graph
-            var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
-            var admitPatientDemographicsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Outpatient',
-                        data: admitPatientCounts,
-                        backgroundColor: 'rgba(153, 102, 255, 0.7)', // Purple
-                        borderWidth: 1,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true, // Stack the bars on the x-axis for each month
-                            title: {
+        // Get the chart context and create the line graph
+        var ctx = document.getElementById('admitPatientDemographicsChart').getContext('2d');
+        var admitPatientDemographicsChart = new Chart(ctx, {
+            type: 'line', // Change this line to set the type to 'line'
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Outpatient',
+                    data: admitPatientCounts,
+                    borderColor: 'rgba(153, 102, 255, 1)', // Purple
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)', // Lighter purple fill
+                    borderWidth: 1,
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(153, 102, 255, 1)', // Purple data points
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
                             display: true,
                             text: 'Months'
                         }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
                         },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            },
-                            title: {
+                        title: {
                             display: true,
                             text: 'Outpatient Count'
                         }
-                        }
                     }
                 }
-            });
+            }
+        });
         </script>
     @endsection

@@ -32,11 +32,10 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Patient List</h1>
+                            <h1 class="display-6">Patient List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
-
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
@@ -67,81 +66,62 @@
                                         <span class="fa fa-check-circle"></span> No Patient.
                                     </div>
                                 @else
-                                    <form action="{{ route('nurse.patient.search') }}" method="GET">
-                                        @csrf
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput search" placeholder="Search" name="search" />
-                                                    <label for="floatingInput">Search</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 mt-2">
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Physician</th>
-                                                <th>Admitted Date</th>
-                                                <th>Room Number</th>
-                                                <th>Bed Number</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($patients as $patient)
+                                    <div class="row my-4">
+                                        <table class="table table-bordered" id="patientTable">
+                                            <thead class="table-primary text-light text-center">
                                                 <tr>
-                                                    <td>{{ ucwords($patient->first_name) }}</td>
-                                                    <td>{{ ucwords($patient->last_name) }}</td>
-
-                                                    @foreach ($doctors as $doctor)
-                                                        @if ($patient->physician == $doctor->id)
-                                                            <td>Dr. {{ ucwords($doctor->first_name) }}
-                                                                {{ ucwords($doctor->last_name) }}</td>
-                                                        @else
-                                                            <td>NA</td>
-                                                        @endif
-                                                    @endforeach
-                                                    <td>{{ ucwords($patient->admitted_date) }}</td>
-                                                    <td>{{ ucwords($patient->room_number) }}</td>
-                                                    <td>{{ ucwords($patient->bed_number) }}</td>
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                    data-target="#updateModal"
-                                                                    data-id="{{ json_encode($patient->id) }}"
-                                                                    data-first-name="{{ json_encode($patient->first_name) }}"
-                                                                    data-middle-name="{{ json_encode($patient->middle_name) }}"
-                                                                    data-last-name="{{ json_encode($patient->last_name) }}"
-                                                                    data-admitted-date="{{ json_encode($patient->admitted_date) }}"
-                                                                    data-admitted-time="{{ json_encode($patient->admitted_time) }}"
-                                                                    data-room-no="{{ json_encode($patient->room_number) }}"
-                                                                    data-bed-no="{{ json_encode($patient->bed_number) }}"
-                                                                    data-physician="{{ json_encode($patient->physician) }}">Update</a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Physician</th>
+                                                    <th>Admitted Date</th>
+                                                    <th>Room Number</th>
+                                                    <th>Bed Number</th>
+                                                    <th>Action</th>
                                                 </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($patients as $patient)
+                                                    <tr>
+                                                        <td>{{ ucwords($patient->first_name) }}</td>
+                                                        <td>{{ ucwords($patient->last_name) }}</td>
+    
+                                                        @foreach ($doctors as $doctor)
+                                                            @if ($patient->physician == $doctor->id)
+                                                                <td>Dr. {{ ucwords($doctor->first_name) }}
+                                                                    {{ ucwords($doctor->last_name) }}</td>
+                                                            @else
+                                                                <td>NA</td>
+                                                            @endif
+                                                        @endforeach
+                                                        <td>{{ ucwords($patient->admitted_date) }}</td>
+                                                        <td>{{ ucwords($patient->room_number) }}</td>
+                                                        <td>{{ ucwords($patient->bed_number) }}</td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item btn btn-primary" data-toggle="modal"
+                                                                        data-target="#updateModal"
+                                                                        data-id="{{ json_encode($patient->id) }}"
+                                                                        data-first-name="{{ json_encode($patient->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($patient->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($patient->last_name) }}"
+                                                                        data-admitted-date="{{ json_encode($patient->admitted_date) }}"
+                                                                        data-admitted-time="{{ json_encode($patient->admitted_time) }}"
+                                                                        data-room-no="{{ json_encode($patient->room_number) }}"
+                                                                        data-bed-no="{{ json_encode($patient->bed_number) }}"
+                                                                        data-physician="{{ json_encode($patient->physician) }}">Update</a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+    
+                                            </tbody>
+                                        </table>
                                     </div>
                                 @endif
                             </div>

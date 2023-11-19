@@ -203,7 +203,7 @@ class NurseController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where('type', 'admitted_patient')->whereNull('discharged_date')->paginate(5);
+        $patients = Patient::where('type', 'admitted_patient')->whereNull('discharged_date')->get();
 
         return view('nurse.patient.patient', compact('patients', 'profile', 'doctors','limitNotifications','count','currentTime','currentDate'));
     }
@@ -231,28 +231,6 @@ class NurseController extends Controller
                 return redirect()->back()->with('info', 'No changes were made.');
             }
     }
-
-    public function patientSearch(Request $request)
-    {
-        $profile = auth()->user();
-        $notifications = Notification::where('type',$profile->role)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = User::where('role', 'doctor')->get();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $searchTerm = $request->input('search');
-        
-        $patients = Patient::where('type', 'admitted_patient')->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(5);
-
-        return view('nurse.patient.patient_search', compact('patients', 'profile', 'doctors','limitNotifications','count','currentTime','currentDate'));
-    }
-
     public function notification()
     {
         $profile = Auth::user();

@@ -76,7 +76,7 @@
                                     </div>
                                 @else
                                 <div class="row my-4">
-                                    <table class="table table-bordered" id="patientTable">
+                                    <table class="table table-hover" id="patientTable">
                                         <thead class="table-primary text-light text-center">
                                             <tr>
                                                 <th>First Name</th>

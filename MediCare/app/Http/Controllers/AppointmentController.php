@@ -62,7 +62,9 @@ class AppointmentController extends Controller
 
         $user = Auth::user();
         $appointments = Appointment::where('account_id', $user->id)
-        ->whereNotIn('status', ['cancelled', 'unavailable'])
+        ->where(function ($query) {
+            $query->whereNotIn('status', ['cancelled', 'unavailable']);
+        })
         ->get();
 
         $events = [];

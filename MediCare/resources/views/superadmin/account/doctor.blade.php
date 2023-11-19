@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Doctor Accounts</h1>
+                            <h1 class="display-6">Doctor Accounts</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -72,103 +72,105 @@
                                         <span class="fa fa-check-circle"></span> No Doctor Account Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Email</th>
-                                                <th>Specialties</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($users as $user)
+                                    <div class="row my-4">
+                                        <table class="table table-hover" id="patientTable">
+                                            <thead class="table-primary text-light text-center">
                                                 <tr>
-                                                    <td>{{ ucwords($user->first_name) }}</td>
-                                                    <td>{{ ucwords($user->last_name) }}</td>
-                                                    <td>{{ ucwords($user->email) }}</td>
-                                                    @foreach ($doctors as $doctor)
-                                                        @if ($user->id == $doctor->account_id)
-                                                            <td>{{ ucwords($doctor->specialties) }}</td>
-                                                        @endif
-                                                    @endforeach
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-
-                                                                @foreach ($doctors as $doctor)
-                                                                    @if ($user->id === $doctor->account_id)
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                            data-toggle="modal" data-target="#updateModal"
-                                                                            data-user-id="{{ json_encode($user->id) }}"
-                                                                            data-first-name="{{ json_encode($user->first_name) }}"
-                                                                            data-last-name="{{ json_encode($user->last_name) }}"
-                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                            data-age="{{ json_encode($doctor->age) }}"
-                                                                            data-gender="{{ json_encode($doctor->gender) }}"
-                                                                            data-qualification="{{ json_encode($doctor->qualification) }}"
-                                                                            data-birthdate="{{ json_encode($doctor->birthdate) }}"
-                                                                            data-employment-date="{{ json_encode($doctor->employment_date) }}"
-                                                                            data-years-of-experience="{{ json_encode($doctor->years_of_experience) }}"
-                                                                            data-specialties="{{ json_encode($doctor->specialties) }}"
-                                                                            data-street="{{ json_encode($doctor->street) }}"
-                                                                            data-brgy="{{ json_encode($doctor->brgy) }}"
-                                                                            data-city="{{ json_encode($doctor->city) }}"
-                                                                            data-province="{{ json_encode($doctor->province) }}"
-                                                                            data-phone="{{ json_encode($doctor->phone) }}"
-                                                                            data-facebook="{{ json_encode($doctor->facebook_link) }}"
-                                                                            data-twitter="{{ json_encode($doctor->twitter_link) }}"
-                                                                            data-instagram="{{ json_encode($doctor->instagram_link) }}"
-                                                                            data-linkedin="{{ json_encode($doctor->linkedin_link) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">Update Profile</a>
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                            data-toggle="modal"
-                                                                            data-target="#updatePasswordModal"
-                                                                            data-user-id="{{ json_encode($user->id) }}">Update
-                                                                            Password</a>
-
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                            data-toggle="modal" data-target="#viewModal"
-                                                                            data-first-name="{{ json_encode($user->first_name) }}"
-                                                                            data-last-name="{{ json_encode($user->last_name) }}"
-                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                            data-age="{{ json_encode($doctor->age) }}"
-                                                                            data-gender="{{ json_encode($doctor->gender) }}"
-                                                                            data-qualification="{{ json_encode($doctor->qualification) }}"
-                                                                            data-years-of-experience="{{ json_encode($doctor->years_of_experience) }}"
-                                                                            data-specialties="{{ json_encode($doctor->specialties) }}"
-                                                                            data-street="{{ json_encode($doctor->street) }}"
-                                                                            data-brgy="{{ json_encode($doctor->brgy) }}"
-                                                                            data-city="{{ json_encode($doctor->city) }}"
-                                                                            data-province="{{ json_encode($doctor->province) }}"
-                                                                            data-phone="{{ json_encode($doctor->phone) }}"
-                                                                            data-facebook="{{ json_encode($doctor->facebook_link) }}"
-                                                                            data-twitter="{{ json_encode($doctor->twitter_link) }}"
-                                                                            data-instagram="{{ json_encode($doctor->instagram_link) }}"
-                                                                            data-linkedin="{{ json_encode($doctor->linkedin_link) }}"
-                                                                            data-birthdate="{{ json_encode($doctor->birthdate) }}"
-                                                                            data-phone="{{ json_encode($doctor->phone) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">View Profile</a>
-                                                                            <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
-                                                                                @csrf
-                                                                                <input type="hidden" name="id" value="{{$user->id}}">
-                                                                                <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
-                                                                            </form>
-                                                                    @endif
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Email</th>
+                                                    <th>Specialties</th>
+                                                    <th></th>
                                                 </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($users as $user)
+                                                    <tr>
+                                                        <td>{{ ucwords($user->first_name) }}</td>
+                                                        <td>{{ ucwords($user->last_name) }}</td>
+                                                        <td>{{ ucwords($user->email) }}</td>
+                                                        @foreach ($doctors as $doctor)
+                                                            @if ($user->id == $doctor->account_id)
+                                                                <td>{{ ucwords($doctor->specialties) }}</td>
+                                                            @endif
+                                                        @endforeach
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+    
+                                                                    @foreach ($doctors as $doctor)
+                                                                        @if ($user->id === $doctor->account_id)
+                                                                            <a class="dropdown-item btn btn-primary"
+                                                                                data-toggle="modal" data-target="#updateModal"
+                                                                                data-user-id="{{ json_encode($user->id) }}"
+                                                                                data-first-name="{{ json_encode($user->first_name) }}"
+                                                                                data-last-name="{{ json_encode($user->last_name) }}"
+                                                                                data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                                data-age="{{ json_encode($doctor->age) }}"
+                                                                                data-gender="{{ json_encode($doctor->gender) }}"
+                                                                                data-qualification="{{ json_encode($doctor->qualification) }}"
+                                                                                data-birthdate="{{ json_encode($doctor->birthdate) }}"
+                                                                                data-employment-date="{{ json_encode($doctor->employment_date) }}"
+                                                                                data-years-of-experience="{{ json_encode($doctor->years_of_experience) }}"
+                                                                                data-specialties="{{ json_encode($doctor->specialties) }}"
+                                                                                data-street="{{ json_encode($doctor->street) }}"
+                                                                                data-brgy="{{ json_encode($doctor->brgy) }}"
+                                                                                data-city="{{ json_encode($doctor->city) }}"
+                                                                                data-province="{{ json_encode($doctor->province) }}"
+                                                                                data-phone="{{ json_encode($doctor->phone) }}"
+                                                                                data-facebook="{{ json_encode($doctor->facebook_link) }}"
+                                                                                data-twitter="{{ json_encode($doctor->twitter_link) }}"
+                                                                                data-instagram="{{ json_encode($doctor->instagram_link) }}"
+                                                                                data-linkedin="{{ json_encode($doctor->linkedin_link) }}"
+                                                                                data-email="{{ json_encode($user->email) }}">Update Profile</a>
+                                                                            <a class="dropdown-item btn btn-primary"
+                                                                                data-toggle="modal"
+                                                                                data-target="#updatePasswordModal"
+                                                                                data-user-id="{{ json_encode($user->id) }}">Update
+                                                                                Password</a>
+    
+                                                                            <a class="dropdown-item btn btn-primary"
+                                                                                data-toggle="modal" data-target="#viewModal"
+                                                                                data-first-name="{{ json_encode($user->first_name) }}"
+                                                                                data-last-name="{{ json_encode($user->last_name) }}"
+                                                                                data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                                data-age="{{ json_encode($doctor->age) }}"
+                                                                                data-gender="{{ json_encode($doctor->gender) }}"
+                                                                                data-qualification="{{ json_encode($doctor->qualification) }}"
+                                                                                data-years-of-experience="{{ json_encode($doctor->years_of_experience) }}"
+                                                                                data-specialties="{{ json_encode($doctor->specialties) }}"
+                                                                                data-street="{{ json_encode($doctor->street) }}"
+                                                                                data-brgy="{{ json_encode($doctor->brgy) }}"
+                                                                                data-city="{{ json_encode($doctor->city) }}"
+                                                                                data-province="{{ json_encode($doctor->province) }}"
+                                                                                data-phone="{{ json_encode($doctor->phone) }}"
+                                                                                data-facebook="{{ json_encode($doctor->facebook_link) }}"
+                                                                                data-twitter="{{ json_encode($doctor->twitter_link) }}"
+                                                                                data-instagram="{{ json_encode($doctor->instagram_link) }}"
+                                                                                data-linkedin="{{ json_encode($doctor->linkedin_link) }}"
+                                                                                data-birthdate="{{ json_encode($doctor->birthdate) }}"
+                                                                                data-phone="{{ json_encode($doctor->phone) }}"
+                                                                                data-email="{{ json_encode($user->email) }}">View Profile</a>
+                                                                                <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
+                                                                                    @csrf
+                                                                                    <input type="hidden" name="id" value="{{$user->id}}">
+                                                                                    <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
+                                                                                </form>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+    
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 @endif
                             </div>
                         </div>

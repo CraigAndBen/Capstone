@@ -27,6 +27,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+
+    <script  src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script  src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script  src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
 
 
 </head>
@@ -407,5 +414,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- [Body] end -->
 @yield('scripts')
-
+<script>
+    new DataTable('#patientTable');
+</script>
 </html>

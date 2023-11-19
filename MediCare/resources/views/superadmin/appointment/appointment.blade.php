@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Appointment List </h1>
+                            <h1 class="display-6">Appointment List </h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -66,83 +66,62 @@
                                         <span class="fa fa-check-circle"></span> No Appointment Yet.
                                     </div>
                                 @else
-                                    <form action="{{ route('superadmin.appointment.search') }}" method="GET">
-                                        @csrf
-                                        <div class="row d-flex justify-content-center">
-                                            <div class="col-md-2">
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-floating mb-3">
-                                                    <input type="text" class="form-control ml-2"
-                                                        id="floatingInput search" placeholder="Search" name="search" />
-                                                    <label for="floatingInput">Search</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 mt-2">
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>specialties</th>
-                                                <th>Type</th>
-                                                <th>Date</th>
-                                                <th>Time</th>
-                                                <th>Status</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($appointments as $appointment)
+                                    <div class="row my-4">
+                                        <table class="table table-hover" id="patientTable">
+                                            <thead class="table-primary text-light text-center">
                                                 <tr>
-                                                    <td>{{ ucwords($appointment->first_name) }}</td>
-                                                    <td>{{ ucwords($appointment->last_name) }}</td>
-                                                    <td>{{ ucwords($appointment->specialties) }}</td>
-                                                    <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                    <td>{{ date('F j, Y', strtotime($appointment->appointment_date)) }}</td>
-                                                    <td>{{ ucwords($appointment->appointment_time) }}</td>
-                                                    <td>{{ ucwords($appointment->status) }}</td>
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                    data-target="#viewModal"
-                                                                    data-first-name="{{ json_encode($appointment->first_name) }}"
-                                                                    data-middle-name="{{ json_encode($appointment->middle_name) }}"
-                                                                    data-last-name="{{ json_encode($appointment->last_name) }}"
-                                                                    data-street="{{ json_encode($appointment->street) }}"
-                                                                    data-brgy="{{ json_encode($appointment->brgy) }}"
-                                                                    data-city="{{ json_encode($appointment->city) }}"
-                                                                    data-province="{{ json_encode($appointment->province) }}"
-                                                                    data-email="{{ json_encode($appointment->email) }}"
-                                                                    data-birthdate="{{ json_encode($appointment->birthdate) }}"
-                                                                    data-gender="{{ json_encode($appointment->gender) }}"
-                                                                    data-phone="{{ json_encode($appointment->phone) }}"
-                                                                    data-specialties="{{ json_encode($appointment->specialties) }}"
-                                                                    data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
-                                                                    data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
-                                                                    data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
-                                                                    data-reason="{{ json_encode($appointment->reason) }}">View</a>
-
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Type</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th>Status</th>
+                                                    <th></th>
                                                 </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $appointments->links('pagination::bootstrap-4') }}
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($appointments as $appointment)
+                                                    <tr>
+                                                        <td>{{ ucwords($appointment->first_name) }}</td>
+                                                        <td>{{ ucwords($appointment->last_name) }}</td>
+                                                        <td>{{ ucwords($appointment->appointment_type) }}</td>
+                                                        <td>{{ date('F j, Y', strtotime($appointment->appointment_date)) }}</td>
+                                                        <td>{{ ucwords($appointment->appointment_time) }}</td>
+                                                        <td>{{ ucwords($appointment->status) }}</td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item btn btn-primary" data-toggle="modal"
+                                                                        data-target="#viewModal"
+                                                                        data-first-name="{{ json_encode($appointment->first_name) }}"
+                                                                        data-middle-name="{{ json_encode($appointment->middle_name) }}"
+                                                                        data-last-name="{{ json_encode($appointment->last_name) }}"
+                                                                        data-street="{{ json_encode($appointment->street) }}"
+                                                                        data-brgy="{{ json_encode($appointment->brgy) }}"
+                                                                        data-city="{{ json_encode($appointment->city) }}"
+                                                                        data-province="{{ json_encode($appointment->province) }}"
+                                                                        data-email="{{ json_encode($appointment->email) }}"
+                                                                        data-birthdate="{{ json_encode($appointment->birthdate) }}"
+                                                                        data-gender="{{ json_encode($appointment->gender) }}"
+                                                                        data-phone="{{ json_encode($appointment->phone) }}"
+                                                                        data-specialties="{{ json_encode($appointment->specialties) }}"
+                                                                        data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
+                                                                        data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
+                                                                        data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
+                                                                        data-reason="{{ json_encode($appointment->reason) }}">View</a>
+    
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+    
+                                            </tbody>
+                                        </table>
                                     </div>
                                 @endif
                             </div>

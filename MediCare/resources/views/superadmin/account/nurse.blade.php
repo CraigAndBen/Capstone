@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Nurse Accounts</h1>
+                            <h1 class="display-6">Nurse Accounts</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -72,89 +72,91 @@
                                         <span class="fa fa-check-circle"></span> No Nurse Account Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Email</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($users as $user)
+                                    <div class="row my-4">
+                                        <table class="table table-hover" id="patientTable">
+                                            <thead class="table-primary text-light text-center">
                                                 <tr>
-                                                    <td>{{ ucwords($user->first_name) }}</td>
-                                                    <td>{{ ucwords($user->last_name) }}</td>
-                                                    <td>{{ ucwords($user->email) }}</td>
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-
-                                                                @foreach ($nurses as $nurse)
-                                                                    @if ($user->id === $nurse->account_id)
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                            data-toggle="modal" data-target="#updateModal"
-                                                                            data-user-id="{{ json_encode($user->id) }}"
-                                                                            data-first-name="{{ json_encode($user->first_name) }}"
-                                                                            data-last-name="{{ json_encode($user->last_name) }}"
-                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                            data-age="{{ json_encode($nurse->age) }}"
-                                                                            data-gender="{{ json_encode($nurse->gender) }}"
-                                                                            data-qualification="{{ json_encode($nurse->qualification) }}"
-                                                                            data-birthdate="{{ json_encode($nurse->birthdate) }}"
-                                                                            data-employment-date="{{ json_encode($nurse->employment_date) }}"
-                                                                            data-shift="{{ json_encode($nurse->shift) }}"
-                                                                            data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
-                                                                            data-street="{{ json_encode($nurse->street) }}"
-                                                                            data-brgy="{{ json_encode($nurse->brgy) }}"
-                                                                            data-city="{{ json_encode($nurse->city) }}"
-                                                                            data-province="{{ json_encode($nurse->province) }}"
-                                                                            data-phone="{{ json_encode($nurse->phone) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">Update
-                                                                            Account Profile</a>
-                                                                        <a class="dropdown-item" data-toggle="modal"
-                                                                            data-target="#updatePasswordModal"
-                                                                            data-user-id="{{ json_encode($user->id) }}">Update
-                                                                            Password</a>
-
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                            data-toggle="modal" data-target="#viewModal"
-                                                                            data-first-name="{{ json_encode($user->first_name) }}"
-                                                                            data-last-name="{{ json_encode($user->last_name) }}"
-                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                            data-age="{{ json_encode($nurse->age) }}"
-                                                                            data-gender="{{ json_encode($nurse->gender) }}"
-                                                                            data-qualification="{{ json_encode($nurse->qualification) }}"
-                                                                            data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
-                                                                            data-shift="{{ json_encode($nurse->shift) }}"
-                                                                            data-street="{{ json_encode($nurse->street) }}"
-                                                                            data-brgy="{{ json_encode($nurse->brgy) }}"
-                                                                            data-city="{{ json_encode($nurse->city) }}"
-                                                                            data-province="{{ json_encode($nurse->province) }}"
-                                                                            data-birthdate="{{ json_encode($nurse->birthdate) }}"
-                                                                            data-phone="{{ json_encode($nurse->phone) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">View
-                                                                            Profile</a>
-                                                                            <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
-                                                                                @csrf
-                                                                                <input type="hidden" name="id" value="{{$user->id}}">
-                                                                                <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
-                                                                            </form>
-                                                                    @endif
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Email</th>
+                                                    <th></th>
                                                 </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($users as $user)
+                                                    <tr>
+                                                        <td>{{ ucwords($user->first_name) }}</td>
+                                                        <td>{{ ucwords($user->last_name) }}</td>
+                                                        <td>{{ ucwords($user->email) }}</td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+    
+                                                                    @foreach ($nurses as $nurse)
+                                                                        @if ($user->id === $nurse->account_id)
+                                                                            <a class="dropdown-item btn btn-primary"
+                                                                                data-toggle="modal" data-target="#updateModal"
+                                                                                data-user-id="{{ json_encode($user->id) }}"
+                                                                                data-first-name="{{ json_encode($user->first_name) }}"
+                                                                                data-last-name="{{ json_encode($user->last_name) }}"
+                                                                                data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                                data-age="{{ json_encode($nurse->age) }}"
+                                                                                data-gender="{{ json_encode($nurse->gender) }}"
+                                                                                data-qualification="{{ json_encode($nurse->qualification) }}"
+                                                                                data-birthdate="{{ json_encode($nurse->birthdate) }}"
+                                                                                data-employment-date="{{ json_encode($nurse->employment_date) }}"
+                                                                                data-shift="{{ json_encode($nurse->shift) }}"
+                                                                                data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
+                                                                                data-street="{{ json_encode($nurse->street) }}"
+                                                                                data-brgy="{{ json_encode($nurse->brgy) }}"
+                                                                                data-city="{{ json_encode($nurse->city) }}"
+                                                                                data-province="{{ json_encode($nurse->province) }}"
+                                                                                data-phone="{{ json_encode($nurse->phone) }}"
+                                                                                data-email="{{ json_encode($user->email) }}">Update
+                                                                                Account Profile</a>
+                                                                            <a class="dropdown-item" data-toggle="modal"
+                                                                                data-target="#updatePasswordModal"
+                                                                                data-user-id="{{ json_encode($user->id) }}">Update
+                                                                                Password</a>
+    
+                                                                            <a class="dropdown-item btn btn-primary"
+                                                                                data-toggle="modal" data-target="#viewModal"
+                                                                                data-first-name="{{ json_encode($user->first_name) }}"
+                                                                                data-last-name="{{ json_encode($user->last_name) }}"
+                                                                                data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                                data-age="{{ json_encode($nurse->age) }}"
+                                                                                data-gender="{{ json_encode($nurse->gender) }}"
+                                                                                data-qualification="{{ json_encode($nurse->qualification) }}"
+                                                                                data-years-of-experience="{{ json_encode($nurse->years_of_experience) }}"
+                                                                                data-shift="{{ json_encode($nurse->shift) }}"
+                                                                                data-street="{{ json_encode($nurse->street) }}"
+                                                                                data-brgy="{{ json_encode($nurse->brgy) }}"
+                                                                                data-city="{{ json_encode($nurse->city) }}"
+                                                                                data-province="{{ json_encode($nurse->province) }}"
+                                                                                data-birthdate="{{ json_encode($nurse->birthdate) }}"
+                                                                                data-phone="{{ json_encode($nurse->phone) }}"
+                                                                                data-email="{{ json_encode($user->email) }}">View
+                                                                                Profile</a>
+                                                                                <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
+                                                                                    @csrf
+                                                                                    <input type="hidden" name="id" value="{{$user->id}}">
+                                                                                    <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
+                                                                                </form>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+    
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 @endif
                             </div>
                         </div>

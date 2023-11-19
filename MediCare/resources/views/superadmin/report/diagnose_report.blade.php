@@ -123,8 +123,8 @@
 @endsection
 @section('scripts')
     <script>
-        // Prepare data for the line graph
-        var months = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'month')) !!};
+         // Prepare data for the line graph
+         var months = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'month')) !!};
         var diagnosePatientCounts = {!! json_encode(array_column($diagnosePatientCountsByMonth, 'count')) !!};
 
         // Get the chart context and create the line graph
@@ -134,11 +134,14 @@
             data: {
                 labels: months,
                 datasets: [{
-                    label: {!!json_encode(ucwords($specificDiagnosis))!!},
+                    label: {!! json_encode(ucwords($specificDiagnosis)) !!},
                     data: diagnosePatientCounts,
-                    fill: false,
-                    borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
                     borderWidth: 2,
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
                 }]
             },
             options: {

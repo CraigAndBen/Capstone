@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Notification List</h1>
+                            <h1 class="display-6">Notification List</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -74,56 +74,59 @@
                                         <span class="fa fa-check-circle"></span> No Notification Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>Title</th>
-                                                <th>Message</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($notifications as $notification)
-                                                <tr class="p-3">
-                                                    <td>{{ ucwords($notification->title) }}</td>
-                                                    <td>{{ ucwords(Str::limit($notification->message, 30)) }}</td>
-                                                    @if ($notification->is_read == 0)
-                                                        <td>Unread</td>
-                                                    @else
-                                                        <td>read</td>
-                                                    @endif
-
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                    data-target="#viewModal"
-                                                                    data-id="{{ json_encode($notification->id) }}"
-                                                                    data-title="{{ json_encode(ucwords($notification->title)) }}"
-                                                                    data-message="{{ json_encode($notification->message) }}"
-                                                                    data-date="{{ json_encode($notification->date) }}"
-                                                                    data-time="{{ json_encode($notification->time) }}"
-                                                                    data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
-                                                                <form method="POST"
-                                                                    action="{{ route('superadmin.notification.delete') }}">
-                                                                    @csrf
-                                                                    <input type="hidden" name="id"
-                                                                        value="{{ $notification->id }}">
-                                                                    <button type="submit"
-                                                                        class="dropdown-item btn btn-primary">Delete</button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                    <div class="row my-4">
+                                        <table class="table table-hover" id="patientTable">
+                                            <thead class="table-primary text-light text-center">
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Message</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($notifications as $notification)
+                                                    <tr class="p-3">
+                                                        <td>{{ ucwords($notification->title) }}</td>
+                                                        <td>{{ ucwords(Str::limit($notification->message, 30)) }}</td>
+                                                        @if ($notification->is_read == 0)
+                                                            <td>Unread</td>
+                                                        @else
+                                                            <td>read</td>
+                                                        @endif
+    
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item btn btn-primary" data-toggle="modal"
+                                                                        data-target="#viewModal"
+                                                                        data-id="{{ json_encode($notification->id) }}"
+                                                                        data-title="{{ json_encode(ucwords($notification->title)) }}"
+                                                                        data-message="{{ json_encode($notification->message) }}"
+                                                                        data-date="{{ json_encode($notification->date) }}"
+                                                                        data-time="{{ json_encode($notification->time) }}"
+                                                                        data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
+                                                                    <form method="POST"
+                                                                        action="{{ route('superadmin.notification.delete') }}">
+                                                                        @csrf
+                                                                        <input type="hidden" name="id"
+                                                                            value="{{ $notification->id }}">
+                                                                        <button type="submit"
+                                                                            class="dropdown-item btn btn-primary">Delete</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                     <div class="d-flex justify-content-center my-3">
                                         {{ $notifications->links('pagination::bootstrap-4') }}
                                     </div>

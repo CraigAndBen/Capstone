@@ -78,7 +78,6 @@ Route::middleware(['auth', 'role:nurse'])->group(function () {
 
     // Patient
     Route::get('/nurse/patient', [NurseController::class, 'patientList'])->name('nurse.patient');
-    Route::get('/nurse/patient/search', [NurseController::class, 'patientSearch'])->name('nurse.patient.search');
     Route::post('/nurse/patient/update', [NurseController::class, 'patientUpdate'])->name('nurse.patient.update');
 
 
@@ -130,9 +129,6 @@ Route::middleware(['auth', 'role:doctor'])->group(function () {
     Route::get('/doctor/outpatient', [DoctorController::class, 'outpatientList'])->name('doctor.outpatient');
     Route::get('/doctor/admotted/patient', [DoctorController::class, 'admittedPatientList'])->name('doctor.admitted');
     Route::post('/doctor/patient/update', [DoctorController::class, 'patientUpdate'])->name('doctor.patient.update');
-    Route::get('/doctor/patient/search', [DoctorController::class, 'patientSearch'])->name('doctor.patient.search');
-    Route::get('/doctor/admitted/patient/search', [DoctorController::class, 'admittedPatientSearch'])->name('doctor.admitted.search');
-    Route::get('/doctor/outpatient/search', [DoctorController::class, 'outpatientSearch'])->name('doctor.outpatient.search');
     Route::get('/doctor/patient/{id}/diagnoses', [DoctorController::class, 'getDiagnoses'])->name('doctor.patient.diagnoses');
     Route::get('/doctor/patient/{id}/medications', [DoctorController::class, 'getMedications'])->name('doctor.patient.medications');
 
@@ -250,7 +246,6 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
     // Appointment
     Route::get('/superadmin/appointment', [SuperAdminController::class, 'appointment'])->name('superadmin.appointment');
-    Route::get('/superadmin/appointment/search', [SuperAdminController::class, 'appointmentSearch'])->name('superadmin.appointment.search');
 
     // Doctor
     Route::get('/super_admin/doctor', [SuperAdminController::class, 'doctor'])->name('superadmin.doctor');

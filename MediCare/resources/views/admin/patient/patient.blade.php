@@ -76,7 +76,7 @@
                                     </div>
                                 @else
                                     <div class="row my-4">
-                                        <table class="table table-bordered mt-2" id="patientTable">
+                                        <table class="table table-hover" id="patientTable">
                                             <thead class="table-primary text-light text-center">
                                                 <tr>
                                                     <th>First Name</th>
@@ -169,10 +169,6 @@
                                             </tbody>
                                         </table> 
                                     </div>
-
-                                    {{-- <div class="d-flex justify-content-center my-3">
-                                        {{ $patients->links('pagination::bootstrap-4') }}
-                                    </div> --}}
                                 @endif
                             </div>
                         </div>

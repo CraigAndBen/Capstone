@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">{{$title}}</h5>
+                                <h5 class="m-b-10">{{ $title }}</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">{{$title}}</li>
+                                <li class="breadcrumb-item" aria-current="page">{{ $title }}</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>{{$title}}</h1>
+                            <h1 class="display-6">{{ $title }}</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
@@ -135,9 +135,12 @@
                 datasets: [{
                     label: {!! json_encode(ucwords($specificDiagnosis)) !!},
                     data: diagnosePatientCounts,
-                    fill: false,
-                    borderColor: 'rgba(54, 162, 235, 0.7)', // Blue
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
                     borderWidth: 2,
+                    fill: true, // To fill the area under the line
+                    pointRadius: 5, // Adjust the size of data points on the line
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
                 }]
             },
             options: {

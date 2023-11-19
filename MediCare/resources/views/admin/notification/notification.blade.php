@@ -76,9 +76,9 @@
                                     </div>
                                 </div>
                                 <hr>
-
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
+                                <div class="row my-4">
+                                    <table class="table table-hover" id="patientTable">
+                                        <thead class="table-primary text-light text-center">
                                             <tr>
                                                 <th>Title</th>
                                                 <th>Message</th>
@@ -128,9 +128,7 @@
 
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $notifications->links('pagination::bootstrap-4') }}
-                                    </div>
+                                </div>
                                 @endif
                             </div>
                         </div>

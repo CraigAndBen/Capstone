@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Report History</h1>
+                            <h1 class="display-6">Report History</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -66,54 +66,53 @@
                                         <span class="fa fa-check-circle"></span> No Appointment Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>Reference Number</th>
-                                                <th>Report Type</th>
-                                                <th>Date</th>
-                                                <th>Time</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($reports as $report)
+                                    <div class="row my-4">
+                                        <table class="table table-hover" id="patientTable">
+                                            <thead class="table-primary text-light text-center">
                                                 <tr>
-                                                    <td>{{ ucwords($report->reference_number) }}</td>
-                                                    <td>{{ ucwords($report->report_type) }}</td>
-                                                    <td>{{ date('F j, Y', strtotime($report->date)) }}</td>
-                                                    <td>{{ ucwords($report->time) }}</td>
-
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <a class="dropdown-item btn btn-primary" data-toggle="modal"
-                                                                    data-target="#viewModal"
-                                                                    data-reference="{{ json_encode($report->reference_number) }}"
-                                                                    data-report-type="{{ json_encode($report->report_type) }}"
-                                                                    @foreach ($users as $user)
-                                                                        @if ($report->user_id == $user->id)
-                                                                            data-author="{{ json_encode($user->first_name . ' ' . $user->last_name) }}"
-                                                                            data-author-type="{{ json_encode(ucwords(str_replace('_', ' ', $report->author_type))) }}"
-                                                                        @endif
-                                                                    @endforeach
-                                                                    data-date="{{ json_encode(date('F j, Y', strtotime($report->date))) }}"
-                                                                    data-time="{{ json_encode($report->time) }}">View</a>
-
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>Reference Number</th>
+                                                    <th>Report Type</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th></th>
                                                 </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $reports->links('pagination::bootstrap-4') }}
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($reports as $report)
+                                                    <tr>
+                                                        <td>{{ ucwords($report->reference_number) }}</td>
+                                                        <td>{{ ucwords($report->report_type) }}</td>
+                                                        <td>{{ date('F j, Y', strtotime($report->date)) }}</td>
+                                                        <td>{{ ucwords($report->time) }}</td>
+    
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item btn btn-primary" data-toggle="modal"
+                                                                        data-target="#viewModal"
+                                                                        data-reference="{{ json_encode($report->reference_number) }}"
+                                                                        data-report-type="{{ json_encode($report->report_type) }}"
+                                                                        @foreach ($users as $user)
+                                                                            @if ($report->user_id == $user->id)
+                                                                                data-author="{{ json_encode($user->first_name . ' ' . $user->last_name) }}"
+                                                                                data-author-type="{{ json_encode(ucwords(str_replace('_', ' ', $report->author_type))) }}"
+                                                                            @endif
+                                                                        @endforeach
+                                                                        data-date="{{ json_encode(date('F j, Y', strtotime($report->date))) }}"
+                                                                        data-time="{{ json_encode($report->time) }}">View</a>
+    
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+    
+                                            </tbody>
+                                        </table>
                                     </div>
                                 @endif
                             </div>

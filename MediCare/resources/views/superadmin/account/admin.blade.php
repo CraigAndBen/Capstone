@@ -32,7 +32,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1>Admin Accounts</h1>
+                            <h1 class="display-6">Admin Accounts</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
@@ -71,67 +71,69 @@
                                         <span class="fa fa-check-circle"></span> No Admin Account Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Email</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($users as $user)
+                                    <div class="row my-4">
+                                        <table class="table table-hover" id="patientTable">
+                                            <thead class="table-primary text-light text-center">
                                                 <tr>
-                                                    <td>{{ ucwords($user->first_name) }}</td>
-                                                    <td>{{ ucwords($user->last_name) }}</td>
-                                                    <td>{{ ucwords($user->email) }}</td>
-                                                    <td class="text-center">
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu">
-
-                                                                @foreach ($admins as $admin)
-                                                                    @if ($user->id === $admin->account_id)
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                            data-toggle="modal" data-target="#updateModal"
-                                                                            data-user-id="{{ json_encode($user->id) }}"
-                                                                            data-first-name="{{ json_encode($user->first_name) }}"
-                                                                            data-last-name="{{ json_encode($user->last_name) }}"
-                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                            data-access-level="{{ json_encode($admin->access_level) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">Update
-                                                                            Account Profile</a>
-                                                                        <a class="dropdown-item" data-toggle="modal"
-                                                                            data-target="#updatePasswordModal"
-                                                                            data-user-id="{{ json_encode($user->id) }}">Update
-                                                                            Password</a>
-                                                                        <a class="dropdown-item btn btn-primary"
-                                                                            data-toggle="modal" data-target="#viewModal"
-                                                                            data-first-name="{{ json_encode($user->first_name) }}"
-                                                                            data-last-name="{{ json_encode($user->last_name) }}"
-                                                                            data-middle-name="{{ json_encode($user->middle_name) }}"
-                                                                            data-access-level="{{ json_encode($admin->access_level) }}"
-                                                                            data-email="{{ json_encode($user->email) }}">View
-                                                                            Profile</a>
-                                                                            <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
-                                                                                @csrf
-                                                                                <input type="hidden" name="id" value="{{$user->id}}">
-                                                                                <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
-                                                                            </form>
-                                                                    @endif
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Email</th>
+                                                    <th></th>
                                                 </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody class="text-center">
+                                                @foreach ($users as $user)
+                                                    <tr>
+                                                        <td>{{ ucwords($user->first_name) }}</td>
+                                                        <td>{{ ucwords($user->last_name) }}</td>
+                                                        <td>{{ ucwords($user->email) }}</td>
+                                                        <td class="text-center">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                    data-toggle="dropdown">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu">
+    
+                                                                    @foreach ($admins as $admin)
+                                                                        @if ($user->id === $admin->account_id)
+                                                                            <a class="dropdown-item btn btn-primary"
+                                                                                data-toggle="modal" data-target="#updateModal"
+                                                                                data-user-id="{{ json_encode($user->id) }}"
+                                                                                data-first-name="{{ json_encode($user->first_name) }}"
+                                                                                data-last-name="{{ json_encode($user->last_name) }}"
+                                                                                data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                                data-access-level="{{ json_encode($admin->access_level) }}"
+                                                                                data-email="{{ json_encode($user->email) }}">Update
+                                                                                Account Profile</a>
+                                                                            <a class="dropdown-item" data-toggle="modal"
+                                                                                data-target="#updatePasswordModal"
+                                                                                data-user-id="{{ json_encode($user->id) }}">Update
+                                                                                Password</a>
+                                                                            <a class="dropdown-item btn btn-primary"
+                                                                                data-toggle="modal" data-target="#viewModal"
+                                                                                data-first-name="{{ json_encode($user->first_name) }}"
+                                                                                data-last-name="{{ json_encode($user->last_name) }}"
+                                                                                data-middle-name="{{ json_encode($user->middle_name) }}"
+                                                                                data-access-level="{{ json_encode($admin->access_level) }}"
+                                                                                data-email="{{ json_encode($user->email) }}">View
+                                                                                Profile</a>
+                                                                                <form method="POST" action="{{ route('superadmin.delete', $user->id) }}">
+                                                                                    @csrf
+                                                                                    <input type="hidden" name="id" value="{{$user->id}}">
+                                                                                    <button type="submit" class="dropdown-item btn btn-primary">Delete</button>
+                                                                                </form>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+    
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 @endif
                             </div>
                         </div>
