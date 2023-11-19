@@ -260,13 +260,18 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.admin') }}">Admin</a>
                             </li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.doctor') }}">Doctor</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.nurse') }}">Nurse</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.doctor') }}">Doctor</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.nurse') }}">Nurse</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.user') }}">User</a>
+                            </li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.supply_officer') }}">Supply Officer</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.staff') }}">Staff</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.cashier') }}">Cashier</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('superadmin.staff') }}">Staff</a>
+                            </li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.cashier') }}">Cashier</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.pharmacist') }}">Pharmacist</a></li>
                         </ul>
@@ -333,9 +338,11 @@
                                 Trend</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.analytics.patient.diagnose_trend') }}">All Patient</a></li>
+                                    href="{{ route('superadmin.analytics.patient.diagnose_trend') }}">All Patient</a>
+                            </li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('superadmin.analytics.admitted.diagnose_trend') }}">Admitted</a></li>
+                                    href="{{ route('superadmin.analytics.admitted.diagnose_trend') }}">Admitted</a>
+                            </li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.analytics.outpatient.diagnose_trend') }}">Outpatient</a>
                             </li>
@@ -378,8 +385,8 @@
                         <i class="ti ti-apps"></i>
                     </li>
                     <li class="pc-item pc-hasmenu">
-                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Report List</span><span
-                                class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
+                        <a class="pc-link"><span class="pc-micon"></span><span class="pc-mtext">Report
+                                List</span><span class="pc-arrow"><i class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.report.history') }}">Report History</a></li>
@@ -544,20 +551,20 @@
                                     var ctx = document.getElementById('appointmentChart').getContext('2d');
                                     var labels = @json($appointmentLabels);
                                     var data = @json($appointmentData);
-                                
-                                
+
+
                                     // Initialize an array to hold the data for all months, initially filled with zeros
                                     var allMonthsData = Array.from({
                                         length: 12
                                     }, () => 0);
-                                
+
                                     // Fill in the data for the corresponding months
                                     for (var i = 0; i < labels.length; i++) {
                                         var date = new Date(labels[i]);
                                         var monthIndex = date.getMonth();
                                         allMonthsData[monthIndex] = data[i];
                                     }
-                                
+
                                     new Chart(ctx, {
                                         type: 'line',
                                         data: {
@@ -565,8 +572,12 @@
                                             datasets: [{
                                                 label: 'Appointment Count',
                                                 data: allMonthsData, // Use allMonthsData as data
-                                                borderColor: 'rgba(75, 192, 192, 1)',
-                                                borderWidth: 1
+                                                borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                                                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
+                                                borderWidth: 1,
+                                                fill: true, // To fill the area under the line
+                                                pointRadius: 5, // Adjust the size of data points on the line
+                                                pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
                                             }]
                                         },
                                         options: {
@@ -578,7 +589,10 @@
                                                     max: 'December', // Specify the maximum label
                                                 },
                                                 y: {
-                                                    beginAtZero: true
+                                                    beginAtZero: true,
+                                                    ticks: {
+                                                        stepSize: 1
+                                                    },
                                                 }
                                             }
                                         }
@@ -670,7 +684,8 @@
                                                 @if (count($fastProducts) > 0)
                                                     <ul>
                                                         @foreach ($fastProducts as $index => $product)
-                                                            <li><strong> {{ $index + 1 }} -</strong> {{ $product['name'] }}</li>
+                                                            <li><strong> {{ $index + 1 }} -</strong>
+                                                                {{ $product['name'] }}</li>
                                                         @endforeach
                                                     </ul>
                                                 @else
@@ -684,7 +699,8 @@
                                                 @if (count($slowProducts) > 0)
                                                     <ul>
                                                         @foreach ($slowProducts as $index => $product)
-                                                            <li><strong>{{ $index + 1 }} - </strong>{{ $product['name'] }}</li>
+                                                            <li><strong>{{ $index + 1 }} -
+                                                                </strong>{{ $product['name'] }}</li>
                                                         @endforeach
                                                     </ul>
                                                 @else
@@ -872,7 +888,7 @@
             },
             tooltips: {
                 callbacks: {
-                    label: function (tooltipItem, data) {
+                    label: function(tooltipItem, data) {
                         var label = data.labels[tooltipItem.index] || '';
                         var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
                         return label + ': ' + value;

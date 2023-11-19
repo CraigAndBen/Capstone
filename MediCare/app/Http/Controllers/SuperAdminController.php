@@ -127,6 +127,10 @@ class SuperAdminController extends Controller
         $rolesCount = $rolesData->count();
 
         $usersLabels = $rolesData->pluck('label')->toArray();
+        $usersLabels = array_map(function ($label) {
+            return str_replace('_', ' ', $label);
+        }, $usersLabels);
+        
         $usersData = $rolesData->pluck('data')->toArray();
 
         /** Item demo**/

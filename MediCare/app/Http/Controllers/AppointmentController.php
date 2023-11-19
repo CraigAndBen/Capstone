@@ -391,7 +391,6 @@ class AppointmentController extends Controller
 
     public function confirmedAppointmentList()
     {
-
         $timeList = [
             '8:30 AM',
             '9:00 AM',
@@ -406,7 +405,6 @@ class AppointmentController extends Controller
             '3:30 PM',
             '4:00 PM',
         ];
-
 
         $user = Auth::user();
         $infos = Doctor::all();
