@@ -45,12 +45,11 @@ class AdminController extends Controller
             ->groupBy('month')
             ->get();
 
-
         $patientsByYear = DB::table('patients')
             ->whereYear('admitted_date', $currentYear)
             ->orWhereYear('date', $currentYear)
             ->get();
-
+        
         $patientCount = $patientsByYear->count();
 
         $rankedDiagnosis = Diagnose::select('diagnose', DB::raw('MONTH(date) as month'))
@@ -204,8 +203,7 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::orderBy('created_at', 'desc')
-            ->get();
+        $patients = Patient::all();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
@@ -222,8 +220,7 @@ class AdminController extends Controller
 
         $request->validate([
             'first_name' => 'required|string|max:255',
-            'middle_name' => 'required|string|max:255',
-            'physician' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
         ]);
 
         if ($type == 'admitted_patient') {
@@ -345,34 +342,13 @@ class AdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = User::where('role', 'doctor')->get();
-        $patients = Patient::where('type', 'outpatient')->orderBy('created_at', 'desc')->paginate(5);
+        $patients = Patient::where('type', 'outpatient')->get();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
         return view('admin.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
-    }
-
-    public function outpatientSearch(Request $request)
-    {
-        $profile = auth()->user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = User::where('role', 'doctor')->get();
-        $searchTerm = $request->input('search');
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $patients = Patient::where('type', 'outpatient')->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(5);
-
-        return view('admin.patient.patient_outpatient_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function patientUpdate(Request $request)
@@ -731,29 +707,9 @@ class AdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::where('type', 'admitted_patient')->orderBy('created_at', 'desc')->paginate(5);
+        $patients = Patient::where('type', 'admitted_patient')->get();
 
         return view('admin.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
-    }
-
-    public function patientAdmittedSearch(Request $request)
-    {
-        $profile = auth()->user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = User::where('role', 'doctor')->get();
-        $searchTerm = $request->input('search');
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $patients = Patient::whereNull('discharged_date')->where(function ($query) use ($searchTerm) {
-            $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%');
-            $query->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-        })->paginate(5);
-
-        return view('admin.patient.patient_admitted_search', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
     public function viewPatientReport(Request $request)
@@ -967,7 +923,6 @@ class AdminController extends Controller
 
         // Loop through each month of the current year
         for ($month = 1; $month <= 12; $month++) {
-
             // Get the start and end dates of the current month
             $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
             $endDate = $startDate->copy()->endOfMonth();

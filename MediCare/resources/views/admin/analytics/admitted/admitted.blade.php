@@ -10,12 +10,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Admitted Patient Demographics</h5>
+                                <h5 class="m-b-10">Admitted Patient Analytics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item" aria-current="page">Admitted Patient Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Admitted Patient Analytics</li>
                             </ul>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="display-6">Admitted Patient Demographics</h1>
+                            <h1 class="display-6">Admitted Patient Analytics</h1>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())

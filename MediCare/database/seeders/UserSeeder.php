@@ -14,9 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            
-            
+        $users = [
             // Admin
             [
                 'first_name' => 'Admin',
@@ -26,7 +24,7 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
                 'status' => 'activated',
             ],      
-            
+
             // Super Admin
             [
                 'first_name' => 'Super Admin',
@@ -36,6 +34,8 @@ class UserSeeder extends Seeder
                 'role' => 'super_admin',
                 'status' => 'activated',
             ],
+
+            // Supply Officer
             [
                 'first_name' => 'Supply Officer',
                 'last_name' => 'Supply Officer',
@@ -44,7 +44,9 @@ class UserSeeder extends Seeder
                 'role' => 'supply_officer',
                 'status' => 'activated',
             ],
-            
-        ]);
+        ];
+
+        // Insert data into the 'users' table
+        DB::table('users')->insert($users);
     }
 }

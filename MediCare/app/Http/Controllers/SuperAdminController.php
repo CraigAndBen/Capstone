@@ -124,7 +124,16 @@ class SuperAdminController extends Controller
             ->groupBy(DB::raw('UPPER(role)'))
             ->get();
 
-        $rolesCount = $rolesData->count();
+        // Initialize variables to store counts
+        $rolesCount = 0;
+        $roleCounts = [];
+
+        // Calculate the total count of users and counts for each role
+        foreach ($rolesData as $role) {
+            $rolesCount += $role->data;
+            $roleCounts[$role->label] = $role->data;
+        }
+
 
         $usersLabels = $rolesData->pluck('label')->toArray();
         $usersLabels = array_map(function ($label) {

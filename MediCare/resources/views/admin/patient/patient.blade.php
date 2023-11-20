@@ -91,13 +91,17 @@
                                                     <tr>
                                                         <td>{{ ucwords($patient->first_name) }}</td>
                                                         <td>{{ ucwords($patient->last_name) }}</td>
-    
+
+                                                        @if (!$doctors->isEmpty())
                                                         @foreach ($doctors as $doctor)
                                                             @if ($patient->physician == $doctor->id)
-                                                                <td>Dr. {{ ucwords($doctor->first_name) }}
-                                                                    {{ ucwords($doctor->last_name) }}</td>
+                                                                <td>Dr. {{ ucwords($doctor->first_name) }} {{ ucwords($doctor->last_name) }}</td>
                                                             @endif
                                                         @endforeach
+                                                        @else
+                                                            <td></td>
+                                                        @endif
+
                                                         @if ($patient->type == 'outpatient')
                                                             <td>Outpatient</td>
                                                         @else
@@ -142,32 +146,35 @@
                                                                         data-guardian-phone="{{ json_encode($patient->guardian_phone) }}"
                                                                         data-guardian-email="{{ json_encode($patient->guardian_email) }}"
                                                                         data-medication="{{ json_encode($patient->medication) }}">Update</a>
-    
+
                                                                     <form action="{{ route('admin.patient.report.view') }}"
                                                                         method="GET" target="_blank">
                                                                         @csrf
                                                                         <input type="hidden" name="patient_id"
                                                                             id="patient_id" value="{{ $patient->id }}">
                                                                         <button type="submit"
-                                                                            class="dropdown-item btn btn-primary">View Report</button>
+                                                                            class="dropdown-item btn btn-primary">View
+                                                                            Report</button>
                                                                     </form>
-                                                                    <form action="{{ route('admin.patient.report.download') }}"
-                                                                    method="GET">
-                                                                    @csrf
-                                                                    <input type="hidden" name="patient_id"
-                                                                        id="patient_id" value="{{ $patient->id }}">
-                                                                    <button type="submit"
-                                                                        class="dropdown-item btn btn-primary">Download Report</button>
-                                                                </form>
-    
+                                                                    <form
+                                                                        action="{{ route('admin.patient.report.download') }}"
+                                                                        method="GET">
+                                                                        @csrf
+                                                                        <input type="hidden" name="patient_id"
+                                                                            id="patient_id" value="{{ $patient->id }}">
+                                                                        <button type="submit"
+                                                                            class="dropdown-item btn btn-primary">Download
+                                                                            Report</button>
+                                                                    </form>
+
                                                                 </div>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach
-    
+
                                             </tbody>
-                                        </table> 
+                                        </table>
                                     </div>
                                 @endif
                             </div>
@@ -248,7 +255,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="phone"
-                                                        name="phone" placeholder="Phone" 
+                                                        name="phone" placeholder="Phone"
                                                         oninput="formatPhoneNumber(this);" />
                                                     <label for="phoneInput">Phone</label>
                                                 </div>
@@ -504,7 +511,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="phone"
-                                                        name="guardian_phone" placeholder="Phone" 
+                                                        name="guardian_phone" placeholder="Phone"
                                                         oninput="formatPhoneNumber(this);" />
                                                     <label for="phoneInput">Phone</label>
                                                 </div>
@@ -644,7 +651,8 @@
                                         </div>
                                         <div class="row justify-content-center mb-3 mt-3">
                                             <div class="col-md-10 text-center">
-                                                <button type="button" class="btn btn-primary" id="addDiagnosisButtonForUpdate"> Add
+                                                <button type="button" class="btn btn-primary"
+                                                    id="addDiagnosisButtonForUpdate"> Add
                                                     Another Diagnosis</button>
                                             </div>
                                         </div>
@@ -702,7 +710,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" id="guardian_phone"
-                                                        name="guardian_phone" placeholder="Phone" 
+                                                        name="guardian_phone" placeholder="Phone"
                                                         oninput="formatPhoneNumber(this);" />
                                                     <label for="phoneInput">Phone</label>
                                                 </div>
@@ -893,8 +901,10 @@
                         var phone = JSON.parse(button.data('phone'));
                         var physician = JSON.parse(button.data('physician'));
                         var medical_condition = JSON.parse(button.data('medical-condition'));
-                        var guardian_first_name = JSON.parse(button.data('guardian-first_name')); // Note the underscore
-                        var guardian_last_name = JSON.parse(button.data('guardian-last_name')); // Note the underscore
+                        var guardian_first_name = JSON.parse(button.data(
+                        'guardian-first_name')); // Note the underscore
+                        var guardian_last_name = JSON.parse(button.data(
+                        'guardian-last_name')); // Note the underscore
                         var guardian_birthdate = JSON.parse(button.data('guardian-birthdate'));
                         var relationship = JSON.parse(button.data('relationship'));
                         var guardian_phone = JSON.parse(button.data('guardian-phone'));

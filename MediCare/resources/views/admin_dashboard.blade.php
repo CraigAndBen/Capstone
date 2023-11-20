@@ -329,7 +329,7 @@
                             @if ($patientCount)
                                 <div class="row mb-3 align-items-center">
                                     <div class="col">
-                                        <small>Total Admitted Patient This Year</small>
+                                        <small>Total Patient This Year</small>
                                         <h3>{{ $patientCount }}</h3>
                                     </div>
                                 </div>
