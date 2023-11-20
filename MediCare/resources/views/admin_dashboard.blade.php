@@ -517,7 +517,8 @@
     // Extract unique diagnoses from the data
     const uniqueDiagnoses = [...new Set(diagnosisData.map(item => item.diagnose))];
 
-    const predefinedColors = ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#e67e22', '#9b59b6'];
+    const predefinedColors = ['#f7aef8', '#b388eb', '#8093f1', '#72ddf7', '#b8e1ff'];
+    
     let colorIndex = 0;
 
     // Create a dataset for each unique diagnosis
@@ -532,7 +533,7 @@
             }
         }
         
-        const predefinedColors = ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#e67e22', '#9b59b6'];
+        const predefinedColors = ['#f7aef8', '#b388eb', '#8093f1', '#72ddf7', '#b8e1ff'];
 
         datasets.push({
             label: diagnose.charAt(0).toUpperCase() + diagnose.slice(1),

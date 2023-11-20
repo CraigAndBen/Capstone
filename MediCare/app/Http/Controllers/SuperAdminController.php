@@ -87,18 +87,6 @@ class SuperAdminController extends Controller
         // Retrieve the rank 1 diagnosis for the current year
         $rank1Diagnosis = $rankedDiagnosis->firstWhere('month', Carbon::now()->month);
 
-        $patientsByMonth = DB::table('patients')
-            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-            ->whereYear('admitted_date', $currentYear)
-            ->groupBy('month')
-            ->get();
-
-        $patientsByYear = DB::table('patients')
-            ->whereYear('admitted_date', $currentYear)
-            ->get();
-
-        $patientCount = $patientsByYear->count();
-
         $monthlyAppointments = Appointment::select(
             DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
             DB::raw('COUNT(*) as count')

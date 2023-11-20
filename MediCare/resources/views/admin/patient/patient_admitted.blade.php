@@ -92,15 +92,12 @@
                                                 <tr>
                                                     <td>{{ ucwords($patient->first_name) }}</td>
                                                     <td>{{ ucwords($patient->last_name) }}</td>
-                                                    @if (!$doctors->isEmpty())
+
                                                     @foreach ($doctors as $doctor)
                                                         @if ($patient->physician == $doctor->id)
                                                             <td>Dr. {{ ucwords($doctor->first_name) }} {{ ucwords($doctor->last_name) }}</td>
                                                         @endif
                                                     @endforeach
-                                                    @else
-                                                        <td></td>
-                                                    @endif
 
                                                     <td>{{ date('Y, F j', strtotime($patient->admitted_date)) }}</td>
                                                     <td>{{ date('g:i A', strtotime($patient->admitted_time)) }}</td>
