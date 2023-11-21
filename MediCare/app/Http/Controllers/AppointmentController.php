@@ -186,12 +186,20 @@ class AppointmentController extends Controller
             }
 
             if ($isAvailable) {
+                $user = User::where('id', $doctor->account_id)->first();
+
                 $availableDoctors[] = [
-                    'id' => $doctor->id,
+                    'id' => $doctor->account_id,
+                    'firstName' => $user->first_name,
+                    'lastName' => $user->last_name,
                     'specialty' => $doctor->specialties,
                 ];
             }
         }
+
+        usort($availableDoctors, function ($a, $b) {
+            return strcmp($a['specialty'], $b['specialty']);
+        });
 
 
         return response()->json($availableDoctors);
@@ -204,7 +212,7 @@ class AppointmentController extends Controller
 
         // Fetch all appointment times for the selected date and specialty
         $appointments = Appointment::where('appointment_date', $selectedDate)
-            ->where('specialties', $selectedSpecialty)
+            ->where('doctor_id', $selectedSpecialty)
             ->where('status', 'pending')
             ->orWhere('status', 'confirmed')
             ->get();
@@ -306,6 +314,7 @@ class AppointmentController extends Controller
         }
 
         $user = Auth::user();
+        $doctor = Doctor::where('account_id', $request->input('specialties'))->first();
 
         Appointment::create([
             'first_name' => $request->input('first_name'),
@@ -317,7 +326,8 @@ class AppointmentController extends Controller
             'brgy' => $request->input('brgy'),
             'city' => $request->input('city'),
             'province' => $request->input('province'),
-            'specialties' => $request->input('specialties'),
+            'doctor_id' => $request->input('specialties'),
+            'specialties' => $doctor->specialties,
             'birthdate' => $request->input('birthdate'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
@@ -495,7 +505,6 @@ class AppointmentController extends Controller
     }
     public function updateAppointment(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|string|max:255',
             'middle_name' => 'required|string|max:255',
@@ -560,7 +569,7 @@ class AppointmentController extends Controller
 
                 $appointment->save();
 
-                return redirect()->back()->with('success', 'Profile updated successfully.');
+                return redirect()->back()->with('success', 'Appointment updated successfully.');
             } else {
                 return back()->with('info', 'The current date and time are unavailable, please select another date and time.');
             }

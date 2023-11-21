@@ -591,8 +591,8 @@
                             if (data.length > 0) {
                                 $.each(data, function(index, doctor) {
                                     dropdown.append($('<option></option>').attr(
-                                        'value', doctor.specialty).text(
-                                        doctor.specialty));
+                                        'value', doctor.id).text('Dr. ' +
+                                        doctor.firstName + ' ' + doctor.lastName + ' - ' + doctor.specialty));
                                 });
                             } else {
                                 // Handle case where no doctors are available for the selected date
