@@ -126,29 +126,32 @@
                     });
                 });
 
-                // Define an array of static colors
-                var staticColors = [
-                    'rgba(75, 192, 192, 0.7)', // Color for the first dataset
-                    'rgba(255, 99, 132, 0.7)', // Color for the second dataset
-                    'rgba(255, 205, 86, 0.7)', // Color for the third dataset
-                    // Add more colors as needed
-                ];
+                // Function to generate a random light color
+                function getRandomLightColor() {
+                    var randomColor = function() {
+                        return Math.floor(Math.random() * 200 + 56); // Ensure the color is in a light range
+                    };
+                    var rgb = `${randomColor()}, ${randomColor()}, ${randomColor()}`;
+                    return {
+                        backgroundColor: `rgba(${rgb}, 0.7)`,
+                        borderColor: `rgba(${rgb}, 0.7)`
+                    };
+                }
 
                 // Create an array to store datasets
                 var datasets = [];
 
                 // Create a dataset for each product
-                var i = 0; // Index to select colors from staticColors array
                 for (var productName in salesData) {
+                    var randomColors = getRandomLightColor();
                     datasets.push({
                         label: productName,
                         data: salesData[productName],
-                        backgroundColor: staticColors[i % staticColors.length], // Get a color from the array
-                        borderColor: staticColors[i % staticColors.length], // Use the same color for the border
+                        backgroundColor: randomColors.backgroundColor, // Use a random light color for the background
+                        borderColor: randomColors.borderColor, // Use the same color for the border
                         borderWidth: 2,
                         fill: false
                     });
-                    i++; // Increment the index to cycle through colors
                 }
 
                 // Create a chart using Chart.js

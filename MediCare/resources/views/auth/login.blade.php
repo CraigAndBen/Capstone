@@ -89,7 +89,7 @@
                                         checked="" />
                                     <label class="form-check-label text-muted" for="customCheckc1">Remember me</label>
                                 </div>
-                                <h5 class="text-primary">Forgot Password?</h5>
+                          
                             </div>
                             <div class="d-grid mt-4">
                                 <button type="submit" id="submitBtn" class="btn btn-primary">Sign In</button>

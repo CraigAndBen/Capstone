@@ -461,7 +461,7 @@ class SupplyOfficerController extends Controller
         return $pdf->download('expiry_item_report.pdf');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
-    
+
     //Category
     public function categoryList()
     {
@@ -782,7 +782,7 @@ class SupplyOfficerController extends Controller
             'supply_officer.report.inventory_report',
             compact(
                 'currentTime',
-                'currentDate',
+                'currentDateTime',
                 'chartData',
                 'chartTitle',
                 'selectedOption'
@@ -819,47 +819,64 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
 
         $fromDate = $request->input('start');
-        $formattedFromDate = date("M j, Y", strtotime($fromDate));
+        $formattedFromDate = date('"M j, Y"', strtotime($fromDate));
         $toDate = $request->input('end');
-        $formattedToDate = date("M j, Y", strtotime($toDate));
+        $toDate = date("Y-m-d 23:59:59", strtotime($toDate));
+        $formattedToDate = date("M j, Y ", strtotime($toDate));
         $selectedOption = $request->input('select');
         $range = $formattedFromDate . " - " . $formattedToDate;
 
         // Query your database to get the most requested products or departments based on the selected date range and category
         if ($selectedOption === 'Item') {
-            // Get the most requested products
+            // Get the most requested products with their creation dates
             $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
-                ->whereBetween('requests.date', [$fromDate, $toDate])
-                ->groupBy('requests.product_id', 'products.p_name') // Group by product name
-                ->selectRaw('products.p_name as label, COUNT(*) as data')
-                ->orderByDesc('data')
+                ->whereBetween('requests.created_at', [$fromDate, $toDate])
+                ->groupBy('requests.product_id', 'products.p_name', 'requests.created_at') // Group by product ID and creation date
+                ->selectRaw('products.p_name as label, requests.created_at as request_date, SUM(requests.quantity) as data')
+                ->orderBy('request_date') // Order by created_at ascending
                 ->get();
-
         } elseif ($selectedOption === 'Department') {
-            // Get the most requested departments
-            $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
-                ->groupBy('department')
-                ->selectRaw('department as label, COUNT(*) as data')
-                ->orderByDesc('data')
+            // Get the most requested departments with their creation dates
+            $result = Request_Form::whereBetween('created_at', [$fromDate, $toDate])
+                ->groupBy('department', 'date') // Group by department and date
+                ->selectRaw('department as label, department, date as request_date, COUNT(DISTINCT created_at, department) as data') // Use SUM(1) to get the count of occurrences
+                ->orderBy('request_date', 'asc') // Order by request_date ascending
+                ->orderBy('data', 'asc') // Then, order by the count of occurrences in ascending order
                 ->get();
         } else {
             // Invalid selection, handle accordingly
             return redirect()->back()->with('info', 'Invalid selection.');
         }
 
+        // Modify the label generation in the controller
+        $labels = $result->map(function ($item) {
+            return date("M j, Y", strtotime($item->request_date)) . ' - ' . $item->label;
+        });
 
-        
         $chartData = [
-
-            'labels' => $result->pluck('label'),
+            'labels' => $labels,
             'data' => $result->pluck('data'),
         ];
 
-
         // Return the view with the chart data
-        return view('supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 
-        'chartData', 'range',      'selectedOption', 'fromDate', 'toDate'));
+        return view(
+            'supply_officer.inventory_demo.requestdemo_search',
+            compact(
+                'profile',
+                'notifications',
+                'limitNotifications',
+                'count',
+                'currentTime',
+                'currentDate',
+                'chartData',
+                'range',
+                'selectedOption',
+                'fromDate',
+                'toDate'
+            )
+        );
     }
+
 
     //Request
     public function requestReport(Request $request)
@@ -877,45 +894,42 @@ class SupplyOfficerController extends Controller
         $range = $formattedFromDate . " - " . $formattedToDate;
 
         // Query your database to get the most requested products or departments based on the selected date range and category
-     
+        if ($selectedOption === 'Item') {
+            // Get the most requested products with their creation dates
+            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+                ->whereBetween('requests.created_at', [$fromDate, $toDate])
+                ->groupBy('requests.product_id', 'products.p_name', 'requests.created_at') // Group by product ID and creation date
+                ->selectRaw('products.p_name as label, requests.created_at as request_date, SUM(requests.quantity) as data')
+                ->orderBy('request_date') // Order by created_at ascending
+                ->get();
+            $reportType = 'item'; // Set the report type to 'item'
 
-if ($selectedOption === 'Item') {
-    // Get the most requested products with their creation dates
-    $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
-        ->whereBetween('requests.created_at', [$fromDate, $toDate])
-        ->groupBy('requests.product_id', 'products.p_name', 'requests.created_at') // Group by product ID and creation date
-        ->selectRaw('products.p_name as label, requests.created_at as request_date, COUNT(*) as data')
-        ->orderByDesc('data')
-        ->get();
-    $reportType = 'item'; // Set the report type to 'item'
+        } elseif ($selectedOption === 'Department') {
+            // Get the most requested departments with their creation dates
+            $result = Request_Form::whereBetween('created_at', [$fromDate, $toDate])
+                ->groupBy('department', 'date') // Group by department and date
+                ->selectRaw('department as label, department, date as request_date, COUNT(DISTINCT created_at, department) as data') // Use SUM(1) to get the count of occurrences
+                ->orderBy('request_date', 'asc') // Order by request_date ascending
+                ->orderBy('data', 'asc') // Then, order by the count of occurrences in ascending order
+                ->get();
+                $reportType = 'department';
 
-} elseif ($selectedOption === 'Department') {
-    // Get the most requested departments with their creation dates
-    $result = Request_Form::whereBetween('created_at', [$fromDate, $toDate])
-        ->groupBy('department', 'created_at') // Group by department and creation date
-        ->selectRaw('department as label, created_at as request_date, COUNT(*) as data')
-        ->orderByDesc('data')
-        ->get();
-    $reportType = 'department'; // Set the report type to 'department'
+        } else {
+            // Invalid selection, handle accordingly
+            return redirect()->back()->with('info', 'Invalid selection.');
+        }
 
-} else {
-    // Invalid selection, handle accordingly
-    return redirect()->back()->with('info', 'Invalid selection.');
-}
+        // Modify the label generation in the controller
+        $labels = $result->map(function ($item) {
+            return date("M j, Y", strtotime($item->request_date)) . ' - ' . $item->label;
+        });
 
-// Modify the label generation in the controller
-$labels = $result->map(function ($item) {
-    return date("M j, Y", strtotime($item->request_date)) . ' - ' . $item->label;
-});
-
-$chartData = [
-    'labels' => $labels,
-    'data' => $result->pluck('data'),
-];
-
-// Return the view with the chart data
-return view('supply_officer.report.request_report', compact('currentTime', 'currentDate', 'chartData', 'range', 'result', 'reportType'));
-
+        $chartData = [
+            'labels' => $labels,
+            'data' => $result->pluck('data'),
+        ];
+        // Return the view with the chart data
+        return view('supply_officer.report.request_report', compact('currentTime', 'currentDateTime', 'chartData', 'range', 'result', 'reportType'));
     }
 
     //Salaes Demo
@@ -1033,40 +1047,66 @@ return view('supply_officer.report.request_report', compact('currentTime', 'curr
 
                 foreach ($dateRange as $date) {
                     $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at', $date)
+                        ->whereDate('created_at',$date)
                         ->sum('quantity');
 
                     $salesData[$productName][] = $quantity;
                 }
             }
         }
-        
-        // Create an array to store the dates with sales
+
+
         $datesWithSales = [];
         $itemCount = [];
         
         foreach ($salesData as $productName => $productSales) {
-            $count = 0; // Initialize the count for the current item
-            foreach ($productSales as $quantity) {
-                if ($quantity > 0) {
-                    $datesWithSales[] = $dateRange[$count]; // Add the corresponding date with sales
-                    $count++;
-                }
-            }
-            $itemCount[$productName] = $count; // Store the count for the current item
+            // Filter out dates with sales (quantity > 0) for the current product
+            $datesWithSales[$productName] = array_map(
+                function ($index, $quantity) use ($dateRange) {
+                    if ($quantity > 0 && isset($dateRange[$index])) {
+                        return [
+                            'date' => date("Y-m-d", strtotime($dateRange[$index])),
+                            'quantity' => $quantity,
+                        ];
+                    }
+                    return null;
+                },
+                array_keys($productSales),
+                $productSales
+            );
+        
+            // Remove null values
+            $datesWithSales[$productName] = array_filter($datesWithSales[$productName]);
+        
+            // Store the count for the current item
+            $itemCount[$productName] = count($datesWithSales[$productName]);
         }
         
+        // Extract unique dates with sales across all products
+        $uniqueDates = [];
+        foreach ($datesWithSales as $productSales) {
+            $uniqueDates = array_merge($uniqueDates, array_column($productSales, 'date'));
+        }
+        
+        $uniqueDates = array_unique($uniqueDates);
+        
+        // Filter out dates with no sales across all products
+        $filteredDates = array_values($uniqueDates);
+        
 
-        return view('supply_officer.report.sale_report', compact(
-            'currentTime',
-            'currentDate',
-            'range',
-            'dateRange',
-            'salesData',
-            'products',
-            'datesWithSales',
-            'itemCount'
-        )
+        return view(
+            'supply_officer.report.sale_report',
+            compact(
+                'currentDateTime',
+                'currentTime',
+                'range',
+                'dateRange',
+                'salesData',
+                'products',
+                'datesWithSales',
+                'itemCount',
+                'filteredDates'
+            )
         );
     }
 
@@ -1128,23 +1168,25 @@ return view('supply_officer.report.request_report', compact('currentTime', 'curr
         $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
 
 
-        return view('supply_officer.inventory_demo.medicinedemo', compact(
-            'profile',
-            'notifications',
-            'limitNotifications',
-            'count',
-            'currentTime',
-            'currentDate',
-            'productPrices',
-            'mostValuedPercentage',
-            'mediumValuedPercentage',
-            'lowValuedPercentage',
-            'mostThreshold',
-            'mediumThreshold',
-            'mostValuedProducts',
-            'mediumValuedProducts',
-            'lowValuedProducts'
-        )
+        return view(
+            'supply_officer.inventory_demo.medicinedemo',
+            compact(
+                'profile',
+                'notifications',
+                'limitNotifications',
+                'count',
+                'currentTime',
+                'currentDate',
+                'productPrices',
+                'mostValuedPercentage',
+                'mediumValuedPercentage',
+                'lowValuedPercentage',
+                'mostThreshold',
+                'mediumThreshold',
+                'mostValuedProducts',
+                'mediumValuedProducts',
+                'lowValuedProducts'
+            )
         );
     }
 
@@ -1196,20 +1238,22 @@ return view('supply_officer.report.request_report', compact('currentTime', 'curr
         $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
 
 
-        return view('supply_officer.report.medicines_report', compact(
-            'chartData',
-            'currentTime',
-            'currentDate',
-            'productPrices',
-            'mostValuedPercentage',
-            'mediumValuedPercentage',
-            'lowValuedPercentage',
-            'mostThreshold',
-            'mediumThreshold',
-            'mostValuedProducts',
-            'mediumValuedProducts',
-            'lowValuedProducts'
-        )
+        return view(
+            'supply_officer.report.medicines_report',
+            compact(
+                'chartData',
+                'currentTime',
+                'currentDate',
+                'productPrices',
+                'mostValuedPercentage',
+                'mediumValuedPercentage',
+                'lowValuedPercentage',
+                'mostThreshold',
+                'mediumThreshold',
+                'mostValuedProducts',
+                'mediumValuedProducts',
+                'lowValuedProducts'
+            )
         );
     }
     public function productDemo()
@@ -1277,20 +1321,22 @@ return view('supply_officer.report.request_report', compact('currentTime', 'curr
             'Non-Moving' => count($nonMovingProducts),
         ];
 
-        return view('supply_officer.inventory_demo.productdemo', compact(
-            'profile',
-            'notifications',
-            'limitNotifications',
-            'counts',
-            'currentTime',
-            'currentDate',
-            'categories',
-            'count',
-            'fastProducts',
-            'slowProducts',
-            'nonMovingProducts',
-            'productPrices' // Pass the product prices to the view
-        )
+        return view(
+            'supply_officer.inventory_demo.productdemo',
+            compact(
+                'profile',
+                'notifications',
+                'limitNotifications',
+                'counts',
+                'currentTime',
+                'currentDate',
+                'categories',
+                'count',
+                'fastProducts',
+                'slowProducts',
+                'nonMovingProducts',
+                'productPrices' // Pass the product prices to the view
+            )
         );
     }
 
@@ -1335,16 +1381,18 @@ return view('supply_officer.report.request_report', compact('currentTime', 'curr
             'Non-Moving' => count($nonMovingProducts),
         ];
 
-        return view('supply_officer.report.products_report', compact(
-            'counts',
-            'currentTime',
-            'currentDate',
-            'categories',
-            'fastProducts',
-            'slowProducts',
-            'nonMovingProducts'
+        return view(
+            'supply_officer.report.products_report',
+            compact(
+                'counts',
+                'currentDateTime',
+                'currentTime',
+                'categories',
+                'fastProducts',
+                'slowProducts',
+                'nonMovingProducts'
 
-        )
+            )
         );
     }
     public function supplyOfficerLogout(Request $request): RedirectResponse

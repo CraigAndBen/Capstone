@@ -28,7 +28,7 @@
         }
 
         .purchase-detail {
-            padding: 10px;
+            padding: 5px;
             
             
         }
@@ -46,37 +46,36 @@
             text-align: center;
         }
 
-        table,
-        th,
-        td {
-            border: 1px solid #333;
+        table, th, td {
+            border: 1px solid #000;
         }
 
-        th,
-        td {
-            padding: 10px;
+        th,td {
+            padding: 8px;
             text-align: center; /* Center-align content within table cells */
-            font-size: 12px;
+            font-size: 11px;
             font-family: 'DejaVu Sans', sans-serif;
 
+        }
+
+        th:nth-child(4) {
+            width: 55px; /* Adjust the width as needed */
         }
 
         .footer {
             position: absolute;
             bottom: 10px;
-
-        
             display: flex;
             justify-content: space-between; /* Align items in a row with space between them */
         
         }
 
         .footer-start, .footer-center, .footer-right {
-            display:inline-flex;
-            margin-left: 70px;
-            font-size: 13px;
-            
+            display: inline-block;
+            margin-left: 90px; /* Adjust the margin as needed */
+            font-size: 11px;
         }
+
 
 
     </style>
@@ -100,25 +99,55 @@
                     <th>Requester Name</th>
                     <th>Department</th>
                     <th>Date</th>
+                    <th>Time</th>
                     <th>Item</th>
                     <th>Brand</th>
                     <th>Quantity</th>
                 </tr>
+                @php
+                    $previousIdentifier = null;
+                @endphp
                 @foreach ($requests as $request)
-                    <tr>
-                        <td>{{ $request->name_requester }}</td>
-                        <td>{{ $request->department }}</td>
-                        <td>{{ date('M j, Y', strtotime($request->date)) }}</td>
-                        @foreach ($products as $product)
-                            @if ($product->id === $request->product_id)
-                                <td>{{ $product->p_name }}</td>
-                            @endif
-                        @endforeach
-                        <td>{{ $request->brand }}</td>
-                        <td>{{ $request->quantity }}</td>
-                    </tr>
+                    @php
+                        // Generate a unique identifier for the row
+                        $rowIdentifier = $request->name_requester . $request->department . $request->date . $request->created_at;
+                    @endphp
+            
+                    @if ($rowIdentifier !== $previousIdentifier)
+                        <tr>
+                            <td>{{ $request->name_requester }}</td>
+                            <td>{{ $request->department }}</td>
+                            <td>{{ date('M j, Y', strtotime($request->date)) }}</td>
+                            <td>{{ date('g:i A', strtotime($request->created_at)) }}</td>
+                                {{-- Display the time --}}
+                            @foreach ($products as $product)
+                                @if ($product->id === $request->product_id)
+                                    <td>{{ $product->p_name }}</td>
+                                @endif
+                            @endforeach
+                            <td>{{ $request->brand }}</td>
+                            <td>{{ $request->quantity }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td colspan="4"></td> {{-- Leave empty cells for name, department, date, and time --}}
+                            @foreach ($products as $product)
+                                @if ($product->id === $request->product_id)
+                                    <td>{{ $product->p_name }}</td>
+                                @endif
+                            @endforeach
+                            <td>{{ $request->brand }}</td>
+                            <td>{{ $request->quantity }}</td>
+                        </tr>
+                    @endif
+            
+                    @php
+                        $previousIdentifier = $rowIdentifier;
+                    @endphp
                 @endforeach
             </table>
+            
+            
         </div>
         <div class="footer">
             <div class="footer-start">

@@ -188,23 +188,16 @@ class StaffController extends Controller
     }
     public function requeststore(Request $request)
     {
-           $request->validate([
-                'name_requester' => 'required',
-                'department' => 'required',
-                'date' => 'required|date',
-                'product_id' => 'required|exists:products,id',
-                'brand'=> 'required',
-                'quantity' => 'required|integer|min:1',
-            ]);
-
+        // Get the original form fields
         $product = Product::find($request->input('product_id'));
-
+    
         // Check if the product exists and has enough stock
         if ($product && $product->stock >= $request->input('quantity')) {
             // Reduce the stock of the product
             $product->stock -= $request->input('quantity');
             $product->save(); // Save the updated stock
-           
+    
+            // Save the original form data
             $prod_requests = new Request_Form();
             $prod_requests->name_requester = $request->input('name_requester');
             $prod_requests->department = $request->input('department');
@@ -212,9 +205,24 @@ class StaffController extends Controller
             $prod_requests->product_id = $request->input('product_id');
             $prod_requests->brand = $request->input('brand');
             $prod_requests->quantity = $request->input('quantity');
-
-            $prod_requests->save();   
-        
+            $prod_requests->save();
+    
+            // Process dynamically added rows
+            $additionalProductIds = $request->input('additional_product_ids');
+            $additionalBrands = $request->input('additional_brands');
+            $additionalQuantities = $request->input('additional_quantities');
+    
+            foreach ($additionalProductIds as $key => $additionalProductId) {
+                $additionalRequest = new Request_Form();
+                $additionalRequest->name_requester = $request->input('name_requester');
+                $additionalRequest->department = $request->input('department');
+                $additionalRequest->date = $request->input('date');
+                $additionalRequest->product_id = $additionalProductId;
+                $additionalRequest->brand = $additionalBrands[$key];
+                $additionalRequest->quantity = $additionalQuantities[$key];
+                $additionalRequest->save();
+            }
+    
             return redirect('/staff/request_form')->with('status', 'Request Sent');
         } else {
             return redirect('/staff/request_form')->with('error', 'Not enough stock available');
