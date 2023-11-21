@@ -17,8 +17,8 @@ class DoctorsSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        
         $specialties = ['Cardiology', 'Dermatology', 'Orthopedics', 'Pediatrics', 'Ophthalmology'];
+        $imageName = 'noprofile.jpeg';
 
         foreach (range(1, 6) as $index) {
 
@@ -30,14 +30,16 @@ class DoctorsSeeder extends Seeder
                 'last_name' => $lastName,
                 'email' => $firstName . '.'. $lastName . '@gmail.com',
                 'role' => 'doctor',
-                'password' => Hash::make('111'), // You may want to use Hash::make() in a real scenario
+                'password' => Hash::make('111'), 
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            $userId = DB::table('doctors')->insertGetId([
+            DB::table('doctors')->insert([
                 'account_id' => $userId,
                 'specialties' => $specialties[array_rand($specialties)],
+                'image_name' => $imageName,
+                'image_data' => 'images/' . $imageName,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

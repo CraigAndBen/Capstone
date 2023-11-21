@@ -4343,7 +4343,7 @@ class SuperAdminController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $doctors = Doctor::all();
-        $appointments = Appointment::whereNot('status', 'unvailable')->orderBy('appointment_date', 'desc')->paginate(5);
+        $appointments = Appointment::whereNot('status', 'unvailable')->orderBy('appointment_date', 'desc')->get();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');

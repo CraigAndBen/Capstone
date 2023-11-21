@@ -106,7 +106,7 @@
                                                                         data-birthdate="{{ json_encode($appointment->birthdate) }}"
                                                                         data-gender="{{ json_encode($appointment->gender) }}"
                                                                         data-phone="{{ json_encode($appointment->phone) }}"
-                                                                        data-specialties="{{ json_encode($appointment->specialties) }}"
+                                                                        data-specialties="{{ json_encode($appointment->doctor_id) }}"
                                                                         data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
                                                                         data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                         data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
@@ -127,7 +127,7 @@
                                                                             data-birthdate="{{ json_encode($appointment->birthdate) }}"
                                                                             data-gender="{{ json_encode($appointment->gender) }}"
                                                                             data-phone="{{ json_encode($appointment->phone) }}"
-                                                                            data-specialties="{{ json_encode($appointment->specialties) }}"
+                                                                            data-specialties="{{ json_encode($appointment->doctor_id) }}"
                                                                             data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
                                                                             data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                             data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
@@ -272,8 +272,13 @@
                             <div class="form-floating mb-3">
                                 <select class="form-control p-3" id="specialties" name="specialties">
                                     <option>Select Specialist</option>
-                                    @foreach ($infos as $info)
-                                        <option value="{{ $info->specialties }}">{{ $info->specialties }}</option>
+                                    @foreach ($doctors as $doctor)
+                                        @foreach ($infos as $info)
+                                            @if ($doctor->account_id == $info->id)
+                                                <option value="{{ $info->id }}">Dr. {{ $info->first_name }}
+                                                    {{ $info->last_name }} - {{$doctor->specialties}}</option>
+                                            @endif
+                                        @endforeach
                                     @endforeach
                                 </select>
                             </div>
@@ -424,19 +429,24 @@
                     </div>
                     <hr>
                     <div class="row mt-4">
-                        <h5>Which specialist do you want to appoint of?</h5>
+                        <h5>Specialist do you want to appoint of:</h5>
                         <div class="form-floating mb-3">
                             <select class="form-control p-3" id="specialties" name="specialties" disabled>
                                 <option>Select Specialist</option>
-                                @foreach ($infos as $info)
-                                    <option value="{{ $info->specialties }}">{{ $info->specialties }}</option>
+                                @foreach ($doctors as $doctor)
+                                    @foreach ($infos as $info)
+                                        @if ($doctor->account_id == $info->id)
+                                            <option value="{{ $info->id }}">Dr. {{ $info->first_name }}
+                                                {{ $info->last_name }} - {{$doctor->specialties}}</option>
+                                        @endif
+                                    @endforeach
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="row mt-4">
                         <div class="form-floating mb-3">
-                            <h5>Which procedure do you want to make an appointment for?</h5>
+                            <h5>Procedure do you want to make an appointment for:</h5>
                             <select class="form-control  p-3" id="appointment_type" name="appointment_type" disabled>
                                 <option value="">Select a Type of Appointment</option>
                                 <option value="regular check-up">Regular Check-up</option>
@@ -579,5 +589,6 @@
                 input.value = '+639' + input.value.substring(2);
             }
         }
+        
     </script>
 @endsection

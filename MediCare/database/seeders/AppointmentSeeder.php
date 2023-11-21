@@ -40,20 +40,28 @@ class AppointmentSeeder extends Seeder
 
             $insertedUserId = DB::table('users')->insertGetId($attributes);
 
-            foreach (range(1, 2) as $index) {
+            foreach (range(1, 10) as $index) {
 
+                $startDate = '2023-01-01';
+                $endDate = now()->toDateString();
+                $dateTime = $faker->dateTimeBetween($startDate, $endDate);
+                $date = $dateTime->format('Y-m-d');
+                $randomTime = $faker->time('H:i:s');
+                
+                // Convert the 24-hour time to 12-hour format with AM/PM
+                $dateTime = new \DateTime($randomTime);
+                $formattedTime = $dateTime->format('h:i A');
+                
                 $type = ['Regular check-up', 'Follow-up appointment', 'Diagnostic appointment', 'specialist consultation'];
                 $doctorId = $faker->numberBetween(4, 9);
-                $specialties = ['Cardiology', 'Dermatology', 'Orthopedics', 'Pediatrics', 'Ophthalmology'];
 
                 $attributes = [
                     'first_name' => $faker->firstName,
                     'last_name' => $faker->lastName,
                     'account_id' => $insertedUserId,
                     'doctor_id' => $doctorId,
-                    'specialties' => $specialties[array_rand($specialties)],
                     'appointment_date' => $date,
-                    'appointment_time' => $time,
+                    'appointment_time' => $formattedTime,
                     'appointment_type' => $type[array_rand($type)],
                     'status' => 'done',
                     'created_at' => $date . ' ' . $time,

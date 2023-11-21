@@ -234,7 +234,7 @@
                     </div>
                     <hr>
                     <div class="row mt-4">
-                        <h5>Which specialist do you want to appoint of?</h5>
+                        <h5>Specialist do you want to appoint of:</h5>
                         <div class="form-floating mb-3">
                             <select class="form-control p-3" id="specialties" name="specialties" disabled>
                                 <option>Select Specialist</option>
@@ -246,7 +246,7 @@
                     </div>
                     <div class="row mt-4">
                         <div class="form-floating mb-3">
-                            <h5>Which procedure do you want to make an appointment for?</h5>
+                            <h5>Procedure do you want to make an appointment for:</h5>
                             <select class="form-control  p-3" id="appointment_type" name="appointment_type" disabled>
                                 <option>Select a Type of Appointment</option>
                                 <option value="regular check-up">Regular Check-up</option>

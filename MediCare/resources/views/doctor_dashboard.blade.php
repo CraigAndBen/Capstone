@@ -74,11 +74,11 @@
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
                             @if ($notificationsAlert->isEmpty())
-                            <i class="ti ti-bell"></i>
-                            @else    
-                            <i class="ti ti-bell"  style="color: red;"></i>
+                                <i class="ti ti-bell"></i>
+                            @else
+                                <i class="ti ti-bell" style="color: red;"></i>
                             @endif
-   
+
                         </a>
                         <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                             <div class="dropdown-header">
@@ -150,10 +150,10 @@
                                 }
                                 ?>
 
-                                <h4>{{ $greeting }}, <span class="small text-muted">Dr.
+                                <h5>{{ $greeting }}, <span class="small text-muted">Dr.
                                         {{ ucwords($profile->first_name) }}
                                         {{ ucwords($profile->last_name) }}</span>
-                                </h4>
+                                </h5>
                                 <hr>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
@@ -491,9 +491,12 @@
             datasets: [{
                 label: 'Monthly Appointments',
                 data: appointmentCounts,
-                borderColor: 'rgba(54, 162, 235, 1)',
+                borderColor: 'rgba(54, 162, 235, 1)', // Blue
+                backgroundColor: 'rgba(54, 162, 235, 0.2)', // Lighter blue fill
                 borderWidth: 2,
-                fill: false
+                fill: true, // To fill the area under the line
+                pointRadius: 5, // Adjust the size of data points on the line
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Blue data points
             }]
         },
         options: {

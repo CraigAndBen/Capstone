@@ -72,7 +72,7 @@ class DoctorController extends Controller
 
         // Retrieve appointments for the specific doctor in the current month
         $currentMonthAppointments = DB::table('appointments')
-            ->where('specialties', $info->specialties)
+            ->where('doctor_id', $profile->id)
             ->whereMonth('appointment_date', $currentMonth)
             ->orderBy('appointment_date', 'desc')
             ->get();
@@ -83,7 +83,7 @@ class DoctorController extends Controller
         // Retrieve the monthly appointments for the specific doctor for the current year
         $monthlyAppointments = DB::table('appointments')
             ->select(DB::raw('MONTH(appointment_date) as month'), DB::raw('COUNT(*) as count'))
-            ->where('specialties', $info->specialties)
+            ->where('doctor_id', $profile->id)
             ->whereYear('appointment_date', $currentYear)
             ->groupBy('month')
             ->get();
@@ -427,10 +427,8 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
-            ->orWhere('specialties', $info->specialties)
-            ->orWhereNull('doctor_id')
             ->orderByRaw("TIME_FORMAT(appointment_time, '%h:%i %p') DESC, appointment_date DESC")
-            ->paginate(5);
+            ->get();
 
         return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
     }
@@ -470,9 +468,8 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
-            ->Where('specialties', $info->specialties)
             ->where('status', 'confirmed')
-            ->orderBy('appointment_date', 'desc')->paginate(5);
+            ->orderBy('appointment_date', 'desc')->get();
 
         return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
 
@@ -514,7 +511,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $appointments = Appointment::where('doctor_id', $profile->id)
-            ->where('status', 'done')->paginate(10);
+            ->where('status', 'done')->get();
 
         return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
     }
@@ -780,8 +777,7 @@ class DoctorController extends Controller
     {
         $user = Auth::user();
         $info = Doctor::where('account_id', $user->id)->first();
-        $appointments = Appointment::where('specialties', $info->specialties)
-        ->where(function ($query) use ($user) {
+        $appointments = Appointment::where(function ($query) use ($user) {
             $query->where('doctor_id', $user->id)
                 ->orWhereNull('doctor_id');
         })

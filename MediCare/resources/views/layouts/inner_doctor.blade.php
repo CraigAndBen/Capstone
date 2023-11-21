@@ -150,9 +150,9 @@
                                 }
                                 ?>
 
-                                <h4>{{ $greeting }}, <span class="small text-muted">Dr. {{ ucwords($profile->first_name) }}
+                                <h5>{{ $greeting }}, <span class="small text-muted">Dr. {{ ucwords($profile->first_name) }}
                                         {{ ucwords($profile->last_name) }}</span>
-                                </h4>
+                                </h5>
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 280px)">
                                     <a href="{{ route('doctor.profile') }}" class="dropdown-item">

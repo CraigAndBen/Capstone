@@ -517,7 +517,7 @@
 
                                 <canvas id="diagnosisChart" width="100%" height="35"></canvas>
                                 <div class="text-center my-3">
-                                    <a href="{{ route('admin.analytics.patient.diagnose') }}"
+                                    <a href="{{ route('superadmin.analytics.patient.diagnose') }}"
                                         class="btn btn-primary">View
                                         all</a>
                                 </div>
