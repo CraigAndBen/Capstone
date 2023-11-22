@@ -25,7 +25,6 @@
             <!-- [ breadcrumb ] end -->
             <!-- [ Main Content ] start -->
             <div class="row">
-                <!-- [ sample-page ] start -->
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
@@ -75,33 +74,43 @@
                                         <span class="fa fa-check-circle"></span> No Request Yet.
                                     </div>
                                 @else
-                                    <table id="requesttable" class="display">
+                                    <table id="requesttable" class="table">
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center">#</th>
                                                 <th style="text-align: center">Name Of Requester</th>
                                                 <th style="text-align: center">Department</th>
                                                 <th style="text-align: center">Date</th>
-                                                <th style="text-align: center">Item Name</th>
-                                                <th style="text-align: center">Brand</th>
-                                                <th style="text-align: center">Quantity</th>
+                                                <th style="text-align: center">Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
                                                 $counter = 1;
+                                                $uniqueRows = [];
                                             @endphp
                                             @foreach ($requests as $request)
-                                                <tr
-                                                    @if ($request->date == now()->format('Y-m-d')) style="background-color: yellow" @endif>
-                                                    <td style="text-align: center">{{ $counter++ }}</td>
-                                                    <td style="text-align: center">{{ $request->name_requester }}</td>
-                                                    <td style="text-align: center">{{ $request->department }}</td>
-                                                    <td style="text-align: center">{{ $request->date }}</td>
-                                                    <td style="text-align: center">{{ $request->product->p_name }}</td>
-                                                    <td style="text-align: center">{{ $request->brand }}</td>
-                                                    <td style="text-align: center">{{ $request->quantity }}</td>
-                                                </tr>
+                                                @php
+                                                    // Generate a unique identifier for the row
+                                                    $rowIdentifier = $request->name_requester . $request->department . $request->date . $request->created_at;
+                                                @endphp
+
+                                                @if (!in_array($rowIdentifier, $uniqueRows))
+                                                    <tr @if ($request->date == now()->format('Y-m-d')) style="background-color: lightblue" @endif
+                                                        class="clickable-row" data-toggle="modal"
+                                                        data-target="#viewModal{{ $request->id }}">
+                                                        <td style="text-align: center">{{ $counter++ }}</td>
+                                                        <td style="text-align: center">{{ $request->name_requester }}</td>
+                                                        <td style="text-align: center">{{ $request->department }}</td>
+                                                        <td style="text-align: center">{{ date('M j, Y', strtotime($request->date)) }}</td>
+                                                       <td style="text-align: center">{{ date('g:i A', strtotime($request->created_at)) }}</td>
+                                                    </tr>
+
+                                                    @php
+                                                        // Add the identifier to the list of unique rows
+                                                        $uniqueRows[] = $rowIdentifier;
+                                                    @endphp
+                                                @endif
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -109,9 +118,93 @@
                             </div>
                         </div>
                     </div>
-                    <!-- [ sample-page ] end -->
+                    {{-- View modal --}}
+                    @foreach ($requests as $request)
+                        <div class="modal fade" id="viewModal{{ $request->id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <h2 class="modal-title text-light" id="myModalLabel">Request</h2>
+                                    </div>
+                                    <!-- Modal Content -->
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="row form-group">
+                                                <div class="col-md-4">
+                                                    <div class="mb-2">
+                                                        <label for="name_of_requester">Name of requester</label>
+                                                        <input type="text" class="form-control" id="name_requester"
+                                                            name="name_requester" value="{{ $request->name_requester }}"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-2">
+                                                        <label for="department">Department</label>
+                                                        <input type="text" class="form-control" id="department"
+                                                            name="department" value="{{ $request->department }}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="mb-2">
+                                                        <label for="date">Date</label>
+                                                        <input type="text" class="form-control" id="date"
+                                                            name="date"
+                                                            value="{{ date('M j, Y', strtotime($request->date)) }}"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-4">
+                                                <div class="rounded border p-3">
+                                                    <div class="table table-sm row">
+                                                        <div class="col-12 col-sm-4">
+                                                            <div class="d-none d-sm-block text-center"><strong>Item</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 col-sm-4">
+                                                            <div class="d-none d-sm-block text-center">
+                                                                <strong>Brand</strong></div>
+                                                        </div>
+                                                        <div class="col-12 col-sm-4">
+                                                            <div class="d-none d-sm-block text-center">
+                                                                <strong>Quantity</strong></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="text-95 text-secondary-d3">
+                                                        @foreach ($requests as $productRequest)
+                                                            @if (
+                                                                $productRequest->name_requester == $request->name_requester &&
+                                                                    $productRequest->department == $request->department &&
+                                                                    $productRequest->date == $request->date &&
+                                                                    $productRequest->created_at == $request->created_at)
+                                                                <div class="table table-sm row mb-2 mb-sm-0 py-25">
+                                                                    <div class="col-12 col-sm-4 text-center">
+                                                                        {{ $productRequest->product->p_name }}</div>
+                                                                    <div class="col-12 col-sm-4 text-center">
+                                                                        {{ $productRequest->brand }}</div>
+                                                                    <div class="col-12 col-sm-4 text-center">
+                                                                        {{ $productRequest->quantity }}</div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    {{-- End View Modal --}}
                 </div>
-                <!-- [ Main Content ] end -->
             </div>
         </div>
     @endsection

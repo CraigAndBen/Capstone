@@ -33,7 +33,7 @@
                                 Most Requesting Department Analytics Report
                             @endif
                         </b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
+                <h5>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
             </div>
             <div class="col-2">
@@ -134,6 +134,15 @@
                     }
                 }
             });
+
+            $(document).ready(function() {
+                // Attach a click event handler to the button
+                $("#printButton").click(function() {
+                    // Call the window.print() function to open the print dialog
+                    window.print();
+                });
+            });
+
         </script>
     @endif
 @endsection

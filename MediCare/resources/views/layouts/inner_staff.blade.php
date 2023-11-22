@@ -171,10 +171,6 @@
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="ti ti-user"></i>
-                                        <span>Social Profile</span>
-                                    </a>
                                     <a href="{{ route('staff.logout') }}" class="dropdown-item">
                                         <i class="ti ti-logout"></i>
                                         <span>Logout</span>

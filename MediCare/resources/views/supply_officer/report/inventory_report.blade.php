@@ -34,7 +34,7 @@
                             @endif
                         </b></i></h8>
                 <br>
-                <h8>Date: <i><b>{{ $currentDate }}</b></i></h8>
+                <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h8>
                 <br>
                 <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             </div>
