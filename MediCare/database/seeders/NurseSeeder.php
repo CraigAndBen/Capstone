@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-
-class DoctorsSeeder extends Seeder
+class NurseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,10 +16,6 @@ class DoctorsSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        $specialties = ['Cardiology', 'Dermatology', 'Orthopedics', 'Pediatrics', 'Ophthalmology'];
-        $qualification = ['MD', 'DO'];
-        $imageName = 'noprofile.jpeg';
-        
 
         foreach (range(1, 6) as $index) {
 
@@ -28,10 +23,11 @@ class DoctorsSeeder extends Seeder
             $lastName = $faker->lastName;
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $date = $faker->date($format = 'Y-m-d', $max = 'now');
-            $time = $faker->time($format = 'h:i A');
             $age = $faker->numberBetween(1, 70);
             $years = $faker->numberBetween(1, 30);
             $gender = $faker->randomElement(['male', 'female']);
+            $qualification = $faker->randomElement(['male', 'female']);
+            $shift = $faker->randomElement(['day', 'night','rotating shift']);
             $digits = $faker->numerify('#########');
             $phone = '+639' . $digits;
 
@@ -39,27 +35,25 @@ class DoctorsSeeder extends Seeder
                 'first_name' => $firstName,
                 'last_name' => $lastName,
                 'email' => $firstName . '.'. $lastName . '@gmail.com',
-                'role' => 'doctor',
+                'role' => 'nurse',
                 'password' => Hash::make('111'), 
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            DB::table('doctors')->insert([
+            DB::table('nurses')->insert([
                 'account_id' => $userId,
                 'gender' => $gender,
                 'age' => $age,
                 'birthdate' => $birthdate,
-                'specialties' => $specialties[array_rand($specialties)],
-                'image_name' => $imageName,
-                'image_data' => 'images/' . $imageName,
                 'employment_date' => $date,
-                'qualification' => $qualification[array_rand($qualification)],
+                'qualification' => $qualification,
                 'years_of_experience' => $years,
                 'phone' => $phone,
                 'street' => $faker->streetAddress,
                 'brgy' => $faker->city,
                 'city' => $faker->city,
+                'shift' => $shift,
                 'province' => $faker->city,
                 'created_at' => now(),
                 'updated_at' => now(),

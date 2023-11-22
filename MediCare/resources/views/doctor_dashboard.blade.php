@@ -395,7 +395,7 @@
                                     </div>
                                     <div class="col-auto"> </div>
                                 </div>
-
+                                @if ($currentAppointmentCount)
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <thead class="thead-dark">
@@ -423,9 +423,19 @@
                                     </table>
                                 </div>
 
-                                <div class="text-center">
-                                    <a href="{{ route('doctor.appointment') }}" class="btn btn-primary">View all</a>
-                                </div>
+                                    <div class="text-center">
+                                        <a href="{{ route('doctor.appointment') }}" class="btn btn-primary">View all</a>
+                                    </div>
+                                @else
+                                    <div class="text-center mb-4">
+                                        <h5>No Current Appointment This Month.</h5>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <a href="{{ route('doctor.appointment') }}" class="btn btn-primary">View all</a>
+                                    </div>
+                                @endif
+    
                             </div>
                         @else
                             <div class="card-body">

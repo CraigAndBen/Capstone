@@ -37,7 +37,7 @@
   <div id="topbar" class="d-flex align-items-center fixed-top">
     <div class="container d-flex justify-content-between">
       <div class="contact-info d-flex align-items-center">
-        <i class="bi bi-envelope"></i> <a href="mailto:contact@example.com">medicare@example.com</a>
+        <i class="bi bi-envelope"></i> <a href="medicare@gmail@gmail.com">medicare@gmail.com</a>
         <i class="bi bi-phone"></i> +1 5589 55488 55
       </div>
       <div class="d-none d-lg-flex social-links align-items-center">
@@ -726,7 +726,7 @@
               Nabua, 4434 Camarines Sur<br>
               Philippines <br><br>
               <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> medicare@example.com<<br>
+              <strong>Email:</strong> medicare@gmail.com<<br>
             </p>
           </div>
 

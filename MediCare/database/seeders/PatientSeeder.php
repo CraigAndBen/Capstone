@@ -31,17 +31,43 @@ class PatientSeeder extends Seeder
             $time = $faker->time('H:i:s');
             $gender = $faker->randomElement(['male', 'female']);
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
+            $guardianBirthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $additionalDays = $faker->numberBetween(1, 40);
             $doctorId = $faker->numberBetween(4, 9);
             $newDate = (new \DateTime($date))->modify("+$additionalDays days")->format('Y-m-d');
+            $roomNum = $faker->numberBetween(1, 100);
+            $bedNum = $faker->numberBetween(1, 100);
+            $medicalCondition = $faker->randomElement(['Common Cold', 'Influenza (Flu)', 'Allergies', 'Acne' ,'Migraines']);
+            $relationship = $faker->randomElement(['parent', 'legal Guardian', 'spouse', 'siblings' ,'grandparent','aunt/Uncle','cousin','extended family member','foster Parent','close friend']);
+            $guardianFirstName = $faker->firstName;
+            $guardianLastName = $faker->lastName;
+            $digits1 = $faker->numerify('#########');
+            $phone = '+639' . $digits1;
+            $digits2 = $faker->numerify('#########');
+            $guardianPhone = '+639' . $digits2;
 
             $attributes = [
                 'first_name' => $faker->firstName,
+                'middle_name' => $faker->lastName,
                 'last_name' => $faker->lastName,
+                'street' => $faker->streetAddress,
+                'brgy' => $faker->city,
+                'city' => $faker->city,
+                'province' => $faker->city,
+                'phone' => $phone,
                 'gender' => $gender,
-                'birthdate' => $birthdate,
+                'birthdate' => $birthdate, 
                 'type' => $type,
                 'physician' => $doctorId,
+                'room_number' => $roomNum,
+                'bed_number' => $bedNum,
+                'medical_condition' => $medicalCondition,
+                'guardian_first_name' => $guardianFirstName,
+                'guardian_last_name' => $guardianLastName,
+                'guardian_birthdate' => $guardianBirthdate,
+                'guardian_phone' => $guardianPhone,
+                'guardian_email' => $guardianFirstName . '.' . '@gmail.com',
+                'relationship' => $relationship,
                 'created_at' => $date . ' ' . $time,
                 'updated_at' => $date . ' ' . $time,
             ];

@@ -138,12 +138,8 @@
                     <td>{{ ucwords($patient->guardian_first_name) }}</td>
                 </tr>
                 <tr>
-                    <th>Guardian Middle Name</th>
-                    <td>{{ ucwords($patient->guardian_first_name) }}</td>
-                </tr>
-                <tr>
                     <th>Guardian Last Name</th>
-                    <td>{{ ucwords($patient->guardian_first_name) }}</td>
+                    <td>{{ ucwords($patient->guardian_last_name) }}</td>
                 </tr>
                 <tr>
                     <th>Guardian Birthdate</th>
@@ -151,7 +147,7 @@
                 </tr>
                 <tr>
                     <th>Relationship</th>
-                    <td>{{ ucwords($patient->guardian_first_name)  }}</td>
+                    <td>{{ ucwords($patient->relationship)  }}</td>
                 </tr>
                 <tr>
                     <th>Guardian Phone</th>
