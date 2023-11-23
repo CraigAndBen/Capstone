@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_price', function (Blueprint $table) {
             $table->id();
             $table->smallInteger('product_id');
-            $table->integer('price');
+            $table->decimal('price', 8, 2);
             $table->timestamps();
         });
     }

@@ -81,69 +81,67 @@
                                         <span class="fa fa-check-circle"></span> No Item Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
-                                            <tr>
-                                                <th>Item Name</th>
-                                                <th>Category Name</th>
-                                                <th>Price</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-                                            @foreach ($products as $product)
-                                                <tr>
-                                                    @foreach ($categories as $category)
-                                                        @if ($product->category_id == $category->id)
-                                                            <td>{{ ucwords($product->p_name) }}</td>
-                                                            <td>{{ ucwords($category->category_name) }}</td>
-                                                            @foreach ($products_price as $price)
-                                                                @if ($price->product_id == $product->id)
-                                                                    <td>₱{{ number_format($price->price, 2) }}</td>
-                                                                    <td class="text-center">
-                                                                        <div class="dropdown">
-                                                                            <button class="btn btn-primary dropdown-toggle"
-                                                                                type="button" data-toggle="dropdown">
-                                                                                Actions
-                                                                            </button>
-                                                                            <div class="dropdown-menu">
-                                                                                <a class="dropdown-item btn btn-primary"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#updateModal"
-                                                                                    data-id="{{ json_encode($price->id) }}"
-                                                                                    data-product-price="{{ json_encode($price->price) }}"
-                                                                                    data-product-name="{{ json_encode($product->id) }}">Update</a>
-
-                                                                                <a class="dropdown-item btn btn-primary"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#viewModal"
-                                                                                    data-id="{{ json_encode($price->id) }}"
-                                                                                    data-product-price="{{ json_encode($price->price) }}"
-                                                                                    data-product-name="{{ json_encode($product->id) }}"">View</a>
-                                                                                <form method="POST"
-                                                                                    action="{{ route('pharmacist.product.delete', ['id' => $price->id]) }}">
-                                                                                    @csrf
-                                                                                    @method('DELETE')
-
-                                                                                    <button type="submit"
-                                                                                        class="btn btn-danger dropdown-item ">Delete</button>
-                                                                                </form>
-                                                                            </div>
+                                <table id="pricetable" class="table table-bordered">
+                                    <thead class="bg-primary text-light text-center">
+                                        <tr>
+                                            <th class="text-center">Item Name</th>
+                                            <th class="text-center">Category Name</th>
+                                            <th class="text-center">Price</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @foreach ($products as $product)
+                                            @php
+                                                $productHasPrice = false;
+                                            @endphp
+                                
+                                            @foreach ($categories as $category)
+                                                @if ($product->category_id == $category->id)
+                                                    @foreach ($products_price as $price)
+                                                        @if ($price->product_id == $product->id)
+                                                            @php
+                                                                $productHasPrice = true;
+                                                            @endphp
+                                                            <tr>
+                                                                <td>{{ ucwords($product->p_name) }}</td>
+                                                                <td>{{ ucwords($category->category_name) }}</td>
+                                                                <td>₱{{ number_format($price->price, 2) }}</td>
+                                                                <td class="text-center">
+                                                                    <div class="dropdown">
+                                                                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                                            Actions
+                                                                        </button>
+                                                                        <div class="dropdown-menu">
+                                                                            <a class="dropdown-item btn btn-primary" data-toggle="modal" data-target="#updateModal"
+                                                                                data-id="{{ json_encode($price->id) }}" data-product-price="{{ json_encode($price->price) }}"
+                                                                                data-product-name="{{ json_encode($product->id) }}">Update</a>
+                                
+                                                                            <a class="dropdown-item btn btn-primary" data-toggle="modal" data-target="#viewModal"
+                                                                                data-id="{{ json_encode($price->id) }}" data-product-price="{{ json_encode($price->price) }}"
+                                                                                data-product-name="{{ json_encode($product->id) }}">View</a>
+                                                                            
+                                                                            <form method="POST" action="{{ route('pharmacist.product.delete', ['id' => $price->id]) }}">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit" class="btn btn-danger dropdown-item">Delete</button>
+                                                                            </form>
                                                                         </div>
-                                                                    </td>
-                                                                @endif
-                                                            @endforeach
-                                                        @else
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
                                                         @endif
                                                     @endforeach
-                                                </tr>
+                                                @endif
                                             @endforeach
-
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $products->links('pagination::bootstrap-4') }}
-                                    </div>
+                                
+                                            {{-- Only display the row if the product has a price --}}
+                                            @if (!$productHasPrice)
+                                                {{-- Handle the case where the product does not have a price --}}
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
                                 @endif
                             </div>
                         </div>
@@ -174,24 +172,25 @@
                                                             @endforeach
                                                         @endforeach
                                                     </select>
+                                                    
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
-                                                    <input type="number" name="price" class="form-control"
-                                                        id="floatingInput price" placeholder="Price" />
+                                                    <input type="hidden" id="id" name="id">
+                                                    <input type="number" step="0.01" name="price" class="form-control" id="price" placeholder="Price" />
                                                     <label for="floatingInput">Price</label>
                                                 </div>
                                             </div>
+                                            
                                         </div>
-
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
                                 </form>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -229,11 +228,11 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="hidden" id="id" name="id">
-                                                    <input type="number" name="price" class="form-control"
-                                                        id="price" placeholder="Price" />
+                                                    <input type="number" step="0.01" name="price" class="form-control" id="price" placeholder="Price" />
                                                     <label for="floatingInput">Price</label>
                                                 </div>
                                             </div>
+                                            
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -272,8 +271,7 @@
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3">
                                                 <input type="hidden" id="id" name="id">
-                                                <input type="number" name="price" class="form-control" id="price"
-                                                    placeholder="Price" disabled />
+                                                <input type="number" step="0.01" name="price" class="form-control" id="price" placeholder="Price" disabled />
                                                 <label for="floatingInput">Price</label>
                                             </div>
                                         </div>
@@ -324,6 +322,12 @@
                     modal.find('#product_id').val(product_name);
                     modal.find('#price').val(product_price);
                 });
+
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#pricetable').DataTable();
             });
         </script>
     @endsection

@@ -165,8 +165,12 @@ class PharmacistController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         
-        $products = Product::with('category')->paginate(10);
+        $products = Product::with('category')->whereHas('category', function ($query) {
+            $query->where('category_name', 'pharmaceutical');
+        })->get();
         $categories = Category::where('category_name', 'pharmaceutical')->get();
+
+        
     
         return view('pharmacist.product.inventory_medicine', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
     }
@@ -270,6 +274,8 @@ class PharmacistController extends Controller
             'currentDate' => $currentDate,
         ];
 
+        $pdf = app('dompdf.wrapper');
+        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
 
         return $pdf->stream('medicine report.pdf');
@@ -296,6 +302,8 @@ class PharmacistController extends Controller
             'currentDate' => $currentDate,
         ];
 
+        $pdf = app('dompdf.wrapper');
+        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
 
         return $pdf->download('medicine report.pdf');
@@ -303,6 +311,7 @@ class PharmacistController extends Controller
        // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
     }
 
+    //Product Price
     public function product()
     {
         $profile = Auth::user();
@@ -314,7 +323,7 @@ class PharmacistController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $products_price = Product_price::all();
-        $products = Product::with('category')->paginate(10);
+        $products = Product::with('category')->get();
         $categories = Category::where('category_name', 'pharmaceutical')->get();
 
         return view('pharmacist.product.product', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories', 'products_price'));
@@ -338,6 +347,8 @@ class PharmacistController extends Controller
             'currentDate' => $currentDate,
         ];
 
+        $pdf = app('dompdf.wrapper');
+        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
 
         return $pdf->stream('medicine price report.pdf');
@@ -364,6 +375,8 @@ class PharmacistController extends Controller
             'currentDate' => $currentDate,
         ];
 
+        $pdf = app('dompdf.wrapper');
+        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
 
         return $pdf->download('medicine price report.pdf');
@@ -376,7 +389,7 @@ class PharmacistController extends Controller
     {
         $request->validate([
             'product' => 'required',
-            'price' => 'required'
+            'price' => 'required|numeric|min:0.01'
         ]);
         
         
@@ -395,13 +408,13 @@ class PharmacistController extends Controller
         $product = Product_price::find($request->input('id'));
 
         if (!$product) {
-            return redirect()->route('pharmacist.product')->with('error', 'Category not found.');
+            return redirect()->route('pharmacist.product')->with('error', 'Item not found.');
         }
 
         // Update the category with new data
         $product->update($request->all());
 
-        return redirect()->route('pharmacist.product')->with('success', 'Category updated successfully.');
+        return redirect()->route('pharmacist.product')->with('success', 'Item updated successfully.');
     }
 
     public function productDelete($id)

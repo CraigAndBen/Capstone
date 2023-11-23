@@ -565,6 +565,7 @@ Route::middleware(['auth', 'role:cashier'])->group(function () {
     Route::post('/cashier/product/purchase/add', [CashierController::class, 'purchaseAdd'])->name('cashier.product.purchase.add');
     Route::post('/cashier/product/purchase/confirm', [CashierController::class, 'purchaseConfirm'])->name('cashier.product.purchase.confirm');
     Route::delete('/cashier/product/purchase/remove/{key}', [CashierController::class, 'removeProduct'])->name('cashier.product.purchase.remove');
+    Route::post('/cashier/product/purchase/receipt/preview', [CashierController::class, 'receiptPreview'])->name('cashier.product.purchase.receipt.preview');
     Route::post('/cashier/product/purchase/receipt', [CashierController::class, 'receipt'])->name('cashier.product.purchase.receipt');
 
 

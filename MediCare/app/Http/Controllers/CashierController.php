@@ -194,7 +194,7 @@ class CashierController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $purchases = Purchase_detail::paginate(5); // Retrieve products from your database
+        $purchases = Purchase_detail::get(); // Retrieve products from your database
         $purchaseDetails = Purchase::get();
 
 
@@ -220,6 +220,8 @@ class CashierController extends Controller
 
         ];
 
+        $pdf = app('dompdf.wrapper');
+        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
 
         return $pdf->stream('purchase_report.pdf');
@@ -241,6 +243,8 @@ class CashierController extends Controller
 
         ];
 
+        $pdf = app('dompdf.wrapper');
+        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
 
         return $pdf->download('purchase report.pdf');
@@ -321,6 +325,51 @@ class CashierController extends Controller
         return redirect()->route('cashier.product.purchase')->with('success', 'Product removed from cart successfully');
     }
 
+    public function receiptPreview(Request $request)
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        // Retrieve the cart data from the session
+        $cart = session('cart', []);
+        // Initialize a variable to store the total price
+        $totalPrice = 0;
+        $amount = $request->input('amount');
+
+        // Loop through the cart items and calculate the total price
+        foreach ($cart as $item) {
+            $quantity = $item['quantity'];
+            $price = $item['price'];
+
+            // Calculate the total price for the current item
+            $itemTotalPrice = $quantity * $price;
+
+            // Add the item's total price to the overall total price
+            $totalPrice += $itemTotalPrice;
+        }
+
+        $min = 10000000; // Smallest 8-digit number
+        $max = 99999999; // Largest 8-digit number
+        $reference = mt_rand($min, $max);
+        $change = $amount - $totalPrice;
+
+        // Increment the reference number by 1
+        $reference += 1;
+
+        if ($change < 0) {
+            return redirect()->route('cashier.product.purchase')->with('info', 'Insufficient Amount');
+        }
+
+        session(['pdf_reference' => $reference]);
+
+        return view('cashier.product.receipt_preview', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'cart', 'reference', 'totalPrice', 'amount', 'change'));
+    }
+
     public function receipt(Request $request)
     {
         $profile = Auth::user();
@@ -361,7 +410,24 @@ class CashierController extends Controller
             return redirect()->route('cashier.product.purchase')->with('info', 'Insufficient Amount');
         }
 
-        return view('cashier.product.receipt', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'cart', 'reference', 'totalPrice', 'amount', 'change'));
+        $reference = session('pdf_reference');
+
+        $data = [
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+            'cart' => $cart,
+            'reference' => $reference,
+            'totalPrice' => $totalPrice,
+            'amount' => $amount,
+            'change' => $change,
+
+        ];
+
+            $pdf = app('dompdf.wrapper');
+            $pdf->setBasePath(public_path());
+            $pdf = app('dompdf.wrapper')->loadView('cashier.product.receipt', $data);
+
+            return $pdf->stream('receipt.pdf');
     }
 
     public function purchaseConfirm(Request $request)

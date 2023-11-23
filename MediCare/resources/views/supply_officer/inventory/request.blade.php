@@ -74,14 +74,15 @@
                                         <span class="fa fa-check-circle"></span> No Request Yet.
                                     </div>
                                 @else
-                                    <table id="requesttable" class="table">
-                                        <thead>
+                                    <table id="requesttable" class="table table-bordered">
+                                        <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th style="text-align: center">#</th>
-                                                <th style="text-align: center">Name Of Requester</th>
-                                                <th style="text-align: center">Department</th>
-                                                <th style="text-align: center">Date</th>
-                                                <th style="text-align: center">Time</th>
+                                                <th class="text-center">#</th>
+                                                <th class="text-center">Name Of Requester</th>
+                                                <th class="text-center">Department</th>
+                                                <th class="text-center">Date</th>
+                                                <th class="text-center">Time</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -98,12 +99,18 @@
                                                 @if (!in_array($rowIdentifier, $uniqueRows))
                                                     <tr @if ($request->date == now()->format('Y-m-d')) style="background-color: lightblue" @endif
                                                         class="clickable-row" data-toggle="modal"
-                                                        data-target="#viewModal{{ $request->id }}">
-                                                        <td style="text-align: center">{{ $counter++ }}</td>
-                                                        <td style="text-align: center">{{ $request->name_requester }}</td>
-                                                        <td style="text-align: center">{{ $request->department }}</td>
-                                                        <td style="text-align: center">{{ date('M j, Y', strtotime($request->date)) }}</td>
-                                                       <td style="text-align: center">{{ date('g:i A', strtotime($request->created_at)) }}</td>
+                                                        data-target="#viewModal{{ $request->id }}" data-request-id="{{ $request->id }}">
+                                                        <td class="text-center">{{ $counter++ }}</td>
+                                                        <td class="text-center">{{ $request->name_requester }}</td>
+                                                        <td class="text-center">{{ $request->department }}</td>
+                                                        <td class="text-center">{{ date('M j, Y', strtotime($request->date)) }}</td>
+                                                       <td class="text-center">{{ date('g:i A', strtotime($request->created_at)) }}</td>
+                                                       <td class="text-center">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#viewModal{{ $request->id }}" >
+                                                            View Receipt
+                                                        </button>
+                                                    </td>
                                                     </tr>
 
                                                     @php
@@ -214,4 +221,34 @@
                 $('#requesttable').DataTable();
             });
         </script>
+        <script>
+            $(document).ready(function () {
+                // Handler for when a modal is shown
+                $('#requesttable').on('shown.bs.modal', function (e) {
+                    var requestId = $(e.relatedTarget).data('request-id');
+                    markRowAsViewed(requestId);
+                });
+        
+                function markRowAsViewed(requestId) {
+                    // Find the row with the corresponding request ID
+                    var row = $('#requesttable').find('tr[data-request-id="' + requestId + '"]');
+                    
+                    // Check if the row exists and if it has not been viewed
+                    if (row.length > 0 && !row.data('viewed')) {
+                        // Remove the background color indicating a new request
+                        row.css('background-color', '');
+        
+                        // Mark the row as viewed
+                        row.data('viewed', true);
+                    }
+                }
+        
+                // Handle click event on rows
+                $('.clickable-row').on('click', function () {
+                    var requestId = $(this).data('request-id');
+                    markRowAsViewed(requestId);
+                });
+            });
+        </script>
+        
     @endsection
