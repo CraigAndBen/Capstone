@@ -61,9 +61,9 @@
                                         <table class="table table-bordered">
                                             <thead class="bg-primary text-light text-center">
                                                 <tr>
-                                                    <th>Type</th>
-                                                    <th>Specialties</th>
                                                     <th>Name</th>
+                                                    <th>Type</th>
+                                                    <th>Specialist</th>
                                                     <th>Date</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
@@ -73,10 +73,16 @@
                                             <tbody class="text-center">
                                                 @foreach ($appointments as $appointment)
                                                     <tr class="p-3">
-                                                        <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                        <td>{{ ucwords($appointment->specialties) }}</td>
                                                         <td>{{ ucwords($appointment->first_name) }}
-                                                            {{ ucwords($appointment->last_name) }}</td>
+                                                            {{ ucwords($appointment->last_name) }}</td> 
+                                                        <td>{{ ucwords($appointment->appointment_type) }}</td>
+                                                        @foreach ($infos as $info)
+                                                            @if ($info->id == $appointment->doctor_id)
+                                                                <td>Dr. {{ ucwords($info->first_name) }} {{ucwords($info->last_name)}}</td>
+                                                            @endif
+                                                        @endforeach
+
+
                                                         <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}
                                                         </td>
                                                         <td>{{ ucwords($appointment->appointment_time) }}</td>

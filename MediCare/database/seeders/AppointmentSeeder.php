@@ -26,10 +26,18 @@ class AppointmentSeeder extends Seeder
             $time = $faker->time('H:i:s');
             $type = 'user';
             $firstName = $faker->firstName;
+            $middleName = $faker->lastName;
             $lastName = $faker->lastName;
+            $gender = $faker->randomElement(['male', 'female']);
+            $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
+            $digits = $faker->numerify('#########');
+            $phone = '+639' . $digits;
+            $occupation = ['Software Developer', 'Registered Nurse', 'Marketing Manager', 'Electrician','Civil Engineer'];
+            $age = $faker->numberBetween(18, 70);
 
             $attributes = [
                 'first_name' => $firstName,
+                'middle_name' => $middleName,
                 'last_name' => $lastName,
                 'role' => $type,
                 'email' => $firstName . '.' . $lastName . '@gmail.com',
@@ -39,6 +47,23 @@ class AppointmentSeeder extends Seeder
             ];
 
             $insertedUserId = DB::table('users')->insertGetId($attributes);
+
+            $attributes = [
+                'account_id' => $insertedUserId,
+                'gender' => $gender,
+                'birthdate' => $birthdate,
+                'phone' => $phone,
+                'age' => $age,
+                'street' => $faker->streetAddress,
+                'brgy' => $faker->city,
+                'city' => $faker->city,
+                'province' => $faker->city,
+                'occupation' => $occupation[array_rand($occupation)],
+                'created_at' => $date . ' ' . $time,
+                'updated_at' => $date . ' ' . $time,
+            ];
+
+            DB::table('users_info')->insertGetId($attributes);
 
             foreach (range(1, 10) as $index) {
 

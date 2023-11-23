@@ -20,6 +20,7 @@ class NurseSeeder extends Seeder
         foreach (range(1, 6) as $index) {
 
             $firstName = $faker->firstName;
+            $middleName = $faker->lastName;
             $lastName = $faker->lastName;
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $date = $faker->date($format = 'Y-m-d', $max = 'now');
@@ -33,6 +34,7 @@ class NurseSeeder extends Seeder
 
             $userId = DB::table('users')->insertGetId([
                 'first_name' => $firstName,
+                'middle_name' => $middleName,
                 'last_name' => $lastName,
                 'email' => $firstName . '.'. $lastName . '@gmail.com',
                 'role' => 'nurse',

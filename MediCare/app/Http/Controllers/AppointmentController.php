@@ -418,8 +418,8 @@ class AppointmentController extends Controller
         ];
 
         $user = Auth::user();
-        $infos = Doctor::all();
-        $doctors = User::all();
+        $doctors = Doctor::orderBy('specialties')->get();
+        $infos = User::where('role', 'doctor')->get();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'confirmed')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read', 0)->get();
 
@@ -446,11 +446,12 @@ class AppointmentController extends Controller
 
 
         $user = Auth::user();
-        $infos = Doctor::all();
+        $doctors = Doctor::orderBy('specialties')->get();
+        $infos = User::where('role', 'doctor')->get();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read', 0)->get();
 
-        return view('user.appointment.done_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert'));
+        return view('user.appointment.done_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert','doctors'));
     }
 
     public function cancelledAppointmentList()
@@ -472,11 +473,12 @@ class AppointmentController extends Controller
         ];
 
         $user = Auth::user();
-        $infos = Doctor::all();
+        $doctors = Doctor::orderBy('specialties')->get();
+        $infos = User::where('role', 'doctor')->get();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read', 0)->get();
 
-        return back()->with('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert'));
+        return view('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert','doctors'));
     }
 
     public function unavailableAppointmentList()
@@ -498,11 +500,12 @@ class AppointmentController extends Controller
         ];
 
         $user = Auth::user();
-        $infos = Doctor::all();
+        $infos = User::where('role', 'doctor')->get();
+        $doctors = Doctor::orderBy('specialties')->get();
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'unavailable')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read', 0)->get();
 
-        return view('user.appointment.unavailable_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert'));
+        return view('user.appointment.unavailable_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert','doctors'));
     }
     public function updateAppointment(Request $request)
     {

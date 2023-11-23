@@ -61,9 +61,9 @@
                                         <table class="table table-bordered">
                                             <thead class="bg-primary text-light text-center">
                                                 <tr>
-                                                    <th>Type</th>
-                                                    <th>Specialties</th>
                                                     <th>Name</th>
+                                                    <th>Type</th>
+                                                    <th>Specialist</th>
                                                     <th>Date</th>
                                                     <th>Time</th>
                                                     <th>Status</th>
@@ -73,10 +73,15 @@
                                             <tbody class="text-center">
                                                 @foreach ($appointments as $appointment)
                                                     <tr class="p-3">
-                                                        <td>{{ ucwords($appointment->appointment_type) }}</td>
-                                                        <td>{{ ucwords($appointment->specialties) }}</td>
                                                         <td>{{ ucwords($appointment->first_name) }}
                                                             {{ ucwords($appointment->last_name) }}</td>
+                                                        <td>{{ ucwords($appointment->appointment_type) }}</td>
+                                                        @foreach ($infos as $info)
+                                                            @if ($info->id == $appointment->doctor_id)
+                                                                <td>Dr. {{ ucwords($info->first_name) }}
+                                                                    {{ ucwords($info->last_name) }}</td>
+                                                            @endif
+                                                        @endforeach
                                                         <td>{{ date('M d, Y', strtotime($appointment->appointment_date)) }}
                                                         </td>
                                                         <td>{{ ucwords($appointment->appointment_time) }}</td>
@@ -105,7 +110,7 @@
                                                                         data-birthdate="{{ json_encode($appointment->birthdate) }}"
                                                                         data-gender="{{ json_encode($appointment->gender) }}"
                                                                         data-phone="{{ json_encode($appointment->phone) }}"
-                                                                        data-specialties="{{ json_encode($appointment->specialties) }}"
+                                                                        data-specialties="{{ json_encode($appointment->doctor_id) }}"
                                                                         data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
                                                                         data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                         data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
@@ -229,8 +234,13 @@
                         <div class="form-floating mb-3">
                             <select class="form-control p-3" id="specialties" name="specialties" disabled>
                                 <option value="">Select Specialist</option>
-                                @foreach ($infos as $info)
-                                    <option value="{{ $info->specialties }}">{{ $info->specialties }}</option>
+                                @foreach ($doctors as $doctor)
+                                    @foreach ($infos as $info)
+                                        @if ($doctor->account_id == $info->id)
+                                            <option value="{{ $info->id }}">Dr. {{ $info->first_name }}
+                                                {{ $info->last_name }} - {{ $doctor->specialties }}</option>
+                                        @endif
+                                    @endforeach
                                 @endforeach
                             </select>
                         </div>
