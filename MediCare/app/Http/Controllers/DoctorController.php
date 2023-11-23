@@ -28,11 +28,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -46,12 +44,12 @@ class DoctorController extends Controller
         $currentYear = Carbon::now()->year;
 
         $admittedPatientsByMonth = DB::table('patients')
-        ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
-        ->where('physician', $profile->id)
-        ->whereYear('admitted_date', $currentYear)
-        ->groupBy('month')
-        ->get();
-    
+            ->select(DB::raw('DATE_FORMAT(admitted_date, "%M") as month'), DB::raw('COUNT(*) as count'))
+            ->where('physician', $profile->id)
+            ->whereYear('admitted_date', $currentYear)
+            ->groupBy('month')
+            ->get();
+
         $outpatientPatientsByMonth = DB::table('patients')
             ->select(DB::raw('DATE_FORMAT(date, "%M") as month'), DB::raw('COUNT(*) as count'))
             ->where('physician', $profile->id)
@@ -100,18 +98,16 @@ class DoctorController extends Controller
 
 
 
-        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'admittedPatientsByMonth','outpatientPatientsByMonth', 'patientCount', 'limitCurrentMonthAppointments', 'months', 'appointmentCounts', 'currentAppointmentCount','appointmentCount', 'currentDate', 'currentTime','notificationsAlert'));
+        return view('doctor_dashboard', compact('profile', 'limitNotifications', 'count', 'info', 'admittedPatientsByMonth', 'outpatientPatientsByMonth', 'patientCount', 'limitCurrentMonthAppointments', 'months', 'appointmentCounts', 'currentAppointmentCount', 'appointmentCount', 'currentDate', 'currentTime', 'notificationsAlert'));
     }
 
     public function profile(Request $request): View
     {
         $profile = $request->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -120,7 +116,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile', compact('profile', 'info','limitNotifications', 'count', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.profile.profile', compact('profile', 'info', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     public function socialProfile(Request $request): View
@@ -128,11 +124,9 @@ class DoctorController extends Controller
 
         $profile = $request->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -141,18 +135,16 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile_social', compact('profile', 'info', 'limitNotifications', 'count', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.profile.profile_social', compact('profile', 'info', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     public function passwordProfile(Request $request): View
     {
         $profile = $request->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -161,7 +153,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     /**
@@ -415,11 +407,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -432,7 +422,7 @@ class DoctorController extends Controller
             ->orderByRaw("TIME_FORMAT(appointment_time, '%h:%i %p') DESC, appointment_date DESC")
             ->get();
 
-        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.appointment.appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
     public function confirmedAppointmentList()
     {
@@ -456,11 +446,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -473,7 +461,7 @@ class DoctorController extends Controller
             ->where('status', 'confirmed')
             ->orderBy('appointment_date', 'desc')->get();
 
-        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.appointment.confirmed_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
 
     }
 
@@ -499,11 +487,9 @@ class DoctorController extends Controller
 
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -515,7 +501,7 @@ class DoctorController extends Controller
         $appointments = Appointment::where('doctor_id', $profile->id)
             ->where('status', 'done')->get();
 
-        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.appointment.done_appointment', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     public function confirmedAppointment(Request $request)
@@ -530,7 +516,7 @@ class DoctorController extends Controller
 
         $currentTime = Carbon::now()->toTimeString();
         $currentDate = Carbon::now()->toDateString();
-        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is confirmed.';
+        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is confirmed by Dr. ' . $profile->first_name . ' ' . $profile->last_name;
 
         Notification::create([
             'account_id' => $appointment->account_id,
@@ -541,6 +527,16 @@ class DoctorController extends Controller
             'type' => 'user',
         ]);
 
+        $message = 'You have successfully confirmed the appointment for ' . $appointment->appointment_type . ' scheduled on ' . $appointment->appointment_date . ' at ' . $appointment->appointment_time . '.';
+
+        Notification::create([
+            'account_id' => $appointment->doctor_id,
+            'title' => 'Appointment confirmed',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
+        ]);
 
         return redirect()->back()->with('success', 'Appointment Confirmed successfully.');
     }
@@ -566,6 +562,17 @@ class DoctorController extends Controller
             'type' => 'user',
         ]);
 
+        $message = 'You have successfully done the appointment for ' . $appointment->appointment_type . ' scheduled on ' . $appointment->appointment_date . ' at ' . $appointment->appointment_time . '.';
+
+        Notification::create([
+            'account_id' => $appointment->doctor_id,
+            'title' => 'Appointment Done',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
+        ]);
+
 
         return redirect()->back()->with('success', 'Appointment Done successfully.');
     }
@@ -576,174 +583,30 @@ class DoctorController extends Controller
 
         $appointment->status = 'cancelled';
         $appointment->save();
+        $currentTime = Carbon::now()->toTimeString();
+        $currentDate = Carbon::now()->toDateString();
+
+        $message = 'You have successfully cancel the appointment for ' . $appointment->appointment_type . ' scheduled on ' . $appointment->appointment_date . ' at ' . $appointment->appointment_time . '.';
+
+        Notification::create([
+            'account_id' => $appointment->doctor_id,
+            'title' => 'Appointment Done',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
+        ]);
 
         return redirect()->back()->with('success', 'Appointment Cancelled successfully.');
-    }
-
-    public function appointmentSearch(Request $request)
-    {
-        $amTime = [
-            '8:30',
-            '9:00',
-            '9:30',
-            '10:30',
-            '11:00',
-            '11:30',
-        ];
-
-        $pmTime = [
-            '1:30',
-            '2:00',
-            '2:30',
-            '3:00',
-            '3:30',
-            '4:00',
-        ];
-
-        $profile = auth()->user();
-        $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = Doctor::all();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $searchTerm = $request->input('search');
-
-        $appointments = Appointment::where('specialties', $info->specialties)
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })
-            ->where(function ($query) {
-                $query->where('status', 'pending')
-                    ->orWhere('status', 'confirmed')
-                    ->orWhere('status', 'done');
-            })
-            ->where(function ($query) use ($profile) {
-                $query->where('doctor_id', $profile->id)
-                    ->orWhereNull('doctor_id');
-            })
-            ->orderBy('appointment_date', 'desc')
-            ->paginate(5);
-
-
-        return view('doctor.appointment.appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
-
-    }
-
-    public function confirmedAppointmentSearch(Request $request)
-    {
-        $amTime = [
-            '8:30',
-            '9:00',
-            '9:30',
-            '10:30',
-            '11:00',
-            '11:30',
-        ];
-
-        $pmTime = [
-            '1:30',
-            '2:00',
-            '2:30',
-            '3:00',
-            '3:30',
-            '4:00',
-        ];
-
-        $profile = auth()->user();
-        $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = Doctor::all();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $searchTerm = $request->input('search');
-
-        $appointments = Appointment::where('specialties', $info->specialties)
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })
-            ->where(function ($query) {
-                $query->where('status', 'confirmed');
-            })
-            ->where(function ($query) use ($profile) {
-                $query->where('doctor_id', $profile->id)
-                    ->orWhereNull('doctor_id');
-            })
-            ->orderBy('appointment_date', 'desc')
-            ->paginate(5);
-
-        return view('doctor.appointment.confirmed_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
-    }
-
-    public function doneAppointmentSearch(Request $request)
-    {
-        $amTime = [
-            '8:30',
-            '9:00',
-            '9:30',
-            '10:30',
-            '11:00',
-            '11:30',
-        ];
-
-        $pmTime = [
-            '1:30',
-            '2:00',
-            '2:30',
-            '3:00',
-            '3:30',
-            '4:00',
-        ];
-
-        $profile = auth()->user();
-        $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)->orderBy('date', 'desc')->get();
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $doctors = Doctor::all();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        $searchTerm = $request->input('search');
-
-        $appointments = Appointment::where('specialties', $info->specialties)
-            ->where(function ($query) use ($searchTerm) {
-                $query->orWhere('first_name', 'LIKE', '%' . $searchTerm . '%')
-                    ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%');
-            })
-            ->where(function ($query) {
-                $query->where('status', 'done');
-            })
-            ->where(function ($query) use ($profile) {
-                $query->where('doctor_id', $profile->id)
-                    ->orWhereNull('doctor_id');
-            })
-            ->orderBy('appointment_date', 'desc')
-            ->paginate(5);
-
-        return view('doctor.appointment.done_appointment_search', compact('appointments', 'profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate'));
     }
 
     public function appointmentCalendar()
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -772,7 +635,7 @@ class DoctorController extends Controller
         ];
 
 
-        return view('doctor.appointment.appointment_calendar', compact('profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.appointment.appointment_calendar', compact('profile', 'doctors', 'amTime', 'pmTime', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     public function appointmentEvents()
@@ -783,8 +646,8 @@ class DoctorController extends Controller
             $query->where('doctor_id', $user->id)
                 ->orWhereNull('doctor_id');
         })
-        ->whereNotIn('status', ['cancelled', 'unavailable'])
-        ->get();
+            ->whereNotIn('status', ['cancelled', 'unavailable'])
+            ->get();
 
         $events = [];
         foreach ($appointments as $appointment) {
@@ -929,7 +792,7 @@ class DoctorController extends Controller
 
         $currentTime = Carbon::now()->toTimeString();
         $currentDate = Carbon::now()->toDateString();
-        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is confirmed.';
+        $message = ' Your appointment that has ' . $appointment->appointment_type . ' that dated ' . $appointment->appointment_date . ' and timed ' . $appointment->appointment_time . ' is confirmed by Dr. ' . $profile->first_name . ' ' . $profile->last_name;
 
         Notification::create([
             'account_id' => $appointment->account_id,
@@ -937,6 +800,18 @@ class DoctorController extends Controller
             'message' => $message,
             'date' => $currentDate,
             'time' => $currentTime,
+            'type' => 'user',
+        ]);
+
+        $message = 'You have successfully confirmed the appointment for ' . $appointment->appointment_type . ' scheduled on ' . $appointment->appointment_date . ' at ' . $appointment->appointment_time . '.';
+
+        Notification::create([
+            'account_id' => $appointment->doctor_id,
+            'title' => 'Appointment Confirmed',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
         ]);
 
         return redirect()->route('doctor.appointment.calendar')->with('success', 'Appointment Confirmed successfully.');
@@ -961,6 +836,17 @@ class DoctorController extends Controller
             'message' => $message,
             'date' => $currentDate,
             'time' => $currentTime,
+        ]);
+
+        $message = 'You have successfully done the appointment for ' . $appointment->appointment_type . ' scheduled on ' . $appointment->appointment_date . ' at ' . $appointment->appointment_time . '.';
+
+        Notification::create([
+            'account_id' => $appointment->doctor_id,
+            'title' => 'Appointment Done',
+            'message' => $message,
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'type' => 'doctor',
         ]);
 
         return redirect()->route('doctor.appointment.calendar')->with('success', 'Appointment Done successfully.');
@@ -1056,11 +942,9 @@ class DoctorController extends Controller
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -1071,18 +955,16 @@ class DoctorController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $patients = Patient::where('physician', $profile->id)->orderBy('created_at', 'desc')->get();
 
-        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     public function admittedPatientList()
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -1095,18 +977,16 @@ class DoctorController extends Controller
             ->where('type', 'admitted_patient')
             ->get();
 
-        return view('doctor.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     public function outpatientList()
     {
         $profile = auth()->user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
             ->orderBy('date', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -1119,7 +999,7 @@ class DoctorController extends Controller
             ->where('type', 'outpatient')
             ->get();
 
-        return view('doctor.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.patient.patient_outpatient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
     }
 
     public function patientUpdate(Request $request)
@@ -1133,106 +1013,106 @@ class DoctorController extends Controller
                     'medical_condition' => $request->input('medical_condition'),
                 ];
 
-                 // Retrieve the request data
-                 $diagnosisDates = $request->input('diagnosesDate');
-                 $diagnosisTimes = $request->input('diagnosesTime');
-                 $diagnoses = $request->input('diagnoses');
- 
-                 // Retrieve the existing data from the database
-                 $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
- 
-                 // Initialize a boolean variable to track changes
-                 $diagnoseChangesDetected = false;
- 
-                 foreach ($diagnoses as $index => $newDiagnosis) {
-                     $existingDiagnosis = $existingDiagnoses->get($index);
-                     $newDiagnoseDate = $diagnosisDates[$index];
-                     $newDiagnoseTime = $diagnosisTimes[$index];
- 
-                     // Check if an existing record exists for this index
-                     if ($existingDiagnosis) {
-                         // Compare both the new diagnosis and new diagnoseDate with the existing ones
-                         if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime ])) {
-                             // At least one of the fields has been updated
-                             $diagnoseChangesDetected = true;
-                             // You can log or perform other actions here
- 
-                             // Update the existing record with the new data
-                             $existingDiagnosis->diagnose = $newDiagnosis;
-                             $existingDiagnosis->date = $newDiagnoseDate;
-                             $existingDiagnosis->time = $newDiagnoseTime;
-                             $existingDiagnosis->save(); // Save the changes to the database
-                         }
-                     } else {
-                         // No existing record for this index, this may mean a new diagnosis was added
-                         // Handle new diagnoses here if needed
-                         $newDiagnosisRecord = new Diagnose(); // Assuming Diagnosis is your Eloquent model or equivalent
-                         $newDiagnosisRecord->patient_id = $patient->id; // Assuming Diagnosis is your Eloquent model or equivalent
-                         $newDiagnosisRecord->diagnose = $newDiagnosis;
-                         $newDiagnosisRecord->date = $newDiagnoseDate;
-                         $newDiagnosisRecord->time = $newDiagnoseTime;
-                         $newDiagnosisRecord->save(); // Save the new dia
-                         $diagnoseChangesDetected = true;
-                     }
-                 }
- 
-                 // Retrieve the request data
-                 $medicationNames = $request->input('medicationName');
-                 $medicationDates = $request->input('medicationDate');
-                 $dosages = $request->input('medicationDosage');
-                 $durations = $request->input('medicationDuration');
-                 $medicationTimes = $request->input('medicationTime');
- 
-                 // Retrieve the existing medication data from the database
-                 $existingMedications = Medication::where('patient_id', $request->id)->get();
- 
-                 // Initialize a boolean variable to track changes
-                 $medicationChangesDetected = false;
- 
-                 foreach ($medicationNames as $index => $newMedicationName) {
-                     $existingMedication = $existingMedications->get($index);
-                     $newMedicationDate = $medicationDates[$index];
-                     $newDosage = $dosages[$index];
-                     $newDuration = $durations[$index];
-                     $newMedicationTime = $medicationTimes[$index];
- 
-                     // Check if an existing record exists for this index
-                     if ($existingMedication) {
-                         // Compare both the new medication data with the existing ones
-                         if (
-                             $this->hasChanges($existingMedication, [
-                                 'medication_name' => $newMedicationName,
-                                 'date' => $newMedicationDate,
-                                 'dosage' => $newDosage,
-                                 'duration' => $newDuration,
-                                 'time' => $newMedicationTime,
-                             ])
-                         ) {
-                             // At least one of the fields has been updated
-                             $medicationChangesDetected = true;
-                             // You can log or perform other actions here
- 
-                             // Update the existing record with the new data
-                             $existingMedication->medication_name = $newMedicationName;
-                             $existingMedication->date = $newMedicationDate;
-                             $existingMedication->dosage = $newDosage;
-                             $existingMedication->duration = $newDuration;
-                             $existingMedication->time = $newMedicationTime;
-                             $existingMedication->save(); // Save the changes to the database
-                         }
-                     } else {
-                         // No existing record for this index, this may mean a new medication was added
-                         $newMedicationRecord = new Medication(); // Assuming Medication is your Eloquent model or equivalent
-                         $newMedicationRecord->patient_id = $patient->id; // Assuming Medication is your Eloquent model or equivalent
-                         $newMedicationRecord->medication_name = $newMedicationName;
-                         $newMedicationRecord->date = $newMedicationDate;
-                         $newMedicationRecord->dosage = $newDosage;
-                         $newMedicationRecord->duration = $newDuration;
-                         $newMedicationRecord->time = $newMedicationTime;
-                         $newMedicationRecord->save(); // Save the new medication
-                         $medicationChangesDetected = true;
-                     }
-                 }
+                // Retrieve the request data
+                $diagnosisDates = $request->input('diagnosesDate');
+                $diagnosisTimes = $request->input('diagnosesTime');
+                $diagnoses = $request->input('diagnoses');
+
+                // Retrieve the existing data from the database
+                $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
+
+                // Initialize a boolean variable to track changes
+                $diagnoseChangesDetected = false;
+
+                foreach ($diagnoses as $index => $newDiagnosis) {
+                    $existingDiagnosis = $existingDiagnoses->get($index);
+                    $newDiagnoseDate = $diagnosisDates[$index];
+                    $newDiagnoseTime = $diagnosisTimes[$index];
+
+                    // Check if an existing record exists for this index
+                    if ($existingDiagnosis) {
+                        // Compare both the new diagnosis and new diagnoseDate with the existing ones
+                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime])) {
+                            // At least one of the fields has been updated
+                            $diagnoseChangesDetected = true;
+                            // You can log or perform other actions here
+
+                            // Update the existing record with the new data
+                            $existingDiagnosis->diagnose = $newDiagnosis;
+                            $existingDiagnosis->date = $newDiagnoseDate;
+                            $existingDiagnosis->time = $newDiagnoseTime;
+                            $existingDiagnosis->save(); // Save the changes to the database
+                        }
+                    } else {
+                        // No existing record for this index, this may mean a new diagnosis was added
+                        // Handle new diagnoses here if needed
+                        $newDiagnosisRecord = new Diagnose(); // Assuming Diagnosis is your Eloquent model or equivalent
+                        $newDiagnosisRecord->patient_id = $patient->id; // Assuming Diagnosis is your Eloquent model or equivalent
+                        $newDiagnosisRecord->diagnose = $newDiagnosis;
+                        $newDiagnosisRecord->date = $newDiagnoseDate;
+                        $newDiagnosisRecord->time = $newDiagnoseTime;
+                        $newDiagnosisRecord->save(); // Save the new dia
+                        $diagnoseChangesDetected = true;
+                    }
+                }
+
+                // Retrieve the request data
+                $medicationNames = $request->input('medicationName');
+                $medicationDates = $request->input('medicationDate');
+                $dosages = $request->input('medicationDosage');
+                $durations = $request->input('medicationDuration');
+                $medicationTimes = $request->input('medicationTime');
+
+                // Retrieve the existing medication data from the database
+                $existingMedications = Medication::where('patient_id', $request->id)->get();
+
+                // Initialize a boolean variable to track changes
+                $medicationChangesDetected = false;
+
+                foreach ($medicationNames as $index => $newMedicationName) {
+                    $existingMedication = $existingMedications->get($index);
+                    $newMedicationDate = $medicationDates[$index];
+                    $newDosage = $dosages[$index];
+                    $newDuration = $durations[$index];
+                    $newMedicationTime = $medicationTimes[$index];
+
+                    // Check if an existing record exists for this index
+                    if ($existingMedication) {
+                        // Compare both the new medication data with the existing ones
+                        if (
+                            $this->hasChanges($existingMedication, [
+                                'medication_name' => $newMedicationName,
+                                'date' => $newMedicationDate,
+                                'dosage' => $newDosage,
+                                'duration' => $newDuration,
+                                'time' => $newMedicationTime,
+                            ])
+                        ) {
+                            // At least one of the fields has been updated
+                            $medicationChangesDetected = true;
+                            // You can log or perform other actions here
+
+                            // Update the existing record with the new data
+                            $existingMedication->medication_name = $newMedicationName;
+                            $existingMedication->date = $newMedicationDate;
+                            $existingMedication->dosage = $newDosage;
+                            $existingMedication->duration = $newDuration;
+                            $existingMedication->time = $newMedicationTime;
+                            $existingMedication->save(); // Save the changes to the database
+                        }
+                    } else {
+                        // No existing record for this index, this may mean a new medication was added
+                        $newMedicationRecord = new Medication(); // Assuming Medication is your Eloquent model or equivalent
+                        $newMedicationRecord->patient_id = $patient->id; // Assuming Medication is your Eloquent model or equivalent
+                        $newMedicationRecord->medication_name = $newMedicationName;
+                        $newMedicationRecord->date = $newMedicationDate;
+                        $newMedicationRecord->dosage = $newDosage;
+                        $newMedicationRecord->duration = $newDuration;
+                        $newMedicationRecord->time = $newMedicationTime;
+                        $newMedicationRecord->save(); // Save the new medication
+                        $medicationChangesDetected = true;
+                    }
+                }
 
                 $patientChange = $this->hasChanges($patient, $patientUpdatedData);
 
@@ -1271,7 +1151,7 @@ class DoctorController extends Controller
                     // Check if an existing record exists for this index
                     if ($existingDiagnosis) {
                         // Compare both the new diagnosis and new diagnoseDate with the existing ones
-                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime ])) {
+                        if ($this->hasChanges($existingDiagnosis, ['diagnose' => $newDiagnosis, 'date' => $newDiagnoseDate, 'time' => $newDiagnoseTime])) {
                             // At least one of the fields has been updated
                             $diagnoseChangesDetected = true;
                             // You can log or perform other actions here
@@ -1426,26 +1306,26 @@ class DoctorController extends Controller
             '             Appointment Report
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$readableDate.' '. $time .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
             Patient Information:
-            - Name: '.$appointment->first_name.' '. $appointment->last_name .'
-            - Date of Birth: '.$appointment->birthdate.'
+            - Name: ' . $appointment->first_name . ' ' . $appointment->last_name . '
+            - Date of Birth: ' . $appointment->birthdate . '
               Address:
-                - Street: '.$appointment->street.'
-                - Brgy: '.$appointment->brgy.'
-                - City: '.$appointment->city.'
-                - Province '.$appointment->province.'
+                - Street: ' . $appointment->street . '
+                - Brgy: ' . $appointment->brgy . '
+                - City: ' . $appointment->city . '
+                - Province ' . $appointment->province . '
               Contact Information: 
-                - Email: '.$appointment->email.'
-                - Phone: '.$appointment->phone.'
+                - Email: ' . $appointment->email . '
+                - Phone: ' . $appointment->phone . '
             
             Appointment Details:
-            - Appointment Date and Time: '.$appointmentDate.' '. $appointment->appointment_time.'
-            - Reason for Visit: '.$appointment->appointment_type.'
-            - Doctor: Dr. '.$doctor->first_name.' '.$doctor->last_name.'
-            - Appointment Status: '.$appointment->status.'
+            - Appointment Date and Time: ' . $appointmentDate . ' ' . $appointment->appointment_time . '
+            - Reason for Visit: ' . $appointment->appointment_type . '
+            - Doctor: Dr. ' . $doctor->first_name . ' ' . $doctor->last_name . '
+            - Appointment Status: ' . $appointment->status . '
 
             Report Status: Finalized';
 
@@ -1478,11 +1358,9 @@ class DoctorController extends Controller
 
         $profile = Auth::user();
         $info = Doctor::where('account_id', $profile->id)->first();
-        $notifications = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
-            ->orderBy('created_at', 'desc')->get();
-        $notificationsAlert = Notification::where('specialties', $info->specialties)
-            ->where('type', 'doctor')
+        $notifications = Notification::where('account_id', $profile->id)
+            ->orderBy('date', 'desc')->get();
+        $notificationsAlert = Notification::where('account_id', $profile->id)
             ->where('is_read', 0)->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
@@ -1491,7 +1369,7 @@ class DoctorController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-        return view('doctor.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate','notificationsAlert'));
+        return view('doctor.notification.notification', compact('profile', 'notifications', 'limitNotifications', 'count', 'info', 'currentTime', 'currentDate', 'notificationsAlert'));
 
     }
 

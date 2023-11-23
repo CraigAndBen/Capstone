@@ -163,7 +163,7 @@
                                             <div class="col-md-4">
                                                 <div class="form-floating">
                                                     <select class="form-control  p-3" id="shift" name="shift">
-                                                        <option value="" {{ $info->shift == '' ? 'selected' : '' }}>Select Gender</option>
+                                                        <option value="" {{ $info->shift == '' ? 'selected' : '' }}>shift</option>
                                                         <option value="day" {{ $info->shift == 'day' ? 'selected' : '' }}>Day</option>
                                                         <option value="night" {{ $info->shift == 'night' ? 'selected' : '' }}>Night</option>
                                                         <option value="rotating shifts" {{ $info->shift == 'rotating shifts' ? 'selected' : '' }}>Rotating Shifts</option>

@@ -27,7 +27,7 @@ class NurseSeeder extends Seeder
             $age = $faker->numberBetween(1, 70);
             $years = $faker->numberBetween(1, 30);
             $gender = $faker->randomElement(['male', 'female']);
-            $qualification = $faker->randomElement(['male', 'female']);
+            $qualification = $faker->randomElement(['Certified Nursing Assistant (CNA)', 'Licensed Practical Nurse (LPN) or Licensed Vocational Nurse (LVN)','Registered Nurse (RN)']);
             $shift = $faker->randomElement(['day', 'night','rotating shift']);
             $digits = $faker->numerify('#########');
             $phone = '+639' . $digits;

@@ -95,7 +95,7 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
                                                     <br>
-                                                    <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                    <img src="{{ asset('logo.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">

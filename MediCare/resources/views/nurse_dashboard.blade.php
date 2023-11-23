@@ -151,7 +151,7 @@
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}" alt="user-image"
+                            <img src="{{ asset('logo.jpg') }}" alt="user-image"
                                 class="user-avtar" />
                             <span>
                                 <i class="ti ti-settings"></i>
@@ -167,10 +167,10 @@
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
                                     </a>
-                                    <a href="#" class="dropdown-item">
+                                    {{-- <a href="#" class="dropdown-item">
                                         <i class="ti ti-user"></i>
                                         <span>Social Profile</span>
-                                    </a>
+                                    </a> --}}
                                     <a href="{{ route('nurse.logout') }}" class="dropdown-item">
                                         <i class="ti ti-logout"></i>
                                         <span>Logout</span>

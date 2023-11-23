@@ -18,7 +18,7 @@ class DoctorsSeeder extends Seeder
     {
         $faker = Faker::create();
         $specialties = ['Cardiology', 'Dermatology', 'Orthopedics', 'Pediatrics', 'Ophthalmology'];
-        $qualification = ['MD', 'DO'];
+        $qualification = ['Doctor of Medicine (MD)', 'Doctor of Osteopathic Medicine (DO)','Surgeon'];
         $imageName = 'noprofile.jpeg';
         
 

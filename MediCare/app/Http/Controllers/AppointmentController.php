@@ -365,7 +365,7 @@ class AppointmentController extends Controller
             'date' => $currentDate,
             'time' => $currentTime,
             'type' => 'doctor',
-            'specialties' => $request->input('specialties'),
+            'account_id' => $request->input('specialties'),
         ]);
 
 
