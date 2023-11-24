@@ -72,7 +72,6 @@
                                                 <tr>
                                                     <th>First Name</th>
                                                     <th>Last Name</th>
-                                                    <th>Physician</th>
                                                     <th>Type</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -83,12 +82,6 @@
                                                         <td>{{ ucwords($patient->first_name) }}</td>
                                                         <td>{{ ucwords($patient->last_name) }}</td>
     
-                                                        @foreach ($doctors as $doctor)
-                                                            @if ($patient->physician == $doctor->id)
-                                                                <td>Dr. {{ ucwords($doctor->first_name) }}
-                                                                    {{ ucwords($doctor->last_name) }}</td>
-                                                            @endif
-                                                        @endforeach
                                                         @if ($patient->type == 'outpatient')
                                                             <td>Outpatient</td>
                                                         @else
@@ -620,7 +613,7 @@
                                         <div class="row justify-content-center mb-3 mt-3">
                                             <div class="col-md-10 text-center">
                                                 <button type="button" class="btn btn-primary" id="addDiagnosisButtonForUpdate"> Add
-                                                    Another Diagnosis</button>
+                                                    Another Diagnoses</button>
                                             </div>
                                         </div>
                                         <hr>

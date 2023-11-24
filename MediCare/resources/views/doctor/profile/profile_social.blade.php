@@ -33,9 +33,8 @@
                                 <div class="row">
                                     <div class="d-flex justify-content-center mb-3">
                                         <div class="auth-header text-center">
-                                            <h1 class="text-primary mt-5"><b>Profile Information</b></h1>
-                                            <p class="f-16 mt-2">Update your account's profile information and email
-                                                address.</p>
+                                            <h1 class="text-primary mt-5"><b>Social Profile Information</b></h1>
+                                            <p class="f-16 mt-2">Update your account's social profile information and profile image.</p>
                                         </div>
                                     </div>
                                     <form method="POST" action="{{ route('doctor.social.update') }}" enctype="multipart/form-data">

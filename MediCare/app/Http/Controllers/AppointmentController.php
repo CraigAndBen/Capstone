@@ -618,7 +618,7 @@ class AppointmentController extends Controller
         $message = ucwords($user->first_name) . ' ' . ucwords($user->last_name) . ' has canceled their appointment for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
 
         Notification::create([
-            'account_id' => $appointment->account_id,
+            'account_id' => $appointment->doctor_id,
             'title' => 'Appointment Cancelled',
             'message' => $message,
             'date' => $currentDate,
@@ -661,7 +661,7 @@ class AppointmentController extends Controller
         $message = ucwords($user->first_name) . ' ' . ucwords($user->last_name) . ' has canceled their appointment for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
 
         Notification::create([
-            'account_id' => $appointment->account_id,
+            'account_id' => $appointment->doctor_id,
             'title' => 'Appointment Cancelled',
             'message' => $message,
             'date' => $currentDate,
