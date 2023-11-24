@@ -103,7 +103,7 @@
                                                     </tbody>
                                                 </table>
                                                 <p>Total: ₱{{ number_format(array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart)), 2) }}</p>
-                                                <form method="POST" action="{{ route('cashier.product.purchase.receipt') }}">
+                                                <form method="POST" action="{{ route('cashier.product.purchase.receipt.preview') }}" >
                                                     @csrf
                                                     <div class="row">
                                                         <div class="col-md-6">
@@ -116,9 +116,7 @@
                                                         <div class="col-md-6 mt-4">
                                                             <button type="submit" class="btn btn-success">Preview Receipt</button>
                                                         </div>
-                                                    </div>
-
- 
+                                                    </div> 
                                                 </form>
                                             @else
                                                 <p>Your cart is empty.</p>

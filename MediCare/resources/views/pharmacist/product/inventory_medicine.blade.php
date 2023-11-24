@@ -80,53 +80,40 @@
                                         <span class="fa fa-check-circle"></span> No Item Yet.
                                     </div>
                                 @else
-                                    <table class="table table-bordered">
-                                        <thead class="bg-primary text-light text-center">
+                                <table id="medicinetable" class="table table-bordered">
+                                    <thead class="bg-primary text-light text-center">
+                                        <tr>
+                                            <th class="text-center">Item Name</th>
+                                            <th class="text-center">Category</th>
+                                            <th class="text-center">Stock Available</th>
+                                            <th class="text-center">Brand</th>
+                                            <th class="text-center">Expiration Date</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @foreach ($products as $product)
                                             <tr>
-                                                <th class="text-center">Item Name</th>
-                                                <th class="text-center">Category</th>
-                                                <th class="text-center">Stock Available</th>
-                                                <th class="text-center">Brand</th>
-                                                <th class="text-center">Expiration Date</th>
-                                                <th class="text-center">Status</th>
-                                                <th class="text-center">Action</th>
+                                                <td class="text-center">{{ $product->p_name }}</td>
+                                                <td class="text-center">{{ $product->category->category_name }}</td>
+                                                <td class="text-center">{{ $product->stock }}</td>
+                                                <td class="text-center">{{ $product->brand }}</td>
+                                                <td class="text-center">{{ date('M j, Y', strtotime($product->expiration)) }}</td>
+                                                <td class="text-center">{{ $product->status }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('pharmacist.medicine.details', $product->id) }}"><i class="bi bi-eye-fill"></i></a>
+                                                    <a type="icon" class="icon-trigger editIcon" data-toggle="modal"
+                                                        data-target="#updateMedicine{{ $product->id }}" href="">
+                                                        <i class="bi bi-pencil-fill"></i></a>
+                                                    <a href="{{ url('/pharmacist/inventory_medicine/delete/' . $product->id) }}"><i
+                                                            class="bi bi-trash-fill"></i></a>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($products as $product)
-                                                <tr>
-                                                    @foreach ($categories as $category)
-                                                        @if ($product->category_id == $category->id)
-                                                            <td class="text-center">{{ $product->p_name }}</td>
-                                                            <td class="text-center">{{ $product->category->category_name }}
-                                                            </td>
-                                                            <td class="text-center">{{ $product->stock }}</td>
-                                                            <td class="text-center">{{ $product->brand }}</td>
-                                                            <td class="text-center">
-                                                                {{ date('M j, Y', strtotime($product->expiration)) }}</td>
-                                                            <td class="text-center">{{ $product->status }}</td>
-                                                            <td class="text-center">
-                                                                <a
-                                                                    href="{{ route('pharmacist.medicine.details', $product->id) }}"><i
-                                                                        class="bi bi-eye-fill"></i></a>
-                                                                <a type="icon" class="icon-trigger editIcon"
-                                                                    data-toggle="modal"
-                                                                    data-target="#updateMedicine{{ $product->id }}"
-                                                                    href="">
-                                                                    <i class="bi bi-pencil-fill"></i></a>
-                                                                <a
-                                                                    href="{{ url('/pharmacist/inventory_medicine/delete/' . $product->id) }}"><i
-                                                                        class="bi bi-trash-fill"></i></a>
-                                                            </td>
-                                                        @endif
-                                                    @endforeach
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $products->links('pagination::bootstrap-4') }}
-                                    </div>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                
                                 @endif
                             </div>
                         </div>
@@ -386,6 +373,7 @@
                 <!-- [ Main Content ] end -->
             </div>
         </div>
+  
 
 
     @endsection
@@ -404,6 +392,12 @@
                     placeholder: 'Select Brand',
                     tags: true
                 });
+            });
+        </script>
+       
+        <script>
+            $(document).ready(function() {
+                $('#medicinetable').DataTable();
             });
         </script>
     @endsection

@@ -75,21 +75,15 @@
                                         <span class="fa fa-check-circle"></span> No Notification Yet.
                                     </div>
                                 @else
-                                    <div class="row justify-content-end">
-                                        <div class="form-group col-sm-4">
-                                            <input type="text" id="purchase_detailsSearch" class="form-control"
-                                                placeholder="Search Purchase Details">
-                                        </div>
-                                    </div>
-                                    <table class="table table-bordered">
+                                    <table id="purchaseListtable" class="table table-bordered responsive">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
-                                                <th>Reference</th>
-                                                <th>Total Quantity</th>
-                                                <th>Total Price</th>
-                                                <th>Amount</th>
-                                                <th>Change</th>
-                                                <th></th>
+                                                <th class="text-center">Reference</th>
+                                                <th class="text-center">Total Quantity</th>
+                                                <th class="text-center">Total Price</th>
+                                                <th class="text-center">Amount</th>
+                                                <th class="text-center">Change</th>
+                                                <th class="text-center"></th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
@@ -110,9 +104,6 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-center my-3">
-                                        {{ $purchases->links('pagination::bootstrap-4') }}
-                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -147,19 +138,19 @@
                                                     <div class="text-95 col-sm-6 align-self-start d-sm-flex justify-content-start">
                                                         <hr class="d-sm-none" />
                                                         <div class="text-grey-m2">
-                                                            <div class="my-2"><i class="text-xs mr-1"></i> <span
-                                                                    class="text-600 text-90">Report Type:
+                                                            <div class="my-2"><i class="text-xs mr-1"></i> 
+                                                                <span class="text-600 text-90">Report Type:
                                                                 </span>Purchase Receipt</div>
-                                                            <div class="my-2"><i class="text-xs mr-1"></i> <span
-                                                                    class="text-600 text-90">Reference:
+                                                            <div class="my-2"><i class="text-xs mr-1"></i> 
+                                                                <span class="text-600 text-90">Reference:
                                                                 </span> {{ $purchase->reference }}</div>
-                                                            <div class="my-2"><i class="text-xs mr-1"></i> <span
-                                                                    class="text-600 text-90">Date:</span>
-                                                                <span> {{ $purchase->created_at->toDateString() }}</span>
+                                                            <div class="my-2"><i class="text-xs mr-1"></i> 
+                                                                <span class="text-600 text-90">Date:</span>
+                                                                <span> {{ date('M j, Y', strtotime($purchase->created_at->toDateString())) }}</span>
                                                             </div>
-                                                            <div class="my-2"><i class="text-xs mr-1"></i> <span
-                                                                    class="text-600 text-90">Time:</span>
-                                                                <span> {{ $purchase->created_at->toTimeString() }}</span>
+                                                            <div class="my-2"><i class="text-xs mr-1"></i> 
+                                                                <span class="text-600 text-90">Time:</span>
+                                                                <span> {{ $purchase->created_at->format('h:i A') }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -168,68 +159,69 @@
                     
                                                 <hr class="row brc-default-l1 mx-n1 mb-6" />
                     
-                                                <div class="mt-4">
-                                                    <div class="table table-sm row ">
-                                                        <div class="d-none d-sm-block col-2">Item Id</div>
-                                                        <div class="col-9 col-sm-3">Item Name</div>
-                                                        <div class="d-none d-sm-block col-sm-2">Unit Price</div>
-                                                        <div class="d-none d-sm-block col-sm-2">Quantity</div>
-                                                        <div class="col-9 col-sm-3">Sub total</div>
+                                                <div class="mt-6">
+                                                    <div class="table table-sm row">
+                                                        <div class="d-none d-sm-block col-2 text-center">Item Id</div>
+                                                        <div class="col-9 col-sm-3 text-center">Item Name</div>
+                                                        <div class="d-none d-sm-block col-sm-2 text-center">Unit Price</div>
+                                                        <div class="d-none d-sm-block col-sm-2 text-center">Quantity</div>
+                                                        <div class="col-9 col-sm-3 text-center">Sub total</div>
                                                     </div>
                     
-                                                    <div class="text-95 text-secondary-d3">
+                                                    <div class="table table-sm row">
                                                         @foreach ($purchaseDetails as $purchaseDetail)
-                                                        @if ($purchaseDetail->reference === $purchase->reference)
-                                                            <div class="row mb-2 mb-sm-0 py-25">
-                                                                <div class="d-none d-sm-block col-2">{{ $purchaseDetail->product_id }}</div>
-                                                                <div class="col-9 col-sm-3">{{ $purchaseDetail->product->p_name }}</div>
-                                                                <div class="d-none d-sm-block col-2">₱{{ $purchaseDetail->price }}</div>
-                                                                <div class="d-none d-sm-block col-2 text-95">{{ $purchaseDetail->quantity }}</div>
-                                                                <div class="col-9 col-sm-3">₱{{ number_format($purchaseDetail['price'] * $purchaseDetail['quantity'], 2) }}</div>
-                                                            </div>
-                                                        @endif
-                                                    @endforeach
-                                                    
+                                                            @if ($purchaseDetail->reference === $purchase->reference)
+                                                                <div class="d-none d-sm-block col-2 text-center">{{ $purchaseDetail->product_id }}</div>
+                                                                <div class="col-9 col-sm-3 text-center">{{ $purchaseDetail->product->p_name }}</div>
+                                                                <div class="d-none d-sm-block col-sm-2 text-center">₱{{ $purchaseDetail->price }}</div>
+                                                                <div class="d-none d-sm-block col-sm-2 text-center">{{ $purchaseDetail->quantity }}</div>
+                                                                <div class="col-9 col-sm-3 text-center">₱{{ number_format($purchaseDetail['price'] * $purchaseDetail['quantity'], 2) }}</div>
+                                                            @endif
+                                                        @endforeach                                                   
                                                     </div>
                     
                                                     <hr class="row brc-default-l1 mx-n1 mb-4" />
                     
-                                                    <div class="row border-b-2 brc-default-l2 justify-content-last"></div>
+                                                    <div class="row border-b-2 justify-content-last"></div>
                                                     <div class="row mt-3">
                                                         <div class="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0">
+                                                            <!-- Left column content, if any -->
                                                         </div>
-                                                        <div
-                                                            class="col-12 col-sm-5 text-grey text-90 order-first order-sm-last">
+                                                        <div class="col-12 col-sm-5 text-grey text-90 order-first order-sm-last">
                                                             <div class="row my-2">
-                                                                <div class="col-7 text-right">
-                                                                    Total: 
+                                                                <div class="col-7">
+                                                                    <span>Total: </span>
                                                                 </div>
                                                                 <div class="col-5">
                                                                     <span class="text-110 text-secondary-d1">
-                                                                        ₱{{ number_format($purchase->total_price, 2) }}</span>
+                                                                        ₱{{ number_format($purchase->total_price, 2) }}
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                    
+
                                                             <div class="row my-2">
-                                                                <div class="col-7 text-right">
-                                                                    Amount: 
+                                                                <div class="col-7">
+                                                                    <span>Amount: </span>
                                                                 </div>
                                                                 <div class="col-5">
-                                                                    <span class="text-110 text-secondary-d1">₱{{ number_format ($purchase->amount, 2) }}</span>
+                                                                    <span class="text-110 text-secondary-d1">
+                                                                        ₱{{ number_format($purchase->amount, 2) }}
+                                                                    </span>
                                                                 </div>
                                                             </div>
-                    
-                                                            <div class="row my-2 ">
-                                                                <div class="col-7 text-right">
-                                                                    Change: 
+
+                                                            <div class="row my-2">
+                                                                <div class="col-7">
+                                                                    <span>Change: </span>
                                                                 </div>
                                                                 <div class="col-5">
-                                                                    <span class="text-110 text-secondary-d1">₱{{ number_format($purchase->change, 2) }}</span>
+                                                                    <span class="text-110 text-secondary-d1">
+                                                                        ₱{{ number_format($purchase->change, 2) }}
+                                                                    </span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                    
                                                     <hr />
                                                 </div>
                                             </div>
@@ -258,37 +250,9 @@
     @endsection
 
     @section('scripts')
-    
         <script>
             $(document).ready(function() {
-                $('#purchase_detailsSearch').on('keyup', function() {
-                    var searchText = $(this).val().toLowerCase();
-                    filterRequests(searchText);
-                });
-
-                function filterRequests(searchText) {
-                    var rows = document.querySelectorAll("table tbody tr");
-                    for (var i = 0; i < rows.length; i++) {
-                        var reference = rows[i].querySelector("td:nth-child(1)").textContent.toLowerCase();
-                        var totalquantity = rows[i].querySelector("td:nth-child(2)").textContent.toLowerCase();
-                        var totalPrice = rows[i].querySelector("td:nth-child(3)").textContent.toLowerCase();
-                        var amount = rows[i].querySelector("td:nth-child(4)").textContent.toLowerCase();
-                        var change = rows[i].querySelector("td:nth-child(5)").textContent.toLowerCase();
-
-
-                        if (
-                            reference.includes(searchText) ||
-                            totalquantity.includes(searchText) ||
-                            totalPrice.includes(searchText) ||
-                            amount.includes(searchText) ||
-                            change.includes(searchText)
-                        ) {
-                            rows[i].style.display = "";
-                        } else {
-                            rows[i].style.display = "none";
-                        }
-                    }
-                }
+                $('#purchaseListtable').DataTable();
             });
         </script>
     @endsection

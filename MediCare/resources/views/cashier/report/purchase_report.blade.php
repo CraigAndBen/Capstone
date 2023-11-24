@@ -18,6 +18,14 @@
             margin: 0 auto;
             padding: 5px;
         }
+        
+        .img  {
+            float:left;
+            padding-top: 10px;
+            width: 110px;
+            height: 70px;
+        }
+
         p, b{
             font-size: 13px;
         }
@@ -84,15 +92,16 @@
 
 <body>
     <div class="container">
-        <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
-            <br>
-            Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
-            <br>
-            Phone: +1 5589 55488 55
-            <br>
-            Email: medicare@example.com
-        </p>
-
+        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare" >
+            <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
+                <br>
+                Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
+                <br>
+                Phone: +1 5589 55488 55
+                <br>
+                Email: medicare@example.com
+            </p>
+    </div>
         <div class="purchase-detail">
             <h3>Purchase Details Report</h3>
             <table>

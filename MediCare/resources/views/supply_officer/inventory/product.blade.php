@@ -93,7 +93,7 @@
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="text-center">
                                             @foreach ($products as $product)
                                                 <tr>
                                                     <td class="text-center">{{ $product->p_name }}</td>

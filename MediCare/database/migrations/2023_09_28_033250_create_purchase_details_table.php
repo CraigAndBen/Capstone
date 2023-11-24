@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->integer('reference');
             $table->integer('total_quantity');
-            $table->integer('total_price');
-            $table->integer('amount');
-            $table->integer('change');
+            $table->decimal('total_price' ,8, 2);
+            $table->decimal('amount', 8, 2);
+            $table->decimal('change', 8, 2);
             $table->timestamps();
         });
     }

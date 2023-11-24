@@ -208,20 +208,24 @@ class StaffController extends Controller
             $prod_requests->save();
     
             // Process dynamically added rows
-            $additionalProductIds = $request->input('additional_product_ids');
-            $additionalBrands = $request->input('additional_brands');
-            $additionalQuantities = $request->input('additional_quantities');
-    
-            foreach ($additionalProductIds as $key => $additionalProductId) {
-                $additionalRequest = new Request_Form();
-                $additionalRequest->name_requester = $request->input('name_requester');
-                $additionalRequest->department = $request->input('department');
-                $additionalRequest->date = $request->input('date');
-                $additionalRequest->product_id = $additionalProductId;
-                $additionalRequest->brand = $additionalBrands[$key];
-                $additionalRequest->quantity = $additionalQuantities[$key];
-                $additionalRequest->save();
-            }
+$additionalProductIds = $request->input('additional_product_ids', []);
+$additionalBrands = $request->input('additional_brands', []);
+$additionalQuantities = $request->input('additional_quantities', []);
+
+// Check if the array is not null before iterating
+if ($additionalProductIds) {
+    foreach ($additionalProductIds as $key => $additionalProductId) {
+        $additionalRequest = new Request_Form();
+        $additionalRequest->name_requester = $request->input('name_requester');
+        $additionalRequest->department = $request->input('department');
+        $additionalRequest->date = $request->input('date');
+        $additionalRequest->product_id = $additionalProductId;
+        $additionalRequest->brand = $additionalBrands[$key];
+        $additionalRequest->quantity = $additionalQuantities[$key];
+        $additionalRequest->save();
+    }
+}
+
     
             return redirect('/staff/request_form')->with('status', 'Request Sent');
         } else {
