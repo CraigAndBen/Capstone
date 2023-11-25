@@ -1274,13 +1274,12 @@ class DoctorController extends Controller
 
         $pdf = app('dompdf.wrapper')->loadView('doctor.report.appointment_report', $data);
 
-        return $pdf->stream('appointment_report.pdf');
+        return $pdf->stream($reference . '.pdf');
 
     }
 
-    public function downloadPatientReport(Request $request)
+    public function downloadAppointmentReport(Request $request)
     {
-
         $profile = auth()->user();
         $appointment = Appointment::where('id', $request->input('appointment_id'))->first();
         $currentYear = Carbon::now()->year; // Get current year
@@ -1293,10 +1292,7 @@ class DoctorController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'DAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
-        $reference = $request->input('reference');
-        $time = $request->input('time');
-        $date = $request->input('date');
-        $readableDate = date('F j, Y', strtotime($date));
+        $readableDate = date('F j, Y', strtotime($currentDate));
         $appointment = Appointment::where('id', $request->input('appointment_id'))->first();
         $appointmentDate = date('F j, Y', strtotime($appointment->appointment_date));
 
@@ -1307,7 +1303,7 @@ class DoctorController extends Controller
             ------------------------
 
             Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '
+            Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
 
             Patient Information:
             - Name: ' . $appointment->first_name . ' ' . $appointment->last_name . '
@@ -1330,10 +1326,10 @@ class DoctorController extends Controller
             Report Status: Finalized';
 
         Report::create([
-            'reference_number' => $request->input('reference'),
+            'reference_number' => $reference,
             'report_type' => 'Doctor appointment report',
-            'date' => $request->input('date'),
-            'time' => $request->input('time'),
+            'date' => $currentDate,
+            'time' => $currentTime,
             'user_id' => $profile->id,
             'author_type' => $profile->role,
             'content' => $content,
@@ -1350,7 +1346,7 @@ class DoctorController extends Controller
 
         $pdf = app('dompdf.wrapper')->loadView('doctor.report.appointment_report', $data);
 
-        return $pdf->download('appointment_report.pdf');
+        return $pdf->download($reference . '.pdf');
     }
 
     public function notification()

@@ -742,7 +742,7 @@ class AdminController extends Controller
 
         $pdf = app('dompdf.wrapper')->loadView('admin.report.patient_report', $data);
 
-        return $pdf->stream('patient_report.pdf');
+        return $pdf->stream($reference . '.pdf');
 
     }
 
@@ -823,7 +823,7 @@ class AdminController extends Controller
 
         $pdf = app('dompdf.wrapper')->loadView('admin.report.patient_report', $data);
 
-        return $pdf->download('patient_report.pdf');
+        return $pdf->download($reference . '.pdf');
     }
 
     // Notification

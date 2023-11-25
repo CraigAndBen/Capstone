@@ -94,7 +94,7 @@
                                                 href="{{ route('superadmin.notification') }}">
                                                 <div class="d-flex">
                                                     <div class="flex-shrink-0">
-                                                        <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                        <img src="{{ asset('logo.jpg')}}"
                                                             alt="user-image" class="user-avtar" />
                                                     </div>
                                                     <div class="flex-grow-1 ms-1">
@@ -127,7 +127,7 @@
                                         <a class="list-group-item list-group-item-action">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0">
-                                                    <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}"
+                                                    <img src="{{ asset('logo.jpg') }}"
                                                         alt="user-image" class="user-avtar" />
                                                 </div>
                                                 <div class="flex-grow-1 ms-1">
@@ -145,7 +145,7 @@
                         <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
                             data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                             aria-expanded="false">
-                            <img src="{{ asset('admin_assets/images/user/avatar-2.jpg') }}" alt="user-image"
+                            <img src="{{ asset('logo.jpg')}}" alt="user-image"
                                 class="user-avtar" />
                             <span>
                                 <i class="ti ti-settings"></i>
@@ -160,10 +160,6 @@
                                     <a href="{{ route('superadmin.profile') }}" class="dropdown-item">
                                         <i class="ti ti-settings"></i>
                                         <span>Account Settings</span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="ti ti-user"></i>
-                                        <span>Social Profile</span>
                                     </a>
                                     <a href="{{ route('superadmin.logout') }}" class="dropdown-item">
                                         <i class="ti ti-logout"></i>
