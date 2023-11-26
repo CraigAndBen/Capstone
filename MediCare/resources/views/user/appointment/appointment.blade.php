@@ -74,11 +74,12 @@
                                                 @foreach ($appointments as $appointment)
                                                     <tr class="p-3">
                                                         <td>{{ ucwords($appointment->first_name) }}
-                                                            {{ ucwords($appointment->last_name) }}</td> 
+                                                            {{ ucwords($appointment->last_name) }}</td>
                                                         <td>{{ ucwords($appointment->appointment_type) }}</td>
                                                         @foreach ($infos as $info)
                                                             @if ($info->id == $appointment->doctor_id)
-                                                                <td>Dr. {{ ucwords($info->first_name) }} {{ucwords($info->last_name)}}</td>
+                                                                <td>Dr. {{ ucwords($info->first_name) }}
+                                                                    {{ ucwords($info->last_name) }}</td>
                                                             @endif
                                                         @endforeach
 
@@ -134,6 +135,10 @@
                                                                             data-gender="{{ json_encode($appointment->gender) }}"
                                                                             data-phone="{{ json_encode($appointment->phone) }}"
                                                                             data-specialties="{{ json_encode($appointment->doctor_id) }}"
+                                                                            @foreach ($infos as $doctor)
+                                                                                @if ($doctor->id == $appointment->doctor_id)
+                                                                                    data-doctor="{{ json_encode('Dr. ' . $doctor->first_name . ' ' . $doctor->last_name . ' - ' . $appointment->specialties) }}"
+                                                                                @endif @endforeach
                                                                             data-appointment-type="{{ json_encode($appointment->appointment_type) }}"
                                                                             data-appointment-date="{{ json_encode($appointment->appointment_date) }}"
                                                                             data-appointment-time="{{ json_encode($appointment->appointment_time) }}"
@@ -274,15 +279,15 @@
                         </div>
                         <hr>
                         <div class="row mt-4">
-                            <h5>Which specialist do you want to appoint of?</h5>
+                            <h5>Current selected specialist: <i><span id="selectedDoctor"></span></i></h5>
                             <div class="form-floating mb-3">
-                                <select class="form-control p-3" id="specialties" name="specialties">
-                                    <option>Select Specialist</option>
+                                <select class="form-control p-3" id="updateSpecialties" name="specialties">
+                                    <option value="">Select Specialist</option>
                                     @foreach ($doctors as $doctor)
                                         @foreach ($infos as $info)
                                             @if ($doctor->account_id == $info->id)
                                                 <option value="{{ $info->id }}">Dr. {{ $info->first_name }}
-                                                    {{ $info->last_name }} - {{$doctor->specialties}}</option>
+                                                    {{ $info->last_name }} - {{ $doctor->specialties }}</option>
                                             @endif
                                         @endforeach
                                     @endforeach
@@ -306,18 +311,19 @@
                             <h5>Preffered Appointment Date and Time <i>(Monday - Friday)</i></h5>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <input type="date" class="form-control" id="appointment_date"
+                                    <input type="date" class="form-control" id="updateAppointment_date"
                                         name="appointment_date" placeholder="Date" min="<?= date('Y-m-d') ?>" />
                                     <label for="floatingInput">Appointment Date</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <select class="form-control  p-3" id="appointment_time" name="appointment_time">
-                                        <option>Select Time of Appointment</option>
-                                        @foreach ($timeList as $time)
+                                    <select class="form-control  p-3" id="updateAppointment_time"
+                                        name="appointment_time">
+                                        <option value="">Select Time of Appointment</option>
+                                        {{-- @foreach ($timeList as $time)
                                             <option value="{{ $time }}">{{ $time }}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                 </div>
                             </div>
@@ -340,7 +346,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="viewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    {{-- <div class="modal fade" id="viewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
@@ -443,7 +449,7 @@
                                     @foreach ($infos as $info)
                                         @if ($doctor->account_id == $info->id)
                                             <option value="{{ $info->id }}">Dr. {{ $info->first_name }}
-                                                {{ $info->last_name }} - {{$doctor->specialties}}</option>
+                                                {{ $info->last_name }} - {{ $doctor->specialties }}</option>
                                         @endif
                                     @endforeach
                                 @endforeach
@@ -498,7 +504,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
 @endsection
@@ -525,6 +531,7 @@
                 var appointment_type = JSON.parse(button.data('appointment-type'));
                 var appointment_date = JSON.parse(button.data('appointment-date'));
                 var appointment_time = JSON.parse(button.data('appointment-time'));
+                var doctor = JSON.parse(button.data('doctor'));
                 var reason = JSON.parse(button.data('reason'));
                 var modal = $(this);
 
@@ -545,6 +552,57 @@
                 modal.find('#appointment_date').val(appointment_date);
                 modal.find('#appointment_time').val(appointment_time);
                 modal.find('#reason').val(reason);
+                modal.find('#selectedDoctor').text(doctor);
+
+                var today = new Date();
+                var minDate = today.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+                // Set the minimum date for the date input
+                document.getElementById('updateAppointment_date').setAttribute('min', minDate);
+
+                // Add an event listener to validate the selected date
+                document.getElementById('updateAppointment_date').addEventListener('change', function() {
+                    var selectedDate = new Date(this.value);
+                    var dayOfWeek = selectedDate.getDay(); // Sunday is 0, Monday is 1, and so on.
+
+                    // Check if the selected date is not in the past and is a weekday (Monday to Friday)
+                    if (selectedDate < today || dayOfWeek === 0 || dayOfWeek === 6) {
+                        alert('Please select a valid date (not in the past and on a weekday).');
+                        this.value = ''; // Reset the input value
+                    }
+                });
+
+                $('#updateAppointment_date, #updateSpecialties').change(function() {
+                    var selectedDate = $('#updateAppointment_date').val();
+                    var selectedSpecialty = $('#updateSpecialties').val();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/user/appointment/doctor/specialties/time',
+                        data: {
+                            '_token': '{{ csrf_token() }}',
+                            selectedSpecialty: selectedSpecialty,
+                            selectedDate: selectedDate
+                        },
+                        success: function(data) {
+                            var dropdown = $('#updateAppointment_time');
+                            dropdown.empty();
+
+                            // Add a default option as the first option in the select
+                            dropdown.append($('<option></option>').attr('value', '')
+                                .text(
+                                    'Select Available Time'));
+
+                            $.each(data, function(index, time) {
+                                dropdown.append($('<option></option>').attr(
+                                    'value', time).text(time));
+                            });
+                        },
+                        error: function() {
+                            console.log('Failed to fetch available time data.');
+                        }
+                    });
+                });
             });
 
             $('#viewModal').on('show.bs.modal', function(event) {
@@ -595,6 +653,5 @@
                 input.value = '+639' + input.value.substring(2);
             }
         }
-        
     </script>
 @endsection

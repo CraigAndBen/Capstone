@@ -451,7 +451,7 @@ class AppointmentController extends Controller
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'done')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read', 0)->get();
 
-        return view('user.appointment.done_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert','doctors'));
+        return view('user.appointment.done_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert', 'doctors'));
     }
 
     public function cancelledAppointmentList()
@@ -478,7 +478,7 @@ class AppointmentController extends Controller
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'cancelled')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read', 0)->get();
 
-        return view('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert','doctors'));
+        return view('user.appointment.cancelled_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert', 'doctors'));
     }
 
     public function unavailableAppointmentList()
@@ -505,7 +505,7 @@ class AppointmentController extends Controller
         $appointments = Appointment::where('account_id', $user->id)->where('status', 'unavailable')->paginate(5);
         $notificationsAlert = Notification::where('account_id', $user->id)->where('is_read', 0)->get();
 
-        return view('user.appointment.unavailable_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert','doctors'));
+        return view('user.appointment.unavailable_appointment', compact('appointments', 'infos', 'timeList', 'notificationsAlert', 'doctors'));
     }
     public function updateAppointment(Request $request)
     {
@@ -521,50 +521,19 @@ class AppointmentController extends Controller
             'gender' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'phone' => 'required',
-            'specialties' => 'required',
             'appointment_type' => 'required|string|max:255',
-            'appointment_date' => 'required|date',
-            'appointment_time' => 'required|string|max:255',
             'reason' => 'required|string|max:255',
         ]);
 
         $appointment = Appointment::where('id', $request->appointment_id)->first();
-        $appointments = Appointment::where('doctor_id', $appointment->doctor_id)->first();
 
-        $appointmentUpdatedData = [
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'street' => $request->input('street'),
-            'brgy' => $request->input('brgy'),
-            'city' => $request->input('city'),
-            'province' => $request->input('province'),
-            'birthdate' => $request->input('birthdate'),
-            'gender' => $request->input('gender'),
-            'phone' => $request->input('phone'),
-            'doctor_id' => $request->input('specialties'),
-            'email' => $request->input('email'),
-            'appointment_type' => $request->input('appointment_type'),
-            'appointment_date' => $request->input('appointment_date'),
-            'appointment_time' => $request->input('appointment_time'),
-            'reason' => $request->input('reason'),
-        ];
+        $doctor = $request->filled('specialties');
+        $date = $request->filled('appointment_date');
+        $time = $request->filled('appointment_time');
+        $status = $date || $doctor || $time;
 
-        $appointmentChange = $this->hasChanges($appointment, $appointmentUpdatedData);
-
-        if ($appointmentChange) {
-            // Check for date and time availability
-            $existingAppointment = Appointment::where('appointment_date', $request->input('appointment_date'))
-                ->where('appointment_time', $request->input('appointment_time'))
-                ->where('id', '!=', $appointment->id)
-                ->first();
-        
-            if ($existingAppointment) {
-                return back()->with('info', 'The selected date and time are unavailable. Please choose another date and time.');
-            }
-        
-            // Update appointment details
-            $appointment->update([
+        if (!$status) {
+            $appointmentUpdatedData = [
                 'first_name' => $request->input('first_name'),
                 'middle_name' => $request->input('middle_name'),
                 'last_name' => $request->input('last_name'),
@@ -577,11 +546,120 @@ class AppointmentController extends Controller
                 'phone' => $request->input('phone'),
                 'email' => $request->input('email'),
                 'appointment_type' => $request->input('appointment_type'),
+                'reason' => $request->input('reason'),
+            ];
+
+        } else {
+            $appointmentUpdatedData = [
+                'first_name' => $request->input('first_name'),
+                'middle_name' => $request->input('middle_name'),
+                'last_name' => $request->input('last_name'),
+                'street' => $request->input('street'),
+                'brgy' => $request->input('brgy'),
+                'city' => $request->input('city'),
+                'province' => $request->input('province'),
+                'birthdate' => $request->input('birthdate'),
+                'gender' => $request->input('gender'),
+                'phone' => $request->input('phone'),
+                'email' => $request->input('email'),
                 'appointment_date' => $request->input('appointment_date'),
                 'appointment_time' => $request->input('appointment_time'),
+                'doctor_id' => $request->input('specialties'),
+                'appointment_type' => $request->input('appointment_type'),
                 'reason' => $request->input('reason'),
-            ]);
-        
+            ];
+        }
+
+        $appointmentChange = $this->hasChanges($appointment, $appointmentUpdatedData);
+
+        if ($appointmentChange) {
+
+            if (!$status) {
+                $appointment->update([
+                    'first_name' => $request->input('first_name'),
+                    'middle_name' => $request->input('middle_name'),
+                    'last_name' => $request->input('last_name'),
+                    'street' => $request->input('street'),
+                    'brgy' => $request->input('brgy'),
+                    'city' => $request->input('city'),
+                    'province' => $request->input('province'),
+                    'birthdate' => $request->input('birthdate'),
+                    'gender' => $request->input('gender'),
+                    'phone' => $request->input('phone'),
+                    'email' => $request->input('email'),
+                    'appointment_type' => $request->input('appointment_type'),
+                    'reason' => $request->input('reason'),
+                ]);
+
+
+                $currentTime = Carbon::now()->toTimeString();
+                $currentDate = Carbon::now()->toDateString();
+                $rawDate = $request->input('appointment_date');
+                $dateTime = new DateTime($rawDate);
+                $readableDate = $dateTime->format('F j, Y');
+
+                $message = 'You have successfully updated your appointment information for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+
+                Notification::create([
+                    'account_id' => $appointment->account_id,
+                    'title' => 'Appointment Updated',
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                    'type' => 'user',
+                ]);
+
+            } else {
+                $appointment->update([
+                    'first_name' => $request->input('first_name'),
+                    'middle_name' => $request->input('middle_name'),
+                    'last_name' => $request->input('last_name'),
+                    'street' => $request->input('street'),
+                    'brgy' => $request->input('brgy'),
+                    'city' => $request->input('city'),
+                    'province' => $request->input('province'),
+                    'birthdate' => $request->input('birthdate'),
+                    'gender' => $request->input('gender'),
+                    'phone' => $request->input('phone'),
+                    'email' => $request->input('email'),
+                    'appointment_type' => $request->input('appointment_type'),
+                    'appointment_date' => $request->input('appointment_date'),
+                    'appointment_time' => $request->input('appointment_time'),
+                    'doctor_id' => $request->input('specialties'),
+                    'reason' => $request->input('reason'),
+                ]);
+
+                $currentTime = Carbon::now()->toTimeString();
+                $currentDate = Carbon::now()->toDateString();
+                $rawDate = $request->input('appointment_date');
+                $dateTime = new DateTime($rawDate);
+                $readableDate = $dateTime->format('F j, Y');
+
+                $message = 'You have successfully updated your appointment information for ' . $appointment->appointment_type . '. The appointment is now scheduled for ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+
+                Notification::create([
+                    'account_id' => $appointment->account_id,
+                    'title' => 'Appointment Updated',
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                    'type' => 'user',
+                ]);
+
+                $user = User::where('id', $appointment->account_id)->first();
+
+                $message = ucwords($user->first_name) . ' ' . ucwords($user->last_name) . ' has updated their appointment for ' . $appointment->appointment_type . ' The appointment is now scheduled for ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
+
+                Notification::create([
+                    'account_id' => $appointment->doctor_id,
+                    'title' => 'Appointment Updated',
+                    'message' => $message,
+                    'date' => $currentDate,
+                    'time' => $currentTime,
+                    'type' => 'doctor',
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Appointment updated successfully.');
         } else {
             return redirect()->back()->with('info', 'No changes were made.');
@@ -612,7 +690,6 @@ class AppointmentController extends Controller
             'date' => $currentDate,
             'time' => $currentTime,
             'type' => 'user',
-            'specialties' => $request->input('specialties'),
         ]);
 
         $message = ucwords($user->first_name) . ' ' . ucwords($user->last_name) . ' has canceled their appointment for ' . $appointment->appointment_type . ' scheduled on ' . $readableDate . ' at ' . $appointment->appointment_time . '.';
@@ -624,7 +701,6 @@ class AppointmentController extends Controller
             'date' => $currentDate,
             'time' => $currentTime,
             'type' => 'doctor',
-            'specialties' => $request->input('specialties'),
         ]);
 
         return redirect()->route('user.appointment')->with('info', 'Appoinment cancelled successfully.');
