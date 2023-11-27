@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <title> MediCare | Purchase Transaction Report</title>
     <style>
+        @page{
+            size: a4;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -12,39 +15,51 @@
 
         }
 
+        header {
+            width: 100%;
+            position: fixed;
+            top: -50px;
+            left: 15px;
+            align-content: center;
+        }
+
+        .img {
+            float: left;
+            padding-top: 10px;
+            width: 110px;
+            height: 70px;
+        }
         .container {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
             padding: 5px;
-        }
-        
-        .img  {
-            float:left;
-            padding-top: 10px;
-            width: 110px;
-            height: 70px;
+            margin-top: 20px;
         }
 
-        p, b{
+
+        p,
+        b {
             font-size: 13px;
         }
 
-        .header h1 {
+        h5 {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
             font-size: 20px;
             margin: 0;
         }
 
         .purchase-detail {
             padding: 10px;
-            
-            
         }
 
         .purchase-detail h3 {
             font-size: 20px;
             margin-top: 0;
-            
+
         }
 
         table {
@@ -63,45 +78,53 @@
         th,
         td {
             padding: 10px;
-            text-align: center; /* Center-align content within table cells */
+            text-align: center;
+            /* Center-align content within table cells */
             font-size: 12px;
-            font-family: 'DejaVu Sans', sans-serif;
+            font-family: 'Arial', 'DejaVu Sans', sans-serif;
 
         }
 
-        .footer {
-            position: absolute;
-            bottom: 10px;
-
-        
+        footer {
+            width: 100%;
+            position: fixed;
+            bottom: -100px;
             display: flex;
-            justify-content: space-between; /* Align items in a row with space between them */
-        
+            left: 0px;
+            right: 0px;
+            justify-content: space-between;
+            height: 100px;
+            line-height: 35px;
+            border-top: 1px solid #000;
+            /* Align items in a row with space between them */
+
         }
 
-        .footer-start, .footer-center, .footer-right {
-            display:inline-flex;
-            margin-left: 70px;
-            font-size: 13px;
-            
+        .footer-start,
+        .footer-center,
+        .footer-right {
+            display: inline-block;
+            margin-left: 90px;
+            font-size: 11px;
+
         }
-
-
     </style>
 </head>
 
 <body>
+    <header>
+        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare">
+        <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
+            <br>
+            Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
+            <br>
+            Phone: +1 5589 55488 55
+            <br>
+            Email: medicare@example.com
+        </p>
+    </header>
     <div class="container">
-        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare" >
-            <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
-                <br>
-                Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
-                <br>
-                Phone: +1 5589 55488 55
-                <br>
-                Email: medicare@example.com
-            </p>
-    </div>
+        <h5>Reference: {{ $reference }}</h5>
         <div class="purchase-detail">
             <h3>Purchase Details Report</h3>
             <table>
@@ -112,31 +135,30 @@
                     <th>AMOUNT PAID</th>
                     <th>CHANGE</th>
                 </tr>
-                @foreach($purchases as $purchase)
-                <tr>
-                    <td>{{ ucwords($purchase->reference) }}</td>
-                    <td>{{ ucwords($purchase->total_quantity) }}</td>
-                    <td>₱{{ number_format($purchase->total_price, 2) }}</td>
-                    <td>₱{{ number_format($purchase->amount, 2) }}</td>
-                    <td>₱{{ number_format($purchase->change, 2) }}</td>
-                </tr>
+                @foreach ($purchases as $purchase)
+                    <tr>
+                        <td>{{ ucwords($purchase->reference) }}</td>
+                        <td>{{ ucwords($purchase->total_quantity) }}</td>
+                        <td>₱{{ number_format($purchase->total_price, 2) }}</td>
+                        <td>₱{{ number_format($purchase->amount, 2) }}</td>
+                        <td>₱{{ number_format($purchase->change, 2) }}</td>
+                    </tr>
                 @endforeach
             </table>
         </div>
-        <div class="footer">
+    </div>
+        <footer class="text-center">
             <div class="footer-start">
                 Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}
             </div>
             <div class="footer-center">
-                Printing Time: {{ $currentTime }}
+                &copy; 2023 MediCare
+                
             </div>
             <div class="footer-right">
-                &copy; 2023 MediCare
+                Printing Time: {{ $currentTime }}
             </div>
-        </div>
-        
-        
-    </div>
+        </footer>
 </body>
 
 </html>

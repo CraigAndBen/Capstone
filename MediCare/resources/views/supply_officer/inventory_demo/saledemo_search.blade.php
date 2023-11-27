@@ -108,68 +108,70 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         @section('scripts')
-            <script>
-                // Get the PHP data from the PHP variables
-                var dateRange = <?php echo json_encode($dateRange); ?>;
-                var salesData = <?php echo json_encode($salesData); ?>;
-
-                // Define an array to store formatted dates
-                var formattedDates = dateRange.map(function(dateString) {
-                    // Parse the date string
-                    var date = new Date(dateString);
-
-                    // Format the date as "MMM d, yyyy" (e.g., "Jan 1, 2023")
-                    return date.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                    });
+        <script>
+            // Get the PHP data from the PHP variables
+            var dateRange = <?php echo json_encode($dateRange); ?>;
+            var salesData = <?php echo json_encode($salesData); ?>;
+        
+            // Define an array to store formatted dates
+            var formattedDates = dateRange.map(function(dateString) {
+                // Parse the date string
+                var date = new Date(dateString);
+        
+                // Format the date as "MMM d, yyyy" (e.g., "Jan 1, 2023")
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
                 });
-
-                // Function to generate a random light color
-                function getRandomLightColor() {
-                    var randomColor = function() {
-                        return Math.floor(Math.random() * 200 + 56); // Ensure the color is in a light range
-                    };
-                    var rgb = `${randomColor()}, ${randomColor()}, ${randomColor()}`;
-                    return {
-                        backgroundColor: `rgba(${rgb}, 0.7)`,
-                        borderColor: `rgba(${rgb}, 0.7)`
-                    };
-                }
-
-                // Create an array to store datasets
-                var datasets = [];
-
-                // Create a dataset for each product
-                for (var productName in salesData) {
-                    var randomColors = getRandomLightColor();
-                    datasets.push({
-                        label: productName,
-                        data: salesData[productName],
-                        backgroundColor: randomColors.backgroundColor, // Use a random light color for the background
-                        borderColor: randomColors.borderColor, // Use the same color for the border
-                        borderWidth: 2,
-                        fill: false
-                    });
-                }
-
-                // Create a chart using Chart.js
-                var ctx = document.getElementById('salesGraph').getContext('2d');
-                var salesGraph = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: formattedDates, // Use the formatted dates
-                        datasets: datasets
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+            });
+        
+            // Function to generate a random light color
+            function getRandomLightColor() {
+                var randomColor = function() {
+                    return Math.floor(Math.random() * 200 + 56); // Ensure the color is in a light range
+                };
+                var rgb = `${randomColor()}, ${randomColor()}, ${randomColor()}`;
+                return {
+                    backgroundColor: `rgba(${rgb}, 0.7)`,
+                    borderColor: `rgba(${rgb}, 0.7)`
+                };
+            }
+        
+            // Create an array to store datasets
+            var datasets = [];
+        
+            // Create a dataset for each product
+            for (var productName in salesData) {
+                var randomColors = getRandomLightColor();
+                datasets.push({
+                    label: productName,
+                    data: salesData[productName],
+                    backgroundColor: randomColors.backgroundColor, // Use a random light color for the background
+                    borderColor: randomColors.borderColor, // Use the same color for the border
+                    borderWidth: 2,
+                    fill: false
+                });
+            }
+        
+            // Create a chart using Chart.js
+            var ctx = document.getElementById('salesGraph').getContext('2d');
+            var salesGraph = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: formattedDates, // Use the formatted dates
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0 // Display only whole numbers on the y-axis
                         }
                     }
-                });
-            </script>
+                }
+            });
+        </script>
+        
         @endsection

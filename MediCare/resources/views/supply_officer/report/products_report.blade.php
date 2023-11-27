@@ -27,9 +27,13 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>Item (FSN) Analytics Report</b></i></h5>
-                <h5>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>Item (FSN) Analytics Report</b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDate)) }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
+                <br>
+                <h8>Reference: <i><b>{{ $reference }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -41,8 +45,8 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Item (FSN) Pie Graph</i></h3>
-                <h4>Segregates items based on their consumption rate</h4>
+                <h3 style="margin-left: 65px"><i>Item (FSN) Pie Graph</i></h3>
+                <h5 style="margin-left: 65px">Segregates items based on their consumption rate</h5>
                 <div class="row mb-5 p-3 mx-auto">
                     <canvas id="productGraph" style="width: 300px; height: 300px;"></canvas>
                 </div>
@@ -54,9 +58,9 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>Medicine Table</i></h3>
+                <h3 style="margin-left: 65px"><i>Medicine Table</i></h3>
                 <br>
-                <table class="table table-bordered">
+                <table class="table table-bordered" style="margin-left: 40px">
                     <thead>
                         <tr class="text-center">
                             <th>Classification</th>
@@ -67,13 +71,13 @@
                     <tbody>
                         @foreach ($categories as $category)
                             <tr>
-                                <td class="text-center">{{ $category }}</td>
+                                <td>{{ $category }}</td>
                                 <td>
                                     @if ($category === 'Fast')
                                         @if (count($fastProducts) > 0)
                                             <ul>
                                                 @foreach ($fastProducts as $product)
-                                                    <li>{{ $product }}</li>
+                                                    <li class="text-left">{{ $product }}</li>
                                                 @endforeach
                                             </ul>
                                         @else
@@ -87,7 +91,7 @@
                                                 @endforeach
                                             </ul>
                                         @else
-                                            No products in this classification.
+                                            No item in this classification.
                                         @endif
                                     @elseif ($category === 'Non-Moving')
                                         @if (count($nonMovingProducts) > 0)
@@ -97,11 +101,11 @@
                                                 @endforeach
                                             </ul>
                                         @else
-                                            No products in this classification.
+                                            No item in this classification.
                                         @endif
                                     @endif
                                 </td>
-                                <td class="text-center">{{ $counts[$category] }}</td>
+                                <td>{{ $counts[$category] }}</td>
                             </tr>
                         @endforeach
 
@@ -109,7 +113,7 @@
                             $total = $counts['Fast'] + $counts['Slow'] + $counts['Non-Moving'];
                         @endphp
                         <tr>
-                            <td><strong>Total</strong></td>
+                            <td><strong></strong></td>
                             <td><strong></strong></td>
                             <td class="text-center"><strong>{{ $total }}</strong></td>
                         </tr>
@@ -123,8 +127,15 @@
 
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('supply_officer.product.demo') }}" class="btn btn-danger">Back</a>
+                <form action="{{route('supply_officer.products.report.save')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="reference" value="{{$reference}}">
+                    <input type="hidden" name="date" value="{{$currentDate}}">
+                    <input type="hidden" name="time" value="{{$currentTime}}">
+                    <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
+                    <button id="done" type="submit" class="btn btn-success">Done</button>
+                    <a id="back" href="{{ route('supply_officer.product.demo') }}" class="btn btn-danger">Back</a>
+                </form>
             </div>
             <div class="col-2">
             </div>

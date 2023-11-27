@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Purchase_detail;
+use App\Models\Report;
 use Illuminate\View\View;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -210,6 +211,10 @@ class CashierController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PURLR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $purchases = Purchase_detail::all(); // Retrieve products from your database
 
         // return view('cashier.report.purchase_report', compact('currentTime', 'currentDate', 'purchases'));
@@ -217,11 +222,10 @@ class CashierController extends Controller
             'purchases' => $purchases,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' =>$reference,
 
         ];
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
 
         return $pdf->stream('purchase_report.pdf');
@@ -229,22 +233,45 @@ class CashierController extends Controller
 
     public function downloadPurchaseReport()
     {
+        $profile = auth()->user();
         $currentDate = date('Y-m-d');
+        $readableDate = date('M j, y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PURLR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $purchases = Purchase_detail::all(); // Retrieve products from your database
 
-        // return view('cashier.report.purchase_report', compact('currentTime', 'currentDate', 'purchases'));
+        $content =
+        '              Purchase Transaction Report 
+            ------------------------
+
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+
+            Report Status: Finalized';
+
+    Report::create([
+        'reference_number' => $reference,
+        'report_type' => 'Purchase Transaction Report',
+        'date' => $currentDate,
+        'time' => $currentTime,
+        'user_id' => $profile->id,
+        'author_type' => $profile->role,
+        'content' => $content,
+    ]);
+
         $data = [
             'purchases' => $purchases,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
 
         ];
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
 
         return $pdf->download('purchase report.pdf');

@@ -100,7 +100,7 @@
                             </div>
                             <div class="row justify-content-end">
                                 <div class="col-md-2 mt-2">
-                                    <form action="{{ route('superadmin.request.report') }}" method="POST">
+                                    <form action="{{ route('superadmin.request.report') }}" method="GET">
                                         @csrf
                                         <input type="hidden" name="select" id="select" value="{{ $selectedOption }}">
                                         <input type="hidden" name="start" id="start" value="{{ $fromDate }}">

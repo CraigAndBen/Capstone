@@ -83,8 +83,9 @@
                         <hr>
                         <div class="row justify-content-end">
                             <div class="col-md-2 mt-2">
-                                <form action="{{ route('superadmin.inventory.report') }}" method="POST">
+                                <form action="{{ route('superadmin.inventory.report') }}" method="GET">
                                     @csrf
+                                    
                                     <input type="hidden" name="select" id="select" value="{{ $selectedOption }}">
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>
@@ -104,88 +105,70 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @section('scripts')
-        @if (isset($chartData))
-        <script>
-            var ctx = document.getElementById('productChart').getContext('2d');
-            var productData = @json($chartData);
-        
-            // Define an array to store labels with both name and number
-            var labelsWithNamesAndNumbers = productData.map(data => `${data.label} (${data.count})`);
-        
-            // Dynamically generate an array of colors based on the number of data points
-            var colors = generateColors(productData.length);
-        
-            function generateColors(numColors) {
-                var colorsArray = [];
-                for (var i = 0; i < numColors; i++) {
-                    // You can use any method to generate colors dynamically, e.g., random colors
-                    var randomColor = 'rgba(' +
-                        Math.floor(Math.random() * 256) + ',' +
-                        Math.floor(Math.random() * 256) + ',' +
-                        Math.floor(Math.random() * 256) + ', 0.2)';
-                    colorsArray.push(randomColor);
-                }
-                return colorsArray;
+    @if (isset($chartData))
+    <script>
+        var ctx = document.getElementById('productChart').getContext('2d');
+        var productData = @json($chartData);
+    
+        // Define an array to store labels with both name and number
+        var labelsWithNamesAndNumbers = productData.map(data => `${data.label} (${data.count})`);
+    
+        // Extract original labels without counts
+        var originalLabels = productData.map(data => data.label);
+    
+        // Dynamically generate an array of colors based on the number of data points
+        var colors = generateColors(productData.length);
+    
+        function generateColors(numColors) {
+            var colorsArray = [];
+            for (var i = 0; i < numColors; i++) {
+                // You can use any method to generate colors dynamically, e.g., random colors
+                var randomColor = 'rgba(' +
+                    Math.floor(Math.random() * 256) + ',' +
+                    Math.floor(Math.random() * 256) + ',' +
+                    Math.floor(Math.random() * 256) + ', 0.2)';
+                colorsArray.push(randomColor);
             }
-        
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labelsWithNamesAndNumbers, // Use labels with both name and number
-                    datasets: [{
-                        label: 'Data',
-                        data: productData.map(data => data.count),
-                        backgroundColor: colors, // Use the dynamically generated colors array
-                        borderColor: colors.map(color => color.replace('0.2', '1')), // Set border color with full opacity
-                        borderWidth: 2 // Increase the line thickness
-                    }]
+            return colorsArray;
+        }
+    
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labelsWithNamesAndNumbers, // Use labels with both name and number
+                datasets: [{
+                    label: 'Data',
+                    data: productData.map(data => data.count),
+                    backgroundColor: colors, // Use the dynamically generated colors array
+                    borderColor: colors.map(color => color.replace('0.2', '1')), // Set border color with full opacity
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            // Customize the y-axis scale options
-                            ticks: {
-                                beginAtZero: true,
-                                stepSize: 10, // Adjust the step size of y-axis ticks
-                                font: {
-                                    size: 12, // Set font size for y-axis labels
-                                }
-                            }
-                        },
-                        x: {
-                            // Customize the x-axis scale options
-                            ticks: {
-                                font: {
-                                    size: 12, // Set font size for x-axis labels
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true, // Display the legend
-                            position: 'top', // Position the legend at the top
-                            labels: {
-                                font: {
-                                    size: 12 // Set font size for legend labels
-                                }
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            generateLabels: function (chart) {
+                                return originalLabels.map(function (label, i) {
+                                    return {
+                                        text: label,
+                                        fillStyle: chart.data.datasets[0].backgroundColor[i]
+                                    };
+                                });
                             }
                         }
                     }
-                    
                 }
-            });
-        
-            $(document).ready(function() {
-                // Attach a click event handler to the button
-                $("#printButton").click(function() {
-                    // Call the window.print() function to open the print dialog
-                    window.print();
-                });
-            });
-        </script>
-        
-        
-        @endif
+            }
+        });
+    </script>
+    
+@endif
+
     @endsection

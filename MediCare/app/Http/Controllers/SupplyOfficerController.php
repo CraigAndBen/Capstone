@@ -7,6 +7,8 @@ use App\Models\Purchase;
 use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Report;
+use App\Models\Expiries;
 use Illuminate\View\View;
 use App\Models\Notification;
 use App\Models\Request_Form;
@@ -228,7 +230,7 @@ class SupplyOfficerController extends Controller
 
     }
 
-    public function viewProductReport(Request $request)
+    public function viewProductReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -236,6 +238,9 @@ class SupplyOfficerController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $today = Carbon::now();
         $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'INVR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $products = Product::orderBy('expiration', 'asc')->get();
         $categories = Category::all();
@@ -245,7 +250,7 @@ class SupplyOfficerController extends Controller
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
-
+            'reference' =>$reference,
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.product_report', $data);
@@ -255,23 +260,49 @@ class SupplyOfficerController extends Controller
         //return view('supply_officer.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories'));
     }
 
-    public function downloadProductReport(Request $request)
+    public function downloadProductReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $readableDate = date('M j, y');
         $today = Carbon::now();
+        $profile = auth()->user();
         $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'INVR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $products = Product::orderBy('expiration', 'asc')->get();
         $categories = Category::all();
+
+        $content =
+            '              Inventory Report 
+                ------------------------
+    
+                Report Reference Number: ' . $reference . '
+                Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+    
+                Report Status: Finalized';
+
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Inventory Report',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
 
         $data = [
             'products' => $products,
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' =>$reference,
 
         ];
 
@@ -364,51 +395,97 @@ class SupplyOfficerController extends Controller
 
     public function expirationproduct()
     {
+        $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
+        $currentDate = $currentDateTime->format('Y-m-d');
+        
+        
+        // Calculate the date three months from the current date
+        $threeMonthsFromNow = $currentDateTime->copy()->addMonths(3)->format('Y-m-d');
+        
+        // Calculate the date six months from the current date
+        $sixMonthsFromNow = $currentDateTime->copy()->addMonths(6)->format('Y-m-d');
+        
+        // Retrieve the pharmaceutical category ID
+        $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
+        
+        // Retrieve products with expiration dates within three months for non-pharmaceutical category
+        $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
+        ->where('category_id', '!=', $pharmaceuticalCategoryId)
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+        // Retrieve products with expiration dates within six months for pharmaceutical category
+        $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+        ->where('category_id', '=', $pharmaceuticalCategoryId)
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+    
+        // Combine the collections or pass them separately to your view as needed
+        $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
+    
+        foreach ($products as $product) {
+            $existingExpiry = Expiries::where([
+                'item_name' => $product->p_name,
+                'exp_date' => $product->expiration,
+            ])->first();
+        
+            if (!$existingExpiry) {
+                Expiries::create([
+                    'item_name' => $product->p_name,
+                    'stock' => $product->stock,
+                    'brand' => $product->brand,
+                    'category' => $product->category->category_name,
+                    'exp_date' => $product->expiration,
+                ]);
+            }
+        }
+        
+    
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        $categories = Product::paginate(5);
-
-        $currentDate = Carbon::now();
-
-        // Calculate the date three months from the current date
-        $threeMonthsFromNow = $currentDate->copy()->addMonths(3);
-
-        // Retrieve products with expiration dates within the date range
-        $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $threeMonthsFromNow)
-            ->get();
-
+    
         // Display the list of products
         return view('supply_officer.inventory.expiring_soon', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
-
     }
-
+    
+    
     public function viewExpiryReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        $categories = Product::paginate(5);
-
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'EXPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         $currentDate = Carbon::now();
-
-        // Calculate the date three month from the current date
-        $threeMonthFromNow = $currentDate->copy()->addMonths(3);
-
-        // Retrieve products with expiration dates within the date range
-        $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $threeMonthFromNow)
-            ->orderBy('expiration', 'asc')
+        $categories = Product::get();
+        
+        // Calculate the date three months from the current date
+        $threeMonthsFromNow = Carbon::now()->addMonths(3)->format('Y-m-d');
+    
+        // Calculate the date six months from the current date
+        $sixMonthsFromNow = Carbon::now()->addMonths(6)->format('Y-m-d');
+    
+        // Retrieve the pharmaceutical category ID
+        $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
+    
+        // Retrieve products with expiration dates within three months for non-pharmaceutical category
+        $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
+            ->where('category_id', '!=', $pharmaceuticalCategoryId)
             ->get();
+       
+            // Retrieve products with expiration dates within six months for pharmaceutical category
+       $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+            ->where('category_id', '=', $pharmaceuticalCategoryId)
+            ->get();
+
+            // Combine the collections or pass them separately to your view as needed
+        $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
 
         // Display the list of products
 
@@ -417,6 +494,7 @@ class SupplyOfficerController extends Controller
             'products' => $products,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' =>$reference,
 
         ];
 
@@ -428,32 +506,65 @@ class SupplyOfficerController extends Controller
 
     public function downloadExpiryReport()
     {
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
+        $profile = auth()->user();
+    
+        $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        $categories = Product::paginate(5);
-
-        $currentDate = Carbon::now();
-
-        // Calculate the date three month from the current date
-        $threeMonthFromNow = $currentDate->copy()->addMonths(3);
-
-        // Retrieve products with expiration dates within the date range
-        $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $threeMonthFromNow)
-            ->orderBy('expiration', 'asc')
+        $currentDate = $currentDateTime->toDateString();
+        $readableDate = date('M j, y');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'EXPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+    
+        $categories = Product::get();
+    
+        // Calculate the date three months from the current date
+        $threeMonthsFromNow = Carbon::now()->addMonths(3)->format('Y-m-d');
+    
+        // Calculate the date six months from the current date
+        $sixMonthsFromNow = Carbon::now()->addMonths(6)->format('Y-m-d');
+    
+        // Retrieve the pharmaceutical category ID
+        $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
+    
+        // Retrieve products with expiration dates within three months for non-pharmaceutical category
+        $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
+            ->where('category_id', '!=', $pharmaceuticalCategoryId)
             ->get();
+       
+            // Retrieve products with expiration dates within six months for pharmaceutical category
+       $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+       ->where('category_id', '=', $pharmaceuticalCategoryId)
+       ->get();
 
-        // Display the list of products
-
+            // Combine the collections or pass them separately to your view as needed
+        $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
+    
+            $content =
+            '              Expiry Item Report 
+                ------------------------
+    
+                Report Reference Number: ' . $reference . '
+                Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+    
+                Report Status: Finalized';
+                    
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Expiry Item report',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+    
         $data = [
             'categories' => $categories,
             'products' => $products,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
-
+            'reference' => $reference
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.expiry_report', $data);
@@ -473,6 +584,7 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+
         $products = Product::with('category')->get();
         $categories = Category::with('products')->get();
 
@@ -531,6 +643,10 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'CATLR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $products = Product::with('category')->get();
         $categories = Category::with('products')->get();
 
@@ -540,6 +656,7 @@ class SupplyOfficerController extends Controller
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
 
         ];
 
@@ -552,26 +669,49 @@ class SupplyOfficerController extends Controller
 
     public function downloadCategoryReport()
     {
-
+        $profile = auth()->user();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $readableDate = date('M j, y');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'CATLR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $products = Product::with('category')->get();
         $categories = Category::with('products')->get();
 
+        $content =
+            '              Category Report 
+                ------------------------
+    
+                Report Reference Number: ' . $reference . '
+                Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+    
+                Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Category report',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
 
         $data = [
             'products' => $products,
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
-
+            'reference' => $reference,
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.category_report', $data);
 
-        return $pdf->download('category_list_report.pdf');
+        return $pdf->download('category_report.pdf');
         //return view('supply_officer.inventory.category', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
 
     }
@@ -600,6 +740,10 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'REQLR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $requests = Request_Form::all();
         $products = Product::all();
 
@@ -608,6 +752,7 @@ class SupplyOfficerController extends Controller
             'products' => $products,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
 
         ];
 
@@ -621,18 +766,44 @@ class SupplyOfficerController extends Controller
 
     public function downloadRequestListReport()
     {
+        $profile = auth()->user();
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $readableDate = date('M j, y');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'REQLR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $requests = Request_Form::all();
         $products = Product::all();
+
+        $content =
+            '              Request List Report 
+                ------------------------
+    
+                Report Reference Number: ' . $reference . '
+                Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+    
+                Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Request List report',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
 
         $data = [
             'requests' => $requests,
             'products' => $products,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
 
         ];
 
@@ -643,7 +814,6 @@ class SupplyOfficerController extends Controller
         //return view('supply_officer.report.request_list_report', compact( 'currentTime', 'currentDate', 'requests','products'));
 
     }
-
 
     public function inventoryDemo()
     {
@@ -736,6 +906,9 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
 
         $selectedOption = $request->input('select');
         $chartData = [];
@@ -747,6 +920,8 @@ class SupplyOfficerController extends Controller
                 ->orderByDesc('count')
                 ->get();
             $chartTitle = 'category';
+            $reference = 'CATAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+            
 
             // Transform data into chart format
             foreach ($data as $item) {
@@ -764,6 +939,7 @@ class SupplyOfficerController extends Controller
                 ->get();
 
             $chartTitle = 'brand';
+            $reference = 'BRAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
             // Transform data into chart format
             foreach ($data as $item) {
@@ -785,11 +961,420 @@ class SupplyOfficerController extends Controller
                 'currentDateTime',
                 'chartData',
                 'chartTitle',
-                'selectedOption'
+                'selectedOption',
+                'reference'
             )
         );
     }
 
+    public function inventoryReportSave(Request $request)
+    {
+        // Common report reference generation
+        $reference = $request->input('reference');
+        $selectedOption = $request->input('select');
+        $time = $request->input('time');
+        $date = $request->input('date');
+
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        // Initialize variables
+        $chartData = [];
+        $chartTitle = '';
+        $reportType = ''; // Initialize $reportType here
+
+        // Process selected option
+        if ($request->has('select')) {
+            $selectedOption = $request->input('select');
+            $currentDateWithoutHyphens = str_replace('-', '', date('Y-m-d'));
+            $randomNumber = mt_rand(100, 999);
+
+            if ($selectedOption === 'Category') {
+                $chartTitle = 'category';
+                $reference = 'CATAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+            } elseif ($selectedOption === 'Brand') {
+                $chartTitle = 'brand';
+                $reference = 'BRAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+            } else {
+                // Invalid selection, handle accordingly
+                return redirect()->back()->with('error', 'Invalid selection.');
+            }
+        }
+
+        // Common report content generation
+        $content = '
+            Brand/Category Analytics Report
+            ------------------------
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
+
+            Report Status: Finalized';
+
+        // Common report creation
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' =>'Brand/Category Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        // Additional data for analytics report
+        $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        // Redirect with data
+        return redirect()->route(
+            'supply_officer.inventory.demo',
+            compact(
+                'profile',
+                'currentTime',
+                'currentDateTime',
+                'chartData',
+                'chartTitle',
+                'reference',
+                'reportType'
+            )
+        );
+    }
+ 
+    //Salaes Demo
+    public function saleDemo()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $requests = Purchase::all();
+
+
+        return view('supply_officer.inventory_demo.saledemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
+    }
+
+    public function saleDemoSearch(Request $request)
+    {
+
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId);
+    
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+    
+                foreach ($dateRange as $date) {
+                    // Modify the query to get only the items that have sales within the date range
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
+                        ->sum('quantity');
+    
+                    $salesData[$productName][] = $quantity;
+                }
+    
+                // Remove products with no sales within the date range
+                if (array_sum($salesData[$productName]) == 0) {
+                    unset($salesData[$productName]);
+                }
+            }
+        }
+
+
+        return view('supply_officer.inventory_demo.saledemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'fromDate', 'toDate', 'selectedOption'));
+    }
+
+    public function saleReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'SAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M, j Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M, j Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId);
+    
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+    
+                foreach ($dateRange as $date) {
+                    // Modify the query to get only the items that have sales within the date range
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
+                        ->sum('quantity');
+    
+                    $salesData[$productName][] = $quantity;
+                }
+    
+                // Remove products with no sales within the date range
+                if (array_sum($salesData[$productName]) == 0) {
+                    unset($salesData[$productName]);
+                }
+            }
+        }
+
+
+        $datesWithSales = [];
+        $itemCount = [];
+        
+        foreach ($salesData as $productName => $productSales) {
+            // Filter out dates with sales (quantity > 0) for the current product
+            $datesWithSales[$productName] = array_map(
+                function ($index, $quantity) use ($dateRange) {
+                    if ($quantity > 0 && isset($dateRange[$index])) {
+                        return [
+                            'date' => date("Y-m-d", strtotime($dateRange[$index])),
+                            'quantity' => $quantity,
+                        ];
+                    }
+                    return null;
+                },
+                array_keys($productSales),
+                $productSales
+            );
+        
+            // Remove null values
+            $datesWithSales[$productName] = array_filter($datesWithSales[$productName]);
+        
+            // Store the count for the current item
+            $itemCount[$productName] = count($datesWithSales[$productName]);
+        }
+        
+        // Extract unique dates with sales across all products
+        $uniqueDates = [];
+        foreach ($datesWithSales as $productSales) {
+            $uniqueDates = array_merge($uniqueDates, array_column($productSales, 'date'));
+        }
+        
+        $uniqueDates = array_unique($uniqueDates);
+        
+        // Filter out dates with no sales across all products
+        $filteredDates = array_values($uniqueDates);
+        
+
+        return view(
+            'supply_officer.report.sale_report',
+            compact(
+                'currentDateTime',
+                'currentTime',
+                'range',
+                'dateRange',
+                'salesData',
+                'products',
+                'datesWithSales',
+                'itemCount',
+                'filteredDates',
+                'reference'
+            )
+        );
+    }
+
+    public function saleReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $content =
+            '             Sales Analytics Report
+            ------------------------
+
+            Report Reference Number: '.$reference.'
+            Report Date and Time: '.$readableDate.' '. $time .'
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Sales Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'SAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M, j Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M, j Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId);
+    
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+    
+                foreach ($dateRange as $date) {
+                    // Modify the query to get only the items that have sales within the date range
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
+                        ->sum('quantity');
+    
+                    $salesData[$productName][] = $quantity;
+                }
+    
+                // Remove products with no sales within the date range
+                if (array_sum($salesData[$productName]) == 0) {
+                    unset($salesData[$productName]);
+                }
+            }
+        }
+
+
+        $datesWithSales = [];
+        $itemCount = [];
+        
+        foreach ($salesData as $productName => $productSales) {
+            // Filter out dates with sales (quantity > 0) for the current product
+            $datesWithSales[$productName] = array_map(
+                function ($index, $quantity) use ($dateRange) {
+                    if ($quantity > 0 && isset($dateRange[$index])) {
+                        return [
+                            'date' => date("Y-m-d", strtotime($dateRange[$index])),
+                            'quantity' => $quantity,
+                        ];
+                    }
+                    return null;
+                },
+                array_keys($productSales),
+                $productSales
+            );
+        
+            // Remove null values
+            $datesWithSales[$productName] = array_filter($datesWithSales[$productName]);
+        
+            // Store the count for the current item
+            $itemCount[$productName] = count($datesWithSales[$productName]);
+        }
+        
+        // Extract unique dates with sales across all products
+        $uniqueDates = [];
+        foreach ($datesWithSales as $productSales) {
+            $uniqueDates = array_merge($uniqueDates, array_column($productSales, 'date'));
+        }
+        
+        $uniqueDates = array_unique($uniqueDates);
+        
+        // Filter out dates with no sales across all products
+        $filteredDates = array_values($uniqueDates);
+        
+
+        return redirect()->route(
+            'supply_officer.sale.demo',
+            compact(
+                'currentDateTime',
+                'currentTime',
+                'range',
+                'dateRange',
+                'salesData',
+                'products',
+                'datesWithSales',
+                'itemCount',
+                'filteredDates',
+                'reference'
+            )
+        );
+    }
     public function requestDemo()
     {
         $profile = Auth::user();
@@ -860,23 +1445,9 @@ class SupplyOfficerController extends Controller
 
         // Return the view with the chart data
         return view(
-            'supply_officer.inventory_demo.requestdemo_search',
-            compact(
-                'profile',
-                'notifications',
-                'limitNotifications',
-                'count',
-                'currentTime',
-                'currentDate',
-                'chartData',
-                'range',
-                'selectedOption',
-                'fromDate',
-                'toDate'
-            )
-        );
+            'supply_officer.inventory_demo.requestdemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'chartData', 'range',
+ 'selectedOption', 'fromDate', 'toDate' ));
     }
-
 
     //Request
     public function requestReport(Request $request)
@@ -885,6 +1456,11 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'REQAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
 
         $fromDate = $request->input('start');
         $formattedFromDate = date("M j, Y", strtotime($fromDate));
@@ -903,6 +1479,7 @@ class SupplyOfficerController extends Controller
                 ->orderBy('request_date') // Order by created_at ascending
                 ->get();
             $reportType = 'item'; // Set the report type to 'item'
+            $reference = 'REQIAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         } elseif ($selectedOption === 'Department') {
             // Get the most requested departments with their creation dates
@@ -913,6 +1490,7 @@ class SupplyOfficerController extends Controller
                 ->orderBy('data', 'asc') // Then, order by the count of occurrences in ascending order
                 ->get();
                 $reportType = 'department';
+                $reference = 'REQDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         } else {
             // Invalid selection, handle accordingly
@@ -929,187 +1507,74 @@ class SupplyOfficerController extends Controller
             'data' => $result->pluck('data'),
         ];
         // Return the view with the chart data
-        return view('supply_officer.report.request_report', compact('currentTime', 'currentDateTime', 'chartData', 'range', 'result', 'reportType'));
+        return view('supply_officer.report.request_report', compact('currentTime', 'currentDateTime', 'chartData', 'range', 'result', 'reportType', 'reference'));
     }
 
-    //Salaes Demo
-    public function saleDemo()
+    public function requestReportSave(Request $request)
     {
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
 
-        $requests = Purchase::all();
-
-
-        return view('supply_officer.inventory_demo.saledemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
-    }
-
-    public function saleDemoSearch(Request $request)
-    {
-
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $fromDate = $request->input('start');
+        $fromDate = $request->input('start');   
         $formattedFromDate = date("M j, Y", strtotime($fromDate));
         $toDate = $request->input('end');
         $formattedToDate = date("M j, Y", strtotime($toDate));
         $selectedOption = $request->input('select');
         $range = $formattedFromDate . " - " . $formattedToDate;
 
-        // Create an array to store the date range
-        $dateRange = [];
-        $currentDate = $fromDate;
-
-        while ($currentDate <= $toDate) {
-            $dateRange[] = $currentDate;
-            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-        }
-
-        // Fetch data from the purchases table for each product on each day
-        $products = Purchase::select('product_id')
-            ->distinct()
-            ->get();
-
-        $salesData = [];
-
-        foreach ($products as $product) {
-            $productId = $product->product_id;
-            $productInfo = Product::find($productId); // Fetch product info from the products table
-
-            if ($productInfo) {
-                $productName = $productInfo->p_name;
-                $salesData[$productName] = [];
-
-                foreach ($dateRange as $date) {
-                    $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at', $date)
-                        ->sum('quantity');
-
-                    $salesData[$productName][] = $quantity;
-                }
+        // Query your database to get the most requested products or departments based on the selected date range and category
+ 
+        if ($request->has('select')) {
+            $currentDateWithoutHyphens = str_replace('-', '', date('Y-m-d'));
+            $randomNumber = mt_rand(100, 999);
+    
+            if ($selectedOption === 'Item') {
+                $reportType = 'Most Requested Item'; // Set the report type to 'Most Requested Item'
+                $reference = 'REQIAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+    
+            } elseif ($selectedOption === 'Department') {
+                $reportType = 'Most Requesting Department';
+                $reference = 'REQDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+    
+            } else {
+                // Invalid selection, handle accordingly
+                return redirect()->back()->with('info', 'Invalid selection.');
             }
         }
-
-
-        return view('supply_officer.inventory_demo.saledemo_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'range', 'dateRange', 'salesData', 'fromDate', 'toDate', 'selectedOption'));
+    
+        $content =
+            '             Most Requesting/Requested Analytics Report
+            ------------------------
+    
+            Report Reference Number: '.$reference.'
+            Report Date and Time: '.$readableDate.' '. $time .'  
+    
+            Report Status: Finalized';
+    
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Most Requesting/Requested Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+    
+        // Return the view with the chart data
+        return redirect()->route('supply_officer.request.demo', compact('currentTime', 'currentDateTime', 'range', 'reference', 'reportType'));
     }
-
-    public function saleReport(Request $request)
-    {
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $fromDate = $request->input('start');
-        $formattedFromDate = date("M, j Y", strtotime($fromDate));
-        $toDate = $request->input('end');
-        $formattedToDate = date("M, j Y", strtotime($toDate));
-        $selectedOption = $request->input('select');
-        $range = $formattedFromDate . " - " . $formattedToDate;
-
-        // Create an array to store the date range
-        $dateRange = [];
-        $currentDate = $fromDate;
-
-        while ($currentDate <= $toDate) {
-            $dateRange[] = $currentDate;
-            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-        }
-
-        // Fetch data from the purchases table for each product on each day
-        $products = Purchase::select('product_id')
-            ->distinct()
-            ->get();
-
-        $salesData = [];
-
-        foreach ($products as $product) {
-            $productId = $product->product_id;
-            $productInfo = Product::find($productId); // Fetch product info from the products table
-
-            if ($productInfo) {
-                $productName = $productInfo->p_name;
-                $salesData[$productName] = [];
-
-                foreach ($dateRange as $date) {
-                    $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at',$date)
-                        ->sum('quantity');
-
-                    $salesData[$productName][] = $quantity;
-                }
-            }
-        }
-
-
-        $datesWithSales = [];
-        $itemCount = [];
-        
-        foreach ($salesData as $productName => $productSales) {
-            // Filter out dates with sales (quantity > 0) for the current product
-            $datesWithSales[$productName] = array_map(
-                function ($index, $quantity) use ($dateRange) {
-                    if ($quantity > 0 && isset($dateRange[$index])) {
-                        return [
-                            'date' => date("Y-m-d", strtotime($dateRange[$index])),
-                            'quantity' => $quantity,
-                        ];
-                    }
-                    return null;
-                },
-                array_keys($productSales),
-                $productSales
-            );
-        
-            // Remove null values
-            $datesWithSales[$productName] = array_filter($datesWithSales[$productName]);
-        
-            // Store the count for the current item
-            $itemCount[$productName] = count($datesWithSales[$productName]);
-        }
-        
-        // Extract unique dates with sales across all products
-        $uniqueDates = [];
-        foreach ($datesWithSales as $productSales) {
-            $uniqueDates = array_merge($uniqueDates, array_column($productSales, 'date'));
-        }
-        
-        $uniqueDates = array_unique($uniqueDates);
-        
-        // Filter out dates with no sales across all products
-        $filteredDates = array_values($uniqueDates);
-        
-
-        return view(
-            'supply_officer.report.sale_report',
-            compact(
-                'currentDateTime',
-                'currentTime',
-                'range',
-                'dateRange',
-                'salesData',
-                'products',
-                'datesWithSales',
-                'itemCount',
-                'filteredDates'
-            )
-        );
-    }
-
     //Medicine Demo
     public function medicineDemo()
     {
@@ -1196,6 +1661,10 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MEDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $selectedOption = $request->input('select');
         $chartData = [];
@@ -1252,7 +1721,101 @@ class SupplyOfficerController extends Controller
                 'mediumThreshold',
                 'mostValuedProducts',
                 'mediumValuedProducts',
-                'lowValuedProducts'
+                'lowValuedProducts',
+                'reference'
+            )
+        );
+    }
+
+    public function medicineReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $content =
+            '             Medicine Analytics Report
+            ------------------------
+
+            Report Reference Number: '.$reference.'
+            Report Date and Time: '.$readableDate.' '. $time .'
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Medicine Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        $profile = auth()->user();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $chartData = [];
+
+        // Fetch product prices from the product_price table
+        $productPrices = Product_price::all();
+
+        // Define price range thresholds for categorization
+        $mostThreshold = 100; // Adjust as needed
+        $mediumThreshold = 50; // Adjust as needed
+
+        // Initialize arrays to store product names in each category
+        $mostValuedProducts = [];
+        $mediumValuedProducts = [];
+        $lowValuedProducts = [];
+
+        // Categorize product prices and collect product names
+        foreach ($productPrices as $productPrice) {
+            $product = $productPrice->product; // Access the related product
+
+            if ($product) {
+                if ($productPrice->price >= $mostThreshold) {
+                    $mostValuedProducts[] = $product->p_name; // Use the product's name
+                } elseif ($productPrice->price >= $mediumThreshold) {
+                    $mediumValuedProducts[] = $product->p_name; // Use the product's name
+                } else {
+                    $lowValuedProducts[] = $product->p_name; // Use the product's name
+                }
+            }
+        }
+
+        // Calculate the percentages based on counts
+        $totalCount = count($productPrices);
+        $mostValuedCount = count($mostValuedProducts);
+        $mediumValuedCount = count($mediumValuedProducts);
+        $lowValuedCount = count($lowValuedProducts);
+
+        $mostValuedPercentage = ($totalCount > 0) ? round(($mostValuedCount / $totalCount) * 100) : 0;
+        $mediumValuedPercentage = ($totalCount > 0) ? round(($mediumValuedCount / $totalCount) * 100) : 0;
+        $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
+
+
+        return redirect()->route(
+            'supply_officer.medicine.demo',
+            compact(
+                'chartData',
+                'currentTime',
+                'currentDate',
+                'productPrices',
+                'mostValuedPercentage',
+                'mediumValuedPercentage',
+                'lowValuedPercentage',
+                'mostThreshold',
+                'mediumThreshold',
+                'mostValuedProducts',
+                'mediumValuedProducts',
+                'lowValuedProducts',
+                'reference'
             )
         );
     }
@@ -1346,6 +1909,10 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'IFSNAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $selectedOption = $request->input('select');
         $chartData = [];
@@ -1385,12 +1952,97 @@ class SupplyOfficerController extends Controller
             'supply_officer.report.products_report',
             compact(
                 'counts',
-                'currentDateTime',
+                'currentDate',
                 'currentTime',
                 'categories',
                 'fastProducts',
                 'slowProducts',
-                'nonMovingProducts'
+                'nonMovingProducts',
+                'reference'
+
+            )
+        );
+    }
+
+    public function productsReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $content =
+            '             Item Analytics Report
+            ------------------------
+
+            Report Reference Number: '.$reference.'
+            Report Date and Time: '.$readableDate.' '. $time .'
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Item Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        $profile = auth()->user();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $selectedOption = $request->input('select');
+        $chartData = [];
+
+
+        // Retrieve all products
+        $products = Product::all();
+
+        // Initialize arrays to store categorized products
+        $fastProducts = [];
+        $slowProducts = [];
+        $nonMovingProducts = [];
+
+        // Categorize products based on request and sales and store them in arrays
+        foreach ($products as $product) {
+            $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+            $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+
+            if ($totalRequestQuantity > 0) {
+                $fastProducts[] = $product->p_name;
+            } elseif ($totalSalesQuantity > 0) {
+                $slowProducts[] = $product->p_name;
+            } else {
+                $nonMovingProducts[] = $product->p_name;
+            }
+        }
+
+        // Create an array with category names and counts
+        $categories = ['Fast', 'Slow', 'Non-Moving'];
+        $counts = [
+            'Fast' => count($fastProducts),
+            'Slow' => count($slowProducts),
+            'Non-Moving' => count($nonMovingProducts),
+        ];
+
+        return redirect()->route(
+            'supply_officer.product.demo',
+            compact(
+                'counts',
+                'currentDate',
+                'currentTime',
+                'categories',
+                'fastProducts',
+                'slowProducts',
+                'nonMovingProducts',
+                'reference'
 
             )
         );

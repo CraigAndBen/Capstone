@@ -5,11 +5,21 @@
     <meta charset="UTF-8">
     <title>MediCare | Request List Report</title>
     <style>
+        @page {
+            size: a4;
+        }   
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+        }
 
+        header {
+            width: 100%;
+            position: fixed;
+            top: -50px;
+            left: 15px;
+            align-content: center;
         }
 
         .container {
@@ -17,9 +27,23 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 5px;
+            
         }
+
+        .img  {
+            float:left;
+            padding-top: 10px;
+            width: 110px;
+            height: 70px;
+        }
+        
         p, b{
             font-size: 13px;
+        }
+
+        h5 {
+            font-family: Arial, sans-serif;
+            margin-top: 50px;
         }
 
         .header h1 {
@@ -36,6 +60,7 @@
         .purchase-detail h3 {
             font-size: 20px;
             margin-top: 0;
+            text-align: center;
             
         }
 
@@ -62,12 +87,17 @@
             width: 55px; /* Adjust the width as needed */
         }
 
-        .footer {
-            position: absolute;
-            bottom: 10px;
+        footer {
+            width: 100%;
+            position: fixed;
+            bottom: -100px;
             display: flex;
-            justify-content: space-between; /* Align items in a row with space between them */
-        
+            left: 0px;
+            right: 0px;
+            justify-content: space-between;
+            height: 100px;
+            line-height: 35px;
+            border-top: 1px solid #000;
         }
 
         .footer-start, .footer-center, .footer-right {
@@ -82,7 +112,8 @@
 </head>
 
 <body>
-    <div class="container">
+    <header>
+        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
@@ -91,7 +122,9 @@
             <br>
             Email: medicare@example.com
         </p>
-
+    </header>
+    <div class="container">
+        <h5>Reference: {{ $reference }}</h5>
         <div class="purchase-detail">
             <h3>Request List Report</h3>
             <table>
@@ -146,23 +179,20 @@
                     @endphp
                 @endforeach
             </table>
-            
-            
         </div>
-        <div class="footer">
+    </div>
+        <footer>
             <div class="footer-start">
                 Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}
             </div>
             <div class="footer-center">
-                Printing Time: {{ $currentTime }}
-            </div>
-            <div class="footer-right">
                 &copy; 2023 MediCare
             </div>
-        </div>
+            <div class="footer-right">
+                Printing Time: {{ $currentTime }}
+            </div>
+        </footer>
         
-        
-    </div>
 </body>
 
 </html>

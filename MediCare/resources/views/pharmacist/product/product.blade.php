@@ -37,11 +37,13 @@
                         <div class="card-body">
                             <div class="container">
                                 <div class="d-flex mb-3 justify-content-end">
-                                    <div class="m-1 form-group">
+                                    <div class="form-group d-flex">
                                         <a href="{{ route('pharmacist.product.report.view') }}"
-                                        class="btn btn-success" target="_blank">View Report</a>
-                                        <a href="{{ route('pharmacist.product.report.download') }}" 
-                                        class="btn btn-success" target="_blank">Download Report</a>
+                                        class="btn btn-success mr-2" target="_blank">View Report</a>
+                                        <form action="{{ route('pharmacist.product.report.download') }}" method="GET">
+                                            @csrf
+                                        <button class="btn btn-success" style="margin-left: 10px;" target="_blank">Download Report</button>
+                                        </form>
                                     </div>
                                 </div>
 

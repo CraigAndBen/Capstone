@@ -114,7 +114,7 @@
                                                                     data-id="{{ json_encode($notification->id) }}"
                                                                     data-title="{{ json_encode(ucwords($notification->title)) }}"
                                                                     data-message="{{ json_encode($notification->message) }}"
-                                                                    data-date="{{ json_encode($notification->date) }}"
+                                                                    data-created-at="{{ json_encode($notification->created_at) }}"
                                                                     data-time="{{ json_encode($notification->time) }}"
                                                                     data-is-read="{{ json_encode($notification->is_read) }}">Read</a>
                                                                 <form method="POST"
@@ -140,37 +140,42 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="viewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="viewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-md">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary text-light">
                                     <h3 class="modal-title" id="title"></h3>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row">
-                                        <h4 class="text-bold">Date: </h4>
-                                        <p class="text-bold" id="date"></p>
-                                        <h4 class="text-bold">Time: </h4>
-                                        <p class="text-bold" id="time"></p>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <h4 class="text-bold">Date:</h4>
+                                            <p id="date"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4 class="text-bold">Time:</h4>
+                                            <p id="time"></p>
+                                        </div>
                                     </div>
                                     <div class="row">
-                                        <h4 class="text-bold">Message: </h4>
-                                        <p class="text-bold" id="message"></p>
+                                        <div class="col-md-12">
+                                            <h4 class="text-bold">Message:</h4>
+                                            <p id="message"></p>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <form action="{{ route('supply_officer.notification.read') }}" method="post">
-                                            @csrf
-                                            <input type="hidden" name="id" id="id">
-                                            <input type="hidden" name="is_read" id="is_read">
-                                            <button type="sumbit" class="btn btn-danger">Back</button>
-                                        </form>
-                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="{{ route('supply_officer.notification.read') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="id" id="id">
+                                        <input type="hidden" name="is_read" id="is_read">
+                                        <button type="submit" class="btn btn-danger">Back</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- [ sample-page ] end -->
                 </div>
                 <!-- [ Main Content ] end -->
@@ -181,26 +186,29 @@
     @endsection
 
     @section('scripts')
-        <script>
-            $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
 
-                $('#viewModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget); // Button that triggered the modal
-                    var id = JSON.parse(button.data('id'));
-                    var title = JSON.parse(button.data('title'));
-                    var message = JSON.parse(button.data('message'));
-                    var date = JSON.parse(button.data('date'));
-                    var time = JSON.parse(button.data('time'));
-                    var is_read = JSON.parse(button.data('is-read'));
-                    var modal = $(this);
+            $('#viewModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = JSON.parse(button.data('id'));
+                var title = JSON.parse(button.data('title'));
+                var message = JSON.parse(button.data('message'));
+                var createdAt = JSON.parse(button.data('created-at'));
+                var time = JSON.parse(button.data('time'));
+                var is_read = JSON.parse(button.data('is-read'));
+                var modal = $(this);
 
-                    modal.find('#id').val(id);
-                    modal.find('#title').text(title);
-                    modal.find('#message').text(message);
-                    modal.find('#date').text(date);
-                    modal.find('#time').text(time);
-                    modal.find('#is_read').val(is_read);
-                });
+                // Format the date using JavaScript
+                var formattedDate = new Date(createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                modal.find('#id').val(id);
+                modal.find('#title').text(title);
+                modal.find('#message').text(message);
+                modal.find('#date').text(formattedDate);
+                modal.find('#time').text(time);
+                modal.find('#is_read').val(is_read);
             });
-        </script>
-    @endsection
+        });
+    </script>
+@endsection

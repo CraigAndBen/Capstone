@@ -10,6 +10,7 @@ use App\Models\Doctor;
 use App\Models\Report;
 use App\Models\Patient;
 use App\Models\Product;
+use App\Models\Expiries;
 use App\Models\Category;
 use App\Models\Diagnose;
 use App\Models\Purchase;
@@ -127,7 +128,7 @@ class SuperAdminController extends Controller
         $usersLabels = array_map(function ($label) {
             return str_replace('_', ' ', $label);
         }, $usersLabels);
-        
+
         $usersData = $rolesData->pluck('data')->toArray();
 
         /** Item demo**/
@@ -4417,51 +4418,119 @@ class SuperAdminController extends Controller
 
     public function expirationproduct()
     {
+        $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
+        $currentDate = $currentDateTime->format('Y-m-d');
+        
+        
+        // Calculate the date three months from the current date
+        $threeMonthsFromNow = $currentDateTime->copy()->addMonths(3)->format('Y-m-d');
+        
+        // Calculate the date six months from the current date
+        $sixMonthsFromNow = $currentDateTime->copy()->addMonths(6)->format('Y-m-d');
+        
+        // Retrieve the pharmaceutical category ID
+        $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
+        
+        // Retrieve products with expiration dates within three months for non-pharmaceutical category
+        $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
+        ->where('category_id', '!=', $pharmaceuticalCategoryId)
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+        // Retrieve products with expiration dates within six months for pharmaceutical category
+        $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+        ->where('category_id', '=', $pharmaceuticalCategoryId)
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+    
+        // Combine the collections or pass them separately to your view as needed
+        $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
+    
+        foreach ($products as $product) {
+            $existingExpiry = Expiries::where([
+                'item_name' => $product->p_name,
+                'exp_date' => $product->expiration,
+            ])->first();
+        
+            if (!$existingExpiry) {
+                Expiries::create([
+                    'item_name' => $product->p_name,
+                    'stock' => $product->stock,
+                    'brand' => $product->brand,
+                    'category' => $product->category->category_name,
+                    'exp_date' => $product->expiration,
+                ]);
+            }
+        }
+        
+    
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        $categories = Product::paginate(5);
-
-        $currentDate = Carbon::now();
-
-        // Calculate the date three months from the current date
-        $threeMonthsFromNow = $currentDate->copy()->addMonths(3);
-
-        // Retrieve products with expiration dates within the date range
-        $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $threeMonthsFromNow)
-            ->get();
-
+    
         // Display the list of products
         return view('superadmin.inventory.expiring_soon', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
-
     }
 
+    public function expirySearch(Request $request)
+{
+    $profile = Auth::user();
+    $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+    $limitNotifications = $notifications->take(5);
+    $count = $notifications->count();
+    $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
+    $currentDate = $currentDateTime->format('Y-m-d');
+    $currentTime = $currentDateTime->format('h:i A');
+    
+    $startDate = $request->input('startDate');
+    $formattedFromDate = date("M j, Y", strtotime($startDate));
+    $endDate = $request->input('endDate');
+    $formattedToDate = date("M j, Y", strtotime($endDate));
+    $selectedOption = $request->input('select');
+    $range = $formattedFromDate . " - " . $formattedToDate;
+
+    $products = Expiries::whereBetween('created_at', [$startDate, $endDate])
+        ->get();
+
+    return view('superadmin.inventory.expiring_soon_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
+}
+     
     public function viewExpiryReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        $categories = Product::paginate(5);
-
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'EXPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         $currentDate = Carbon::now();
-
-        // Calculate the date three month from the current date
-        $threeMonthFromNow = $currentDate->copy()->addMonths(3);
-
-        // Retrieve products with expiration dates within the date range
-        $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $threeMonthFromNow)
-            ->orderBy('expiration', 'asc')
+        $categories = Product::get();
+        
+        // Calculate the date three months from the current date
+        $threeMonthsFromNow = Carbon::now()->addMonths(3)->format('Y-m-d');
+    
+        // Calculate the date six months from the current date
+        $sixMonthsFromNow = Carbon::now()->addMonths(6)->format('Y-m-d');
+    
+        // Retrieve the pharmaceutical category ID
+        $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
+    
+        // Retrieve products with expiration dates within three months for non-pharmaceutical category
+        $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
+            ->where('category_id', '!=', $pharmaceuticalCategoryId)
             ->get();
+       
+            // Retrieve products with expiration dates within six months for pharmaceutical category
+       $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+            ->where('category_id', '=', $pharmaceuticalCategoryId)
+            ->get();
+
+            // Combine the collections or pass them separately to your view as needed
+        $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
 
         // Display the list of products
 
@@ -4470,51 +4539,84 @@ class SuperAdminController extends Controller
             'products' => $products,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' =>$reference,
 
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('superadmin.report.expiry_report', $data);
 
-        return $pdf->stream('expiry item report.pdf');
+        return $pdf->stream('expiry_item_report.pdf');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
 
     public function downloadExpiryReport()
     {
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
+        $profile = auth()->user();
+    
+        $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-
-        $categories = Product::paginate(5);
-
-        $currentDate = Carbon::now();
-
-        // Calculate the date three month from the current date
-        $threeMonthFromNow = $currentDate->copy()->addMonths(3);
-
-        // Retrieve products with expiration dates within the date range
-        $products = Product::where('expiration', '>', $currentDate)
-            ->where('expiration', '<=', $threeMonthFromNow)
-            ->orderBy('expiration', 'asc')
+        $currentDate = $currentDateTime->toDateString();
+        $readableDate = date('M j, y');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'EXPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+    
+        $categories = Product::get();
+    
+        // Calculate the date three months from the current date
+        $threeMonthsFromNow = Carbon::now()->addMonths(3)->format('Y-m-d');
+    
+        // Calculate the date six months from the current date
+        $sixMonthsFromNow = Carbon::now()->addMonths(6)->format('Y-m-d');
+    
+        // Retrieve the pharmaceutical category ID
+        $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
+    
+        // Retrieve products with expiration dates within three months for non-pharmaceutical category
+        $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
+            ->where('category_id', '!=', $pharmaceuticalCategoryId)
             ->get();
+       
+            // Retrieve products with expiration dates within six months for pharmaceutical category
+       $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+       ->where('category_id', '=', $pharmaceuticalCategoryId)
+       ->get();
 
-        // Display the list of products
-
+            // Combine the collections or pass them separately to your view as needed
+        $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
+    
+            $content =
+            '              Expiry Item Report 
+                ------------------------
+    
+                Report Reference Number: ' . $reference . '
+                Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+    
+                Report Status: Finalized';
+                    
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Expiry Item report',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+    
         $data = [
             'categories' => $categories,
             'products' => $products,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
-
+            'reference' => $reference
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('superadmin.report.expiry_report', $data);
 
-        return $pdf->download('expiry item report.pdf');
+        return $pdf->download('expiry_item_report.pdf');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
-
     public function inventoryDemo()
     {
         $profile = Auth::user();
@@ -4606,6 +4708,9 @@ class SuperAdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
 
         $selectedOption = $request->input('select');
         $chartData = [];
@@ -4617,6 +4722,8 @@ class SuperAdminController extends Controller
                 ->orderByDesc('count')
                 ->get();
             $chartTitle = 'category';
+            $reference = 'CATAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
 
             // Transform data into chart format
             foreach ($data as $item) {
@@ -4634,6 +4741,7 @@ class SuperAdminController extends Controller
                 ->get();
 
             $chartTitle = 'brand';
+            $reference = 'BRAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
             // Transform data into chart format
             foreach ($data as $item) {
@@ -4652,157 +4760,90 @@ class SuperAdminController extends Controller
             'superadmin.report.inventory_report',
             compact(
                 'currentTime',
-                'currentDate',
+                'currentDateTime',
                 'chartData',
                 'chartTitle',
-                'selectedOption'
+                'selectedOption',
+                'reference'
             )
         );
     }
 
-    public function requestDemo()
+    public function inventoryReportSave(Request $request)
     {
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $requests = Request_Form::all();
-
-
-        return view('superadmin.inventory_demo.requestdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
-    }
-
-    public function requestDemoSearch(Request $request)
-    {
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $fromDate = $request->input('start');
-        $formattedFromDate = date("M j, Y", strtotime($fromDate));
-        $toDate = $request->input('end');
-        $formattedToDate = date("M j, Y", strtotime($toDate));
+        // Common report reference generation
+        $reference = $request->input('reference');
         $selectedOption = $request->input('select');
-        $range = $formattedFromDate . " - " . $formattedToDate;
+        $time = $request->input('time');
+        $date = $request->input('date');
 
-        // Query your database to get the most requested products or departments based on the selected date range and category
-        if ($selectedOption === 'Item') {
-            // Get the most requested products
-            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
-                ->whereBetween('requests.date', [$fromDate, $toDate])
-                ->groupBy('requests.product_id', 'products.p_name') // Group by product name
-                ->selectRaw('products.p_name as label, COUNT(*) as data')
-                ->orderByDesc('data')
-                ->get();
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
 
-        } elseif ($selectedOption === 'Department') {
-            // Get the most requested departments
-            $result = Request_Form::whereBetween('date', [$fromDate, $toDate])
-                ->groupBy('department')
-                ->selectRaw('department as label, COUNT(*) as data')
-                ->orderByDesc('data')
-                ->get();
-        } else {
-            // Invalid selection, handle accordingly
-            return redirect()->back()->with('info', 'Invalid selection.');
+        // Initialize variables
+        $chartData = [];
+        $chartTitle = '';
+        $reportType = ''; // Initialize $reportType here
+
+        // Process selected option
+        if ($request->has('select')) {
+            $selectedOption = $request->input('select');
+            $currentDateWithoutHyphens = str_replace('-', '', date('Y-m-d'));
+            $randomNumber = mt_rand(100, 999);
+
+            if ($selectedOption === 'Category') {
+                $chartTitle = 'category';
+                $reference = 'CATAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+            } elseif ($selectedOption === 'Brand') {
+                $chartTitle = 'brand';
+                $reference = 'BRAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+            } else {
+                // Invalid selection, handle accordingly
+                return redirect()->back()->with('error', 'Invalid selection.');
+            }
         }
 
+        // Common report content generation
+        $content = '
+            Brand/Category Analytics Report
+            ------------------------
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
+            Report Status: Finalized';
 
-        $chartData = [
+        // Common report creation
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Brand/Category Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
 
-            'labels' => $result->pluck('label'),
-            'data' => $result->pluck('data'),
-        ];
+        // Additional data for analytics report
+        $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
 
-
-        // Return the view with the chart data
-        return view(
-            'superadmin.inventory_demo.requestdemo_search',
+        // Redirect with data
+        return redirect()->route(
+            'superadmin.inventory.demo',
             compact(
                 'profile',
-                'notifications',
-                'limitNotifications',
-                'count',
                 'currentTime',
-                'currentDate',
+                'currentDateTime',
                 'chartData',
-                'range',
-                'selectedOption',
-                'fromDate',
-                'toDate'
+                'chartTitle',
+                'reference',
+                'reportType'
             )
         );
     }
 
-    //Request
-    public function requestReport(Request $request)
-    {
-        $currentDate = date('Y-m-d');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-
-        $fromDate = $request->input('start');
-        $formattedFromDate = date("M j, Y", strtotime($fromDate));
-        $toDate = $request->input('end');
-        $formattedToDate = date("M j, Y", strtotime($toDate));
-        $selectedOption = $request->input('select');
-        $range = $formattedFromDate . " - " . $formattedToDate;
-
-        // Query your database to get the most requested products or departments based on the selected date range and category
-
-
-        if ($selectedOption === 'Item') {
-            // Get the most requested products with their creation dates
-            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
-                ->whereBetween('requests.created_at', [$fromDate, $toDate])
-                ->groupBy('requests.product_id', 'products.p_name', 'requests.created_at') // Group by product ID and creation date
-                ->selectRaw('products.p_name as label, requests.created_at as request_date, COUNT(*) as data')
-                ->orderByDesc('data')
-                ->get();
-            $reportType = 'item'; // Set the report type to 'item'
-
-        } elseif ($selectedOption === 'Department') {
-            // Get the most requested departments with their creation dates
-            $result = Request_Form::whereBetween('created_at', [$fromDate, $toDate])
-                ->groupBy('department', 'created_at') // Group by department and creation date
-                ->selectRaw('department as label, created_at as request_date, COUNT(*) as data')
-                ->orderByDesc('data')
-                ->get();
-            $reportType = 'department'; // Set the report type to 'department'
-
-        } else {
-            // Invalid selection, handle accordingly
-            return redirect()->back()->with('info', 'Invalid selection.');
-        }
-
-        // Modify the label generation in the controller
-        $labels = $result->map(function ($item) {
-            return date("M j, Y", strtotime($item->request_date)) . ' - ' . $item->label;
-        });
-
-        $chartData = [
-            'labels' => $labels,
-            'data' => $result->pluck('data'),
-        ];
-
-        // Return the view with the chart data
-        return view('superadmin.report.request_report', compact('currentTime', 'currentDate', 'chartData', 'range', 'result', 'reportType'));
-
-    }
-
-    //Salaes Demo
+    //Sale Demo
     public function saleDemo()
     {
         $profile = Auth::user();
@@ -4857,18 +4898,24 @@ class SuperAdminController extends Controller
 
         foreach ($products as $product) {
             $productId = $product->product_id;
-            $productInfo = Product::find($productId); // Fetch product info from the products table
+            $productInfo = Product::find($productId);
 
             if ($productInfo) {
                 $productName = $productInfo->p_name;
                 $salesData[$productName] = [];
 
                 foreach ($dateRange as $date) {
+                    // Modify the query to get only the items that have sales within the date range
                     $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at', $date)
+                        ->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
                         ->sum('quantity');
 
                     $salesData[$productName][] = $quantity;
+                }
+
+                // Remove products with no sales within the date range
+                if (array_sum($salesData[$productName]) == 0) {
+                    unset($salesData[$productName]);
                 }
             }
         }
@@ -4883,6 +4930,10 @@ class SuperAdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'SAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $fromDate = $request->input('start');
         $formattedFromDate = date("M, j Y", strtotime($fromDate));
@@ -4909,35 +4960,437 @@ class SuperAdminController extends Controller
 
         foreach ($products as $product) {
             $productId = $product->product_id;
-            $productInfo = Product::find($productId); // Fetch product info from the products table
+            $productInfo = Product::find($productId);
 
             if ($productInfo) {
                 $productName = $productInfo->p_name;
                 $salesData[$productName] = [];
 
                 foreach ($dateRange as $date) {
+                    // Modify the query to get only the items that have sales within the date range
                     $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at', $date)
+                        ->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
                         ->sum('quantity');
 
                     $salesData[$productName][] = $quantity;
+                }
+
+                // Remove products with no sales within the date range
+                if (array_sum($salesData[$productName]) == 0) {
+                    unset($salesData[$productName]);
                 }
             }
         }
 
 
+        $datesWithSales = [];
+        $itemCount = [];
+
+        foreach ($salesData as $productName => $productSales) {
+            // Filter out dates with sales (quantity > 0) for the current product
+            $datesWithSales[$productName] = array_map(
+                function ($index, $quantity) use ($dateRange) {
+                    if ($quantity > 0 && isset($dateRange[$index])) {
+                        return [
+                            'date' => date("Y-m-d", strtotime($dateRange[$index])),
+                            'quantity' => $quantity,
+                        ];
+                    }
+                    return null;
+                },
+                array_keys($productSales),
+                $productSales
+            );
+
+            // Remove null values
+            $datesWithSales[$productName] = array_filter($datesWithSales[$productName]);
+
+            // Store the count for the current item
+            $itemCount[$productName] = count($datesWithSales[$productName]);
+        }
+
+        // Extract unique dates with sales across all products
+        $uniqueDates = [];
+        foreach ($datesWithSales as $productSales) {
+            $uniqueDates = array_merge($uniqueDates, array_column($productSales, 'date'));
+        }
+
+        $uniqueDates = array_unique($uniqueDates);
+
+        // Filter out dates with no sales across all products
+        $filteredDates = array_values($uniqueDates);
+
 
         return view(
             'superadmin.report.sale_report',
             compact(
+                'currentDateTime',
                 'currentTime',
-                'currentDate',
                 'range',
                 'dateRange',
                 'salesData',
-                'products'
+                'products',
+                'datesWithSales',
+                'itemCount',
+                'filteredDates',
+                'reference'
             )
         );
+    }
+
+    public function saleReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $content =
+            '             Sales Analytics Report
+            ------------------------
+
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Sales Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'SAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M, j Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M, j Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Create an array to store the date range
+        $dateRange = [];
+        $currentDate = $fromDate;
+
+        while ($currentDate <= $toDate) {
+            $dateRange[] = $currentDate;
+            $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        }
+
+        // Fetch data from the purchases table for each product on each day
+        $products = Purchase::select('product_id')
+            ->distinct()
+            ->get();
+
+        $salesData = [];
+
+        foreach ($products as $product) {
+            $productId = $product->product_id;
+            $productInfo = Product::find($productId);
+
+            if ($productInfo) {
+                $productName = $productInfo->p_name;
+                $salesData[$productName] = [];
+
+                foreach ($dateRange as $date) {
+                    // Modify the query to get only the items that have sales within the date range
+                    $quantity = Purchase::where('product_id', $productId)
+                        ->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])
+                        ->sum('quantity');
+
+                    $salesData[$productName][] = $quantity;
+                }
+
+                // Remove products with no sales within the date range
+                if (array_sum($salesData[$productName]) == 0) {
+                    unset($salesData[$productName]);
+                }
+            }
+        }
+
+
+        $datesWithSales = [];
+        $itemCount = [];
+
+        foreach ($salesData as $productName => $productSales) {
+            // Filter out dates with sales (quantity > 0) for the current product
+            $datesWithSales[$productName] = array_map(
+                function ($index, $quantity) use ($dateRange) {
+                    if ($quantity > 0 && isset($dateRange[$index])) {
+                        return [
+                            'date' => date("Y-m-d", strtotime($dateRange[$index])),
+                            'quantity' => $quantity,
+                        ];
+                    }
+                    return null;
+                },
+                array_keys($productSales),
+                $productSales
+            );
+
+            // Remove null values
+            $datesWithSales[$productName] = array_filter($datesWithSales[$productName]);
+
+            // Store the count for the current item
+            $itemCount[$productName] = count($datesWithSales[$productName]);
+        }
+
+        // Extract unique dates with sales across all products
+        $uniqueDates = [];
+        foreach ($datesWithSales as $productSales) {
+            $uniqueDates = array_merge($uniqueDates, array_column($productSales, 'date'));
+        }
+
+        $uniqueDates = array_unique($uniqueDates);
+
+        // Filter out dates with no sales across all products
+        $filteredDates = array_values($uniqueDates);
+
+
+        return redirect()->route(
+            'superadmin.sale.demo',
+            compact(
+                'currentDateTime',
+                'currentTime',
+                'range',
+                'dateRange',
+                'salesData',
+                'products',
+                'datesWithSales',
+                'itemCount',
+                'filteredDates',
+                'reference'
+            )
+        );
+    }
+
+    //Request Demo
+    public function requestDemo()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $requests = Request_Form::all();
+
+
+        return view('superadmin.inventory_demo.requestdemo', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'requests'));
+    }
+
+    public function requestDemoSearch(Request $request)
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date('"M j, Y"', strtotime($fromDate));
+        $toDate = $request->input('end');
+        $toDate = date("Y-m-d 23:59:59", strtotime($toDate));
+        $formattedToDate = date("M j, Y ", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Query your database to get the most requested products or departments based on the selected date range and category
+        if ($selectedOption === 'Item') {
+            // Get the most requested products with their creation dates
+            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+                ->whereBetween('requests.created_at', [$fromDate, $toDate])
+                ->groupBy('requests.product_id', 'products.p_name', 'requests.created_at') // Group by product ID and creation date
+                ->selectRaw('products.p_name as label, requests.created_at as request_date, SUM(requests.quantity) as data')
+                ->orderBy('request_date') // Order by created_at ascending
+                ->get();
+        } elseif ($selectedOption === 'Department') {
+            // Get the most requested departments with their creation dates
+            $result = Request_Form::whereBetween('created_at', [$fromDate, $toDate])
+                ->groupBy('department', 'date') // Group by department and date
+                ->selectRaw('department as label, department, date as request_date, COUNT(DISTINCT created_at, department) as data') // Use SUM(1) to get the count of occurrences
+                ->orderBy('request_date', 'asc') // Order by request_date ascending
+                ->orderBy('data', 'asc') // Then, order by the count of occurrences in ascending order
+                ->get();
+        } else {
+            // Invalid selection, handle accordingly
+            return redirect()->back()->with('info', 'Invalid selection.');
+        }
+
+        // Modify the label generation in the controller
+        $labels = $result->map(function ($item) {
+            return date("M j, Y", strtotime($item->request_date)) . ' - ' . $item->label;
+        });
+
+        $chartData = [
+            'labels' => $labels,
+            'data' => $result->pluck('data'),
+        ];
+
+        // Return the view with the chart data
+        return view(
+            'superadmin.inventory_demo.requestdemo_search',
+            compact(
+                'profile',
+                'notifications',
+                'limitNotifications',
+                'count',
+                'currentTime',
+                'currentDate',
+                'chartData',
+                'range',
+                'selectedOption',
+                'fromDate',
+                'toDate'
+            )
+        );
+    }
+
+    //Request
+    public function requestReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'REQAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Query your database to get the most requested products or departments based on the selected date range and category
+        if ($selectedOption === 'Item') {
+            // Get the most requested products with their creation dates
+            $result = Request_Form::join('products', 'requests.product_id', '=', 'products.id')
+                ->whereBetween('requests.created_at', [$fromDate, $toDate])
+                ->groupBy('requests.product_id', 'products.p_name', 'requests.created_at') // Group by product ID and creation date
+                ->selectRaw('products.p_name as label, requests.created_at as request_date, SUM(requests.quantity) as data')
+                ->orderBy('request_date') // Order by created_at ascending
+                ->get();
+            $reportType = 'item'; // Set the report type to 'item'
+            $reference = 'REQIAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        } elseif ($selectedOption === 'Department') {
+            // Get the most requested departments with their creation dates
+            $result = Request_Form::whereBetween('created_at', [$fromDate, $toDate])
+                ->groupBy('department', 'date') // Group by department and date
+                ->selectRaw('department as label, department, date as request_date, COUNT(DISTINCT created_at, department) as data') // Use SUM(1) to get the count of occurrences
+                ->orderBy('request_date', 'asc') // Order by request_date ascending
+                ->orderBy('data', 'asc') // Then, order by the count of occurrences in ascending order
+                ->get();
+            $reportType = 'department';
+            $reference = 'REQDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        } else {
+            // Invalid selection, handle accordingly
+            return redirect()->back()->with('info', 'Invalid selection.');
+        }
+
+        // Modify the label generation in the controller
+        $labels = $result->map(function ($item) {
+            return date("M j, Y", strtotime($item->request_date)) . ' - ' . $item->label;
+        });
+
+        $chartData = [
+            'labels' => $labels,
+            'data' => $result->pluck('data'),
+        ];
+        // Return the view with the chart data
+        return view('superadmin.report.request_report', compact('currentTime', 'currentDateTime', 'chartData', 'range', 'result', 'reportType', 'reference'));
+    }
+
+    public function requestReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+
+        $fromDate = $request->input('start');
+        $formattedFromDate = date("M j, Y", strtotime($fromDate));
+        $toDate = $request->input('end');
+        $formattedToDate = date("M j, Y", strtotime($toDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
+
+        // Query your database to get the most requested products or departments based on the selected date range and category
+
+        if ($request->has('select')) {
+            $currentDateWithoutHyphens = str_replace('-', '', date('Y-m-d'));
+            $randomNumber = mt_rand(100, 999);
+
+            if ($selectedOption === 'Item') {
+                $reportType = 'Most Requested Item'; // Set the report type to 'Most Requested Item'
+                $reference = 'REQIAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+            } elseif ($selectedOption === 'Department') {
+                $reportType = 'Most Requesting Department';
+                $reference = 'REQDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+            } else {
+                // Invalid selection, handle accordingly
+                return redirect()->back()->with('info', 'Invalid selection.');
+            }
+        }
+
+        $content =
+            '             Most Requesting/Requested Analytics Report
+            ------------------------
+    
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '  
+    
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Most Requesting/Requested Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        // Return the view with the chart data
+        return redirect()->route('superadmin.request.demo', compact('currentTime', 'currentDateTime', 'range', 'reference'));
     }
 
     //Medicine Demo
@@ -5026,6 +5479,10 @@ class SuperAdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MEDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $selectedOption = $request->input('select');
         $chartData = [];
@@ -5082,10 +5539,106 @@ class SuperAdminController extends Controller
                 'mediumThreshold',
                 'mostValuedProducts',
                 'mediumValuedProducts',
-                'lowValuedProducts'
+                'lowValuedProducts',
+                'reference'
             )
         );
     }
+
+    public function medicineReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $content =
+            '             Medicine Analytics Report
+            ------------------------
+
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Medicine Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        $profile = auth()->user();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $chartData = [];
+
+        // Fetch product prices from the product_price table
+        $productPrices = Product_price::all();
+
+        // Define price range thresholds for categorization
+        $mostThreshold = 100; // Adjust as needed
+        $mediumThreshold = 50; // Adjust as needed
+
+        // Initialize arrays to store product names in each category
+        $mostValuedProducts = [];
+        $mediumValuedProducts = [];
+        $lowValuedProducts = [];
+
+        // Categorize product prices and collect product names
+        foreach ($productPrices as $productPrice) {
+            $product = $productPrice->product; // Access the related product
+
+            if ($product) {
+                if ($productPrice->price >= $mostThreshold) {
+                    $mostValuedProducts[] = $product->p_name; // Use the product's name
+                } elseif ($productPrice->price >= $mediumThreshold) {
+                    $mediumValuedProducts[] = $product->p_name; // Use the product's name
+                } else {
+                    $lowValuedProducts[] = $product->p_name; // Use the product's name
+                }
+            }
+        }
+
+        // Calculate the percentages based on counts
+        $totalCount = count($productPrices);
+        $mostValuedCount = count($mostValuedProducts);
+        $mediumValuedCount = count($mediumValuedProducts);
+        $lowValuedCount = count($lowValuedProducts);
+
+        $mostValuedPercentage = ($totalCount > 0) ? round(($mostValuedCount / $totalCount) * 100) : 0;
+        $mediumValuedPercentage = ($totalCount > 0) ? round(($mediumValuedCount / $totalCount) * 100) : 0;
+        $lowValuedPercentage = ($totalCount > 0) ? round(($lowValuedCount / $totalCount) * 100) : 0;
+
+
+        return redirect()->route(
+            'superadmin.medicine.demo',
+            compact(
+                'chartData',
+                'currentTime',
+                'currentDate',
+                'productPrices',
+                'mostValuedPercentage',
+                'mediumValuedPercentage',
+                'lowValuedPercentage',
+                'mostThreshold',
+                'mediumThreshold',
+                'mostValuedProducts',
+                'mediumValuedProducts',
+                'lowValuedProducts',
+                'reference'
+            )
+        );
+    }
+
+    //Product Demo
     public function productDemo()
     {
         $profile = Auth::user();
@@ -5176,6 +5729,10 @@ class SuperAdminController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'IFSNAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         $selectedOption = $request->input('select');
         $chartData = [];
@@ -5215,16 +5772,102 @@ class SuperAdminController extends Controller
             'superadmin.report.products_report',
             compact(
                 'counts',
-                'currentTime',
                 'currentDate',
+                'currentTime',
                 'categories',
                 'fastProducts',
                 'slowProducts',
-                'nonMovingProducts'
+                'nonMovingProducts',
+                'reference'
 
             )
         );
     }
+
+    public function productsReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $content =
+            '             Item Analytics Report
+            ------------------------
+
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
+
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Item Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+        $profile = auth()->user();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+
+        $selectedOption = $request->input('select');
+        $chartData = [];
+
+
+        // Retrieve all products
+        $products = Product::all();
+
+        // Initialize arrays to store categorized products
+        $fastProducts = [];
+        $slowProducts = [];
+        $nonMovingProducts = [];
+
+        // Categorize products based on request and sales and store them in arrays
+        foreach ($products as $product) {
+            $totalRequestQuantity = Request_Form::where('product_id', $product->id)->sum('quantity');
+            $totalSalesQuantity = Purchase::where('product_id', $product->id)->sum('quantity');
+
+            if ($totalRequestQuantity > 0) {
+                $fastProducts[] = $product->p_name;
+            } elseif ($totalSalesQuantity > 0) {
+                $slowProducts[] = $product->p_name;
+            } else {
+                $nonMovingProducts[] = $product->p_name;
+            }
+        }
+
+        // Create an array with category names and counts
+        $categories = ['Fast', 'Slow', 'Non-Moving'];
+        $counts = [
+            'Fast' => count($fastProducts),
+            'Slow' => count($slowProducts),
+            'Non-Moving' => count($nonMovingProducts),
+        ];
+
+        return redirect()->route(
+            'superadmin.product.demo',
+            compact(
+                'counts',
+                'currentDate',
+                'currentTime',
+                'categories',
+                'fastProducts',
+                'slowProducts',
+                'nonMovingProducts',
+                'reference'
+
+            )
+        );
+    }
+
     public function deleteUser(Request $request)
     {
         // Find the user by ID

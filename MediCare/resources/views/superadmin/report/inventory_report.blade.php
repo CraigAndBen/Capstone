@@ -11,30 +11,48 @@
             #back {
                 display: none;
             }
+            #done {
+                display: none;
+            }
         }
 
         @page {
-            size: portrait;
+            size: a4;
         }
 
         .page-break {
             page-break-after: always;
         }
+
+        #requestChartContainer {
+        text-align: center;
+    }
+
+    #productChart {
+        max-width: 100%; /* Make the chart responsive */
+        display: inline-block;
+       
+    }
+       
     </style>
 @endsection
 @section('content')
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h5>Report Type: <i><b>
-                    @if ($chartTitle === 'category')
-                    Category Analytics Report
-                @elseif ($chartTitle === 'brand')
-                   Brand Analytics Report
-                @endif
-            </b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
-                <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h8>Report Type: <i><b>
+                            @if ($chartTitle === 'category')
+                                Category Analytics Report
+                            @elseif ($chartTitle === 'brand')
+                                Brand Analytics Report
+                            @endif
+                        </b></i></h8>
+                <br>
+                <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h8>
+                <br>
+                <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
+                <br>
+                <h8>Reference: <i><b>{{ $reference }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -48,12 +66,12 @@
         <div class="row justify-content-center">
             <div class="col-8 text-center">
                 <h3><i>
-                    @if ($chartTitle === 'category')
-                            Category Data
+                        @if ($chartTitle === 'category')
+                            Category Analytics
                         @elseif ($chartTitle === 'brand')
-                           Brand Data
+                            Brand Analytics
                         @endif
-                </i></h3>
+                    </i></h3>
                 <br>
                 <canvas id="productChart"></canvas>
             </div>
@@ -62,7 +80,7 @@
             </div>
         </div>
 
-        <div style="height: 150px"></div>
+        <div style="height: 100px"></div>
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
@@ -70,14 +88,18 @@
                     @if ($chartTitle === 'category')
                             Category Data
                         @elseif ($chartTitle === 'brand')
-                           Brand Data
+                            Brand Data
                         @endif
                 </i></h3>
                 <br>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Label</th>
+                            <th>@if ($chartTitle === 'category')
+                                Category 
+                            @elseif ($chartTitle === 'brand')
+                                Brand 
+                            @endif</th>
                             <th>Count</th>
                         </tr>
                     </thead>
@@ -110,8 +132,16 @@
         </div>
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('superadmin.inventory.demo') }}" class="btn btn-danger">Back</a>
+                <form action="{{ route('superadmin.inventory.report.save') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="reference" value="{{ $reference }}">
+                    <input type="hidden" name="date" value="{{ $currentDateTime }}">
+                    <input type="hidden" name="time" value="{{ $currentTime }}">
+             
+                    <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
+                    <button id="done" type="submit" class="btn btn-success">Done</button>
+                    <a id="back" href="{{ route('superadmin.inventory.demo') }}" class="btn btn-danger">Back</a>
+                </form>
             </div>
             <div class="col-2">
             </div>
@@ -121,12 +151,15 @@
 @endsection
 @section('scripts')
     @if (isset($chartData))
-    <script>
-        var ctx = document.getElementById('productChart').getContext('2d');
+        <script>
+             var ctx = document.getElementById('productChart').getContext('2d');
         var productData = @json($chartData);
     
         // Define an array to store labels with both name and number
         var labelsWithNamesAndNumbers = productData.map(data => `${data.label} (${data.count})`);
+    
+        // Extract original labels without counts
+        var originalLabels = productData.map(data => data.label);
     
         // Dynamically generate an array of colors based on the number of data points
         var colors = generateColors(productData.length);
@@ -161,25 +194,31 @@
                     y: {
                         beginAtZero: true
                     }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            generateLabels: function (chart) {
+                                return originalLabels.map(function (label, i) {
+                                    return {
+                                        text: label,
+                                        fillStyle: chart.data.datasets[0].backgroundColor[i]
+                                    };
+                                });
+                            }
+                        }
+                    }
                 }
             }
         });
-    
-        $(document).ready(function() {
-            // Attach a click event handler to the button
-            $("#printButton").click(function() {
-                // Call the window.print() function to open the print dialog
-                window.print();
-            });
-        });
-        $(document).ready(function() {
+            $(document).ready(function() {
                 // Attach a click event handler to the button
                 $("#printButton").click(function() {
                     // Call the window.print() function to open the print dialog
                     window.print();
                 });
             });
-    </script>
-    
+        </script>
     @endif
 @endsection

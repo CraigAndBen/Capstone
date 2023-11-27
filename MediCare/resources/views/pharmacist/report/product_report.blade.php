@@ -5,10 +5,22 @@
     <meta charset="UTF-8">
     <title>MediCare | Item Price List Report</title>
     <style>
+        @page {
+            size: a4;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+        }
+
+        header {
+            width: 100%;
+            position: fixed;
+            top: -50px;
+            left: 15px;
+            align-content: center;
         }
 
         .container {
@@ -30,6 +42,11 @@
             font-size: 13px;
         }
 
+        h5 {
+            font-family: Arial, sans-serif;
+            margin-top: 40px;
+        }
+
         .header h1 {
             font-size: 20px;
             margin: 0;
@@ -42,6 +59,7 @@
         .purchase-detail h3 {
             font-size: 20px;
             margin-top: 0;
+            text-align: center;
         }
 
         table {
@@ -64,27 +82,31 @@
             font-family: 'DejaVu Sans', sans-serif;
         }
 
-        .footer {
-            position: absolute;
-            bottom: 10px;
-
+        footer {
+            width: 100%;
+            position: fixed;
+            bottom: -100px;
             display: flex;
-            justify-content: space-between; /* Align items in a row with space between them */
-
+            left: 0px;
+            right: 0px;
+            justify-content: space-between;
+            height: 100px;
+            line-height: 35px;
+            border-top: 1px solid #000;
         }
 
         .footer-start,
         .footer-center,
         .footer-right {
-            display: inline-flex;
-            margin-left: 70px;
-            font-size: 13px;
+            display: inline-block;
+            margin-left: 90px;
+            font-size: 11px;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <header>
         <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
@@ -94,60 +116,65 @@
             <br>
             Email: medicare@example.com
         </p>
-    </div>
-    <div class="purchase-detail">
-        <h3>Item Price List Report</h3>
-        <table>
-            <thead>
-            <tr>
-                <th>ITEM NAME</th>
-                <th>CATEGORY</th>
-                <th>PRICE</th>
-            </tr>
-        </thead>
-        <tbody class="text-center">
-            @foreach ($products as $product)
-                @php
-                    $productHasPrice = false;
-                @endphp
-    
-                @foreach ($categories as $category)
-                    @if ($product->category_id == $category->id)
-                        @foreach ($products_price as $price)
-                            @if ($price->product_id == $product->id)
-                                @php
-                                    $productHasPrice = true;
-                                @endphp
-                                <tr>
-                                    <td>{{ ucwords($product->p_name) }}</td>
-                                    <td>{{ ucwords($category->category_name) }}</td>
-                                    <td>₱{{ number_format($price->price, 2) }}</td>
-                                    
-                                </tr>
+    </header>
+    <div class="container">
+        <h5>Reference: {{ $reference }}</h5>
+        <div class="purchase-detail">
+            <h3>Item Price List Report</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ITEM NAME</th>
+                        <th>CATEGORY</th>
+                        <th>PRICE</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @foreach ($products as $product)
+                        @php
+                            $productHasPrice = false;
+                        @endphp
+
+                        @foreach ($categories as $category)
+                            @if ($product->category_id == $category->id)
+                                @foreach ($products_price as $price)
+                                    @if ($price->product_id == $product->id)
+                                        @php
+                                            $productHasPrice = true;
+                                        @endphp
+                                        <tr>
+                                            <td>{{ ucwords($product->p_name) }}</td>
+                                            <td>{{ ucwords($category->category_name) }}</td>
+                                            <td>₱{{ number_format($price->price, 2) }}</td>
+
+                                        </tr>
+                                    @endif
+                                @endforeach
                             @endif
                         @endforeach
-                    @endif
-                @endforeach
+
+                        {{-- Only display the row if the product has a price --}}
+                        @if (!$productHasPrice)
+                            {{-- Handle the case where the product does not have a price --}}
+                        @endif
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+        <footer>
+            <div class="footer-start">
+                Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}
+            </div>
+            <div class="footer-center">
+                &copy; 2023 MediCare
+            </div>
+            <div class="footer-right">
+                Printing Time: {{ $currentTime }}
+            </div>
+        </footer>
+
     
-                {{-- Only display the row if the product has a price --}}
-                @if (!$productHasPrice)
-                    {{-- Handle the case where the product does not have a price --}}
-                @endif
-            @endforeach
-        </tbody>
-        </table>
-    </div>
-    <div class="footer">
-        <div class="footer-start">
-            Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}
-        </div>
-        <div class="footer-center">
-            Printing Time: {{ $currentTime }}
-        </div>
-        <div class="footer-right">
-            &copy; 2023 MediCare
-        </div>
-    </div>
 </body>
 
 </html>

@@ -11,15 +11,28 @@
             #back {
                 display: none;
             }
+            #done {
+                display: none;
+            }
         }
 
         @page {
-            size: portrait;
+            size: a4;
         }
 
         .page-break {
             page-break-after: always;
         }
+
+        #requestChartContainer {
+        text-align: center;
+    }
+
+    #requestChart {
+        max-width: 100%; /* Make the chart responsive */
+        display: inline-block;
+    }
+     
     </style>
 @endsection
 @section('content')
@@ -27,14 +40,15 @@
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
                 <h5>Report Type: <i><b>
-                    @if ($reportType === 'item')
-                            Most Requested Item Analytics Report
-                        @elseif ($reportType === 'department')
-                            Most Requesting Department Analytics Report
-                        @endif
-                </b></i></h5>
-                <h5>Date: <i><b>{{ $currentDate }}</b></i></h5>
+                            @if ($reportType === 'item')
+                                Most Requested Item Analytics Report
+                            @elseif ($reportType === 'department')
+                                Most Requesting Department Analytics Report
+                            @endif
+                        </b></i></h5>
+                <h5>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h5>
                 <h5>Time: <i><b>{{ $currentTime }}</b></i></h5>
+                <h5>Reference: <i><b>{{ $reference }}</b></i></h5>
             </div>
             <div class="col-2">
 
@@ -47,7 +61,7 @@
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>
+                <h3 style="margin-left: 40px"><i>
                         @if ($reportType === 'item')
                             Most Requested Item
                         @elseif ($reportType === 'department')
@@ -62,13 +76,13 @@
             </div>
         </div>
 
-        <div style="height: 150px"></div>
+        <div style="height: 100px"></div>
 
         <div class="row justify-content-center">
             <div class="col-8 text-center">
-                <h3><i>{{ $reportType === 'item' ? 'Item' : 'Department' }} Table</i></h3>
+                <h3 style="margin-left: 65px"><i>{{ $reportType === 'item' ? 'Item' : 'Department' }} Table</i></h3>
                 <br>
-                <table class="table table-bordered">
+                <table class="table table-bordered" style="margin-left: 40px">
                     <thead>
                         <tr>
                             <th>{{ $reportType === 'item' ? 'Item' : 'Department' }}</th>
@@ -100,8 +114,15 @@
         </div>
         <div class="row justify-content-end align-items-end my-5">
             <div class="col-10 text-right">
-                <button id="printButton" class="btn btn-primary">Preview Report</button>
-                <a id="back" href="{{ route('superadmin.request.demo') }}" class="btn btn-danger">Back</a>
+                <form action="{{ route('superadmin.request.report.save') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="reference" value="{{ $reference }}">
+                    <input type="hidden" name="date" value="{{ $currentDateTime }}">
+                    <input type="hidden" name="time" value="{{ $currentTime }}">
+                    <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
+                    <button id="done" type="submit" class="btn btn-success">Done</button>
+                    <a id="back" href="{{ route('superadmin.request.demo') }}" class="btn btn-danger">Back</a>
+                </form>
             </div>
             <div class="col-2">
             </div>
@@ -110,30 +131,39 @@
     </div>
 @endsection
 @section('scripts')
-            @if (isset($chartData))
-                <script>
-                    var ctx = document.getElementById('requestChart').getContext('2d');
-                    var chartData = @json($chartData);
-                    new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: @json($chartData['labels']),
-                            datasets: [{
-                                label: @json($range),
-                                data: @json($chartData['data']),
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
+    @if (isset($chartData))
+        <script>
+            var ctx = document.getElementById('requestChart').getContext('2d');
+            var chartData = @json($chartData);
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @json($chartData['labels']),
+                    datasets: [{
+                        label: @json($range),
+                        data: @json($chartData['data']),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
-                    });
-                </script>
-            @endif
-        @endsection
+                    }
+                }
+            });
+
+            $(document).ready(function() {
+                // Attach a click event handler to the button
+                $("#printButton").click(function() {
+                    // Call the window.print() function to open the print dialog
+                    window.print();
+                });
+            });
+
+        </script>
+    @endif
+@endsection

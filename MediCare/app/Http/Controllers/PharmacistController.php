@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Purchase;
+use App\Models\Report;
 use Illuminate\View\View;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -255,7 +256,7 @@ class PharmacistController extends Controller
 
     }
 
-    public function viewMedicineReport(Request $request)
+    public function viewMedicineReport()
     {
         $currentDate = date('Y-m-d');
         $currentDateTime = Carbon::now();
@@ -263,6 +264,10 @@ class PharmacistController extends Controller
         $currentTime = $currentDateTime->format('h:i A');
         $today = Carbon::now();
         $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
+
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MINVR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         
         $products = Product::orderBy('expiration', 'asc')->get();
         $categories = Category::all();
@@ -272,10 +277,9 @@ class PharmacistController extends Controller
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
 
         return $pdf->stream('medicine report.pdf');
@@ -283,23 +287,48 @@ class PharmacistController extends Controller
        // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
     }
 
-    public function downloadMedicineReport(Request $request)
+    public function downloadMedicineReport()
     {
+        $profile = auth()->user();
         $currentDate = date('Y-m-d');
+        $today = Carbon::now();
+        $readableDate = date('M j, y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
-        $today = Carbon::now();
         $oneWeekFromToday = $today->addDays(7); // Calculate the date one week from today
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MINVR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         
         $products = Product::orderBy('expiration', 'asc')->get();
         $categories = Category::all();
+
+        $content =
+            '              Medicine Inventory Report 
+                ------------------------
+    
+                Report Reference Number: ' . $reference . '
+                Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+    
+                Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Medicine Inventory',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
 
         $data = [
             'products' => $products,
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
         ];
 
         $pdf = app('dompdf.wrapper');
@@ -335,6 +364,10 @@ class PharmacistController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MEDPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $products_price = Product_price::whereNotNull('price')->get();
         $products = Product::all();
         $categories = Category::where('category_name', 'pharmaceutical')->get();
@@ -345,10 +378,9 @@ class PharmacistController extends Controller
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
 
         return $pdf->stream('medicine price report.pdf');
@@ -359,13 +391,38 @@ class PharmacistController extends Controller
 
     public function downloadProductReport()
     {
+        $profile = auth()->user();
         $currentDate = date('Y-m-d');
+        $readableDate = date('M j, y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MEDPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
         $products_price = Product_price::whereNotNull('price')->get();
         $products = Product::all();
         $categories = Category::where('category_name', 'pharmaceutical')->get();
+
+        $content =
+            '              Medicine Price Report 
+                ------------------------
+    
+                Report Reference Number: ' . $reference . '
+                Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
+    
+                Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Medicine Price report',
+            'date' => $currentDate,
+            'time' => $currentTime,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
 
         $data = [
             'products_price' => $products_price,
@@ -373,10 +430,10 @@ class PharmacistController extends Controller
             'categories' => $categories,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
+            'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->setBasePath(public_path());
+
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
 
         return $pdf->download('medicine price report.pdf');

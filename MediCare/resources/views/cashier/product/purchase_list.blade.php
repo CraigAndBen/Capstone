@@ -36,16 +36,18 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
-
                                 <div class="d-flex justify-content-end">
-                                    <div class="m-1 form-group">
+                                    <div class="form-group d-flex">
                                         <a href="{{ route('cashier.purchase.report.view') }}" 
-                                        class="btn btn-success" target="_blank">View Report</a>
-                                        <a href="{{ route('cashier.purchase.report.download') }}" 
-                                        class="btn btn-success" target="_blank">Download Report</a>
+                                        class="btn btn-success mr-2" target="_blank">View Report</a>
+                                        <form action="{{ route('cashier.purchase.report.download') }}" method="GET">
+                                            @csrf
+                                        <button class="btn btn-success" style="margin-left: 10px;" target="_blank">Download Report</button>
+                                        </form>
                                     </div>
                                 </div>
-                                <br>    
+                                
+                                <br>
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -75,7 +77,7 @@
                                         <span class="fa fa-check-circle"></span> No Notification Yet.
                                     </div>
                                 @else
-                                    <table id="purchaseListtable" class="table table-bordered responsive">
+                                    <table id="purchaseListtable" class="table table-bordered">
                                         <thead class="bg-primary text-light text-center">
                                             <tr>
                                                 <th class="text-center">Reference</th>
@@ -110,8 +112,7 @@
                     </div>
 
 
-                    {{-- View modal --}}
-                
+                    {{-- View modal --}}              
                     @foreach ($purchases as $purchase)
                     <div class="modal fade" id="viewModal{{ $purchase->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -159,23 +160,21 @@
                     
                                                 <hr class="row brc-default-l1 mx-n1 mb-6" />
                     
-                                                <div class="mt-6">
+                                                <div class="text-center">
                                                     <div class="table table-sm row">
-                                                        <div class="d-none d-sm-block col-2 text-center">Item Id</div>
-                                                        <div class="col-9 col-sm-3 text-center">Item Name</div>
-                                                        <div class="d-none d-sm-block col-sm-2 text-center">Unit Price</div>
-                                                        <div class="d-none d-sm-block col-sm-2 text-center">Quantity</div>
-                                                        <div class="col-9 col-sm-3 text-center">Sub total</div>
+                                                        <div class="col-sm-3">Item Name</div>
+                                                        <div class="col-sm-3">Unit Price</div>
+                                                        <div class="col-sm-3">Quantity</div>
+                                                        <div class="col-sm-3">Sub total</div>
                                                     </div>
                     
                                                     <div class="table table-sm row">
                                                         @foreach ($purchaseDetails as $purchaseDetail)
                                                             @if ($purchaseDetail->reference === $purchase->reference)
-                                                                <div class="d-none d-sm-block col-2 text-center">{{ $purchaseDetail->product_id }}</div>
-                                                                <div class="col-9 col-sm-3 text-center">{{ $purchaseDetail->product->p_name }}</div>
-                                                                <div class="d-none d-sm-block col-sm-2 text-center">₱{{ $purchaseDetail->price }}</div>
-                                                                <div class="d-none d-sm-block col-sm-2 text-center">{{ $purchaseDetail->quantity }}</div>
-                                                                <div class="col-9 col-sm-3 text-center">₱{{ number_format($purchaseDetail['price'] * $purchaseDetail['quantity'], 2) }}</div>
+                                                                <div class="col-sm-3">{{ $purchaseDetail->product->p_name }}</div>
+                                                                <div class="col-sm-3">₱{{ $purchaseDetail->price }}</div>
+                                                                <div class="col-sm-3">{{ $purchaseDetail->quantity }}</div>
+                                                                <div class="col-sm-3">₱{{ number_format($purchaseDetail['price'] * $purchaseDetail['quantity'], 2) }}</div>
                                                             @endif
                                                         @endforeach                                                   
                                                     </div>
@@ -235,8 +234,6 @@
                         </div>
                     </div>
                     @endforeach
-                   
-                    
                     {{-- End View Modal --}}
 
 
@@ -245,8 +242,6 @@
                 <!-- [ Main Content ] end -->
             </div>
         </div>
-
-
     @endsection
 
     @section('scripts')
