@@ -414,13 +414,5 @@
                 $('#producttable').DataTable();
             });
         </script>
-        <script>
-            function restrictAlphabets(e){
-                var x = e.which || e.keycode;
-                if((x >= 48 && <= 57))
-                return true;
-                else
-                return false;
-            }
-        </script>
+
     @endsection
