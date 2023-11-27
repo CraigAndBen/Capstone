@@ -136,8 +136,9 @@
                                                         <label for="quantity">Quantity</label>
                                                         <input type="number" class="form-control" name="quantity"
                                                             placeholder="Enter Quantity" required
+                                                            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                                             oninvalid="this.setCustomValidity('Please input a quantity.')"
-                                                            oninput="setCustomValidity('')">
+                                                            onblur="setCustomValidity('')">
                                                         @error('quantity')
                                                             <div class="alert alert-danger" role="alert">
                                                                 {{ $message }}

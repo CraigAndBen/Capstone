@@ -184,8 +184,9 @@
                                                 <div class="form-floating mb-3">
                                                     <input type="number" class="form-control p-3"
                                                         placeholder="Stock Available" name="stock" required
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                                         oninvalid="this.setCustomValidity('Please input a stock.')"
-                                                        oninput="setCustomValidity('')" />
+                                                        onblur="setCustomValidity('')" />
                                                 </div>
                                                 @error('stock')
                                                     <div class="alert alert-danger" role="alert">
@@ -313,7 +314,7 @@
                                                 <div class="col-md-6">
                                                     <label>Stock</label>
                                                     <div class="form-floating mb-3">
-                                                        <input type="number" class="form-control p-3" name="stock"
+                                                        <input type="number" class="form-control p-3" name="stock" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                                             value="{{ $product->stock }}">
                                                     </div>
                                                 </div>

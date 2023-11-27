@@ -148,7 +148,7 @@
                                                 <i class="bi bi-info-circle-fill" data-toggle="tooltip" data-placement="left" 
                                                      id="stock-tooltip" data-delay="{ 'show': 100, 'hide': 100 }"></i>
                                                 <input type="number" name="quantity" id="quantity" class="form-control"
-                                                    min="1" value="1"> 
+                                                    min="1" value="1" oninput="this.value = this.value.replace(/[^0-9]/g, '');"> 
                                             </div>
 
                                             <button type="submit" class="btn btn-primary">Add Item</button>

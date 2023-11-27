@@ -190,11 +190,11 @@
                                             <div class="col-md-6">
                                                 <label>Stock</label>
                                                 <div class="form-floating mb-3">
-                                                    <input type="number" class="form-control p-3"
-                                                        placeholder="Stock Available" name="stock" required
-                                                        oninvalid="this.setCustomValidity('Please input a stock.')"
-                                                        oninput="setCustomValidity('')" />
-                                                </div>
+                                                    <input type="text" class="form-control p-3" placeholder="Stock Available" name="stock" required
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                                        oninvalid="this.setCustomValidity('Please enter a valid integer.');"
+                                                        onblur="this.setCustomValidity('');">
+                                                </div>                                                
                                                 @error('stock')
                                                     <div class="alert alert-danger" role="alert">
                                                         {{ $message }}
@@ -327,7 +327,7 @@
                                                 <div class="col-md-6">
                                                     <label>Stock</label>
                                                     <div class="form-floating mb-3">
-                                                        <input type="number" class="form-control p-3" name="stock"
+                                                        <input type="number" class="form-control p-3" name="stock" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                                             value="{{ $product->stock }}">
                                                     </div>
                                                 </div>
@@ -413,5 +413,14 @@
             $(document).ready(function() {
                 $('#producttable').DataTable();
             });
+        </script>
+        <script>
+            function restrictAlphabets(e){
+                var x = e.which || e.keycode;
+                if((x >= 48 && <= 57))
+                return true;
+                else
+                return false;
+            }
         </script>
     @endsection
