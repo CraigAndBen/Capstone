@@ -135,7 +135,7 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Item</label>
+                                                <label>Item <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3 p_name" name="p_name" required
                                                         oninvalid="this.setCustomValidity('Please input a item.')"
@@ -159,7 +159,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Brand</label>
+                                                <label>Brand <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3 brand" name="brand" required
                                                         oninvalid="this.setCustomValidity('Please input a brand.')"
@@ -180,7 +180,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Stock</label>
+                                                <label>Stock <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <input type="number" class="form-control p-3"
                                                         placeholder="Stock Available" name="stock" required
@@ -195,7 +195,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Category</label>
+                                                <label>Category <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" name="category_id" required
                                                         oninvalid="this.setCustomValidity('Please input a category.')"
@@ -216,7 +216,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Expiration Date</label>
+                                                <label>Expiration Date <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <input type="date" name="expiration" class="form-control p-3"
                                                         required
@@ -230,7 +230,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Status</label>
+                                                <label>Status <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" name="status" required
                                                         oninvalid="this.setCustomValidity('Please select a status.')"
@@ -249,7 +249,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Description</label>
+                                                <label>Description <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-2">
                                                     <input type="text" name="description" class="form-control"
                                                         placeholder="Description" required
