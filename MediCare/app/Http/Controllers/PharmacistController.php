@@ -452,7 +452,7 @@ class PharmacistController extends Controller
         
         $product_price = new Product_price;
         $product_price->product_id = $request->input('product');
-        $product_price->price = $request->input('price');
+        $product_price->price = number_format($request->input('price'), 2, '.', '');
 
         $product_price->save();
 

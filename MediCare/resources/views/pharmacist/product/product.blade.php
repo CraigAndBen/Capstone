@@ -180,8 +180,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="hidden" id="id" name="id">
-                                                    <input type="number" step="0.01" name="price" class="form-control" id="price" placeholder="Price" 
-                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
+                                                    <input type="text" step="0.01" name="price" class="form-control" id="price" placeholder="Price" 
+                                                    oninput="this.value = this.value.replace(/[^0-9,.]/g, '');"/>
                                                     <label for="floatingInput">Price</label>
                                                 </div>
                                             </div>
@@ -231,8 +231,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3">
                                                     <input type="hidden" id="id" name="id">
-                                                    <input type="number" step="0.01" name="price" class="form-control" id="price" placeholder="Price" 
-                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"/>
+                                                    <input type="text" step="0.01" name="price" class="form-control" id="price" placeholder="Price" 
+                                                    oninput="this.value = this.value.replace(/[^0-9,.]/g, '');"/>
                                                     <label for="floatingInput">Price</label>
                                                 </div>
                                             </div>

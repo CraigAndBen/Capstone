@@ -19,5 +19,8 @@ class Expiries extends Model
 
     ];
     
-    use HasFactory;
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'item_name', 'p_name');
+    }
 }

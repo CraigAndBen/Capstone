@@ -10,7 +10,7 @@ class Product_price extends Model
     use HasFactory;
 
     protected $table = 'product_price';
-    protected $guarded = [
+    protected $fillable = [
         'product_id',
         'price'
     ];
