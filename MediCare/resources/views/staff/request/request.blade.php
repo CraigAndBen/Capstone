@@ -191,45 +191,60 @@
             });
         </script>
         <script>
-           // Add row
-$(".addRow").click(function() {
-    var html = '<div class="row">' +
-        '<div class="form-group col-md-4">' +
-        '<label for="product_id">Item Name</label>' +
-        '<select class="form-control" name="additional_product_ids[]" required>' +
-        '<option value="">Select a Item</option>' +
-        '@foreach ($products as $product)' +
-        '@if ($product->status == "Available")' +
-        '<option value="{{ $product->id }}">{{ $product->p_name }}</option>' +
-        '@endif' +
-        '@endforeach' +
-        '</select>' +
-        '</div>' +
-        '<div class="form-group col-md-4">' +
-        '<label for="brand">Brand</label>' +
-        '<select class="form-control" name="additional_brands[]" required>' +
-        '<option value="">Select a Brand</option>' +
-        '@foreach ($products->unique("brand") as $product)' +
-        '<option value="{{ $product->brand }}">{{ $product->brand }}</option>' +
-        '@endforeach' +
-        '</select>' +
-        '</div>' +
-        '<div class="form-group col-md-3">' +
-        '<label for="quantity">Quantity</label>' +
-        '<input type="number" class="form-control" name="additional_quantities[]" placeholder="Enter Quantity" required>' +
-        '</div>' +
-        '<div class="form-group col-md-1">' +
-        '<div class="form-group col-md-4"></div>' +
-        '<div class="form-group col-md-8">' +
-        '<a href="#" class="btn btn-danger removeRow">-</a>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
+          $(document).ready(function () {
+    // Add row
+    $(".addRow").click(function () {
+        var html = '<div class="row">' +
+            '<div class="form-group col-md-4">' +
+            '<label for="product_id">Item Name</label>' +
+            '<select class="form-control" name="additional_product_ids[]" required>' +
+            '<option value="">Select a Item</option>' +
+            '@foreach ($products as $product)' +
+            '@if ($product->status == "Available")' +
+            '<option value="{{ $product->id }}">{{ $product->p_name }}</option>' +
+            '@endif' +
+            '@endforeach' +
+            '</select>' +
+            '</div>' +
+            '<div class="form-group col-md-4">' +
+            '<label for="brand">Brand</label>' +
+            '<select class="form-control" name="additional_brands[]" required>' +
+            '<option value="">Select a Brand</option>' +
+            '@foreach ($products->unique("brand") as $product)' +
+            '<option value="{{ $product->brand }}">{{ $product->brand }}</option>' +
+            '@endforeach' +
+            '</select>' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+            '<label for="quantity">Quantity</label>' +
+            '<input type="number" class="form-control" name="additional_quantities[]" placeholder="Enter Quantity" required>' +
+            '</div>' +
+            '<div class="form-group col-md-1">' +
+            '<div class="form-group col-md-4"></div>' +
+            '<div class="form-group col-md-8">' +
+            '<a href="#" class="btn btn-danger removeRow">-</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
 
-    $("#dynamicRows").append(html);
+        $("#dynamicRows").append(html);
 
-    // Save rows to local storage
-    saveRowsToLocalStorage();
+        // Save rows to local storage
+        saveRowsToLocalStorage();
+    });
+
+    // Remove row using event delegation
+    $("#dynamicRows").on("click", ".removeRow", function () {
+        $(this).closest('.row').remove();
+
+        // Save rows to local storage
+        saveRowsToLocalStorage();
+    });
+
+    // Function to save rows to local storage
+    function saveRowsToLocalStorage() {
+        // Implement the logic to save rows to local storage if needed
+    }
 });
 
         </script>
