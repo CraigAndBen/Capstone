@@ -1,26 +1,50 @@
 @extends('layouts.analytics_report')
 @section('style')
-    <style>
-        @media print {
-
-            /* Hide the button when printing */
-            #printButton {
-                display: none;
-            }
-
-            #back {
-                display: none;
-            }
+<style>
+    @media print {
+        /* Hide the button when printing */
+        #printButton {
+            display: none;
         }
-
-        @page {
-            size: portrait;
+        #back {
+            display: none;
         }
-
-        .page-break {
-            page-break-after: always;
+        #done {
+            display: none;
         }
-    </style>
+    }
+
+    @page {
+        size: a4;
+    }
+
+    .page-break {
+        page-break-after: always;
+    }
+
+
+
+    #salesGraph {
+        max-width: 100%; /* Make the chart responsive */
+        display: inline-block;
+        margin-left: 35px;
+        
+    }
+
+    .table-flex {
+        display: inline-block;
+        text-align: center;
+    }
+
+    .table-bordered {
+        width: 100%;
+    }
+ 
+    .center-text {
+        text-align: center;
+        margin-left: 65px;
+    }
+</style>
 @endsection
 @section('content')
     <div class="container mt-2">
@@ -31,6 +55,8 @@
                 <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h8>
                 <br>
                 <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
+                <br>
+                <h8>Reference: <i><b>{{ $reference }}</b></i></h8>
             </div>
             <div class="col-2">
 
@@ -42,8 +68,8 @@
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-8 text-center">
-                <h3><i>Sale Analytics</i></h3>
+            <div class="col-8 text-center" >
+                <h3 class="center-text"><i>Sale Analytics</i></h3>
                 <br>
                 <canvas id="salesGraph"></canvas>
             </div>
@@ -52,10 +78,10 @@
 
         </div>
 
-        <div style="height: 150px"></div>
+        <div style="height: 100px"></div>
 
         <div class="row justify-content-center">
-            <div class="col-12 col-md-10 text-center">
+            <div class="col-12 col-md-10 text-center" id="salesTableContainer">
                 <h3><i>Sale Table</i></h3>
                 <br>
                 <div class="table-flex">
@@ -101,8 +127,16 @@
     </div>
     <div class="row justify-content-end align-items-end my-5">
         <div class="col-10 text-right">
-            <button id="printButton" class="btn btn-primary">Preview Report</button>
-            <a id="back" href="{{ route('supply_officer.sale.demo') }}" class="btn btn-danger">Back</a>
+            <form action="{{ route('supply_officer.sale.report.save') }}" method="POST">
+                @csrf
+                <input type="hidden" name="reference" value="{{ $reference }}">
+                <input type="hidden" name="date" value="{{ $currentDateTime }}">
+                <input type="hidden" name="time" value="{{ $currentTime }}">
+         
+                <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
+                <button id="done" type="submit" class="btn btn-success">Done</button>
+                <a id="back" href="{{ route('supply_officer.sale.demo') }}" class="btn btn-danger">Back</a>
+            </form>
         </div>
         <div class="col-2">
         </div>
@@ -111,76 +145,77 @@
     </div>
 @endsection
 @section('scripts')
-    <script>
-        // Get the PHP data from the PHP variables
-        var dateRange = <?php echo json_encode($dateRange); ?>;
-        var salesData = <?php echo json_encode($salesData); ?>;
+<script>
+    // Get the PHP data from the PHP variables
+    var dateRange = <?php echo json_encode($dateRange); ?>;
+    var salesData = <?php echo json_encode($salesData); ?>;
 
-        // Define an array to store formatted dates
-        var formattedDates = dateRange.map(function(dateString) {
-            // Parse the date string
-            var date = new Date(dateString);
+    // Define an array to store formatted dates
+    var formattedDates = dateRange.map(function(dateString) {
+        // Parse the date string
+        var date = new Date(dateString);
 
-            // Format the date as "MMM d, yyyy" (e.g., "Jan 1, 2023")
-            return date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
+        // Format the date as "MMM d, yyyy" (e.g., "Jan 1, 2023")
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
+    });
 
-        // Function to generate a random light color
-        function getRandomLightColor() {
-            var randomColor = function() {
-                return Math.floor(Math.random() * 200 + 56); // Ensure the color is in a light range
-            };
-            var rgb = `${randomColor()}, ${randomColor()}, ${randomColor()}`;
-            return {
-                backgroundColor: `rgba(${rgb}, 0.7)`,
-                borderColor: `rgba(${rgb}, 0.7)`
-            };
-        }
+    // Function to generate a random light color
+    function getRandomLightColor() {
+        var randomColor = function() {
+            return Math.floor(Math.random() * 200 + 56); // Ensure the color is in a light range
+        };
+        var rgb = `${randomColor()}, ${randomColor()}, ${randomColor()}`;
+        return {
+            backgroundColor: `rgba(${rgb}, 0.7)`,
+            borderColor: `rgba(${rgb}, 0.7)`
+        };
+    }
 
-        // Create an array to store datasets
-        var datasets = [];
+    // Create an array to store datasets
+    var datasets = [];
 
-        // Create a dataset for each product
-        for (var productName in salesData) {
-            var randomColors = getRandomLightColor();
-            datasets.push({
-                label: productName,
-                data: salesData[productName],
-                backgroundColor: randomColors.backgroundColor, // Use a random light color for the background
-                borderColor: randomColors.borderColor, // Use the same color for the border
-                borderWidth: 2,
-                fill: false
-            });
-        }
+    // Create a dataset for each product
+    for (var productName in salesData) {
+        var randomColors = getRandomLightColor();
+        datasets.push({
+            label: productName,
+            data: salesData[productName],
+            backgroundColor: randomColors.backgroundColor, // Use a random light color for the background
+            borderColor: randomColors.borderColor, // Use the same color for the border
+            borderWidth: 2,
+            fill: false
+        });
+    }
 
-        // Create a chart using Chart.js
-        var ctx = document.getElementById('salesGraph').getContext('2d');
-        var salesGraph = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: formattedDates, // Use the formatted dates
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    // Create a chart using Chart.js
+    var ctx = document.getElementById('salesGraph').getContext('2d');
+    var salesGraph = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: formattedDates, // Use the formatted dates
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0 // Display only whole numbers on the y-axis
                 }
             }
-        });
-
-        $(document).ready(function() {
+        }
+    });
+    $(document).ready(function() {
             // Attach a click event handler to the button
             $("#printButton").click(function() {
                 // Call the window.print() function to open the print dialog
                 window.print();
             });
         });
-    </script>
+</script>
+
 @endsection

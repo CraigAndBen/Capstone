@@ -32,4 +32,8 @@ class Product extends Model
     {
         return $this->hasOne(Product_price::class);
     }
+    public function expiries()
+    {
+        return $this->hasMany(Expiries::class, 'item_name', 'p_name');
+    }
 }

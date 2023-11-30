@@ -39,11 +39,13 @@
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
-                                    <div class="form-group">
+                                    <div class="form-group d-flex">
                                         <a href="{{ route('pharmacist.medicine.report.view') }}" 
-                                        class="btn btn-success" target="_blank">View Report</a>
-                                        <a href="{{ route('pharmacist.medicine.report.download') }}" 
-                                        class="btn btn-success" target="_blank">Download Report</a>
+                                        class="btn btn-success mr-2" target="_blank">View Report</a>
+                                        <form action="{{ route('pharmacist.medicine.report.download') }}" method="GET">
+                                            @csrf
+                                        <button class="btn btn-success" style="margin-left: 10px;" target="_blank">Download Report</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="d-flex mb-3 justify-content-end">
@@ -133,7 +135,7 @@
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Item</label>
+                                                <label>Item <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3 p_name" name="p_name" required
                                                         oninvalid="this.setCustomValidity('Please input a item.')"
@@ -157,7 +159,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Brand</label>
+                                                <label>Brand <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3 brand" name="brand" required
                                                         oninvalid="this.setCustomValidity('Please input a brand.')"
@@ -178,12 +180,13 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Stock</label>
+                                                <label>Stock <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <input type="number" class="form-control p-3"
                                                         placeholder="Stock Available" name="stock" required
+                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                                         oninvalid="this.setCustomValidity('Please input a stock.')"
-                                                        oninput="setCustomValidity('')" />
+                                                        onblur="setCustomValidity('')" />
                                                 </div>
                                                 @error('stock')
                                                     <div class="alert alert-danger" role="alert">
@@ -192,7 +195,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Category</label>
+                                                <label>Category <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" name="category_id" required
                                                         oninvalid="this.setCustomValidity('Please input a category.')"
@@ -213,7 +216,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Expiration Date</label>
+                                                <label>Expiration Date <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <input type="date" name="expiration" class="form-control p-3"
                                                         required
@@ -227,7 +230,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Status</label>
+                                                <label>Status <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-3">
                                                     <select class="form-control p-3" name="status" required
                                                         oninvalid="this.setCustomValidity('Please select a status.')"
@@ -246,7 +249,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Description</label>
+                                                <label>Description <span style="color: red;">*</span></label>
                                                 <div class="form-floating mb-2">
                                                     <input type="text" name="description" class="form-control"
                                                         placeholder="Description" required
@@ -311,7 +314,7 @@
                                                 <div class="col-md-6">
                                                     <label>Stock</label>
                                                     <div class="form-floating mb-3">
-                                                        <input type="number" class="form-control p-3" name="stock"
+                                                        <input type="number" class="form-control p-3" name="stock" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                                             value="{{ $product->stock }}">
                                                     </div>
                                                 </div>

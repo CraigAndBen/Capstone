@@ -40,7 +40,7 @@
                             <h4>Segregates and ranked the items based on their consumption rate</h4>
                             <div class="row justify-content-end">
                                 <div class="col-md-2 mt-2">
-                                    <a href="{{ route('supply_officer.products.report') }}" class="btn btn-success" target="_blank">View
+                                    <a href="{{ route('supply_officer.products.report') }}" class="btn btn-success">Generate
                                         Report</a>
                                 </div>
                             </div>

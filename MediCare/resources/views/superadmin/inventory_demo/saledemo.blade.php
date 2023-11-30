@@ -12,12 +12,13 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                Request </div>
+                                <h5 class="m-b-10">Sales</h5>
+                            </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item" aria-current="page">Sale Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Sales Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -61,7 +62,7 @@
                             @endif
                             <div class="row justify-content-center">
                                 <div class="col-md-1"></div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <form action="{{ route('superadmin.sale.demo.search') }}" method="GET">
                                         @csrf
                                         <div class="form-group">
@@ -69,7 +70,7 @@
                                             <input type="date" class="form-control" name="start" id="from">
                                         </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="to">To</label>
                                         <input type="date" class="form-control" name="end" id="to">

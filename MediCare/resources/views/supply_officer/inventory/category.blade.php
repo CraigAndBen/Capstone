@@ -39,11 +39,13 @@
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
-                                    <div class="form-group">
+                                    <div class="form-group d-flex">
                                         <a href="{{ route('supply_officer.category.report.view') }}"
                                             class="btn btn-success" target="_blank">View Report</a>
-                                            <a href="{{ route('supply_officer.category.report.download') }}"
-                                            class="btn btn-success" target="_blank">Download Report</a>
+                                            <form action="{{ route('supply_officer.category.report.download') }}" method="GET">
+                                                @csrf
+                                            <button class="btn btn-success" style="margin-left: 10px;" target="_blank">Download Report</button>
+                                            </form>
                                     </div>
                                 </div>
                                 <div class="d-flex mb-3 justify-content-end">

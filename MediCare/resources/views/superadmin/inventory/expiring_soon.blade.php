@@ -38,15 +38,17 @@
                         <div class="card-body">
                             <div class="container">
 
-                                <div class="d-flex mb-3 justify-content-end">
-                                    <div class="form-group">
-                                        <a href="{{ route('superadmin.product.expiry.report.view') }}"
-                                            class="btn btn-success" target="_blank">View Report</a>
-                                        <a href="{{ route('superadmin.product.expiry.report.download') }}"
-                                            class="btn btn-success" target="_blank">Download Report</a>
+                                <div class="d-flex mb-3 justify-content-end align-items-center">
+                                    <div class="form-group d-flex">
+                                        <a href="{{ route('superadmin.product.expiry.report.view') }}" 
+                                        class="btn btn-success mr-2" target="_blank">View Report</a>
+                                        <form action="{{ route('superadmin.product.expiry.report.download') }}" method="GET">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success" style="margin-left: 10px;" 
+                                            target="_blank">Download Report</button>
+                                        </form>
                                     </div>
                                 </div>
-
                                 <div class="row justify-content-end">
                                     <div class="col-md-2">
                                         <div class="form-group">
@@ -68,9 +70,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-
                                 @if ($products->count() > 0)
                                     <table class="table table-hover">
                                         <thead>
@@ -116,35 +115,39 @@
 
         @endsection
         @section('scripts')
-            <script>
-                $(document).ready(function() {
-                    $('#filterByDate').on('click', function() {
-                        var startDate = new Date($('#startDate').val());
-                        var endDate = new Date($('#endDate').val());
-                        filterByDateRange(startDate, endDate);
-                    });
+        <script>
+            $(document).ready(function() {
+                $('#filterByDate').on('click', function() {
+                    var startDate = new Date($('#startDate').val());
+                    var endDate = new Date($('#endDate').val());
+                    filterByDateRange(startDate, endDate);
+                });
 
-                    function filterByDateRange(startDate, endDate) {
-                        var rows = document.querySelectorAll("table tbody tr");
-                        for (var i = 0; i < rows.length; i++) {
-                            var rowDateText = rows[i].querySelector("td:nth-child(6)").textContent.trim();
-                            var rowDate = new Date(rowDateText);
-                            var formattedRowDate = formatDate(rowDate);
+                function filterByDateRange(startDate, endDate) {
+                    var rows = document.querySelectorAll("table tbody tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        var rowDateText = rows[i].querySelector("td:nth-child(6)").textContent.trim();
+                        var rowDate = new Date(rowDateText);
+                        var formattedRowDate = formatDate(rowDate);
 
-                            if (formattedRowDate >= formatDate(startDate) && formattedRowDate <= formatDate(endDate)) {
-                                rows[i].style.display = "";
-                            } else {
-                                rows[i].style.display = "none";
-                            }
+                        if (formattedRowDate >= formatDate(startDate) && formattedRowDate <= formatDate(endDate)) {
+                            rows[i].style.display = "";
+                        } else {
+                            rows[i].style.display = "none";
                         }
                     }
+                }
 
-                    function formatDate(date) {
-                        var day = date.getDate();
-                        var month = date.getMonth() + 1; // Months are 0-based
-                        var year = date.getFullYear();
-                        return year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
-                    }
-                });
-            </script>
-        @endsection
+                function formatDate(date) {
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1; // Months are 0-based
+                    var year = date.getFullYear();
+                    return year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
+                }
+                
+            });
+        </script>
+    @endsection
+
+
+    

@@ -39,11 +39,13 @@
                             <div class="container">
 
                                 <div class="d-flex mb-3 justify-content-end">
-                                    <div class="form-group">
+                                    <div class="form-group d-flex">
                                         <a href="{{ route('supply_officer.product.expiry.report.view') }}"
-                                            class="btn btn-success" target="_blank">View Report</a>
-                                        <a href="{{ route('supply_officer.product.expiry.report.download') }}"
-                                            class="btn btn-success" target="_blank">Download Report</a>
+                                            class="btn btn-success btn-sm" target="_blank">View Report</a>
+                                        <form action="{{ route('supply_officer.product.expiry.report.download') }}" method="GET">
+                                            @csrf
+                                        <button class="btn btn-success btn-sm" style="margin-left: 10px;"  target="_blank">Download Report</button>
+                                        </form>
                                     </div>
                                 </div>
 
@@ -68,11 +70,8 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-
                                 @if ($products->count() > 0)
-                                    <table class="table table-hover">
+                                    <table class="table table-hover table-responsive-sm">
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center">#</th>
@@ -94,10 +93,8 @@
                                                     <td style="text-align: center">{{ $product->p_name }}</td>
                                                     <td style="text-align: center">{{ $product->stock }}</td>
                                                     <td style="text-align: center">{{ $product->brand }}</td>
-                                                    <td style="text-align: center">{{ $product->category->category_name }}
-                                                    </td>
-                                                    <td style="text-align: center">
-                                                        {{ date('M j, Y', strtotime($product->expiration)) }}</td>
+                                                    <td style="text-align: center">{{ $product->category->category_name }} </td>
+                                                    <td style="text-align: center">{{ date('M j, Y', strtotime($product->expiration)) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -145,6 +142,7 @@
                         var year = date.getFullYear();
                         return year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
                     }
+                    
                 });
             </script>
         @endsection

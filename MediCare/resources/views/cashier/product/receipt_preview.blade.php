@@ -96,25 +96,25 @@
 
                                         <hr class="row brc-default-l1 mx-n1 mb-4" />
                                         
-                                        <div class="mt-6">
+                                        <div class="text-center">
                                             <div class="table table-sm row">
-                                                <div class="d-none d-sm-block col-2 text-center">Item Id</div>
-                                                <div class="col-9 col-sm-3 text-center">Item Name</div>
-                                                <div class="d-none d-sm-block col-sm-2 text-center">Unit Price</div>
-                                                <div class="d-none d-sm-block col-sm-2 text-center">Quantity</div>
-                                                <div class="col-9 col-sm-3 text-center">Sub total</div>
+                                                <div class="col-sm-3">Item Name</div>
+                                                <div class="col-sm-3">Unit Price</div>
+                                                <div class="col-sm-3">Quantity</div>
+                                                <div class="col-sm-3">Sub total</div>
                                             </div>
-
+                                        
                                             <div class="table table-sm row">
                                                 @foreach ($cart as $key => $item)
-                                                        <div class="d-none d-sm-block col-2 text-center">{{ $item['product_id'] }}</div>
-                                                        <div class="col-9 col-sm-3 text-center">{{ $item['name'] }}</div>
-                                                        <div class="d-none d-sm-block col-sm-2 text-center">₱{{ number_format($item['price'], 2) }}</div>
-                                                        <div class="d-none d-sm-block col-sm-2 text-center">{{ $item['quantity'] }}</div>
-                                                        <div class="col-9 col-sm-3 text-center">₱{{ number_format($item['price'] * $item['quantity'], 2) }}</div>
+                                                    <div class="col-sm-3">{{ $item['name'] }}</div>
+                                                    <div class="col-sm-3">₱{{ number_format($item['price'], 2) }}</div>
+                                                    <div class="col-sm-3">{{ $item['quantity'] }}</div>
+                                                    <div class="col-sm-3">₱{{ number_format($item['price'] * $item['quantity'], 2) }}</div>
                                                 @endforeach
                                             </div>
                                         </div>
+                                        
+                                        
 
                                             <hr class="row brc-default-l1 mx-n1 mb-4" />
                                         
