@@ -241,8 +241,8 @@
                                 class="pc-mtext">Item</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.product') }}">Item List</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product') }}">Item
+                                    List</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.category') }}">Category List</a></li>
                         </ul>
@@ -276,6 +276,8 @@
                             </li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.product.demo') }}">Item</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.medication.demo') }}">Medication</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">

@@ -454,9 +454,12 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     //Medicine Demo
     Route::get('/supply_officer/inventory_demo/medicinedemo', [SupplyOfficerController::class, 'medicineDemo'])->name('supply_officer.medicine.demo');
 
-
     //Product Demo
     Route::get('/supply_officer/inventory_demo/productdemo', [SupplyOfficerController::class, 'productDemo'])->name('supply_officer.product.demo');
+
+    //Product Demo
+    Route::get('/supply_officer/inventory_demo/medication', [SupplyOfficerController::class, 'medicationDemo'])->name('supply_officer.medication.demo');
+    Route::get('/supply_officer/inventory_demo/medication/search', [SupplyOfficerController::class, 'medicationDemoSearch'])->name('supply_officer.medication.demo.search');
     // Request
     Route::get('/supply_officer/request', [SupplyOfficerController::class, 'requestlist'])->name('supply_officer.request');
 
@@ -472,6 +475,7 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/request/list/report/download', [SupplyOfficerController::class, 'downloadRequestListReport'])->name('supply_officer.request.list.report.download');
     Route::get('/supply_officer/medicines_report/report', [SupplyOfficerController::class, 'medicineReport'])->name('supply_officer.medicines.report');
     Route::get('/supply_officer/products_report/report', [SupplyOfficerController::class, 'productsReport'])->name('supply_officer.products.report');
+    Route::get('/supply_officer/medication/report', [SupplyOfficerController::class, 'medicationReport'])->name('supply_officer.medication.report');
     Route::get('/supply_officer/expiry/report/view', [SupplyOfficerController::class, 'viewExpiryReport'])->name('supply_officer.product.expiry.report.view');
     Route::get('/supply_officer/expiry/report/download', [SupplyOfficerController::class, 'downloadExpiryReport'])->name('supply_officer.product.expiry.report.download');
 

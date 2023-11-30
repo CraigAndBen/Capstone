@@ -36,7 +36,7 @@
 
 
 <body>
-    
+
     <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
         <div class="loader-track">
@@ -232,7 +232,8 @@
                                 class="pc-mtext">Notification List</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.notification') }}">Notification</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.notification') }}">Notification</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
@@ -244,8 +245,8 @@
                                 class="pc-mtext">Item</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.product') }}">Item List</a></li>
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product') }}">Item
+                                    List</a></li>
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.category') }}">Category List</a></li>
                         </ul>
@@ -270,22 +271,29 @@
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
                                     href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sale.demo') }}">Sales</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.medicine.demo') }}">Medicine</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Item</a></li></li>   
-                        </ul>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Expiry</span><span class="pc-arrow"><i
-                                    class="ti ti-chevron-right"></i></span></a>
-                        <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.product.expiration') }}">Expiring Item</a></li>
-
-                        </ul>
+                                    href="{{ route('supply_officer.sale.demo') }}">Sales</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.request.demo') }}">Request</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.medicine.demo') }}">Medicine</a></li>
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('supply_officer.product.demo') }}">Medication</a></li>
                     </li>
+                    <li class="pc-item"><a class="pc-link"
+                            href="{{ route('supply_officer.medication.demo') }}">Item</a></li>
+                </ul>
+                </li>
+                <li class="pc-item pc-hasmenu">
+                    <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                            class="pc-mtext">Expiry</span><span class="pc-arrow"><i
+                                class="ti ti-chevron-right"></i></span></a>
+                    <ul class="pc-submenu">
+                        <li class="pc-item"><a class="pc-link"
+                                href="{{ route('supply_officer.product.expiration') }}">Expiring Item</a></li>
+
+                    </ul>
+                </li>
                 </ul>
             </div>
         </div>

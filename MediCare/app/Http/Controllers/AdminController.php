@@ -49,7 +49,7 @@ class AdminController extends Controller
             ->whereYear('admitted_date', $currentYear)
             ->orWhereYear('date', $currentYear)
             ->get();
-        
+
         $patientCount = $patientsByYear->count();
 
         $rankedDiagnosis = Diagnose::select('diagnose', DB::raw('MONTH(date) as month'))
@@ -277,20 +277,24 @@ class AdminController extends Controller
         $diagnosisTimes = $request->input('diagnosesTime', []); // Retrieve an array of diagnosis dates
         $diagnoses = $request->input('diagnoses', []); // Retrieve an array of diagnoses
 
-        // Iterate through the diagnosis data and save them
-        foreach ($diagnosisDates as $key => $diagnosisDate) {
-            $diagnosis = new Diagnose();
-            $diagnosis->patient_id = $patientId; // Assuming you have the patient object
-            $diagnosis->patient_type = $patientType; // Assuming you have the patient object
+        if ($this->hasValues($diagnosisDates) || $this->hasValues($diagnosisTimes) || $this->hasValues($diagnoses)) {
+            foreach ($diagnosisDates as $key => $diagnosisDate) {
+                $diagnosis = new Diagnose();
+                $diagnosis->patient_id = $patientId; // Assuming you have the patient object
+                $diagnosis->patient_type = $patientType; // Assuming you have the patient object
 
-            // Assign diagnosis data from the arrays
-            $diagnosis->date = $diagnosisDate;
-            $diagnosis->time = $diagnosisTimes[$key];
-            $diagnosis->diagnose = $diagnoses[$key];
+                // Assign diagnosis data from the arrays
+                $diagnosis->date = $diagnosisDate;
+                $diagnosis->time = $diagnosisTimes[$key];
+                $diagnosis->diagnose = $diagnoses[$key];
 
-            // Save the diagnosis record
-            $diagnosis->save();
+                // Save the diagnosis record
+                $diagnosis->save();
+            }
         }
+
+        // Iterate through the diagnosis data and save them
+
 
         $medicationNames = $request->input('medicationName', []); // Retrieve an array of medication names
         $medicationDates = $request->input('medicationDate', []); // Retrieve an array of medication dates
@@ -298,24 +302,25 @@ class AdminController extends Controller
         $durations = $request->input('medicationDuration', []); // Retrieve an array of durations
         $medicationTimes = $request->input('medicationTime', []); // Retrieve an array of medication times
 
-        // Iterate through the medication data and save them
-        foreach ($medicationNames as $key => $medicationName) {
-            $medication = new Medication();
-            $medication->patient_id = $patientId; // Assuming you have the patient object
-            $medication->patient_type = $patientType; // Assuming you have the patient object
+        if ($this->hasValues($medicationNames) || $this->hasValues($medicationDates) || $this->hasValues($dosages) || $this->hasValues($durations) || $this->hasValues($medicationTimes)) {
+            // Iterate through the medication data and save them
+            foreach ($medicationNames as $key => $medicationName) {
+                $medication = new Medication();
+                $medication->patient_id = $patientId; // Assuming you have the patient object
+                $medication->patient_type = $patientType; // Assuming you have the patient object
 
-            // Assign medication data from the arrays
-            $medication->medication_name = $medicationName;
-            $medication->date = $medicationDates[$key];
-            $medication->dosage = $dosages[$key];
-            $medication->duration = $durations[$key];
-            $medication->time = $medicationTimes[$key];
+                // Assign medication data from the arrays
+                $medication->medication_name = $medicationName;
+                $medication->date = $medicationDates[$key];
+                $medication->dosage = $dosages[$key];
+                $medication->duration = $durations[$key];
+                $medication->time = $medicationTimes[$key];
 
-            // Save the medication record
-            $medication->save();
+                // Save the medication record
+                $medication->save();
+            }
+
         }
-
-
 
         return back()->with('success', 'Patient added successfully.');
     }
@@ -388,10 +393,9 @@ class AdminController extends Controller
 
                 ];
 
-                // Retrieve the request data
-                $diagnosisDates = $request->input('diagnosesDate');
-                $diagnosisTimes = $request->input('diagnosesTime');
-                $diagnoses = $request->input('diagnoses');
+                $diagnosisDates = $request->input('diagnosesDate', []); // Retrieve an array of diagnosis dates
+                $diagnosisTimes = $request->input('diagnosesTime', []); // Retrieve an array of diagnosis dates
+                $diagnoses = $request->input('diagnoses', []); // Retrieve an array of diagnoses
 
                 // Retrieve the existing data from the database
                 $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
@@ -432,11 +436,12 @@ class AdminController extends Controller
                 }
 
                 // Retrieve the request data
-                $medicationNames = $request->input('medicationName');
-                $medicationDates = $request->input('medicationDate');
-                $dosages = $request->input('medicationDosage');
-                $durations = $request->input('medicationDuration');
-                $medicationTimes = $request->input('medicationTime');
+
+                $medicationNames = $request->input('medicationName', []); // Retrieve an array of medication names
+                $medicationDates = $request->input('medicationDate', []); // Retrieve an array of medication dates
+                $dosages = $request->input('medicationDosage', []); // Retrieve an array of dosages
+                $durations = $request->input('medicationDuration', []); // Retrieve an array of durations
+                $medicationTimes = $request->input('medicationTime', []); // Retrieve an array of medication times
 
                 // Retrieve the existing medication data from the database
                 $existingMedications = Medication::where('patient_id', $request->id)->get();
@@ -558,9 +563,9 @@ class AdminController extends Controller
                 ];
 
                 // Retrieve the request data
-                $diagnosisDates = $request->input('diagnosesDate');
-                $diagnosisTimes = $request->input('diagnosesTime');
-                $diagnoses = $request->input('diagnoses');
+                $diagnosisDates = $request->input('diagnosesDate', []); // Retrieve an array of diagnosis dates
+                $diagnosisTimes = $request->input('diagnosesTime', []); // Retrieve an array of diagnosis dates
+                $diagnoses = $request->input('diagnoses', []); // Retrieve an array of diagnoses
 
                 // Retrieve the existing data from the database
                 $existingDiagnoses = Diagnose::where('patient_id', $request->id)->get();
@@ -601,11 +606,11 @@ class AdminController extends Controller
                 }
 
                 // Retrieve the request data
-                $medicationNames = $request->input('medicationName');
-                $medicationDates = $request->input('medicationDate');
-                $dosages = $request->input('medicationDosage');
-                $durations = $request->input('medicationDuration');
-                $medicationTimes = $request->input('medicationTime');
+                $medicationNames = $request->input('medicationName', []); // Retrieve an array of medication names
+                $medicationDates = $request->input('medicationDate', []); // Retrieve an array of medication dates
+                $dosages = $request->input('medicationDosage', []); // Retrieve an array of dosages
+                $durations = $request->input('medicationDuration', []); // Retrieve an array of durations
+                $medicationTimes = $request->input('medicationTime', []); // Retrieve an array of medication times
 
                 // Retrieve the existing medication data from the database
                 $existingMedications = Medication::where('patient_id', $request->id)->get();
@@ -953,7 +958,7 @@ class AdminController extends Controller
         $type = 'patient';
         $title = 'Patient Gender Analytics';
 
-        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type', 'title'));
     }
 
     public function admittedGenderDemo()
@@ -1075,7 +1080,7 @@ class AdminController extends Controller
         $type = 'outpatient';
         $title = 'Outpatient Gender Analytics';
 
-        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
+        return view('admin.analytics.gender.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type', 'title'));
     }
 
     public function patientGenderSearch(Request $request)
@@ -1185,7 +1190,7 @@ class AdminController extends Controller
         $totalGenderCounts = $totalMaleCount + $totalFemaleCount;
 
 
-        return view('admin.analytics.gender.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
+        return view('admin.analytics.gender.gender_search', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type', 'title'));
     }
 
     public function genderReport(Request $request)
@@ -1199,7 +1204,7 @@ class AdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
-        
+
         // Initialize an array to store gender counts for each month
         $genderCountsByMonth = [];
         $totalMaleCount = 0;
@@ -1229,12 +1234,12 @@ class AdminController extends Controller
 
                 $title = 'Admitted Patient Gendar Analytics Report';
                 $reference = 'APGAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
-                
+
             } else if ($type == 'outpatient') {
                 $patients = Patient::select('gender')
                     ->whereBetween('date', [$startDate, $endDate])
                     ->get();
-                
+
                 $title = 'Outpatient Gendar Analytics Report';
                 $reference = 'OGAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
             }
@@ -1272,11 +1277,11 @@ class AdminController extends Controller
         $profile = auth()->user();
 
         $content =
-            '              '.$title.'
+            '              ' . $title . '
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$readableDate.' '. $time .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
             Report Status: Finalized';
 
@@ -1356,7 +1361,7 @@ class AdminController extends Controller
         $type = 'patient';
         $title = 'Patient Gender Analytics';
 
-        return redirect()->route('admin.analytics.patient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type','title'));
+        return redirect()->route('admin.analytics.patient.gender', compact('profile', 'limitNotifications', 'count', 'genderCountsByMonth', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalGenderCounts', 'type', 'title'));
 
     }
 
@@ -1452,7 +1457,7 @@ class AdminController extends Controller
         $type = 'patient';
         $title = 'Patient Age Analytics';
 
-        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type','title'));
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type', 'title'));
     }
 
     public function admittedAgeDemo()
@@ -1538,7 +1543,7 @@ class AdminController extends Controller
         $title = 'Admitted Patient Age Analytics';
 
 
-        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type','title'));
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type', 'title'));
     }
 
     public function outpatientAgeDemo()
@@ -1623,7 +1628,7 @@ class AdminController extends Controller
         $type = 'outpatient';
         $title = 'Patient Age Analytics';
 
-        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type','title'));
+        return view('admin.analytics.age.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type', 'title'));
     }
 
     public function patientAgeSearch(Request $request)
@@ -1760,7 +1765,7 @@ class AdminController extends Controller
         $datasets = $ageGroupsByMonth;
         $type = 'patient';
 
-        return view('admin.analytics.age.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'totalPatientCount', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
+        return view('admin.analytics.age.age_search', compact('profile', 'limitNotifications', 'count', 'labels', 'datasets', 'year', 'totalPatientCount', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     public function ageReport(Request $request)
@@ -1895,7 +1900,7 @@ class AdminController extends Controller
         $labels = $ageGroups;
         $datasets = $ageGroupsByMonth;
 
-        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount', 'reference','title'));
+        return view('admin.report.age_report', compact('labels', 'datasets', 'year', 'currentTime', 'currentDate', 'totalPatientCount', 'reference', 'title'));
 
     }
 
@@ -1910,11 +1915,11 @@ class AdminController extends Controller
         $profile = auth()->user();
 
         $content =
-            '             '.$title.'
+            '             ' . $title . '
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$readableDate.' '. $time .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
             Report Status: Finalized';
 
@@ -2017,7 +2022,7 @@ class AdminController extends Controller
         $type = 'patient';
         $title = 'Patient Age Analytics';
 
-        return redirect()->route('admin.analytics.patient.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type','title'));
+        return redirect()->route('admin.analytics.patient.age', compact('profile', 'limitNotifications', 'labels', 'datasets', 'year', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'totalPatientCount', 'count', 'type', 'title'));
 
     }
 
@@ -2174,11 +2179,11 @@ class AdminController extends Controller
         $profile = auth()->user();
 
         $content =
-            '             '.$title.'
+            '             ' . $title . '
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$readableDate.' '. $time .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
             Report Status: Finalized';
 
@@ -2236,7 +2241,7 @@ class AdminController extends Controller
         return redirect()->route('admin.analytics.admitted', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
     }
 
-    
+
     // Outpatient Analytics
     public function outpatientDemo()
     {
@@ -2372,7 +2377,7 @@ class AdminController extends Controller
 
         $title = 'Outpatient Analytics Report';
 
-        return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference','title'));
+        return view('admin.report.outpatient_report', compact('admitPatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'totalAdmittedPatients', 'reference', 'title'));
 
     }
 
@@ -2387,11 +2392,11 @@ class AdminController extends Controller
         $profile = auth()->user();
 
         $content =
-            '             '.$title.'
+            '             ' . $title . '
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$readableDate.' '. $time .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
             Report Status: Finalized';
 
@@ -2448,7 +2453,7 @@ class AdminController extends Controller
 
         return redirect()->route('admin.analytics.outpatient', compact('profile', 'limitNotifications', 'count', 'admitPatientCountsByMonth', 'totalAdmittedPatients', 'year', 'admittedYears', 'currentTime', 'currentDate'));
     }
-    
+
     // Diagnose Analytics
     public function patientDiagnoseDemo()
     {
@@ -2468,25 +2473,19 @@ class AdminController extends Controller
             ->pluck('diagnose')
             ->toArray();
 
-        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->whereNotNull('admitted_date')
-            ->pluck('year')
-            ->toArray();
-
-        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+        $admittedYears = Diagnose::select(DB::raw('YEAR(date) as year'))
             ->distinct()
             ->whereNotNull('date')
             ->pluck('year')
             ->toArray();
 
-        $combinedYears = array_merge($admittedYears, $outpatientYears);
+        $combinedYears = $admittedYears;
 
         $uniqueCombinedYears = array_unique($combinedYears);
         $type = 'patient';
         $title = 'Patient Diagnose Analytics';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     public function admittedDiagnoseDemo()
@@ -2519,7 +2518,7 @@ class AdminController extends Controller
         $type = 'admitted';
         $title = 'Admitted Patient Diagnose Analytics';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     public function outpatientDiagnoseDemo()
@@ -2552,7 +2551,7 @@ class AdminController extends Controller
         $type = 'outpatient';
         $title = 'Outpatient Diagnose Analytics';
 
-        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
+        return view('admin.analytics.diagnose.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     public function diagnoseSearch(Request $request)
@@ -2598,7 +2597,7 @@ class AdminController extends Controller
             $combinedYears = array_merge($admittedYears, $outpatientYears);
 
             $uniqueCombinedYears = array_unique($combinedYears);
-            
+
             $title = 'Patient Diagnose Analytics';
 
         } else if ($type == 'admitted') {
@@ -2678,9 +2677,9 @@ class AdminController extends Controller
                 'count' => $diagnosePatientCounts,
             ];
         }
-        
 
-        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate', 'type','title'));
+
+        return view('admin.analytics.diagnose.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnosePatientCountsByMonth', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'selectedYear', 'specificDiagnosis', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     public function diagnoseReport(Request $request)
@@ -2699,13 +2698,13 @@ class AdminController extends Controller
         // Initialize an array to store diagnose patient counts for each month
         $diagnosePatientCountsByMonth = [];
 
-        if($type == 'patient'){
+        if ($type == 'patient') {
             $title = 'Patient Diagnose Analytics Report';
             $reference = 'PDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
-        } else if ($type == 'admitted'){
+        } else if ($type == 'admitted') {
             $title = 'Admitted Patient Diagnose Analytics Report';
             $reference = 'APDAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
-        } else if($type == 'outpatient'){
+        } else if ($type == 'outpatient') {
             $title = 'Outpatient Diagnose Analytics Report';
             $reference = 'ODAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         }
@@ -2744,7 +2743,7 @@ class AdminController extends Controller
             ];
         }
 
-        return view('admin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'specificDiagnosis', 'reference','title'));
+        return view('admin.report.diagnose_report', compact('diagnosePatientCountsByMonth', 'year', 'currentTime', 'currentDate', 'specificDiagnosis', 'reference', 'title'));
     }
 
     public function diagnoseReportSave(Request $request)
@@ -2758,11 +2757,11 @@ class AdminController extends Controller
         $profile = auth()->user();
 
         $content =
-            '             '.$title.'
+            '             ' . $title . '
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$readableDate.' '. $time .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
             Report Status: Finalized';
 
@@ -2810,7 +2809,7 @@ class AdminController extends Controller
         $type = 'patient';
         $title = 'Patient Diagnose Analytics';
 
-        return redirect()->route('admin.analytics.patient.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type','title'));
+        return redirect()->route('admin.analytics.patient.diagnose', compact('profile', 'limitNotifications', 'count', 'AdmittedDiagnoseData', 'uniqueCombinedYears', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     // Diagnose Trend Analytics
@@ -2858,7 +2857,7 @@ class AdminController extends Controller
         $type = 'patient';
         $title = 'Patient Diagnose Trend Analytics';
 
-        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type','title'));
+        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     public function admittedDiagnoseTrend()
@@ -2907,7 +2906,7 @@ class AdminController extends Controller
         $type = 'admitted';
         $title = 'Admitted Patient Diagnose Trend Analytics';
 
-        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type','title'));
+        return view('admin.analytics.diagnose_trend.diagnose', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
     public function outpatientDiagnoseTrend()
@@ -3048,13 +3047,13 @@ class AdminController extends Controller
                 ->where('diagnose', $specificDiagnosis)
                 ->groupBy(DB::raw('MONTH(date)'))
                 ->get();
-            
+
             $title = 'Admitted Patient Diagnose Trend Analytics';
-            
+
 
         } else if ($type == 'outpatient') {
 
-                $diagnoseData = Diagnose::select('diagnose')
+            $diagnoseData = Diagnose::select('diagnose')
                 ->distinct()
                 ->where('patient_type', 'outpatient')
                 ->pluck('diagnose')
@@ -3077,7 +3076,7 @@ class AdminController extends Controller
                 ->get();
 
             $title = 'Outpatient Diagnose Trend Analytics';
-            
+
         }
 
         // Create an array of years
@@ -3134,7 +3133,7 @@ class AdminController extends Controller
         $months = array_keys($combinedData);
         $patientMonthCounts = array_column($combinedData, 'admitted_count');
 
-        return view('admin.analytics.diagnose_trend.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'years', 'patientYearCounts', 'months', 'patientMonthCounts', 'specificDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type','title'));
+        return view('admin.analytics.diagnose_trend.diagnose_search', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'years', 'patientYearCounts', 'months', 'patientMonthCounts', 'specificDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
 
@@ -3174,7 +3173,7 @@ class AdminController extends Controller
                 ->where('diagnose', $specificDiagnosis)
                 ->groupBy(DB::raw('MONTH(date)'))
                 ->get();
-            
+
             $title = 'Patient Diagnose Trend Report';
             $reference = 'PDTAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
@@ -3201,13 +3200,13 @@ class AdminController extends Controller
                 ->where('diagnose', $specificDiagnosis)
                 ->groupBy(DB::raw('MONTH(date)'))
                 ->get();
-            
+
             $title = 'Admitted Patient Diagnose Trend Report';
             $reference = 'APDTAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
 
         } else if ($type == 'outpatient') {
 
-                $diagnoseData = Diagnose::select('diagnose')
+            $diagnoseData = Diagnose::select('diagnose')
                 ->distinct()
                 ->where('patient_type', 'outpatient')
                 ->pluck('diagnose')
@@ -3227,8 +3226,8 @@ class AdminController extends Controller
                 ->whereYear('date', $currentYear)
                 ->where('diagnose', $specificDiagnosis)
                 ->groupBy(DB::raw('MONTH(date)'))
-                ->get();  
-            
+                ->get();
+
             $title = 'Outpatient Diagnose Trend Report';
             $reference = 'ODTAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         }
@@ -3287,7 +3286,7 @@ class AdminController extends Controller
         $months = array_keys($combinedData);
         $patientMonthCounts = array_column($combinedData, 'admitted_count');
 
-        return view('admin.report.diagnose_trend_report', compact('year', 'currentTime', 'currentDate', 'specificDiagnosis', 'years', 'patientYearCounts', 'months', 'patientMonthCounts','type','reference','title'));
+        return view('admin.report.diagnose_trend_report', compact('year', 'currentTime', 'currentDate', 'specificDiagnosis', 'years', 'patientYearCounts', 'months', 'patientMonthCounts', 'type', 'reference', 'title'));
     }
 
     public function diagnoseTrendReportSave(Request $request)
@@ -3301,11 +3300,11 @@ class AdminController extends Controller
         $profile = auth()->user();
 
         $content =
-            '             '.$title.'
+            '             ' . $title . '
             ------------------------
 
-            Report Reference Number: '.$reference.'
-            Report Date and Time: '.$readableDate.' '. $time .'
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '
 
             Report Status: Finalized';
 
@@ -3361,7 +3360,7 @@ class AdminController extends Controller
         $type = 'patient';
         $title = 'Patient Diagnose Trend Analytics';
 
-        return redirect()->route('admin.analytics.patient.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type','title'));
+        return redirect()->route('admin.analytics.patient.diagnose_trend', compact('profile', 'limitNotifications', 'count', 'diagnoseData', 'limitDiagnosis', 'rankedDiagnosis', 'currentTime', 'currentDate', 'type', 'title'));
     }
 
 
@@ -3377,6 +3376,11 @@ class AdminController extends Controller
 
         return false;
 
+    }
+
+    private function hasValues($array)
+    {
+        return !empty($array) && count(array_filter($array, 'strlen')) > 0;
     }
 
     // Logout

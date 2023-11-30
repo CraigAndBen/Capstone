@@ -127,7 +127,7 @@ class SuperAdminController extends Controller
         $usersLabels = array_map(function ($label) {
             return str_replace('_', ' ', $label);
         }, $usersLabels);
-        
+
         $usersData = $rolesData->pluck('data')->toArray();
 
         /** Item demo**/
@@ -3238,19 +3238,13 @@ class SuperAdminController extends Controller
             ->pluck('diagnose')
             ->toArray();
 
-        $admittedYears = Patient::select(DB::raw('YEAR(admitted_date) as year'))
-            ->distinct()
-            ->whereNotNull('admitted_date')
-            ->pluck('year')
-            ->toArray();
-
-        $outpatientYears = Patient::select(DB::raw('YEAR(date) as year'))
+        $admittedYears = Diagnose::select(DB::raw('YEAR(date) as year'))
             ->distinct()
             ->whereNotNull('date')
             ->pluck('year')
             ->toArray();
 
-        $combinedYears = array_merge($admittedYears, $outpatientYears);
+        $combinedYears = $admittedYears;
 
         $uniqueCombinedYears = array_unique($combinedYears);
         $type = 'patient';

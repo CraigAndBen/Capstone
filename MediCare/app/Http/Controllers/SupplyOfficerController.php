@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product_price;
-use App\Models\Purchase;
 use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Purchase;
 use Illuminate\View\View;
+use App\Models\Medication;
 use App\Models\Notification;
 use App\Models\Request_Form;
 use Illuminate\Http\Request;
+use App\Models\Product_price;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -912,7 +913,7 @@ class SupplyOfficerController extends Controller
                 ->orderBy('request_date', 'asc') // Order by request_date ascending
                 ->orderBy('data', 'asc') // Then, order by the count of occurrences in ascending order
                 ->get();
-                $reportType = 'department';
+            $reportType = 'department';
 
         } else {
             // Invalid selection, handle accordingly
@@ -1047,7 +1048,7 @@ class SupplyOfficerController extends Controller
 
                 foreach ($dateRange as $date) {
                     $quantity = Purchase::where('product_id', $productId)
-                        ->whereDate('created_at',$date)
+                        ->whereDate('created_at', $date)
                         ->sum('quantity');
 
                     $salesData[$productName][] = $quantity;
@@ -1058,7 +1059,7 @@ class SupplyOfficerController extends Controller
 
         $datesWithSales = [];
         $itemCount = [];
-        
+
         foreach ($salesData as $productName => $productSales) {
             // Filter out dates with sales (quantity > 0) for the current product
             $datesWithSales[$productName] = array_map(
@@ -1074,25 +1075,25 @@ class SupplyOfficerController extends Controller
                 array_keys($productSales),
                 $productSales
             );
-        
+
             // Remove null values
             $datesWithSales[$productName] = array_filter($datesWithSales[$productName]);
-        
+
             // Store the count for the current item
             $itemCount[$productName] = count($datesWithSales[$productName]);
         }
-        
+
         // Extract unique dates with sales across all products
         $uniqueDates = [];
         foreach ($datesWithSales as $productSales) {
             $uniqueDates = array_merge($uniqueDates, array_column($productSales, 'date'));
         }
-        
+
         $uniqueDates = array_unique($uniqueDates);
-        
+
         // Filter out dates with no sales across all products
         $filteredDates = array_values($uniqueDates);
-        
+
 
         return view(
             'supply_officer.report.sale_report',
@@ -1394,6 +1395,130 @@ class SupplyOfficerController extends Controller
 
             )
         );
+    }
+
+    public function medicationDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentYear = Carbon::now()->year;
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        return view('supply_officer.inventory_demo.medicationdemo', compact('profile', 'limitNotifications', 'count', 'medicationData', 'years', 'currentTime', 'currentDate'));
+    }
+
+    public function medicationDemoSearch(Request $request)
+    {
+        $request->validate([
+            'medication' => 'required',
+            'year' => 'required',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $specificMedication = $request->input('medication');
+        $selectedYear = $request->input('year');
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->whereNotNull('medication_name')
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store diagnose patient counts for each month
+        $medicationCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($selectedYear, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $medicationCounts = Medication::whereBetween('date', [$startDate, $endDate])
+                ->where('medication_name', $specificMedication)
+                ->count();
+
+            // Store the diagnose patient count for the current month in the array
+            $medicationCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $medicationCounts,
+            ];
+        }
+
+
+        return view('supply_officer.inventory_demo.medicationdemo_search', compact('profile', 'limitNotifications', 'count', 'medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate'));
+    }
+
+    public function medicationReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $specificMedication = $request->input('medication');
+        $selectedYear = $request->input('year');
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->whereNotNull('medication_name')
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store diagnose patient counts for each month
+        $medicationCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($selectedYear, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $medicationCounts = Medication::whereBetween('date', [$startDate, $endDate])
+                ->where('medication_name', $specificMedication)
+                ->count();
+
+            // Store the diagnose patient count for the current month in the array
+            $medicationCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $medicationCounts,
+            ];
+        }
+
+        return view('supply_officer.report.medication_report', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate'));
     }
     public function supplyOfficerLogout(Request $request): RedirectResponse
     {
