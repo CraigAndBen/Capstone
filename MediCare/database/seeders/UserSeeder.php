@@ -44,6 +44,36 @@ class UserSeeder extends Seeder
                 'role' => 'supply_officer',
                 'status' => 'activated',
             ],
+
+            // Pharmacist
+            [
+                'first_name' => 'Pharmacist',
+                'last_name' => 'Pharmacist',
+                'email' => 'pharmacist@sample.com',
+                'password' => Hash::make('111'),
+                'role' => 'pharmacist',
+                'status' => 'activated',
+            ],
+
+            // Cashier
+            [
+                'first_name' => 'Cashier',
+                'last_name' => 'Cashier',
+                'email' => 'cashier@sample.com',
+                'password' => Hash::make('111'),
+                'role' => 'cashier',
+                'status' => 'activated',
+            ],
+
+            // Staff
+            [
+                'first_name' => 'Staff',
+                'last_name' => 'Staff',
+                'email' => 'staff@sample.com',
+                'password' => Hash::make('111'),
+                'role' => 'staff',
+                'status' => 'activated',
+            ],
         ];
 
         // Insert data into the 'users' table

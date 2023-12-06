@@ -2291,7 +2291,7 @@ class SupplyOfficerController extends Controller
             ];
         }
 
-        return view('supply_officer.report.medication_report', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate', 'reference'));
+        return view('supply_officer.report.medication_report', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate', 'reference', 'currentDateTime'));
     }
 
     public function medicationReportSave(Request $request)

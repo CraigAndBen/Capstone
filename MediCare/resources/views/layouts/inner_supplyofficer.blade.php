@@ -266,7 +266,7 @@
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Analytics</span><span class="pc-arrow"><i
+                                class="pc-mtext">Overview</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link"
@@ -283,6 +283,10 @@
                     <li class="pc-item"><a class="pc-link"
                             href="{{ route('supply_officer.medication.demo') }}">Item</a></li>
                 </ul>
+                </li>
+                <li class="pc-item pc-caption">
+                    <label>Item Report</label>
+                    <i class="ti ti-apps"></i>
                 </li>
                 <li class="pc-item pc-hasmenu">
                     <a href="#!" class="pc-link"><span class="pc-micon"></span><span
