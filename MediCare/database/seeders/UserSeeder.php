@@ -27,9 +27,9 @@ class UserSeeder extends Seeder
 
             // Super Admin
             [
-                'first_name' => 'Super Admin',
-                'last_name' => 'Super Admin',
-                'email' => 'super_admin@gmail.com',
+                'first_name' => 'Maria Carla',
+                'last_name' => 'Castro',
+                'email' => 'ma.castro@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'super_admin',
                 'status' => 'activated',
@@ -37,9 +37,9 @@ class UserSeeder extends Seeder
 
             // Supply Officer
             [
-                'first_name' => 'Supply Officer',
-                'last_name' => 'Supply Officer',
-                'email' => 'supply_officer@gmail.com',
+                'first_name' => 'Mae',
+                'last_name' => 'Noarin',
+                'email' => 'maenoarin@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'supply_officer',
                 'status' => 'activated',
@@ -47,9 +47,9 @@ class UserSeeder extends Seeder
 
             // Pharmacist
             [
-                'first_name' => 'Pharmacist',
-                'last_name' => 'Pharmacist',
-                'email' => 'pharmacist@sample.com',
+                'first_name' => 'Katrina',
+                'last_name' => 'Folloso',
+                'email' => 'katfolloso@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'pharmacist',
                 'status' => 'activated',
@@ -57,9 +57,9 @@ class UserSeeder extends Seeder
 
             // Cashier
             [
-                'first_name' => 'Cashier',
-                'last_name' => 'Cashier',
-                'email' => 'cashier@sample.com',
+                'first_name' => 'Roselle',
+                'last_name' => 'Dato',
+                'email' => 'rosdato@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'cashier',
                 'status' => 'activated',
@@ -67,9 +67,27 @@ class UserSeeder extends Seeder
 
             // Staff
             [
-                'first_name' => 'Staff',
-                'last_name' => 'Staff',
-                'email' => 'staff@sample.com',
+                'first_name' => 'Hazel',
+                'last_name' => 'Villar',
+                'email' => 'hazvillar@gmail.com',
+                'password' => Hash::make('111'),
+                'role' => 'staff',
+                'status' => 'activated',
+            ],
+
+            [
+                'first_name' => 'Lorelie',
+                'last_name' => 'Sarion',
+                'email' => 'lorsarion@gmail.com',
+                'password' => Hash::make('111'),
+                'role' => 'staff',
+                'status' => 'activated',
+            ],
+
+            [
+                'first_name' => 'Gretchen',
+                'last_name' => 'Yutuc',
+                'email' => 'greyutuc@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'staff',
                 'status' => 'activated',
