@@ -60,14 +60,14 @@ class DiagnoseAlert
                     $title = "$diagnose yearly alert";
                     $message = "The diagnose: $diagnose is rising from $currentYear to previous year: $year->year, The recommended medicine are:";
 
-                    if ($notifications->isEmpty()) {
+                    if ($notifications->isEmpty() || !$this->isNotificationDuplicate($notifications, $title, $currentDate)) {
 
                         $products = Product::where(function ($query) use ($diagnose) {
                             $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
                         })->get();
-    
-                        foreach ($products as $products) {
-                            $message .= $products->p_name;
+
+                        foreach ($products as $product) {
+                            $message .= $product->p_name;
                         }
 
                         Notification::create([
@@ -79,44 +79,13 @@ class DiagnoseAlert
                             'diagnose' => $diagnose,
                         ]);
 
-                    } else {
-                        foreach ($notifications as $notification) {
-
-                            $notificationDate = Carbon::parse($notification->date);
-                            $year = $notificationDate->year;
-
-                            if (($notification->title != $title && $year != $currentYear) || ($notification->title == $title && $year != $currentYear)) {
-
-                                // Create a new notification if conditions are met'
-                                $products = Product::where(function ($query) use ($diagnose) {
-                                    $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
-                                })->get();
-            
-                                foreach ($products as $products) {
-                                    $message .= $products->p_name;
-                                }
-
-                                Notification::create([
-                                    'title' => $title,
-                                    'message' => $message,
-                                    'date' => $currentDate,
-                                    'time' => $currentTime,
-                                    'type' => 'supply_officer',
-                                    'diagnose' => $diagnose,
-                                ]);
-                            }
-                        }
-
                     }
-
                 }
             }
 
-            // Initialize variables to track the highest count and month name
             $highestCount = 0;
             $highestMonth = '';
 
-            // Loop through previous months and get counts
             for ($i = 1; $i < $currentMonth; $i++) {
                 $month = Carbon::now()->subMonths($i);
                 $monthName = $month->format('F Y');
@@ -132,32 +101,25 @@ class DiagnoseAlert
                 }
             }
 
-            // Get the count for the current month
             $currentMonthCount = Diagnose::whereMonth('date', $currentMonth)
                 ->whereYear('date', $currentYear)
                 ->where('diagnose', $diagnose)
                 ->count();
 
-            // Compare the highest count with the current month count
             if ($currentMonthCount > $highestCount) {
-
-
-
                 $currentTime = Carbon::now()->toTimeString();
                 $currentDate = Carbon::now()->toDateString();
 
                 $title = "$diagnose monthly alert";
                 $message = "The diagnose: $diagnose is rising from previous month: $highestMonth, The recommended medicine are: ";
 
-                if ($notifications->isEmpty()) {
-                    // Create a new notification if no notifications exist
-
+                if ($notifications->isEmpty() || !$this->isNotificationDuplicate($notifications, $title, $currentDate)) {
                     $products = Product::where(function ($query) use ($diagnose) {
                         $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
                     })->get();
 
-                    foreach ($products as $products) {
-                        $message .= $products->p_name;
+                    foreach ($products as $product) {
+                        $message .= $product->p_name;
                     }
 
                     Notification::create([
@@ -168,40 +130,17 @@ class DiagnoseAlert
                         'type' => 'supply_officer',
                         'diagnose' => $diagnose,
                     ]);
-
-                } else {
-                    foreach ($notifications as $notification) {
-
-                        $notificationDate = Carbon::parse($notification->date);
-                        $month = $notificationDate->month;
-
-                        if (($notification->title != $title && $month != $currentMonth) || ($notification->title == $title && $month != $currentMonth)) {
-                            // Create a new notification if conditions are met
-
-                            $products = Product::where(function ($query) use ($diagnose) {
-                                $query->orWhere('description', 'LIKE', '%' . $diagnose . '%');
-                            })->get();
-        
-                            foreach ($products as $products) {
-                                $message .= $products->p_name;
-                            }
-
-                            Notification::create([
-                                'title' => $title,
-                                'message' => $message,
-                                'date' => $currentDate,
-                                'time' => $currentTime,
-                                'type' => 'supply_officer',
-                                'diagnose' => $diagnose,
-                            ]);
-                        }
-                    }
-
                 }
             }
-
         }
 
         return $next($request);
+    }
+
+    private function isNotificationDuplicate($notifications, $title, $date)
+    {
+        return $notifications->contains(function ($notification) use ($title, $date) {
+            return $notification->title === $title && $notification->date === $date;
+        });
     }
 }

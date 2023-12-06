@@ -37,7 +37,7 @@
                                                 <td class="text-center">{{ $product->category->category_name }}</td>
                                                 <td class="text-center">{{ $product->brand }}</td>
                                                 <td class="text-center">{{ $product->stock }}</td>
-                                                <td class="text-center">{{ $product->expiration }}</td>
+                                                <td class="text-center">{{ date('M j, Y', strtotime ($product->expiration)) }}</td>
                                                 <td class="text-center">
                                                     <span
                                                         class="badge  {{ $product->status === 'Unavailable' ? 'bg-danger' : 'bg-success' }} text-lg">

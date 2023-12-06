@@ -79,7 +79,7 @@
 
                                 @if ($categories->isEmpty())
                                     <div class="alert alert-info">
-                                        <span class="fa fa-check-circle"></span> No Notification Yet.
+                                        <span class="fa fa-check-circle"></span> No Category Yet.
                                     </div>
                                 @else
                                     <table id="categorytable" class="table table-bordered">

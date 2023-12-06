@@ -275,9 +275,9 @@
                                     href="{{ route('supply_officer.medicine.demo') }}">Medicine</a>
                             </li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.product.demo') }}">Item</a></li>
+                                href="{{ route('supply_officer.medication.demo') }}">Medication</a></li>
                             <li class="pc-item"><a class="pc-link"
-                                    href="{{ route('supply_officer.medication.demo') }}">Medication</a></li>
+                                    href="{{ route('supply_officer.product.demo') }}">Item</a></li>
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">

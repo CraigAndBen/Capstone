@@ -24,7 +24,7 @@
             page-break-after: always;
         }
 
-        #requestChartContainer {
+        #productChartContainer {
         text-align: center;
     }
 
@@ -60,9 +60,8 @@
             <div class="col-1 my-3">
                 <img src="{{ asset('logo.jpg') }}" alt="" class="" style="max-width: 200px; max-height: 160px">
             </div>
-
         </div>
-
+        <hr style="border-top: 1px solid #000;">
         <div class="row justify-content-center">
             <div class="col-8 text-center">
                 <h3><i>

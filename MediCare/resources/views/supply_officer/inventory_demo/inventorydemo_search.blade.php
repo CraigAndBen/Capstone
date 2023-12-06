@@ -14,8 +14,8 @@
                                 <h5 class="m-b-10">Inventory Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a>
+                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item" aria-current="page">Inventory Demographics</li>
                             </ul>
@@ -64,7 +64,7 @@
 
                                 </div>
                                 <div class="col-md-4">
-                                    <form action="{{ route('superadmin.inventory.demo.search') }}" method="GET">
+                                    <form action="{{ route('supply_officer.inventory.demo.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" name="select" id="select">
                                             <option value="">Select</option>
@@ -83,7 +83,7 @@
                         <hr>
                         <div class="row justify-content-end">
                             <div class="col-md-2 mt-2">
-                                <form action="{{ route('superadmin.inventory.report') }}" method="GET">
+                                <form action="{{ route('supply_officer.inventory.report') }}" method="GET">
                                     @csrf
                                     
                                     <input type="hidden" name="select" id="select" value="{{ $selectedOption }}">

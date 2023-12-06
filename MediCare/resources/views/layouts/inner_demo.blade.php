@@ -63,7 +63,7 @@
                 <ul class="list-unstyled">
                     <li class="dropdown pc-h-item">
                         <div class="mt-3 text-left">
-                            {{-- <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5> --}}
+                            <h5><i>{{$currentDate}} | {{$currentTime}}</i></h5> 
                         </div>
                     </li>
                     <li class="dropdown pc-h-item">
@@ -261,7 +261,9 @@
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.sale.demo') }}">Sales</a></li> 
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.request.demo') }}">Request</a></li> 
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.medicine.demo') }}">Medicine</a>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Item</a></li></li>                   
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.medication.demo') }}">Medication</a></li>  
+                            <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.product.demo') }}">Item</a></li></li>  
+                                           
                         </ul>
                     </li>
                     <li class="pc-item pc-hasmenu">

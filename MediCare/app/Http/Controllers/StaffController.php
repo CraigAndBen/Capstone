@@ -22,7 +22,7 @@ class StaffController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -38,7 +38,7 @@ class StaffController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -52,7 +52,7 @@ class StaffController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -158,7 +158,7 @@ class StaffController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -177,7 +177,7 @@ class StaffController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');

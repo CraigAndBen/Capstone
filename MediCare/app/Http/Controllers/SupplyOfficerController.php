@@ -28,7 +28,7 @@ class SupplyOfficerController extends Controller
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentYear = Carbon::now()->year;
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -44,7 +44,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -58,7 +58,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -164,7 +164,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', 'supply_officer')->orderBy('date', 'desc')->paginate(10);
         $limitNotifications = $notifications->take(10);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -220,7 +220,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -361,7 +361,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -397,7 +397,7 @@ class SupplyOfficerController extends Controller
     public function expirationproduct()
     {
         $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
-        $currentDate = $currentDateTime->format('Y-m-d');
+        $currentDate = $currentDateTime->format('M j, Y');
 
 
         // Calculate the date three months from the current date
@@ -581,7 +581,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -724,7 +724,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -822,7 +822,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -839,7 +839,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -1049,7 +1049,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -1067,7 +1067,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -1382,7 +1382,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -1399,7 +1399,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -1700,7 +1700,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -1943,7 +1943,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -2172,7 +2172,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -2203,7 +2203,7 @@ class SupplyOfficerController extends Controller
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
-        $currentDate = date('Y-m-d');
+        $currentDate = date('M j, Y');
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
@@ -2252,6 +2252,10 @@ class SupplyOfficerController extends Controller
         $currentDateTime = Carbon::now();
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MEDSAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         $specificMedication = $request->input('medication');
         $selectedYear = $request->input('year');
 
@@ -2287,7 +2291,82 @@ class SupplyOfficerController extends Controller
             ];
         }
 
-        return view('supply_officer.report.medication_report', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate'));
+        return view('supply_officer.report.medication_report', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate', 'reference'));
+    }
+
+    public function medicationReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        
+        $specificMedication = $request->input('medication');
+        $selectedYear = $request->input('year');
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->whereNotNull('medication_name')
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store diagnose patient counts for each month
+        $medicationCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($selectedYear, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $medicationCounts = Medication::whereBetween('date', [$startDate, $endDate])
+                ->where('medication_name', $specificMedication)
+                ->count();
+
+            // Store the diagnose patient count for the current month in the array
+            $medicationCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $medicationCounts,
+            ];
+        }
+
+        $content =
+            '             Medicication Analytics Report
+            ------------------------
+    
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '  
+    
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Medicication Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+
+        return redirect()->route('supply_officer.medication.demo', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate', 'reference', 'currentDateTime'));
     }
     public function supplyOfficerLogout(Request $request): RedirectResponse
     {

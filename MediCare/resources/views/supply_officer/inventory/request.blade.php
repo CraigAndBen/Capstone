@@ -224,33 +224,48 @@
             });
         </script>
         <script>
-            $(document).ready(function () {
-                // Handler for when a modal is shown
-                $('#requesttable').on('shown.bs.modal', function (e) {
-                    var requestId = $(e.relatedTarget).data('request-id');
-                    markRowAsViewed(requestId);
-                });
+           $(document).ready(function () {
+    // Handler for when a modal is shown
+    $('#requesttable').on('shown.bs.modal', function (e) {
+        var requestId = $(e.relatedTarget).data('request-id');
+        markRowAsViewed(requestId);
+    });
+
+    function markRowAsViewed(requestId) {
+        // Find the row with the corresponding request ID
+        var row = $('#requesttable').find('tr[data-request-id="' + requestId + '"]');
         
-                function markRowAsViewed(requestId) {
-                    // Find the row with the corresponding request ID
-                    var row = $('#requesttable').find('tr[data-request-id="' + requestId + '"]');
-                    
-                    // Check if the row exists and if it has not been viewed
-                    if (row.length > 0 && !row.data('viewed')) {
-                        // Remove the background color indicating a new request
-                        row.css('background-color', '');
-        
-                        // Mark the row as viewed
-                        row.data('viewed', true);
-                    }
-                }
-        
-                // Handle click event on rows
-                $('.clickable-row').on('click', function () {
-                    var requestId = $(this).data('request-id');
-                    markRowAsViewed(requestId);
-                });
-            });
+        // Check if the row exists and if it has not been viewed
+        if (row.length > 0 && !row.data('viewed')) {
+            // Remove the background color indicating a new request
+            row.css('background-color', '');
+
+            // Mark the row as viewed
+            row.data('viewed', true);
+
+            // Store the viewed status in local storage
+            localStorage.setItem('viewed_' + requestId, true);
+        }
+    }
+
+    // Handle click event on rows
+    $('.clickable-row').on('click', function () {
+        var requestId = $(this).data('request-id');
+        markRowAsViewed(requestId);
+    });
+
+    // Check local storage on page load and update the rows
+    $('.clickable-row').each(function () {
+        var requestId = $(this).data('request-id');
+        var viewedStatus = localStorage.getItem('viewed_' + requestId);
+
+        if (viewedStatus) {
+            // Remove the background color indicating a new request
+            $(this).css('background-color', '');
+        }
+    });
+});
+
         </script>
         
     @endsection

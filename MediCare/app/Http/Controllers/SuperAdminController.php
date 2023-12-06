@@ -21,6 +21,7 @@ use App\Models\Notification;
 use App\Models\Request_Form;
 use Illuminate\Http\Request;
 use App\Models\Product_price;
+use App\Models\Medication;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -5862,6 +5863,206 @@ class SuperAdminController extends Controller
         );
     }
 
+    public function medicationDemo()
+    {
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('M j, Y');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentYear = Carbon::now()->year;
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        return view('superadmin.inventory_demo.medicationdemo', compact('profile', 'limitNotifications', 'count', 'medicationData', 'years', 'currentTime', 'currentDate'));
+    }
+    public function medicationDemoSearch(Request $request)
+    {
+        $request->validate([
+            'medication' => 'required',
+            'year' => 'required',
+        ]);
+
+        $profile = auth()->user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->get();
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('M j, Y');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $specificMedication = $request->input('medication');
+        $selectedYear = $request->input('year');
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->whereNotNull('medication_name')
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store diagnose patient counts for each month
+        $medicationCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($selectedYear, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $medicationCounts = Medication::whereBetween('date', [$startDate, $endDate])
+                ->where('medication_name', $specificMedication)
+                ->count();
+
+            // Store the diagnose patient count for the current month in the array
+            $medicationCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $medicationCounts,
+            ];
+        }
+
+
+        return view('superadmin.inventory_demo.medicationdemo_search', compact('profile', 'limitNotifications', 'count', 'medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate'));
+    }
+
+    public function medicationReport(Request $request)
+    {
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'MEDSAR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+        $specificMedication = $request->input('medication');
+        $selectedYear = $request->input('year');
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->whereNotNull('medication_name')
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store diagnose patient counts for each month
+        $medicationCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($selectedYear, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $medicationCounts = Medication::whereBetween('date', [$startDate, $endDate])
+                ->where('medication_name', $specificMedication)
+                ->count();
+
+            // Store the diagnose patient count for the current month in the array
+            $medicationCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $medicationCounts,
+            ];
+        }
+
+        return view('superadmin.report.medication_report', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate', 'reference', 'currentDateTime'));
+    }
+
+    public function medicationReportSave(Request $request)
+    {
+        $reference = $request->input('reference');
+        $time = $request->input('time');
+        $date = $request->input('date');
+        $type = $request->input('type');
+        $readableDate = date('F j, Y', strtotime($date));
+        $profile = auth()->user();
+
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentTime = $currentDateTime->format('h:i A');
+        $randomNumber = mt_rand(100, 999);
+        
+        $specificMedication = $request->input('medication');
+        $selectedYear = $request->input('year');
+
+        $medicationData = Medication::select('medication_name')
+            ->distinct()
+            ->whereNotNull('medication_name')
+            ->pluck('medication_name')
+            ->toArray();
+
+        $years = Medication::select(DB::raw('YEAR(date) as year'))
+            ->distinct()
+            ->whereNotNull('date')
+            ->pluck('year')
+            ->toArray();
+
+        // Initialize an array to store diagnose patient counts for each month
+        $medicationCountsByMonth = [];
+
+        // Loop through each month of the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // Get the start and end dates of the current month
+            $startDate = Carbon::createFromDate($selectedYear, $month, 1)->startOfMonth();
+            $endDate = $startDate->copy()->endOfMonth();
+
+            $medicationCounts = Medication::whereBetween('date', [$startDate, $endDate])
+                ->where('medication_name', $specificMedication)
+                ->count();
+
+            // Store the diagnose patient count for the current month in the array
+            $medicationCountsByMonth[] = [
+                'month' => $startDate->format('F'),
+                'count' => $medicationCounts,
+            ];
+        }
+
+        $content =
+            '             Medicication Analytics Report
+            ------------------------
+    
+            Report Reference Number: ' . $reference . '
+            Report Date and Time: ' . $readableDate . ' ' . $time . '  
+    
+            Report Status: Finalized';
+
+        Report::create([
+            'reference_number' => $reference,
+            'report_type' => 'Medicication Analytics Report',
+            'date' => $date,
+            'time' => $time,
+            'user_id' => $profile->id,
+            'author_type' => $profile->role,
+            'content' => $content,
+        ]);
+
+
+        return redirect()->route('superadmin.medication.demo', compact('medicationCountsByMonth', 'medicationData', 'years', 'selectedYear', 'specificMedication', 'currentTime', 'currentDate', 'reference', 'currentDateTime'));
+    }
     public function deleteUser(Request $request)
     {
         // Find the user by ID

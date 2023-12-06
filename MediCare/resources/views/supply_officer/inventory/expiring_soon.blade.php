@@ -15,8 +15,7 @@
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a>
-                                </li>
+                                <li class="breadcrumb-item"><a href="{{ route('supply_officer.dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item" aria-current="page">Expiring Items</li>
                             </ul>
                         </div>
@@ -44,33 +43,39 @@
                                             class="btn btn-success btn-sm" target="_blank">View Report</a>
                                         <form action="{{ route('supply_officer.product.expiry.report.download') }}" method="GET">
                                             @csrf
-                                        <button class="btn btn-success btn-sm" style="margin-left: 10px;"  target="_blank">Download Report</button>
+                                            <button class="btn btn-success btn-sm" style="margin-left: 10px;"  target="_blank">Download Report</button>
                                         </form>
                                     </div>
                                 </div>
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <strong>Whoops!</strong> There were some problems with your input. Please fix the following errors: <br>
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
 
-                                <div class="row justify-content-end">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="startDate">Start</label>
-                                            <input type="date" id="startDate" class="form-control"
-                                                placeholder="Start Date">
-                                        </div>
+                                @if (session('success'))
+                                    <div class="alert alert-success">
+                                        <span class="fa fa-check-circle"></span> {{ session('success') }}
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="endDate">End</label>
-                                            <input type="date" id="endDate" class="form-control"
-                                                placeholder="End Date">
-                                        </div>
+                                @endif
+
+                                @if (session('info'))
+                                    <div class="alert alert-info">
+                                        <span class="fa fa-check-circle"></span> {{ session('info') }}
                                     </div>
-                                    <div class="col-md-2 mt-4 align-self-end">
-                                        <div class="form-group">
-                                            <button id="filterByDate" class="btn btn-primary">Search</button>
-                                        </div>
+                                @endif
+
+                                @if ($products->isEmpty())
+                                    <div class="alert alert-info">
+                                        <span class="fa fa-check-circle"></span> No Expiring Item Yet.
                                     </div>
-                                </div>
-                                @if ($products->count() > 0)
+                                @else
+
                                     <table class="table table-hover table-responsive-sm">
                                         <thead>
                                             <tr>
@@ -99,50 +104,14 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                @else
-                                    <p>No expiring items found.</p>
-                                @endif
+
+                                @endif <!-- End of $categories->isEmpty() check -->
                             </div>
                         </div>
-
                     </div>
                     <!-- [ Main Content ] end -->
                 </div>
             </div>
-
-
-        @endsection
-        @section('scripts')
-            <script>
-                $(document).ready(function() {
-                    $('#filterByDate').on('click', function() {
-                        var startDate = new Date($('#startDate').val());
-                        var endDate = new Date($('#endDate').val());
-                        filterByDateRange(startDate, endDate);
-                    });
-
-                    function filterByDateRange(startDate, endDate) {
-                        var rows = document.querySelectorAll("table tbody tr");
-                        for (var i = 0; i < rows.length; i++) {
-                            var rowDateText = rows[i].querySelector("td:nth-child(6)").textContent.trim();
-                            var rowDate = new Date(rowDateText);
-                            var formattedRowDate = formatDate(rowDate);
-
-                            if (formattedRowDate >= formatDate(startDate) && formattedRowDate <= formatDate(endDate)) {
-                                rows[i].style.display = "";
-                            } else {
-                                rows[i].style.display = "none";
-                            }
-                        }
-                    }
-
-                    function formatDate(date) {
-                        var day = date.getDate();
-                        var month = date.getMonth() + 1; // Months are 0-based
-                        var year = date.getFullYear();
-                        return year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
-                    }
-                    
-                });
-            </script>
-        @endsection
+        </div>
+    </div>
+@endsection

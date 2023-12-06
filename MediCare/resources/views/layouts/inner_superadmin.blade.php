@@ -341,6 +341,9 @@
                                     href="{{ route('superadmin.medicine.demo') }}">Medicine</a>
                             </li>
                             <li class="pc-item"><a class="pc-link"
+                                href="{{ route('superadmin.medication.demo') }}">Medication</a>
+                        </li>
+                            <li class="pc-item"><a class="pc-link"
                                     href="{{ route('superadmin.product.demo') }}">Item</a></li>
                         </ul>
                     </li>

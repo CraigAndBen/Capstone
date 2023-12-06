@@ -40,7 +40,7 @@
         <div class="col-7 my-4">
             <h8>Report Type: <i><b>Medication Analytics Report</b></i></h8>
             <br>
-            <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h8>
+            <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDate)) }}</b></i></h8>
             <br>
             <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
             <br>
@@ -99,14 +99,14 @@
 
     <div class="row justify-content-end align-items-end my-5">
         <div class="col-10 text-right">
-        <form action="{{ route('supply_officer.medication.report.save') }}" method="POST">
+        <form action="{{ route('superadmin.medication.report.save') }}" method="POST">
             @csrf
             <input type="hidden" name="reference" value="{{ $reference }}">
-            <input type="hidden" name="date" value="{{ $currentDateTime }}">
+            <input type="hidden" name="date" value="{{ $currentDate }}">
             <input type="hidden" name="time" value="{{ $currentTime }}">
             <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
             <button id="done" type="submit" class="btn btn-success">Done</button>
-            <a id="back" href="{{ route('supply_officer.medication.demo') }}" class="btn btn-danger">Back</a>
+            <a id="back" href="{{ route('superadmin.medication.demo') }}" class="btn btn-danger">Back</a>
             </form>
         </div>
         <div class="col-2"></div>
@@ -157,7 +157,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Diagnose Count'
+                            text: 'Medication Count'
                         }
                     }
                 }
