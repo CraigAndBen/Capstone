@@ -38,7 +38,7 @@
                                                 address.</p>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('staff.profile.update') }}">
+                                    <form method="POST" action="{{ route('cashier.profile.update') }}">
                                         @csrf
 
                                         @if ($errors->any())

@@ -33,7 +33,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h1 class="display-6">supply Officer Accounts</h1>
+                            <h1 class="display-6">Supply Officer Accounts</h1>
                         </div>
                         <div class="card-body">
                             <div class="container">
