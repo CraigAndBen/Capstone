@@ -102,7 +102,7 @@
                                 <form action="{{ route('supply_officer.medication.report') }}" method="GET">
                                     @csrf
                                     <input type="hidden" name="medication" id="medication" value="{{ $specificMedication }}">
-                                    <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                    <input type="hidden" name="year" id="year" value="{{ $selectedYear }}">
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>
                             </div>

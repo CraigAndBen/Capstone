@@ -2313,6 +2313,7 @@ class SupplyOfficerController extends Controller
         
         $specificMedication = $request->input('medication');
         $selectedYear = $request->input('year');
+        $title = "Medication Analytics Report";
 
         $medicationData = Medication::select('medication_name')
             ->distinct()
@@ -2347,13 +2348,7 @@ class SupplyOfficerController extends Controller
         }
 
         $content =
-            '             Medicication Analytics Report
-            ------------------------
-    
-            Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '  
-    
-            Report Status: Finalized';
+        "Report Title: " . $title . "\nReport Reference Number: " . $reference . "\nReport Year: " . $selectedYear . "\nReport Date and Time: " . $readableDate . " " . $time . "\nReport Status: Finalized";
 
         Report::create([
             'reference_number' => $reference,

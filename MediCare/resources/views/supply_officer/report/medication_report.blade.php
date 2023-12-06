@@ -40,6 +40,8 @@
         <div class="col-7 my-4">
             <h8>Report Type: <i><b>Medication Analytics Report</b></i></h8>
             <br>
+            <h8>Year: <i><b>{{$selectedYear}}</b></i></h8>
+            <br>
             <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h8>
             <br>
             <h8>Time: <i><b>{{ $currentTime }}</b></i></h8>
@@ -54,7 +56,7 @@
     <hr style="border-top: 1px solid #000;">
     <div class="row justify-content-center">
         <div class="col-8 text-center">
-            <h3><i>{{ ucwords($specificMedication) }} Line Graph</i></h3>
+            <h3><i>{{$selectedYear}} {{ ucwords($specificMedication) }} Line Graph</i></h3>
             <div class="row mb-5 p-3 mx-auto">
                 <canvas id="medicationDemographicsChart" style="width: 100%; height: 40;"></canvas>
             </div>
@@ -65,7 +67,7 @@
     <div class="row justify-content-center">
         <div class="col-1"></div>
         <div class="col-8 text-center">
-            <h3><i>{{ ucwords($specificMedication) }} Table</i></h3>
+            <h3><i>{{$selectedYear}} {{ ucwords($specificMedication) }} Table</i></h3>
             <br>
             <table class="table table-bordered table-sm text-center">
                 <thead>
@@ -104,6 +106,7 @@
             <input type="hidden" name="reference" value="{{ $reference }}">
             <input type="hidden" name="date" value="{{ $currentDateTime }}">
             <input type="hidden" name="time" value="{{ $currentTime }}">
+            <input type="hidden" name="year" value="{{ $selectedYear }}">
             <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
             <button id="done" type="submit" class="btn btn-success">Done</button>
             <a id="back" href="{{ route('supply_officer.medication.demo') }}" class="btn btn-danger">Back</a>
