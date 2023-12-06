@@ -4017,7 +4017,7 @@ class SuperAdminController extends Controller
         $patientYearCounts = [];
 
         // Initialize counts for each year
-        foreach (range(date('Y') - 1, date('Y')) as $year) {
+        foreach (range(date('Y') - 5, date('Y')) as $year) {
             $years[] = $year;
             $patientYearCounts[] = 0;
         }
@@ -4169,7 +4169,7 @@ class SuperAdminController extends Controller
         $patientYearCounts = [];
 
         // Initialize counts for each year
-        foreach (range(date('Y') - 1, date('Y')) as $year) {
+        foreach (range(date('Y') - 5, date('Y')) as $year) {
             $years[] = $year;
             $patientYearCounts[] = 0;
         }
@@ -4471,27 +4471,27 @@ class SuperAdminController extends Controller
     }
 
     public function expirySearch(Request $request)
-{
-    $profile = Auth::user();
-    $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-    $limitNotifications = $notifications->take(5);
-    $count = $notifications->count();
-    $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
-    $currentDate = $currentDateTime->format('Y-m-d');
-    $currentTime = $currentDateTime->format('h:i A');
-    
-    $startDate = $request->input('startDate');
-    $formattedFromDate = date("M j, Y", strtotime($startDate));
-    $endDate = $request->input('endDate');
-    $formattedToDate = date("M j, Y", strtotime($endDate));
-    $selectedOption = $request->input('select');
-    $range = $formattedFromDate . " - " . $formattedToDate;
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
+        $currentDate = $currentDateTime->format('Y-m-d');
+        $currentTime = $currentDateTime->format('h:i A');
+        
+        $startDate = $request->input('startDate');
+        $formattedFromDate = date("M j, Y", strtotime($startDate));
+        $endDate = $request->input('endDate');
+        $formattedToDate = date("M j, Y", strtotime($endDate));
+        $selectedOption = $request->input('select');
+        $range = $formattedFromDate . " - " . $formattedToDate;
 
-    $products = Expiries::whereBetween('created_at', [$startDate, $endDate])
-        ->get();
+        $products = Expiries::whereBetween('created_at', [$startDate, $endDate])
+            ->get();
 
-    return view('superadmin.inventory.expiring_soon_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
-}
+        return view('superadmin.inventory.expiring_soon_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
+    }
      
     public function viewExpiryReport()
     {

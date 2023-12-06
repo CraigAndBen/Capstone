@@ -17,9 +17,12 @@ class DatabaseSeeder extends Seeder
         // UserSeeder call
         $this->call(UserSeeder::class);
         $this->call(DoctorsSeeder::class);
-        // $this->call(PatientSeeder::class);
-        // $this->call(AppointmentSeeder::class);
-        // $this->call(NurseSeeder::class);
+        $this->call(PatientSeeder::class);
+        $this->call(AppointmentSeeder::class);
+        $this->call(NurseSeeder::class);
+        $this->call(CashierSeeder::class);
+        $this->call(PharmacistSeeder::class);
+        $this->call(StaffSeeder::class);
 
         // \App\Models\User::factory(5)->create();
 

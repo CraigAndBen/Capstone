@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             [
                 'first_name' => 'Admin',
                 'last_name' => 'Admin',
-                'email' => 'admin@sample.com',
+                'email' => 'admin@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'admin',
                 'status' => 'activated',
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             [
                 'first_name' => 'Super Admin',
                 'last_name' => 'Super Admin',
-                'email' => 'super_admin@sample.com',
+                'email' => 'super_admin@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'super_admin',
                 'status' => 'activated',
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
             [
                 'first_name' => 'Supply Officer',
                 'last_name' => 'Supply Officer',
-                'email' => 'supply_officer@sample.com',
+                'email' => 'supply_officer@gmail.com',
                 'password' => Hash::make('111'),
                 'role' => 'supply_officer',
                 'status' => 'activated',

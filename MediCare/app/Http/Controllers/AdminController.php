@@ -3084,7 +3084,7 @@ class AdminController extends Controller
         $patientYearCounts = [];
 
         // Initialize counts for each year
-        foreach (range(date('Y') - 1, date('Y')) as $year) {
+        foreach (range(date('Y') - 5, date('Y')) as $year) {
             $years[] = $year;
             $patientYearCounts[] = 0;
         }
@@ -3237,7 +3237,7 @@ class AdminController extends Controller
         $patientYearCounts = [];
 
         // Initialize counts for each year
-        foreach (range(date('Y') - 1, date('Y')) as $year) {
+        foreach (range(date('Y') - 5, date('Y')) as $year) {
             $years[] = $year;
             $patientYearCounts[] = 0;
         }

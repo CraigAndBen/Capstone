@@ -39,7 +39,7 @@
                                                 stay secure.</p>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('supply_officer.password.update') }}">
+                                    <form method="POST" action="{{ route('cashier.password.update') }}">
                                         @csrf
 
                                         @if ($errors->any())
