@@ -104,7 +104,7 @@
                                     @csrf
                                     <input type="hidden" name="diagnose" id="diagnose" value="{{ $specificDiagnosis }}">
                                     <input type="hidden" name="type" value="{{ $type }}">
-                                    <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                    <input type="hidden" name="year" id="year" value="{{ $selectedYear }}">
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>
                             </div>

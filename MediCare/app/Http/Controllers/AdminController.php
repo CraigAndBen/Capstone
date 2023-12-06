@@ -1273,17 +1273,12 @@ class AdminController extends Controller
         $date = $request->input('date');
         $title = $request->input('title');
         $type = $request->input('type');
+        $year = $request->input('year');
         $readableDate = date('F j, Y', strtotime($date));
         $profile = auth()->user();
 
         $content =
-            '              ' . $title . '
-            ------------------------
-
-            Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '
-
-            Report Status: Finalized';
+            "Report Title: " . $title . "\nReport Reference Number: " . $reference . "\nReport Year: " . $year . "\nReport Date and Time: " . $readableDate . " " . $time . "\nReport Status: Finalized";
 
         Report::create([
             'reference_number' => $reference,
@@ -1911,17 +1906,12 @@ class AdminController extends Controller
         $date = $request->input('date');
         $title = $request->input('title');
         $type = $request->input('type');
+        $year = $request->input('year');
         $readableDate = date('F j, Y', strtotime($date));
         $profile = auth()->user();
 
         $content =
-            '             ' . $title . '
-            ------------------------
-
-            Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '
-
-            Report Status: Finalized';
+            "Report Title: " . $title . "\nReport Reference Number: " . $reference . "\nReport Year: " . $year . "\nReport Date and Time: " . $readableDate . " " . $time . "\nReport Status: Finalized";
 
         Report::create([
             'reference_number' => $reference,
@@ -2175,17 +2165,12 @@ class AdminController extends Controller
         $date = $request->input('date');
         $title = $request->input('title');
         $type = $request->input('type');
+        $year = $request->input('year');
         $readableDate = date('F j, Y', strtotime($date));
         $profile = auth()->user();
 
         $content =
-            '             ' . $title . '
-            ------------------------
-
-            Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '
-
-            Report Status: Finalized';
+            "Report Title: " . $title . "\nReport Reference Number: " . $reference . "\nReport Year: " . $year . "\nReport Date and Time: " . $readableDate . " " . $time . "\nReport Status: Finalized";
 
         Report::create([
             'reference_number' => $reference,
@@ -2388,17 +2373,12 @@ class AdminController extends Controller
         $date = $request->input('date');
         $title = $request->input('title');
         $type = $request->input('type');
+        $year = $request->input('year');
         $readableDate = date('F j, Y', strtotime($date));
         $profile = auth()->user();
 
         $content =
-            '             ' . $title . '
-            ------------------------
-
-            Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '
-
-            Report Status: Finalized';
+        "Report Title: " . $title . "\nReport Reference Number: " . $reference . "\nReport Year: " . $year . "\nReport Date and Time: " . $readableDate . " " . $time . "\nReport Status: Finalized";
 
         Report::create([
             'reference_number' => $reference,
@@ -2753,17 +2733,12 @@ class AdminController extends Controller
         $date = $request->input('date');
         $title = $request->input('title');
         $type = $request->input('type');
+        $year = $request->input('year');
         $readableDate = date('F j, Y', strtotime($date));
         $profile = auth()->user();
 
         $content =
-            '             ' . $title . '
-            ------------------------
-
-            Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '
-
-            Report Status: Finalized';
+        "Report Title: " . $title . "\nReport Reference Number: " . $reference . "\nReport Year: " . $year . "\nReport Date and Time: " . $readableDate . " " . $time . "\nReport Status: Finalized";
 
         Report::create([
             'reference_number' => $reference,
@@ -3296,17 +3271,12 @@ class AdminController extends Controller
         $date = $request->input('date');
         $title = $request->input('title');
         $type = $request->input('type');
+        $year = $request->input('year');
         $readableDate = date('F j, Y', strtotime($date));
         $profile = auth()->user();
 
         $content =
-            '             ' . $title . '
-            ------------------------
-
-            Report Reference Number: ' . $reference . '
-            Report Date and Time: ' . $readableDate . ' ' . $time . '
-
-            Report Status: Finalized';
+        "Report Title: " . $title . "\nReport Reference Number: " . $reference . "\nReport Year: " . $year . "\nReport Date and Time: " . $readableDate . " " . $time . "\nReport Status: Finalized";
 
         Report::create([
             'reference_number' => $reference,

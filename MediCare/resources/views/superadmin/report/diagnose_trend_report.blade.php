@@ -111,7 +111,7 @@
     <div class="container my-5">
         <br><br><br>
         <div class="row justify-content-center mt-5">
-            <h3><i>{{ ucwords($specificDiagnosis) }} Monthly Trend Graph</i></h3>
+            <h3><i>{{$year}} {{ ucwords($specificDiagnosis) }} Monthly Trend Graph</i></h3>
             <br>
         </div>
         <div class="row justify-content-center">
@@ -136,7 +136,7 @@
 
             </div>
             <div class="col-9 text-center">
-                <h3><i>{{ ucwords($specificDiagnosis) }} Monthly Trend Table</i></h3>
+                <h3><i>{{$year}} {{ ucwords($specificDiagnosis) }} Monthly Trend Table</i></h3>
                 <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead>
@@ -178,6 +178,7 @@
                     <input type="hidden" name="date" value="{{ $currentDate }}">
                     <input type="hidden" name="time" value="{{ $currentTime }}">
                     <input type="hidden" name="title" value="{{ $title }}">
+                    <input type="hidden" name="year" value="{{ $year }}">
                     <input type="hidden" name="type" value="gender">
                     <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
                     <button id="done" type="submit" class="btn btn-success">Done</button>

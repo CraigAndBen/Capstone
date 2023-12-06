@@ -1,4 +1,4 @@
-@extends('layouts.inner_demo')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->
@@ -102,7 +102,7 @@
                                 <form action="{{ route('superadmin.medication.report') }}" method="GET">
                                     @csrf
                                     <input type="hidden" name="medication" id="medication" value="{{ $specificMedication }}">
-                                    <input type="hidden" name="year" id="year" value="{{ $year }}">
+                                    <input type="hidden" name="year" id="year" value="{{ $selectedYear }}">
                                     <button type="submit" class="btn btn-success">Generate Report</button>
                                 </form>
                             </div>

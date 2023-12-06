@@ -1,4 +1,4 @@
-@extends('layouts.inner_demo')
+@extends('layouts.inner_superadmin')
 
 @section('content')
     <!-- [ Main Content ] start -->

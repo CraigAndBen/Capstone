@@ -12,9 +12,11 @@
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
         }
 
         .header {
@@ -74,21 +76,18 @@
 
 <body>
     <div class="container">
+        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare" style="height: 100px">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             C98V+GR4, Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
             <br>
             Phone: +1 5589 55488 55
             <br>
-            Email: medicare@example.com
+            Email: medicare@gmail.com
             <br>
             Reference No: {{ $reference }}
         </p>
         <hr>
-
-        <div class="header">
-            <h2>Appointment Information</h2>
-        </div>
         <div class="patient-info">
             <h2>Patient Details</h2>
             <table>

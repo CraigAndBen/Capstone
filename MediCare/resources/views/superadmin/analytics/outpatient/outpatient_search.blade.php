@@ -89,7 +89,7 @@
                                 <div class="col-md-10"> <!-- Adjust the column width as needed -->
                                 </div>
                                 <div class="col-md-2 text-right mb-3"> <!-- Adjust the column width as needed -->
-                                    <form action="{{ route('admin.outpatient.report') }}" method="POST">
+                                    <form action="{{ route('superadmin.outpatient.report') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="year" id="year" value="{{ $year }}">
                                         <button type="submit" class="btn btn-success">Generate Report</button>

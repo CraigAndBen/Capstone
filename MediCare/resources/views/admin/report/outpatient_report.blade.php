@@ -45,7 +45,7 @@
         <hr style="border-top: 1px solid #000;">
 
         <div class="row justify-content-center mt-5">
-            <h3><i>Admitted Bar Graph</i></h3>
+            <h3><i>{{$year}} Outpatient Bar Graph</i></h3>
             <br>
         </div>
         <div class="row justify-content-center">
@@ -67,7 +67,7 @@
 
             </div>
             <div class="col-8 text-center">
-                <h3><i>Outpatient Table</i></h3>
+                <h3><i>{{$year}} Outpatient Table</i></h3>
                 <br>
                 <table class="table table-bordered table-sm text-center">
                     <thead class="bg-primary text-light text-center">
@@ -102,6 +102,7 @@
                     <input type="hidden" name="date" value="{{$currentDate}}">
                     <input type="hidden" name="time" value="{{$currentTime}}">
                     <input type="hidden" name="title" value="{{$title}}">
+                    <input type="hidden" name="year" value="{{$year}}">
                     <input type="hidden" name="type" value="gender">
                     <button id="printButton" type="button" class="btn btn-primary">Preview Report</button>
                     <button id="done" type="submit" class="btn btn-success">Done</button>

@@ -12,9 +12,16 @@
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .img {
+            max-width: 100%;
+            height: auto;
         }
 
         .header {
@@ -44,7 +51,9 @@
             margin-top: 10px;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid #333;
         }
 
@@ -74,21 +83,18 @@
 
 <body>
     <div class="container">
+        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare" style="height: 100px">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             C98V+GR4, Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
             <br>
             Phone: +1 5589 55488 55
             <br>
-            Email: medicare@example.com
+            Email: medicare@gmail.com
             <br>
             Reference No: {{ $reference }}
         </p>
         <hr>
-
-        <div class="header">
-            <h2>Patient Information</h2>
-        </div>
         <div class="patient-info">
             <h2>Patient Details</h2>
             <table>
@@ -106,7 +112,7 @@
                 </tr>
                 <tr>
                     <th>Date of Birth</th>
-                    <td>{{ isset($patient->birthdate) ? date('F j, Y', strtotime($patient->birthdate)) : "" }}</td>
+                    <td>{{ isset($patient->birthdate) ? date('F j, Y', strtotime($patient->birthdate)) : '' }}</td>
 
                 </tr>
                 <tr>
@@ -143,11 +149,12 @@
                 </tr>
                 <tr>
                     <th>Guardian Birthdate</th>
-                    <td>{{ isset($patient->guardian_birthdate) ? date('F j, Y', strtotime($patient->guardian_birthdate)) : "" }}</td>
+                    <td>{{ isset($patient->guardian_birthdate) ? date('F j, Y', strtotime($patient->guardian_birthdate)) : '' }}
+                    </td>
                 </tr>
                 <tr>
                     <th>Relationship</th>
-                    <td>{{ ucwords($patient->relationship)  }}</td>
+                    <td>{{ ucwords($patient->relationship) }}</td>
                 </tr>
                 <tr>
                     <th>Guardian Phone</th>
@@ -163,7 +170,7 @@
                 </tr>
                 <tr>
                     <th>Physician</th>
-                    <td>Dr. {{ ucwords($doctor->first_name) }} {{ucwords($doctor->last_name)}}</td>
+                    <td>Dr. {{ ucwords($doctor->first_name) }} {{ ucwords($doctor->last_name) }}</td>
                 </tr>
                 <tr>
                     <th>Medical Condition</th>
@@ -172,46 +179,48 @@
             </table>
             <br>
             @if ($patient->type == 'admitted_patient')
-            <h2>Admission Details</h2>
-            <table>
-                <tr>
-                    <th>Admitted Date</th>
-                    <td>{{ isset($patient->admitted_date) ? date('F j, Y', strtotime($patient->admitted_date)) : "" }}</td>
-                </tr>
-                <tr>
-                    <th>Admitted Time</th>
-                    <td>{{ date('h:i A', strtotime($patient->admitted_time)) }}</td>
-                </tr>
-                <tr>
-                    <th>Discharged Date</th>
-                    <td>{{ isset($patient->discharged_date) ? date('F j, Y', strtotime($patient->discharged_date)) : "" }}</td>
-                </tr>
-                <tr>
-                    <th>Discharged Time</th>
-                    <td>{{ date('h:i A', strtotime($patient->discharged_time)) }}</td>
-                </tr>
-                <tr>
-                    <th>Room Number</th>
-                    <td>{{ $patient->room_number }}</td>
-                </tr>
-                <tr>
-                    <th>Bed Number</th>
-                    <td>{{ $patient->bed_number }}</td>
-                </tr>
-            </table>
+                <h2>Admission Details</h2>
+                <table>
+                    <tr>
+                        <th>Admitted Date</th>
+                        <td>{{ isset($patient->admitted_date) ? date('F j, Y', strtotime($patient->admitted_date)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Admitted Time</th>
+                        <td>{{ date('h:i A', strtotime($patient->admitted_time)) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Discharged Date</th>
+                        <td>{{ isset($patient->discharged_date) ? date('F j, Y', strtotime($patient->discharged_date)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Discharged Time</th>
+                        <td>{{ date('h:i A', strtotime($patient->discharged_time)) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Room Number</th>
+                        <td>{{ $patient->room_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Bed Number</th>
+                        <td>{{ $patient->bed_number }}</td>
+                    </tr>
+                </table>
             @else
-            <h2>Appointment Details</h2>
-            <table>
-                <tr>
-                    <th>Appointment Date</th>
-                    <td>{{ isset($patient->date) ? date('F j, Y', strtotime($patient->date)) : "" }}</td>
-                </tr>
-                <tr>
-                    <th>Appointment Time</th>
-                    <td>{{ date('h:i A', strtotime($patient->time)) }}</td>
-                </tr>
-            </table>
-            <br>
+                <h2>Appointment Details</h2>
+                <table>
+                    <tr>
+                        <th>Appointment Date</th>
+                        <td>{{ isset($patient->date) ? date('F j, Y', strtotime($patient->date)) : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Appointment Time</th>
+                        <td>{{ date('h:i A', strtotime($patient->time)) }}</td>
+                    </tr>
+                </table>
+                <br>
             @endif
             <br>
             <h2>Diagnose List</h2>
@@ -222,13 +231,13 @@
                     <th>Diagnose Name</th>
                 </tr>
                 @foreach ($diagnoses as $diagnose)
-                <tr>
-                    <td>{{ isset($diagnose->date) ? date('F j, Y', strtotime($diagnose->date)) : "" }}</td>
-                    <td>{{ date('h:i A', strtotime($diagnose->time)) }}</td>
-                    <td>{{ ucwords($diagnose->diagnose) }}</td>
-                </tr>
+                    <tr>
+                        <td>{{ isset($diagnose->date) ? date('F j, Y', strtotime($diagnose->date)) : '' }}</td>
+                        <td>{{ date('h:i A', strtotime($diagnose->time)) }}</td>
+                        <td>{{ ucwords($diagnose->diagnose) }}</td>
+                    </tr>
                 @endforeach
-  
+
             </table>
             <br>
 
@@ -242,13 +251,13 @@
                     <th>Medication Duration</th>
                 </tr>
                 @foreach ($medications as $medication)
-                <tr>
-                    <td>{{ isset($medication->date) ? date('F j, Y', strtotime($medication->date)) : "" }}</td>
-                    <td>{{ date('h:i A', strtotime($medication->time)) }}</td>
-                    <td>{{ ucwords($medication->medication_name) }}</td>
-                    <td>{{ ucwords($medication->dosage) }}</td>
-                    <td>{{ ucwords($medication->duration) }}</td>
-                </tr>
+                    <tr>
+                        <td>{{ isset($medication->date) ? date('F j, Y', strtotime($medication->date)) : '' }}</td>
+                        <td>{{ date('h:i A', strtotime($medication->time)) }}</td>
+                        <td>{{ ucwords($medication->medication_name) }}</td>
+                        <td>{{ ucwords($medication->dosage) }}</td>
+                        <td>{{ ucwords($medication->duration) }}</td>
+                    </tr>
                 @endforeach
 
             </table>
