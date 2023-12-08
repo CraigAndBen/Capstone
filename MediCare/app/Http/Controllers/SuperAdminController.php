@@ -4272,7 +4272,7 @@ class SuperAdminController extends Controller
         $notifications = Notification::where('type', $profile->role)
             ->orWhere('type', 'admin')
             ->orWhere('type', 'supply_officer')
-            ->orderBy('date', 'desc')->get();
+            ->orderBy('date', 'desc')->paginate();
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentDate = date('Y-m-d');

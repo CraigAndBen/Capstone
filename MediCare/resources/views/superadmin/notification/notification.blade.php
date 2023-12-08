@@ -154,7 +154,7 @@
                                         <p class="text-bold" id="message"></p>
                                     </div>
                                     <div class="modal-footer">
-                                        <form action="{{ route('nurse.notification.read') }}" method="post">
+                                        <form action="{{ route('superadmin.notification.read') }}" method="post">
                                             @csrf
                                             <input type="hidden" name="id" id="id">
                                             <input type="hidden" name="is_read" id="is_read">
