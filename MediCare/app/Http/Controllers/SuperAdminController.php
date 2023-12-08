@@ -4509,7 +4509,7 @@ class SuperAdminController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('superadmin.report.expiry_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('expiry_item_report.pdf');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
@@ -4578,7 +4578,7 @@ class SuperAdminController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('superadmin.report.expiry_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('expiry_item_report.pdf');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
