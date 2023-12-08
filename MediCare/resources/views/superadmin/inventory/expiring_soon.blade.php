@@ -49,27 +49,7 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="row justify-content-end">
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="startDate">Start</label>
-                                            <input type="date" id="startDate" class="form-control"
-                                                placeholder="Start Date">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="endDate">End</label>
-                                            <input type="date" id="endDate" class="form-control"
-                                                placeholder="End Date">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 mt-4 align-self-end">
-                                        <div class="form-group">
-                                            <button id="filterByDate" class="btn btn-primary">Search</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 @if ($products->count() > 0)
                                     <table class="table table-hover">
                                         <thead>
@@ -114,40 +94,7 @@
 
 
         @endsection
-        @section('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#filterByDate').on('click', function() {
-                    var startDate = new Date($('#startDate').val());
-                    var endDate = new Date($('#endDate').val());
-                    filterByDateRange(startDate, endDate);
-                });
-
-                function filterByDateRange(startDate, endDate) {
-                    var rows = document.querySelectorAll("table tbody tr");
-                    for (var i = 0; i < rows.length; i++) {
-                        var rowDateText = rows[i].querySelector("td:nth-child(6)").textContent.trim();
-                        var rowDate = new Date(rowDateText);
-                        var formattedRowDate = formatDate(rowDate);
-
-                        if (formattedRowDate >= formatDate(startDate) && formattedRowDate <= formatDate(endDate)) {
-                            rows[i].style.display = "";
-                        } else {
-                            rows[i].style.display = "none";
-                        }
-                    }
-                }
-
-                function formatDate(date) {
-                    var day = date.getDate();
-                    var month = date.getMonth() + 1; // Months are 0-based
-                    var year = date.getFullYear();
-                    return year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
-                }
-                
-            });
-        </script>
-    @endsection
+  
 
 
     

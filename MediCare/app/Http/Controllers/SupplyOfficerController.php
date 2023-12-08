@@ -1587,7 +1587,7 @@ class SupplyOfficerController extends Controller
         ]);
 
         // Return the view with the chart data
-        return redirect()->route('supply_officer.request.demo', compact('currentTime', 'currentDateTime', 'range', 'reference', 'reportType'));
+        return redirect()->route('supply_officer.request.demo', compact('currentTime', 'currentDateTime', 'range', 'reference'));
     }
 
     // public function saleReport(Request $request)

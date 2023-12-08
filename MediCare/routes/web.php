@@ -491,6 +491,7 @@ Route::middleware(['auth', 'role:supply_officer'])->group(function () {
     Route::get('/supply_officer/medicines_report/report', [SupplyOfficerController::class, 'medicineReport'])->name('supply_officer.medicines.report');
     Route::post('/supply_officer/medicines_report/report/save', [SupplyOfficerController::class, 'medicineReportSave'])->name('supply_officer.medicines.report.save');
     Route::get('/supply_officer/products_report/report', [SupplyOfficerController::class, 'productsReport'])->name('supply_officer.products.report');
+    Route::post('/supply_officer/products_report/report/save', [SupplyOfficerController::class, 'productsReportSave'])->name('supply_officer.products.report.save');
     Route::get('/supply_officer/medication/report', [SupplyOfficerController::class, 'medicationReport'])->name('supply_officer.medication.report');
     Route::post('/supply_officer/medication/report/save', [SupplyOfficerController::class, 'medicationReportSave'])->name('supply_officer.medication.report.save');
     Route::get('/supply_officer/expiry/report/view', [SupplyOfficerController::class, 'viewExpiryReport'])->name('supply_officer.product.expiry.report.view');
