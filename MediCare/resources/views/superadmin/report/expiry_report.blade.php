@@ -112,7 +112,7 @@
 
 <body>
     <header>
-        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare">
+        <img class="img" src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('logo.jpg'))) }}" alt="MediCare">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
