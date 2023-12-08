@@ -68,7 +68,7 @@
         <hr style="border-top: 1px solid #000;">
         <div class="row justify-content-center">
             <div class="col-8 text-center" >
-                <h3 class="center-text"><i>Sale Analytics</i></h3>
+                <h3 class="center-text"><i>Sales Analytics</i></h3>
                 <br>
                 <canvas id="salesGraph"></canvas>
             </div>

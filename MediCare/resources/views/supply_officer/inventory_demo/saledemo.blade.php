@@ -34,7 +34,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Sale Demographics</h2>
+                            <h2>Sales Demographics</h2>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())

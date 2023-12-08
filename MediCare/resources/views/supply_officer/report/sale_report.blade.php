@@ -50,7 +50,7 @@
     <div class="container mt-2">
         <div class="row justify-content-first align-items-first my-3">
             <div class="col-7 my-4">
-                <h8>Report Type: <i><b>Sale Analytics Report</b></i></h8>
+                <h8>Report Type: <i><b>Sales Analytics Report</b></i></h8>
                 <br>
                 <h8>Date: <i><b>{{ date('M j, Y', strtotime($currentDateTime)) }}</b></i></h8>
                 <br>
@@ -68,7 +68,7 @@
         <hr style="border-top: 1px solid #000;">
         <div class="row justify-content-center">
             <div class="col-8 text-center" >
-                <h3 class="center-text"><i>Sale Analytics</i></h3>
+                <h3 class="center-text"><i>Sales Analytics</i></h3>
                 <br>
                 <canvas id="salesGraph"></canvas>
             </div>
@@ -81,7 +81,7 @@
 
         <div class="row justify-content-center">
             <div class="col-12 col-md-10 text-center" id="salesTableContainer">
-                <h3><i>Sale Table</i></h3>
+                <h3><i>Sales Table</i></h3>
                 <br>
                 <div class="table-flex">
                     <table class="table table-bordered">

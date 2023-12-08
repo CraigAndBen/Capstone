@@ -11,13 +11,13 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Sale Demographics</h5>
+                                <h5 class="m-b-10">Sales Demographics</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item" aria-current="page">Sale Demographics</li>
+                                <li class="breadcrumb-item" aria-current="page">Sales Demographics</li>
                             </ul>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
-                            <h2>Sale Demographics</h2>
+                            <h2>Sales Demographics</h2>
                         </div>
                         <div class="card-body">
                             @if ($errors->any())
