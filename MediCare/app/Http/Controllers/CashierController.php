@@ -227,7 +227,7 @@ class CashierController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('purchase_report.pdf');
     }
 
@@ -273,7 +273,7 @@ class CashierController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('purchase report.pdf');
     }
 
@@ -450,10 +450,9 @@ class CashierController extends Controller
 
         ];
 
-            $pdf = app('dompdf.wrapper');
-            $pdf->setBasePath(public_path());
+            
             $pdf = app('dompdf.wrapper')->loadView('cashier.product.receipt', $data);
-
+            $pdf->setBasePath(base_path());
             return $pdf->stream('receipt.pdf');
     }
 

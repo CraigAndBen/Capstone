@@ -280,8 +280,9 @@ class PharmacistController extends Controller
             'reference' => $reference,
         ];
 
+        
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('medicine report.pdf');
     
        // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
@@ -331,10 +332,8 @@ class PharmacistController extends Controller
             'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper');
-        $pdf->setBasePath(public_path());
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('medicine report.pdf');
     
        // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
@@ -382,7 +381,7 @@ class PharmacistController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('medicine price report.pdf');
     
 
@@ -435,7 +434,7 @@ class PharmacistController extends Controller
 
 
         $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('medicine price report.pdf');
     
 

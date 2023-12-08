@@ -255,7 +255,7 @@ class SupplyOfficerController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.product_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('item_list_report.pdf');
 
         //return view('supply_officer.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories'));
@@ -308,7 +308,7 @@ class SupplyOfficerController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.product_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('item_list_report.pdf');
 
         //return view('supply_officer.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories'));
@@ -498,9 +498,10 @@ class SupplyOfficerController extends Controller
             'reference' => $reference,
 
         ];
+        
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.expiry_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('expiry_item_report.pdf');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
@@ -569,7 +570,7 @@ class SupplyOfficerController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.expiry_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('expiry_item_report.pdf');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
@@ -662,7 +663,7 @@ class SupplyOfficerController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.category_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('category_list_report.pdf');
         //return view('supply_officer.inventory.category', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
 
@@ -711,7 +712,7 @@ class SupplyOfficerController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.category_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('category_report.pdf');
         //return view('supply_officer.inventory.category', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products', 'categories'));
 
@@ -758,7 +759,7 @@ class SupplyOfficerController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.request_list_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->stream('request_list_report.pdf');
 
         //return view('supply_officer.report.request_list_report', compact( 'currentTime', 'currentDate', 'requests','products'));
@@ -809,7 +810,7 @@ class SupplyOfficerController extends Controller
         ];
 
         $pdf = app('dompdf.wrapper')->loadView('supply_officer.report.request_list_report', $data);
-
+        $pdf->setBasePath(base_path());
         return $pdf->download('request_list_report.pdf');
 
         //return view('supply_officer.report.request_list_report', compact( 'currentTime', 'currentDate', 'requests','products'));
