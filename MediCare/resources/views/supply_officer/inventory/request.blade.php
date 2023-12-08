@@ -110,7 +110,7 @@
                                                        <td class="text-center">
                                                         <button type="button" class="btn btn-primary" data-toggle="modal"
                                                             data-target="#viewModal{{ $request->id }}" >
-                                                            View Receipt
+                                                            View Request
                                                         </button>
                                                     </td>
                                                     </tr>
