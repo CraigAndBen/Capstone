@@ -66,7 +66,7 @@
                                     <form action="{{ route('supply_officer.medication.demo.search') }}" method="GET">
                                         @csrf
                                         <select class="form-control p-3" id="medication" name="medication">
-                                            <option value="">Select Diagnose</option>
+                                            <option value="">Select Medication</option>
                                             @foreach ($medicationData as $medication)
                                                 <option value="{{ $medication }}">{{ ucwords($medication) }}</option>
                                             @endforeach
@@ -90,7 +90,7 @@
                         <hr>
                         <div class="container">
                             <div class="alert alert-success">
-                                Select medication and Year First.
+                                Select Medication and Year First.
                             </div>
                         </div>
                     </div>

@@ -88,7 +88,7 @@
                                         <tr>
                                             <th class="text-center">Item Name</th>
                                             <th class="text-center">Category Name</th>
-                                            <th class="text-center">Price</th>
+                                            <th class="text-center">Unit Price</th>
                                             <th></th>
                                         </tr>
                                     </thead>
