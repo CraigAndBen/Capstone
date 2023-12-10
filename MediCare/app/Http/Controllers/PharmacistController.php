@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase_detail;
+use TCPDF;
 use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Category;
@@ -269,8 +270,11 @@ class PharmacistController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'MINVR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         
-        $products = Product::orderBy('expiration', 'asc')->get();
-        $categories = Category::all();
+        $products = Product::with('category')
+        ->whereHas('category', function ($query) {
+            $query->where('category_name', 'pharmaceutical');
+        })->orderBy('expiration', 'asc')->get();
+        $categories = Category::where('category_name', 'pharmaceutical')->get();
 
         $data = [
             'products' => $products,
@@ -281,9 +285,17 @@ class PharmacistController extends Controller
         ];
 
         
-        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->stream('medicine report.pdf');
+        // Create new PDF document
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/pharmacist/report/medicine_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+      
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'I');
     
        // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
     }
@@ -302,8 +314,12 @@ class PharmacistController extends Controller
         $randomNumber = mt_rand(100, 999);
         $reference = 'MINVR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         
-        $products = Product::orderBy('expiration', 'asc')->get();
-        $categories = Category::all();
+        $products = Product::with('category')->whereHas('category', function ($query) {
+            $query->where('category_name', 'pharmaceutical');
+        })
+        ->orderBy('expiration', 'asc')
+        ->get();
+        $categories = Category::where('category_name', 'pharmaceutical')->get();
 
         $content =
             '              Medicine Inventory Report 
@@ -332,9 +348,18 @@ class PharmacistController extends Controller
             'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.medicine_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->download('medicine report.pdf');
+        // Create new PDF document
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        $pdf->SetPrintHeader(false);
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/pharmacist/report/medicine_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+      
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'D');
     
        // return view('pharmacist.report.medicine_report', compact('currentTime', 'currentDate', 'products', 'categories'));
     }
@@ -380,9 +405,17 @@ class PharmacistController extends Controller
             'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->stream('medicine price report.pdf');
+        // Create new PDF document
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/pharmacist/report/product_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+      
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'I');
     
 
         //return view('pharmacist.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories', 'products_price'));
@@ -433,9 +466,18 @@ class PharmacistController extends Controller
         ];
 
 
-        $pdf = app('dompdf.wrapper')->loadView('pharmacist.report.product_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->download('medicine price report.pdf');
+        // Create new PDF document
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        $pdf->SetPrintHeader(false);
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/pharmacist/report/product_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+      
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'D');
     
 
         //return view('pharmacist.report.product_report', compact('currentTime', 'currentDate', 'products', 'categories', 'products_price'));

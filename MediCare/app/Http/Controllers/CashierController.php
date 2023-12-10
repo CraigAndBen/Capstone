@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use TCPDF;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Purchase_detail;
@@ -226,9 +227,16 @@ class CashierController extends Controller
 
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->stream('purchase_report.pdf');
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/cashier/report/purchase_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+      
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'I');
     }
 
     public function downloadPurchaseReport()
@@ -272,9 +280,18 @@ class CashierController extends Controller
 
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('cashier.report.purchase_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->download('purchase report.pdf');
+         // Create new PDF document
+         $pdf = new TCPDF();
+         // Add a page
+         $pdf->AddPage();
+         $pdf->SetPrintHeader(false);
+         // Read HTML content from a file
+         $htmlFilePath = resource_path('views/cashier/report/purchase_report.blade.php');
+         $htmlContent = view()->file($htmlFilePath, $data)->render();
+       
+         $pdf->writeHTML($htmlContent);
+         // Output PDF to browser
+         $pdf->Output($reference . '.pdf', 'D');
     }
 
     public function purchase()
@@ -451,9 +468,17 @@ class CashierController extends Controller
         ];
 
             
-            $pdf = app('dompdf.wrapper')->loadView('cashier.product.receipt', $data);
-            $pdf->setBasePath(base_path());
-            return $pdf->stream('receipt.pdf');
+        $pdf = new TCPDF();
+        // Add a page
+     
+        $pdf->AddPage('L', 'A6');
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/cashier/product/receipt.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+      
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'I');
     }
 
     public function purchaseConfirm(Request $request)

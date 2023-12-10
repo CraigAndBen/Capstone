@@ -5,111 +5,73 @@
     <meta charset="UTF-8">
     <title>MediCare | Medicine List Report</title>
     <style>
-        @page {
-            size: a4;
-        }
-
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
-
-        header {
-            width: 100%;
-            position: fixed;
-            top: -50px;
-            left: 15px;
-            align-content: center;
-        }
-
-        .img {
-            float: left;
-            padding-top: 10px;
-            width: 110px;
-            height: 70px;
-        }
-
         .container {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 5px;
-            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
         }
-
-        p,
-        b {
-            font-size: 13px;
+        .img {
+            max-width: 100%;
+            height: auto;
         }
-
-        h5 {
-            font-family: Arial, sans-serif;
-            margin-top: 40px;
+        .header {
+            text-align: center;
+            background-color: #2E8BC0;
+            color: #fff;
+            padding: 3px;
         }
-
         h1 {
-            font-size: 20px;
             margin: 0;
+            font-size: 15px;
         }
-
-        .purchase-detail {
-            padding: 10px;
+        .patient-info {
+            padding: 20px;
         }
-
-        .purchase-detail h3 {
+        .patient-info h2 {
             font-size: 20px;
             margin-top: 0;
-            text-align:center;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            text-align: center;
+            margin-top: 10px;
         }
-
         table,
         th,
         td {
             border: 1px solid #333;
         }
-
-        th,
+        th {
+            padding: 10px;
+            text-align: left;
+            font-size: 15px;
+        }
         td {
             padding: 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+        .footer {
             text-align: center;
-            font-size: 12px;
-            font-family: 'DejaVu Sans', sans-serif;
-        }
-
-        footer {
+            background-color: #2E8BC0;
+            color: #fff;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
             width: 100%;
-            position: fixed;
-            bottom: -100px;
-            display: flex;
-            left: 0px;
-            right: 0px;
-            justify-content: space-between;
-            height: 100px;
-            line-height: 35px;
-            border-top: 1px solid #000;
-        }
-
-        .footer-start,
-        .footer-center,
-        .footer-right {
-            display: inline-block;
-            margin-left: 90px;
-            font-size: 11px;
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <img class="img" src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('logo.jpg'))) }}" alt="MediCare">
+    <div class="container">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
@@ -117,10 +79,10 @@
             Phone: +1 5589 55488 55
             <br>
             Email: medicare@example.com
+            <br>
+            Reference: {{ $reference }}
         </p>
-    </header>
-    <div class="container">
-        <h5>Reference: {{ $reference }}</h5>
+
         <div class="purchase-detail">
             <h3>Medicine List Report</h3>
             <table>
@@ -148,17 +110,9 @@
             </table>
         </div>
     </div>
-        <footer class="text-center">
-            <div class="footer-start">
-                Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}
-            </div>
-            <div class="footer-center">
-                &copy; 2023 MediCare
-            </div>
-            <div class="footer-right">
-                Printing Time: {{ $currentTime }}
-            </div>
-        </footer>
+    <div class="footer">
+        Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&copy; 2023 MediCare&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printing Time: {{ $currentTime }}
+    </div>
 </body>
 
 </html>

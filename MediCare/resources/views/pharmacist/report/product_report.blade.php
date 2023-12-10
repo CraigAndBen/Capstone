@@ -5,109 +5,60 @@
     <meta charset="UTF-8">
     <title>MediCare | Item Price List Report</title>
     <style>
-        @page {
-            size: a4;
-        }
-
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
         }
-
-        header {
-            width: 100%;
-            position: fixed;
-            top: -50px;
-            left: 15px;
-            align-content: center;
-        }
-
         .container {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 5px;
-        }
-
-        .img {
-            float: left;
-            padding-top: 10px;
-            width: 110px;
-            height: 70px;
-        }
-
-        p,
-        b {
-            font-size: 13px;
-        }
-
-        h5 {
-            font-family: Arial, sans-serif;
-            margin-top: 40px;
-        }
-
-        .header h1 {
-            font-size: 20px;
-            margin: 0;
-        }
-
-        .purchase-detail {
-            padding: 10px;
-        }
-
-        .purchase-detail h3 {
-            font-size: 20px;
-            margin-top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             text-align: center;
         }
 
+        h1 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
         }
-
         table,
         th,
         td {
             border: 1px solid #333;
-            text-align: center;
-        }
-
-        th,
-        td {
-            padding: 10px;
-            font-size: 12px;
             font-family: 'DejaVu Sans', sans-serif;
         }
-
-        footer {
-            width: 100%;
-            position: fixed;
-            bottom: -100px;
-            display: flex;
-            left: 0px;
-            right: 0px;
-            justify-content: space-between;
-            height: 100px;
-            line-height: 35px;
-            border-top: 1px solid #000;
+        th {
+            padding: 10px;
+            text-align: left;
+            font-size: 15px;
         }
-
-        .footer-start,
-        .footer-center,
-        .footer-right {
-            display: inline-block;
-            margin-left: 90px;
-            font-size: 11px;
+        td {
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+        .footer {
+            text-align: center;
+            background-color: #2E8BC0;
+            color: #fff;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <img class="img" src="data:image/jpeg;base64,{{ base64_encode(file_get_contents(public_path('logo.jpg'))) }}" alt="MediCare">
+    <div class="container">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
@@ -115,18 +66,16 @@
             Phone: +1 5589 55488 55
             <br>
             Email: medicare@example.com
-        </p>
-    </header>
-    <div class="container">
-        <h5>Reference: {{ $reference }}</h5>
+            <br>
+            Reference: {{ $reference }}
         <div class="purchase-detail">
             <h3>Item Price List Report</h3>
             <table>
                 <thead>
                     <tr>
-                        <th>ITEM NAME</th>
-                        <th>CATEGORY</th>
-                        <th>PRICE</th>
+                        <th style="text-align:center;">ITEM NAME</th>
+                        <th style="text-align:center">CATEGORY</th>
+                        <th style="text-align:center">PRICE</th>
                     </tr>
                 </thead>
                 <tbody class="text-center">
@@ -162,19 +111,9 @@
             </table>
         </div>
     </div>
-        <footer>
-            <div class="footer-start">
-                Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}
-            </div>
-            <div class="footer-center">
-                &copy; 2023 MediCare
-            </div>
-            <div class="footer-right">
-                Printing Time: {{ $currentTime }}
-            </div>
-        </footer>
-
-    
+    <div class="footer">
+        Printing Date: {{ date('m/d/Y', strtotime($currentDate)) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&copy; 2023 MediCare&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printing Time: {{ $currentTime }}
+    </div>
 </body>
 
 </html>
