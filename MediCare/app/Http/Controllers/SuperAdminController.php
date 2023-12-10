@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use TCPDF;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Nurse;
@@ -4508,9 +4509,17 @@ class SuperAdminController extends Controller
 
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('superadmin.report.expiry_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->stream('expiry_item_report.pdf');
+        // Create new PDF document
+       $pdf = new TCPDF();
+       // Add a page
+       $pdf->AddPage();
+       // Read HTML content from a file
+       $htmlFilePath = resource_path('views/superadmin/report/expiry_report.blade.php');
+       $htmlContent = view()->file($htmlFilePath, $data)->render();
+     
+       $pdf->writeHTML($htmlContent);
+       // Output PDF to browser
+       $pdf->Output($reference . '.pdf', 'I');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
 
@@ -4577,9 +4586,18 @@ class SuperAdminController extends Controller
             'reference' => $reference
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('superadmin.report.expiry_report', $data);
-        $pdf->setBasePath(base_path());
-        return $pdf->download('expiry_item_report.pdf');
+         // Create new PDF document
+         $pdf = new TCPDF();
+         // Add a page
+         $pdf->AddPage();
+         $pdf->SetPrintHeader(false);
+         // Read HTML content from a file
+         $htmlFilePath = resource_path('views/superadmin/report/expiry_report.blade.php');
+         $htmlContent = view()->file($htmlFilePath, $data)->render();
+       
+         $pdf->writeHTML($htmlContent);
+         // Output PDF to browser
+         $pdf->Output($reference . '.pdf', 'D');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
     public function inventoryDemo()
