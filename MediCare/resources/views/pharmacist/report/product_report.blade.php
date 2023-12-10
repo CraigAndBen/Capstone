@@ -38,7 +38,7 @@
         th {
             padding: 10px;
             text-align: left;
-            font-size: 15px;
+            font-size: 10px;
         }
         td {
             padding: 10px;
@@ -73,9 +73,9 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="text-align:center;">ITEM NAME</th>
-                        <th style="text-align:center">CATEGORY</th>
-                        <th style="text-align:center">PRICE</th>
+                        <th style="text-align:center;"><strong>ITEM NAME</strong></th>
+                        <th style="text-align:center"><strong>CATEGORY</strong></th>
+                        <th style="text-align:center"><strong>PRICE</strong></th>
                     </tr>
                 </thead>
                 <tbody class="text-center">

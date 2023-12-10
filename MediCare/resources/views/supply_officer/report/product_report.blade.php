@@ -87,11 +87,11 @@
             <h3>Inventory Report</h3>
             <table>
                 <tr>
-                    <th>ITEM NAME</th>
-                    <th>CATEGORY</th>
-                    <th>STOCK</th>
-                    <th>BRAND</th>
-                    <th>STATUS</th>
+                    <th><strong>NAME</strong></th>
+                    <th><strong>CATEGORY</strong></th>
+                    <th><strong>STOCK</strong></th>
+                    <th><strong>BRAND</strong></th>
+                    <th><strong>STATUS</strong></th>
                 </tr>
                 @foreach ($products as $product)
                     <tr>

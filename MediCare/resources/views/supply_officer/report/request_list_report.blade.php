@@ -87,13 +87,13 @@
             <h3>Request List Report</h3>
             <table>
                 <tr>
-                    <th>Requester Name</th>
-                    <th>Department</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Item</th>
-                    <th>Brand</th>
-                    <th>Quantity</th>
+                    <th><strong>Requester Name</strong></th>
+                    <th><strong>Department</strong></th>
+                    <th><strong>Date</strong></th>
+                    <th><strong>Time</strong></th>
+                    <th><strong>Item</strong></th>
+                    <th><strong>Brand</strong></th>
+                    <th><strong>Quantity</strong></th>
                 </tr>
                 @php
                     $previousIdentifier = null;

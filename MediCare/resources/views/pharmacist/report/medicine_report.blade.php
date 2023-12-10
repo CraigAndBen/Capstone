@@ -51,7 +51,7 @@
         th {
             padding: 10px;
             text-align: left;
-            font-size: 15px;
+            font-size: 10px;
         }
         td {
             padding: 10px;
@@ -87,11 +87,11 @@
             <h3>Medicine List Report</h3>
             <table>
                 <tr>
-                    <th>ITEM NAME</th>
-                    <th>CATEGORY</th>
-                    <th>STOCK</th>
-                    <th>BRAND</th>
-                    <th>EXPIRATION</th>
+                    <th><strong>ITEM NAME</strong></th>
+                    <th><strong>CATEGORY</strong></th>
+                    <th><strong>STOCK</strong></th>
+                    <th><strong>BRAND</strong></th>
+                    <th><strong>EXPIRATION</strong></th>
                 </tr>
                 @foreach ($products as $product)
                     <tr>

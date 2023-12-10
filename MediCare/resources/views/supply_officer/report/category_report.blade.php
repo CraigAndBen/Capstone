@@ -86,8 +86,8 @@
             <h3>Catgeory Report</h3>
             <table>
                 <tr>
-                    <th>CATGEORY NAME</th>
-                    <th>CATEGORY CODE</th>
+                    <th><strong>CATGEORY NAME</strong></th>
+                    <th><strong>CATEGORY CODE</strong></th>
                 </tr>
                 @foreach ($categories as $catgeory)
                             <tr>

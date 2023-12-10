@@ -88,11 +88,11 @@
             <h3>Purchase Details Report</h3>
             <table>
                 <tr>
-                    <th>REFERENCE</th>
-                    <th>TOTAL QUANTITY</th>
-                    <th>TOTAL PRICE</th>
-                    <th>AMOUNT PAID</th>
-                    <th>CHANGE</th>
+                    <th><strong>REFERENCE</strong></th>
+                    <th><strong>TOTAL QUANTITY</strong></th>
+                    <th><strong>TOTAL PRICE</strong></th>
+                    <th><strong>AMOUNT PAID</strong></th>
+                    <th><strong>CHANGE</strong></th>
                 </tr>
                 @foreach ($purchases as $purchase)
                     <tr>
