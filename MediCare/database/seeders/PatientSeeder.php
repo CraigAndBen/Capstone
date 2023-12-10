@@ -29,7 +29,7 @@ class PatientSeeder extends Seeder
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $guardianBirthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $additionalDays = $faker->numberBetween(1, 40);
-            $doctorId = $faker->numberBetween(4, 9);
+            $doctorId = $faker->numberBetween(9, 14);
             $newDate = (new \DateTime($date))->modify("+$additionalDays days")->format('Y-m-d');
             $roomNum = $faker->numberBetween(1, 100);
             $bedNum = $faker->numberBetween(1, 100);
@@ -133,7 +133,7 @@ class PatientSeeder extends Seeder
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $guardianBirthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $additionalDays = $faker->numberBetween(1, 40);
-            $doctorId = $faker->numberBetween(4, 9);
+            $doctorId = $faker->numberBetween(9, 14);
             $newDate = (new \DateTime($date))->modify("+$additionalDays days")->format('Y-m-d');
             $roomNum = $faker->numberBetween(1, 100);
             $bedNum = $faker->numberBetween(1, 100);
@@ -237,7 +237,7 @@ class PatientSeeder extends Seeder
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $guardianBirthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $additionalDays = $faker->numberBetween(1, 40);
-            $doctorId = $faker->numberBetween(4, 9);
+            $doctorId = $faker->numberBetween(9, 14);
             $newDate = (new \DateTime($date))->modify("+$additionalDays days")->format('Y-m-d');
             $roomNum = $faker->numberBetween(1, 100);
             $bedNum = $faker->numberBetween(1, 100);
@@ -341,7 +341,7 @@ class PatientSeeder extends Seeder
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $guardianBirthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $additionalDays = $faker->numberBetween(1, 40);
-            $doctorId = $faker->numberBetween(4, 9);
+            $doctorId = $faker->numberBetween(9, 14);
             $newDate = (new \DateTime($date))->modify("+$additionalDays days")->format('Y-m-d');
             $roomNum = $faker->numberBetween(1, 100);
             $bedNum = $faker->numberBetween(1, 100);
@@ -445,7 +445,7 @@ class PatientSeeder extends Seeder
             $birthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $guardianBirthdate = $faker->date($format = 'Y-m-d', $max = 'now');
             $additionalDays = $faker->numberBetween(1, 40);
-            $doctorId = $faker->numberBetween(4, 9);
+            $doctorId = $faker->numberBetween(9, 14);
             $newDate = (new \DateTime($date))->modify("+$additionalDays days")->format('Y-m-d');
             $roomNum = $faker->numberBetween(1, 100);
             $bedNum = $faker->numberBetween(1, 100);

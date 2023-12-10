@@ -13,7 +13,8 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "php-ai/php-ml": "^0.10.0",
-        "spatie/browsershot": "^3.59"
+        "spatie/browsershot": "^3.59",
+        "tecnickcom/tcpdf": "^6.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
