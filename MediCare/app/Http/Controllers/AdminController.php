@@ -211,7 +211,6 @@ class AdminController extends Controller
         $currentDateTime->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
 
-
         return view('admin.patient.patient', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
 
     }
@@ -719,6 +718,53 @@ class AdminController extends Controller
         return view('admin.patient.patient_admitted', compact('patients', 'profile', 'doctors', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
+    public function viewPatientReport(Request $request)
+    {
+
+        $profile = auth()->user();
+        $patient = Patient::where('id', $request->input('patient_id'))->first();
+        $currentYear = Carbon::now()->year; // Get current year
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentTime = $currentDateTime->format('h:i A');
+        $doctor = User::where('id', $patient->physician)->first();
+        $diagnoses = Diagnose::where('patient_id', $patient->id)->get();
+        $medications = Medication::where('patient_id', $patient->id)->get();
+        $randomNumber = mt_rand(100, 999);
+        $reference = 'PIR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
+
+        $data = [
+            'patient' => $patient,
+            'currentTime' => $currentTime,
+            'currentDate' => $currentDate,
+            'profile' => $profile,
+            'doctor' => $doctor,
+            'diagnoses' => $diagnoses,
+            'medications' => $medications,
+            'reference' => $reference,
+        ];
+
+        // Create new PDF document
+        $pdf = new TCPDF();
+
+        // Add a page
+        $pdf->AddPage();
+        $pdf->SetPrintHeader(false);
+
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/admin/report/patient_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+
+        // Set content with HTML
+        $pdf->writeHTML($htmlContent);
+
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'I');
+
+    }
+
     public function downloadPatientReport(Request $request)
     {
 
@@ -799,6 +845,7 @@ class AdminController extends Controller
 
         // Add a page
         $pdf->AddPage();
+        $pdf->SetPrintHeader(false);
 
         // Read HTML content from a file
         $htmlFilePath = resource_path('views/admin/report/patient_report.blade.php');
@@ -808,7 +855,7 @@ class AdminController extends Controller
         $pdf->writeHTML($htmlContent);
 
         // Output PDF to browser
-        $pdf->Output($reference . '.pdf', 'D');
+        $pdf->Output( $reference . '.pdf', 'D');
     }
 
     // Notification

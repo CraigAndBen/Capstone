@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Doctor_availabilities;
 use Illuminate\Http\RedirectResponse;
+use TCPDF;
+
 
 class DoctorController extends Controller
 {
@@ -1272,9 +1274,21 @@ class DoctorController extends Controller
             'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('doctor.report.appointment_report', $data);
+        // Create new PDF document
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        $pdf->SetPrintHeader(false);
 
-        return $pdf->stream($reference . '.pdf');
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/doctor/report/appointment_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+
+        // Set content with HTML
+        $pdf->writeHTML($htmlContent);
+
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'I');
 
     }
 
@@ -1344,9 +1358,21 @@ class DoctorController extends Controller
             'reference' => $reference,
         ];
 
-        $pdf = app('dompdf.wrapper')->loadView('doctor.report.appointment_report', $data);
+        // Create new PDF document
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        $pdf->SetPrintHeader(false);
 
-        return $pdf->download($reference . '.pdf');
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/doctor/report/appointment_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+
+        // Set content with HTML
+        $pdf->writeHTML($htmlContent);
+
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'D');
     }
 
     public function notification()

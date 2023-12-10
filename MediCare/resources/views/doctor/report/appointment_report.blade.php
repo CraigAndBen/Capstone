@@ -76,7 +76,6 @@
 
 <body>
     <div class="container">
-        <img class="img" src="{{ public_path('logo.jpg') }}" alt="MediCare" style="height: 100px">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             C98V+GR4, Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
@@ -87,7 +86,6 @@
             <br>
             Reference No: {{ $reference }}
         </p>
-        <hr>
         <div class="patient-info">
             <h2>Patient Details</h2>
             <table>
@@ -160,9 +158,6 @@
             </table>
             <br>
         </div>
-    </div>
-    <div class="footer">
-        &copy; 2023 MediCare
     </div>
 </body>
 
