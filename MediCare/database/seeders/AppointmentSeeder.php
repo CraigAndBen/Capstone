@@ -81,7 +81,7 @@ class AppointmentSeeder extends Seeder
                 $lastName = $faker->lastName;
                 $type = ['Regular check-up', 'Follow-up appointment', 'Diagnostic appointment', 'specialist consultation'];
                 $reason = ['Physical examinations', 'blood pressure checks', 'ge-appropriate screenings like mammograms or colonoscopies', 'Follow-up after surgery,'];
-                $doctorId = $faker->numberBetween(4, 9);
+                $doctorId = $faker->numberBetween(9, 14);
                 $digits = $faker->numerify('#########');
                 $phone = '+639' . $digits;
 

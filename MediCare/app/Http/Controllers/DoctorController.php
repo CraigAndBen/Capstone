@@ -721,8 +721,8 @@ class DoctorController extends Controller
             ],
             [
                 'title' => 'Ninoy Aquino Day',
-                'start' => $currentYear . '-8-21',
-                'end' => $currentYear . '-8-21',
+                'start' => $currentYear . '-08-21',
+                'end' => $currentYear . '-08-21',
                 'type' => 'holiday',
             ],
 
@@ -922,7 +922,7 @@ class DoctorController extends Controller
 
             }
 
-            return redirect()->route('doctor.appointment.calendar')->with('success', 'Your availability is now set to ' . $request->availability . ' on ' . $readableDate);
+            return redirect()->route('doctor.appointment.calendar')->with('success', 'Your availability is now updated and set to ' . $request->availability . ' on ' . $readableDate);
         }
     }
 

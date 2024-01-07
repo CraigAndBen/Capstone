@@ -3,12 +3,16 @@
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- FullCalendar CSS -->
+    {{-- <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.css" rel="stylesheet">
     <!-- Moment.js for date handling -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <!-- FullCalendar JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.js"></script> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
     <section class="breadcrumbs">
         <div class="container" style="margin-top: 85px">
@@ -35,7 +39,8 @@
                                     <div class="d-flex justify-content-center">
                                         <div class="auth-header text-center">
                                             <h2 class="text-primary mt-5"><b>Doctor Appointment Request Calendar</b></h2>
-                                            <p class="f-16 mt-2">Select your preferred date, fill out the form below, and we will get back to you soon with more updates to plan your appointment.</p>
+                                            <p class="f-16 mt-2">Select your preferred date, fill out the form below, and we
+                                                will get back to you soon with more updates to plan your appointment.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -70,46 +75,9 @@
                                         {{ session('date') }}
                                     </div>
                                 @endif
-                                <div class="mb-3">
-                                    <div id="calendar" style="max-height: 700px; max-width: 100%"></div>
+                                <div class="m-3 p-3">
+                                    <div id="calendar"></div>
                                 </div>
-
-                                <div class="container my-5">
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-6 text-center">
-                                            <h3>Event Color Legend</h3>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Event Type</th>
-                                                        <th>Color</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Holiday</td>
-                                                        <td style="background-color: green;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Appointment (Pending)</td>
-                                                        <td style="background-color: #E1AA74;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Appointment (Confirmed)</td>
-                                                        <td style="background-color: #3876BF;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Appointment (Done)</td>
-                                                        <td style="background-color: #192655;"></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-
-                                <div id="datePlaceholder"></div>
 
                                 <div class="modal fade" id="createModal" data-bs-backdrop="static" data-bs-keyboard="false"
                                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -309,13 +277,14 @@
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                            <div id="infoBg" class="modal-header d-flex justify-content-center">
                                                 <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
                                                     Appointment
                                                 </h3>
                                             </div>
                                             <div class="modal-body">
-                                                <h4 id="eventName" class="pb-3"></h4>
+                                                <p><strong>Appointment Type:</strong> <span id="eventName"></span>
+                                                </p>
                                                 <p><strong>Appointment Start:</strong> <span id="eventStartDate"></span>
                                                 </p>
                                                 <p><strong>Appointment End:</strong> <span id="eventEndDate"></span>
@@ -335,25 +304,28 @@
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                            <div class="modal-header d-flex justify-content-center"
+                                                style="background: orange">
                                                 <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
                                                     Appointment
                                                 </h3>
                                             </div>
                                             <div class="modal-body">
-                                                <h4 id="cancelEventName" class="pb-3"></h4>
-                                                <p><strong>Appointment Start:</strong> <span id="cancelEventStartDate"></span>
+                                                <p><strong>Appointment Type:</strong> <span id="cancelEventName"></span>
+                                                <p><strong>Appointment Start:</strong> <span
+                                                        id="cancelEventStartDate"></span>
                                                 </p>
                                                 <p><strong>Appointment End:</strong> <span id="cancelEventEndDate"></span>
                                                 <p><strong>Appointment Status:</strong> <span id="cancelStatus"></span>
                                                 </p>
-                                                <form action="{{route('user.appointment.calendar.cancel')}}" method="POST">
+                                                <form action="{{ route('user.appointment.calendar.cancel') }}"
+                                                    method="POST">
                                                     @csrf
-                                                <input type="hidden" id="cancelId" name="appointment_id">
+                                                    <input type="hidden" id="cancelId" name="appointment_id">
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-danger"
-                                                data-bs-dismiss="modal">Cancel</button>
+                                                    data-bs-dismiss="modal">Cancel</button>
                                                 <button type="button" class="btn btn-primary"
                                                     data-bs-dismiss="modal">Close</button>
                                             </div>
@@ -367,13 +339,14 @@
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                            <div class="modal-header d-flex justify-content-center"
+                                                style="background: red">
                                                 <h3 class="modal-title text-white" id="staticBackdropLabel">Holiday
                                                 </h3>
                                             </div>
                                             <div class="modal-body text-center">
                                                 <h4 id="holidayName" class="pb-3"></h4>
-                                                <p><strong>Date:</strong> <span id="date"></span>
+                                                <p><strong>Date:</strong> <span id="holidayDate"></span>
                                                 </p>
                                             </div>
                                             <div class="modal-footer">
@@ -441,12 +414,34 @@
 
                                                 <p>5. <i>Privacy and Data Security</i></p>
 
-                                                <p>&nbsp;&nbsp;The protection of your privacy is of utmost importance to us.
-                                                    Our
-                                                    service collects and stores personal data as part of the appointment
-                                                    booking process. For details on how your personal information is
-                                                    collected, used, and protected, please refer to our Privacy Policy,
-                                                    which outlines our commitment to safeguarding your data.</p>
+                                                <p>&nbsp;&nbsp;• Data Collection:
+                                                    During the appointment booking process, our service collects and stores the following personal data:
+                                                    <br>&nbsp;&nbsp;- Full Name
+                                                    <br>&nbsp;&nbsp;- Contact Information (email address, phone number, etc.)
+                                                    <br>&nbsp;&nbsp;- Appointment Preferences
+                                                    <br>&nbsp;&nbsp;- Other Information voluntarily provided by the user
+                                                 <br>
+                                                 <br>
+                                                    &nbsp;&nbsp;• Use of Gathered Data:
+                                                    The collected data is used solely for the purpose of facilitating and managing appointment bookings. This includes, but is not limited to, sending confirmation details, reminders, and updates related to your appointments.
+                                                 <br>
+                                                 <br>
+                                                    &nbsp;&nbsp;• Data Protection:
+                                                    We are committed to safeguarding your data and have implemented security measures to prevent unauthorized access, disclosure, alteration, and destruction of your personal information.
+                                                 <br>
+                                                 <br>
+                                                    &nbsp;&nbsp;• Third-Party Sharing:
+                                                    We do not sell, trade, or otherwise transfer your personal information to third parties. Your data is used exclusively for the stated purposes within our service.
+                                                 <br>
+                                                 <br>
+                                                    &nbsp;&nbsp;• Your Consent:
+                                                    By using our service and providing your personal information, you consent to the collection and use of this information as outlined in our Privacy Policy.
+                                                 <br>
+                                                 <br>
+                                                    • Privacy Policy:
+                                                    For more details on how your personal information is handled, please refer to our Privacy Policy, which provides a comprehensive overview of our data protection practices.
+                                                 
+                                                 Please take the time to read our Privacy Policy carefully. If you have any questions or concerns regarding the handling of your data, feel free to contact us at medicare@gmail.com.</p>
 
                                                 <p>6. <i>Liability</i></p>
 
@@ -475,9 +470,12 @@
 
                                                 <p>9. <i>Governing Law</i></p>
 
-                                                <p>&nbsp;&nbsp;These terms and conditions are governed by the laws of
-                                                    Philippines, and any disputes or legal matters will be subject to the
-                                                    jurisdiction of the appropriate courts in that jurisdiction.</p>
+                                                <p>&nbsp;&nbsp; These terms and conditions are governed by the laws of the Republic of the Philippines. Any disputes or legal matters arising from the use of our service, including matters related to data privacy, shall be subject to the jurisdiction of the appropriate courts in the Philippines.
+                                                    <br><br>
+
+                                                    &nbsp;&nbsp;In particular, the processing of personal data collected through our service is subject to the provisions of the Data Privacy Act of the Philippines (Republic Act No. 10173). We are committed to complying with the principles and requirements of this act, ensuring the protection and privacy of your personal information.
+                                                 <br><br>
+                                                 &nbsp;&nbsp;If you have any concerns or questions regarding the processing of your personal data, please refer to our Privacy Policy or contact us at medicare@gmail.com. We are dedicated to addressing your inquiries and maintaining transparency in our data processing practices..</p>
 
                                                 <p>10. <i>Contact Information</i></p>
 
@@ -514,7 +512,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
 @section('scripts')
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             var holidayDates = []; // Initialize an empty array
 
@@ -735,6 +733,279 @@
         });
 
         function formatPhoneNumber(input) {
+            // Remove any non-numeric characters
+            input.value = input.value.replace(/[^0-9+]/g, '');
+
+            // Check if the input starts with "09" and change it to "+639"
+            if (input.value.startsWith('09')) {
+                input.value = '+639' + input.value.substring(2);
+            }
+        }
+
+        $('#specialties, #appointment_date').change(function() {
+            var selectedSpecialty = $('#specialties').val();
+            var selectedDate = $('#appointment_date').val();
+
+            $.ajax({
+                type: "POST",
+                url: '/user/appointment/doctor/specialties/time',
+                data: {
+                    selectedSpecialty: selectedSpecialty,
+                    selectedDate: selectedDate
+                },
+                success: function(data) {
+                    var dropdown = $('#appointment_time');
+                    dropdown.empty();
+
+                    // Add a default option as the first option in the select
+                    dropdown.append($('<option></option>').attr('value', '').text(
+                        'Select Available Time'));
+
+                    $.each(data, function(index, time) {
+                        dropdown.append($('<option></option>').attr('value', time).text(time));
+                    });
+                },
+                error: function() {
+                    console.log('Failed to fetch available time data.');
+                }
+            });
+        });
+    </script> --}}
+    <script>
+        $(document).ready(function() {
+
+            var availabilityDates = [];
+            var holidayDates = [];
+
+            $.ajax({
+                url: '/user/appointment/holida',
+                method: 'GET',
+                success: function(data) {
+                    holidayDates = data.map(function(event) {
+                        return event.start;
+                    });
+                },
+                error: function() {
+                    console.log('Failed to fetch holiday data from the server.');
+                }
+            });
+
+            $('#calendar').fullCalendar({
+                selectable: true,
+                selectHelper: true,
+
+                select: function(start, end, allDay) {
+
+                    clickedDateString = start.format('YYYY-MM-DD');
+
+                    if (holidayDates.includes(clickedDateString)) {
+                        return; // Do nothing if it's a holiday
+                    }
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: '/user/appointment/doctor/specialties', // Route to the Laravel controller method
+                        data: {
+                            date: clickedDateString
+                        },
+                        success: function(data) {
+                            // Update the dropdown with available doctors' specialties
+                            var dropdown = $('#specialties');
+                            dropdown.empty();
+
+                            // Add a default option as the first option in the select
+                            dropdown.append($('<option></option>').attr('value', '').text(
+                                'Select Specialist'));
+
+                            if (data.length > 0) {
+                                $.each(data, function(index, doctor) {
+                                    dropdown.append($('<option></option>').attr(
+                                        'value', doctor.id).text('Dr. ' +
+                                        doctor.firstName + ' ' + doctor.lastName + ' - ' + doctor.specialty));
+                                });
+                            } else {
+                                // Handle case where no doctors are available for the selected date
+                                dropdown.append($('<option></option>').attr('value', '')
+                                    .text('No available doctors'));
+                            }
+
+
+                        },
+                        error: function() {
+                            console.log('Failed to fetch available doctors data.');
+                        }
+                    });
+
+                    openEventModal(start.format('YYYY-MM-DD'));
+                },
+
+                header: {
+                    left: 'month, agendaWeek, agendaDay, list',
+                    center: 'title',
+                    right: 'prev, today, next'
+                },
+                buttonText: {
+                    today: 'Today',
+                    month: 'Month',
+                    agendaWeek: 'Week',
+                    agendaDay: 'Day',
+                    list: 'List',
+                },
+                eventSources: [{
+                        url: '/user/appointment/event',
+                        method: 'GET',
+                        textColor: 'white',
+                    },
+                    {
+                        url: '/user/appointment/holiday',
+                        method: 'GET',
+                        textColor: 'white',
+                    },
+                ],
+
+                dayRender: function(date, cell) {
+                    var currentDate = moment(); // Get the current date
+                    var cellDate = moment(date);
+
+                    // Compare the cell date with the current date
+                    if (cellDate.isBefore(currentDate, 'day')) {
+                        // Past days: Set a different background color
+                        cell.css("background", "lightgray");
+                    }
+                    if (cellDate.isSame(currentDate, 'day')) {
+                        // Current day: Set a different background color
+                        cell.css("background", "yellow");
+                    } else if (cellDate.day() === 0 || cellDate.day() === 6) {
+                        // Weekend days: Set a different background color
+                        cell.css("background", "lightpink");
+                    }
+                },
+
+                eventRender: function(event, element) {
+                    var eventColor;
+
+                    // Check the event type and set the color accordingly
+                    switch (event.type) {
+                        case 'holiday':
+                            eventColor = 'red';
+                            break;
+                        case 'availability':
+                            // Use the default color for availability events
+                            break;
+                    }
+
+                    switch (event.status) {
+                        case 'Pending':
+                            eventColor = 'orange';
+                            break;
+                        case 'Confirmed':
+                            eventColor = 'green';
+                            break;
+                        case 'Done':
+                            eventColor = 'darkblue';
+                            break;
+                    }
+
+                    // Set the background color for the event
+                    if (eventColor) {
+                        element.css('background-color', eventColor);
+                    }
+                },
+
+                selectAllow: function(selectInfo) {
+                    var selectedStartDate = moment(selectInfo.start);
+
+                    console.log(selectedStartDate);
+
+                    return selectedStartDate.isSameOrAfter(moment(), 'day') && selectedStartDate
+                        .day() !== 0 && selectedStartDate.day() !== 6;
+                },
+                eventClick: function(info) {
+
+                    if (info.type === 'holiday') {
+                        displayHolidayDetails(info);
+                    }
+
+                    if (info.status === 'Pending') {
+                        cancelEventDetails(info);
+                    } else if (info.status === 'Confimed' || info.status === 'Done') {
+                        displayEventDetails(info);
+                    }
+                },
+            });
+
+            function openEventModal(date) {
+                $('#createModal').modal('show');
+                $('#appointment_date').val(date);
+            }
+
+            function displayEventDetails(event) {
+                $('#infoModal').modal('show');
+                displayEventInfo(event);
+            }
+
+            function cancelEventDetails(event) {
+                $('#cancelModal').modal('show');
+                displayCancelEventInfo(event);
+            }
+
+            function displayHolidayDetails(event) {
+                $('#holidayModal').modal('show');
+                displayHolidayInfo(event);
+            }
+
+            function displayEventInfo(event) {
+                $('#eventName').text(event.title);
+                $('#eventStartDate').text(moment(event.start).format('LLLL'));
+                $('#eventEndDate').text(moment(event.end).format('LLLL'));
+
+                var statusText;
+                var backgroundColor;
+
+                switch (event.status) {
+                    case 'Pending':
+                        statusText = 'Waiting for confirmation.';
+                        backgroundColor = 'orange';
+                        break;
+                    case 'Confirmed':
+                        statusText = 'Confirmed.';
+                        backgroundColor = 'green';
+                        break;
+                    case 'Done':
+                        statusText = 'Done.';
+                        backgroundColor = 'darkblue';
+                        break;
+                }
+
+                $('#status').text(statusText);
+                $('#infoBg').css('background-color', backgroundColor);
+            }
+
+            function displayCancelEventInfo(event) {
+                $('#cancelId').val(event.appointment_id);
+                $('#cancelEventName').text(event.title);
+                $('#cancelEventStartDate').text(moment(event.start).format('LLLL'));
+                $('#cancelEventEndDate').text(moment(event.end).format('LLLL'));
+
+                if (event.status == 'Pending') {
+                    $('#cancelStatus').text('Waiting for confimation.');
+                } else {
+                    $('#cancelStatus').text(event.status);
+                }
+            }
+
+            function displayHolidayInfo(event) {
+                $('#holidayName').text(event.title);
+                $('#holidayDate').text(moment(event.start).format('LLLL'));
+            }
+        });
+                function formatPhoneNumber(input) {
             // Remove any non-numeric characters
             input.value = input.value.replace(/[^0-9+]/g, '');
 

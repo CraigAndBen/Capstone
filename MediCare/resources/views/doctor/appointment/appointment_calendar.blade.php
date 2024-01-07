@@ -1,12 +1,18 @@
 @extends('layouts.inner_doctor')
 
 @section('content')
-    <!-- FullCalendar CSS -->
+    {{-- <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.css" rel="stylesheet">
     <!-- Moment.js for date handling -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <!-- FullCalendar JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.js"></script> --}}
+    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> --}}
     <!-- [ Main Content ] start -->
     <div class="pc-container pb-3">
         <div class="pc-content ">
@@ -66,7 +72,7 @@
                                     </div>
                                 @endif
 
-                                <div class="container my-3">
+                                {{-- <div class="container my-3">
                                     <div class="row justify-content-center">
                                         <div class="col-md-6 text-center">
                                             <h3>Event Color Legend</h3>
@@ -80,19 +86,19 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Holiday</td>
-                                                        <td style="background-color: green;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Availability</td>
                                                         <td style="background-color: red;"></td>
                                                     </tr>
                                                     <tr>
+                                                        <td>Availability</td>
+                                                        <td style="background-color: maroon;"></td>
+                                                    </tr>
+                                                    <tr>
                                                         <td>Appointment (Pending)</td>
-                                                        <td style="background-color: #E1AA74;"></td>
+                                                        <td style="background-color: #FFD700 ;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Appointment (Confirmed)</td>
-                                                        <td style="background-color: #3876BF;"></td>
+                                                        <td style="background-color: #008000 ;"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Appointment (Done)</td>
@@ -103,19 +109,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
+                                <hr> --}}
 
                                 <div class="m-3 p-3">
-                                    <div id="calendar" style="max-height: 700px;"></div>
+                                    <div id="calendar"></div>
                                 </div>
 
                                 <div class="modal fade" id="infoModal" data-bs-backdrop="static" data-bs-keyboard="false"
                                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center bg-primary">
-                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
-                                                    Appointment
+                                            <div class="modal-header d-flex justify-content-center" style="background: darkblue">
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel"><span id="eventName"></span>
                                                 </h3>
                                             </div>
                                             <div class="modal-body">
@@ -138,9 +143,8 @@
                                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center bg-primary">
-                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
-                                                    Appointment
+                                            <div class="modal-header d-flex justify-content-center" style="background: orange">
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel"><span id="confirmEventName"></span>
                                                 </h3>
                                             </div>
 
@@ -172,16 +176,14 @@
                                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center bg-primary">
-                                                <h3 class="modal-title text-white" id="staticBackdropLabel">Doctor
-                                                    Appointment
+                                            <div class="modal-header d-flex justify-content-center" style="background: green">
+                                                <h3 class="modal-title text-white" id="staticBackdropLabel"><span id="doneEventName"></span>
                                                 </h3>
                                             </div>
 
                                             <div class="modal-body">
                                                 <h4 id="doneEventName" class="pb-3"></h4>
-                                                <p><strong>Appointment Start:</strong> <span
-                                                        id="doneEventStartDate"></span>
+                                                <p><strong>Appointment Start:</strong> <span id="doneEventStartDate"></span>
                                                 </p>
                                                 <p><strong>Appointment End:</strong> <span id="doneEventEndDate"></span>
                                                 <p><strong>Appointment Status:</strong> <span id="doneStatus"></span>
@@ -214,7 +216,7 @@
                                                 @csrf
                                                 <div class="modal-body">
                                                     <div class="row mt-2">
-                                                        <h3>Date: <i><span id="date"></span></i></h3>
+                                                        <h4>Date: <i><span id="date"></span></i></h4>
                                                     </div>
                                                     <div class="row mt-2">
                                                         <div class="form-floating mb-3">
@@ -261,7 +263,7 @@
                                                 @csrf
                                                 <div class="modal-body">
                                                     <div class="row mt-2">
-                                                        <h3>Date: <i><span id="Updatedate"></span></i></h3>
+                                                        <h3>Date: <i><span id="updateDate"></span></i></h3>
                                                     </div>
                                                     <div class="row mt-2">
                                                         <div class="form-floating mb-3">
@@ -298,7 +300,7 @@
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center bg-primary">
+                                            <div class="modal-header d-flex justify-content-center " style="background: red">
                                                 <h3 class="modal-title text-white" id="staticBackdropLabel">Holiday
                                                 </h3>
                                             </div>
@@ -331,7 +333,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     @section('scripts')
-        <script>
+        {{-- <script>
             document.addEventListener('DOMContentLoaded', function() {
                 var holidayDates = []; // Initialize an empty array
                 var availabilityDates = []; // Initialize an empty array
@@ -365,6 +367,16 @@
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
+                    dayRender: function(info) {
+                        var today = moment().startOf('day');
+                        var date = moment(info.date);
+
+                        if (date.isBefore(today, 'day')) {
+                            info.el.classList.add('fc-past');
+                        } else if (date.isAfter(today, 'day')) {
+                            info.el.classList.add('fc-future');
+                        }
+                    },
                     eventSources: [{
                             url: '/doctor/appointment/calendar/event', // Your existing event source
                         },
@@ -443,7 +455,7 @@
                         // Customize the appearance of events based on the 'type' property in event.extendedProps
                         if (event.extendedProps.type === 'holiday') {
                             containerEl.style.backgroundColor =
-                                'green'; // Set a red background color for holiday events
+                                'red'; // Set a red background color for holiday events
                         } else if (event.extendedProps.type === 'availability') {
                             containerEl.style.backgroundColor =
                                 'red'; // Set a green background color for availability events
@@ -453,17 +465,17 @@
 
                             if (statusLowerCase === 'pending') {
                                 containerEl.style.backgroundColor =
-                                '#E1AA74'; // Set a blue background color
+                                    '#FFD700'; // Set a blue background color
                                 containerEl.style.color =
-                                    'white'; // Set the text color to white a green background color for availability events
+                                    'black'; // Set the text color to white a green background color for availability events
                             } else if (statusLowerCase === 'confirmed') {
                                 containerEl.style.backgroundColor =
-                                '#3876BF'; // Set a blue background color
+                                    '#008000'; // Set a blue background color
                                 containerEl.style.color =
                                     'white'; // Set the text color to white a green background color for availability events
                             } else if (statusLowerCase === 'done') {
                                 containerEl.style.backgroundColor =
-                                '#192655'; // Set a blue background color
+                                    '#192655'; // Set a blue background color
                                 containerEl.style.color =
                                     'white'; // Set the text color to white a green background color for availability events
                             }
@@ -491,14 +503,28 @@
                         return {
                             domNodes: [containerEl]
                         };
-                    }
+                    },
+                    eventClassNames: function(arg) {
+                        var now = new Date();
+                        var eventDate = new Date(arg.event.start);
+
+                        if (eventDate < now) {
+                            return ['fc-past'];
+                        } else {
+                            return [];
+                        }
+                    },
                 });
                 calendar.render();
 
                 function openEventModal(date) {
 
                     const dateObj = new Date(date);
-                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
                     const formattedDate = dateObj.toLocaleDateString('en-US', options);
 
                     $('#availabilityModal').modal('show');
@@ -573,6 +599,248 @@
                     $('#updateAvailability').val(event.extendedProps.availability);
                     $('#updateReason').val(event.extendedProps.reason);
 
+
+                }
+            });
+        </script> --}}
+        <script>
+            $(document).ready(function() {
+
+                var availabilityDates = [];
+                var holidayDates = [];
+
+                $.ajax({
+                    url: '/doctor/appointment/calendar/holiday',
+                    method: 'GET',
+                    success: function(data) {
+                        holidayDates = data.map(function(event) {
+                            return event.start;
+                        });
+                    },
+                    error: function() {
+                        console.log('Failed to fetch holiday data from the server.');
+                    }
+                });
+
+                $.ajax({
+                    url: '/doctor/appointment/calendar/availability/dates',
+                    method: 'GET',
+                    success: function(data) {
+                        availabilityDates = data.map(function(event) {
+                            return event.start;
+                        });
+                    },
+                    error: function() {
+                        console.log('Failed to fetch holiday data from the server.');
+                    }
+                });
+
+                $('#calendar').fullCalendar({
+                    selectable: true,
+                    selectHelper: true,
+
+                    select: function(start, end, allDay) {
+
+                        if (availabilityDates.includes(start.format('YYYY-MM-DD'))) {
+                            return; // Do nothing if it's a holiday
+                        }
+
+                        if (holidayDates.includes(start.format('YYYY-MM-DD'))) {
+                            return; // Do nothing if it's a holiday
+                        }
+
+                        openEventModal(start.format('YYYY-MM-DD'));
+                    },
+
+                    header: {
+                        left: 'month, agendaWeek, agendaDay, list',
+                        center: 'title',
+                        right: 'prev, today, next'
+                    },
+                    buttonText: {
+                        today: 'Today',
+                        month: 'Month',
+                        agendaWeek: 'Week',
+                        agendaDay: 'Day',
+                        list: 'List',
+                    },
+                    eventSources: [{
+                            url: '/doctor/appointment/calendar/event',
+                            method: 'GET',
+                            textColor: 'white',
+                        },
+                        {
+                            url: '/doctor/appointment/calendar/holiday',
+                            method: 'GET',
+                            textColor: 'white',
+                        },
+                        {
+                            url: '/doctor/appointment/calendar/availability/dates',
+                            method: 'GET',
+                            textColor: 'white',
+
+                        }
+                    ],
+
+                    dayRender: function(date, cell) {
+                        var currentDate = moment(); // Get the current date
+                        var cellDate = moment(date);
+
+                        // Compare the cell date with the current date
+                        if (cellDate.isBefore(currentDate, 'day')) {
+                            // Past days: Set a different background color
+                            cell.css("background", "lightgray");
+                        }
+                        if (cellDate.isSame(currentDate, 'day')) {
+                            // Current day: Set a different background color
+                            cell.css("background", "yellow");
+                        } else if (cellDate.day() === 0 || cellDate.day() === 6) {
+                            // Weekend days: Set a different background color
+                            cell.css("background", "lightpink");
+                        }
+                    },
+
+                    eventRender: function(event, element) {
+                        var eventColor;
+
+                        // Check the event type and set the color accordingly
+                        switch (event.type) {
+                            case 'holiday':
+                                eventColor = 'red';
+                                break;
+                            case 'availability':
+                                // Use the default color for availability events
+                                break;
+                        }
+
+                        switch (event.status) {
+                            case 'Pending':
+                                eventColor = 'orange';
+                                break;
+                            case 'Confirmed':
+                                eventColor = 'green';
+                                break;
+                            case 'Done':
+                                eventColor = 'darkblue';
+                                break;
+                        }
+
+                        // Set the background color for the event
+                        if (eventColor) {
+                            element.css('background-color', eventColor);
+                        }
+                    },
+
+                    selectAllow: function(selectInfo) {
+                        var selectedStartDate = moment(selectInfo.start);
+
+                        console.log(selectedStartDate);
+
+                        return selectedStartDate.isSameOrAfter(moment(), 'day') && selectedStartDate
+                            .day() !== 0 && selectedStartDate.day() !== 6;
+                    },
+                    eventClick: function(info) {
+
+                        if (info.type === 'holiday') {
+                            displayHolidayDetails(info);
+                        }
+
+                        if (info.type === 'availability') {
+                            displayAvailabilityDetails(info);
+                        }
+
+                        if (info.status === 'Pending') {
+                            confirmEventDetails(info);
+                        } else if (info.status === 'Confirmed') {
+
+                            doneEventDetails(info);
+                        } else if (info.status === 'Done') {
+                            displayEventDetails(info);
+                        }
+                    },
+                });
+
+                function openEventModal(date) {
+                    const dateObj = new Date(date);
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
+                    const formattedDate = dateObj.toLocaleDateString('en-US', options);
+
+                    $('#availabilityModal').modal('show');
+                    $('#date').text(formattedDate);
+                    $('#availabilityDate').val(date);
+                }
+
+                function displayEventDetails(event) {
+                    // Example: Display event details in a modal
+                    $('#infoModal').modal('show');
+                    displayEventInfo(event);
+                }
+
+                function confirmEventDetails(event) {
+                    $('#confirmModal').modal('show');
+                    displayConfirmInfo(event);
+                }
+
+                function doneEventDetails(event) {
+                    // Example: Display event details in a modal
+                    $('#doneModal').modal('show');
+                    displayDoneInfo(event);
+                }
+
+                function displayHolidayDetails(event) {
+                    // Example: Display event details in a modal
+                    $('#holidayModal').modal('show');
+                    displayHolidayInfo(event);
+                }
+
+                function displayAvailabilityDetails(event) {
+                    // Example: Display event details in a modal
+                    $('#updateAvailabilityModal').modal('show');
+                    displayAvailabilityInfo(event);
+                }
+
+                function displayEventInfo(event) {
+                    // Example: Populate and display event details
+                    $('#eventName').text(event.title);
+                    $('#eventStartDate').text(moment(event.start).format('LLLL'));
+                    $('#eventEndDate').text(moment(event.end).format('LLLL'));
+                    $('#status').text(event.status);
+                }
+
+                function displayConfirmInfo(event) {
+                    $('#confirmId').val(event.appointment_id);
+                    $('#confirmEventName').text(event.title);
+                    $('#confirmEventStartDate').text(moment(event.start).format('LLLL'));
+                    $('#confirmEventEndDate').text(moment(event.end).format('LLLL'));
+                    $('#confirmStatus').text(event.status);
+                }
+
+                function displayDoneInfo(event) {
+                    $('#doneId').val(event.appointment_id);
+                    $('#doneEventName').text(event.title);
+                    $('#doneEventStartDate').text(moment(event.start).format('LLLL'));
+                    $('#doneEventEndDate').text(moment(event.end).format('LLLL'));
+                    $('#doneStatus').text(event.status);
+                }
+
+                function displayHolidayInfo(event) {
+                    // Example: Populate and display event details
+                    $('#holidayName').text(event.title);
+                    $('#holidayDate').text(moment(event.start).format('LLLL'));
+                }
+
+                function displayAvailabilityInfo(event) {
+                    var selectedDate = moment(event.start);
+                    var formattedDate = selectedDate.format('YYYY, MMMM D');
+
+                    $('#updateDate').text(formattedDate);
+                    $('#availability_id').val(event.availability_id);
+                    $('#updateAvailability').val(event.availability);
+                    $('#updateReason').val(event.reason);
 
                 }
             });
