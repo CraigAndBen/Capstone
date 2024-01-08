@@ -19,11 +19,6 @@
             text-align: center;
         }
 
-        .img {
-            max-width: 100%;
-            height: auto;
-        }
-
         .header {
             text-align: center;
             background-color: #2E8BC0;
@@ -83,6 +78,7 @@
 
 <body>
     <div class="container">
+        <img src="logo.jpg" style="height: 90px;">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             C98V+GR4, Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
