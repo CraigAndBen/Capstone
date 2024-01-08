@@ -6167,29 +6167,46 @@ class SuperAdminController extends Controller
             ],
         ];
 
+        $existingHolidays = 0; // Counter for existing holidays
+
         foreach ($holidays as $holidayData) {
-            $holiday = new Holiday();
-            $holiday->name = $holidayData['name'];
-            $holiday->date = $holidayData['date'];
-            $holiday->type = $holidayData['type'];
-            $holiday->save();
+            $name = $holidayData['name'];
+            $date = $holidayData['date'];
+            $type = $holidayData['type'];
+
+            // Check if the record already exists in the table
+            $existingRecord = Holiday::where('name', $name)
+                ->where('date', $date)
+                ->where('type', $type)
+                ->first();
+
+            if ($existingRecord) {
+                $existingHolidays++; // Increment the counter for existing holidays
+            } else {
+                $holiday = new Holiday();
+                $holiday->name = $holidayData['name'];
+                $holiday->date = $holidayData['date'];
+                $holiday->type = $holidayData['type'];
+                $holiday->save();
+            }
         }
 
-        return redirect()->back()->with('success', 'Default holidays for this year have been created successfully.');
-
+        if ($existingHolidays > 0) {
+            return redirect()->back()->with('info', 'Some default holidays for this year already exist.');
+        } else {
+            return redirect()->back()->with('success', 'Default holidays for this year have been created successfully.');
+        }
     }
 
     public function holidayEvents()
     {
-        $user = Auth::user();
-        $info = Doctor::where('account_id', $user->id)->first();
         $holidays = Holiday::all();
 
         $events = [];
         foreach ($holidays as $holiday) {
             $start = Carbon::parse($holiday->date)->format('Y-m-d H:i:s');
             $end = Carbon::parse($holiday->date)->endOfDay()->format('Y-m-d H:i:s');
-            
+
             $events[] = [
                 'holiday_id' => $holiday->id,
                 'title' => ucwords($holiday->name),
@@ -6200,6 +6217,76 @@ class SuperAdminController extends Controller
         }
 
         return response()->json($events);
+    }
+
+    public function holidayUpdate(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+        ]);
+
+        $holiday = Holiday::where('id', $request->id)->first();
+
+        $holidayUpdatedData = [
+            'name' => $request->input('name'),
+            'date' => $request->input('date'),
+            'type' => $request->input('type'),
+        ];
+
+        $holidayChange = $this->hasChanges($holiday, $holidayUpdatedData);
+
+        if ($holidayChange) {
+
+            $holiday->name = $request->input('name');
+            $holiday->date = $request->input('date');
+            $holiday->type = $request->input('type');
+            $holiday->save();
+
+            return redirect()->back()->with('success', 'The holiday has been updated successfully.');
+        } else {
+            return redirect()->back()->with('info', 'No changes were made.');
+        }
+    }
+
+    public function createHoliday(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+        ]);
+
+        $name = ucwords($request->input('name'));
+        $date = $request->input('date');
+        $type = $request->input('type');
+
+        // Check if the record already exists in the table
+        $existingRecord = Holiday::where('name', $name)
+            ->where('date', $date)
+            ->first();
+
+        if ($existingRecord) {
+
+            return redirect()->back()->with('info', 'The holiday already exists.');
+        } else {
+
+            Holiday::create([
+                'name' => $name,
+                'date' => $date,
+                'type' => $type,
+            ]);
+
+            return redirect()->back()->with('success', 'The holiday has been created successfully.');
+        }
+    }
+
+    public function deleteHoliday(Request $request)
+    {
+
+        $holiday = Holiday::where('id', $request->input('holidayId'))->first();
+        $holiday->delete();
+
+        return redirect()->back()->with('success', 'Holiday deleted successfully');
     }
 
     private function hasChanges($info, $updatedData)

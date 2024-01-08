@@ -519,7 +519,7 @@
             var holidayDates = [];
 
             $.ajax({
-                url: '/user/appointment/holida',
+                url: '/user/appointment/holiday',
                 method: 'GET',
                 success: function(data) {
                     holidayDates = data.map(function(event) {

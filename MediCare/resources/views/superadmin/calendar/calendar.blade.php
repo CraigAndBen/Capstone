@@ -82,162 +82,242 @@
                                     <div id="calendar"></div>
                                 </div>
 
-                                <div class="modal fade" id="holidayModal" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
+                                <div class="modal fade" id="holidayModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                         <div class="modal-content">
-                                            <div class="modal-header d-flex justify-content-center " style="background: red">
+                                            <div class="modal-header d-flex justify-content-center "
+                                                style="background: red">
                                                 <h3 class="modal-title text-white" id="staticBackdropLabel">Holiday
                                                 </h3>
                                             </div>
-                                            <div class="modal-body text-center">
-                                                <h4 id="holidayName" class="pb-3"></h4>
-                                                <p><strong>Date:</strong> <span id="holidayDate"></span>
-                                                </p>
-                                                <hr>
-                                                <input type="date">
+                                            <form action="{{ route('superadmin.holiday.update') }}" method="POST">
+                                                @csrf
+                                                <div class="modal-body">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="text" class="form-control" id="holidayName"
+                                                            name="name" placeholder="Holiday Name" />
+                                                        <label for="floatingInput">Holiday Name</label>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <input type="date" class="form-control" id="holidayDate"
+                                                            name="date" />
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <div class="form-floating mb-3">
+                                                            <input type="hidden" id="holidayId" name="id">
+                                                            <select class="form-control  p-3" id="holidayType"
+                                                                name="type">
+                                                                <option value="">Select Type</option>
+                                                                <option value="Default Holiday">Default Holiday</option>
+                                                                <option value="Modified Holiday">Modified Holiday</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success">Update</button>
+                                            </form>
+                                            <form action="{{ route('superadmin.holiday.delete') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="holidayId" id="deleteHolidayId">
+                                                <button type="submit" class="btn btn-danger">Remove</button>
+                                            </form>
+                                            <button type="button" class="btn btn-primary"
+                                            data-bs-dismiss="modal">Back</button>
+                                        </div>
 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="createHolidayModal" data-bs-backdrop="static"
+                                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                                    <div class="modal-content">
+                                        <div class="modal-header d-flex justify-content-center " style="background: red">
+                                            <h3 class="modal-title text-white" id="staticBackdropLabel">Holiday
+                                            </h3>
+                                        </div>
+                                        <form action="{{ route('superadmin.holiday.create') }}" method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <div class="div mb-3">
+                                                    <h5>Date: <span id="createHolidayDate"></span></h5>
+                                                </div>
+
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" name="name"
+                                                        placeholder="Holiday Name" />
+                                                    <label for="floatingInput">Holiday Name</label>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="row mt-2">
+                                                        <div class="form-floating mb-3">
+                                                            <input type="hidden" id="holidayCreateDate" name="date">
+                                                            <select class="form-control  p-3" name="type">
+                                                                <option value="">Select Type</option>
+                                                                <option value="Default Holiday">Default Holiday
+                                                                </option>
+                                                                <option value="Modified Holiday">Modified Holiday
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger"
-                                                    data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
+                                                <button type="submit" class="btn btn-success">Add</button>
+                                        </form>
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">Back</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- [ sample-page ] end -->
+                    </div>
                 </div>
-                <!-- [ Main Content ] end -->
             </div>
         </div>
 
+        <!-- [ sample-page ] end -->
+    </div>
+    <!-- [ Main Content ] end -->
+    </div>
+    </div>
 
-    @endsection
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+@endsection
 
-    @section('scripts')
-        <script>
-            $(document).ready(function() {
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
-                // var holidayDates = [];
+@section('scripts')
+    <script>
+        $(document).ready(function() {
 
-                // $.ajax({
-                //     url: '/doctor/appointment/calendar/holiday',
-                //     method: 'GET',
-                //     success: function(data) {
-                //         holidayDates = data.map(function(event) {
-                //             return event.start;
-                //         });
-                //     },
-                //     error: function() {
-                //         console.log('Failed to fetch holiday data from the server.');
-                //     }
-                // });
+            // var holidayDates = [];
 
-                $('#calendar').fullCalendar({
-                    selectable: true,
-                    selectHelper: true,
+            // $.ajax({
+            //     url: '/doctor/appointment/calendar/holiday',
+            //     method: 'GET',
+            //     success: function(data) {
+            //         holidayDates = data.map(function(event) {
+            //             return event.start;
+            //         });
+            //     },
+            //     error: function() {
+            //         console.log('Failed to fetch holiday data from the server.');
+            //     }
+            // });
 
-                    select: function(start, end, allDay) {
-                        openEventModal(start.format('YYYY-MM-DD'));
-                    },
+            $('#calendar').fullCalendar({
+                selectable: true,
+                selectHelper: true,
 
-                    header: {
-                        left: 'month, agendaWeek, agendaDay, list',
-                        center: 'title',
-                        right: 'prev, today, next'
-                    },
-                    buttonText: {
-                        today: 'Today',
-                        month: 'Month',
-                        agendaWeek: 'Week',
-                        agendaDay: 'Day',
-                        list: 'List',
-                    },
-                    eventSources: [{
-                        url: '/superadmin/calendar/holidays',
-                        method: 'GET',
-                        textColor: 'white',
-                    }, ],
+                select: function(start, end, allDay) {
+                    openEventModal(start.format('YYYY-MM-DD'));
+                },
 
-                    dayRender: function(date, cell) {
-                        var currentDate = moment(); // Get the current date
-                        var cellDate = moment(date);
+                header: {
+                    left: 'month, agendaWeek, agendaDay, list',
+                    center: 'title',
+                    right: 'prev, today, next'
+                },
+                buttonText: {
+                    today: 'Today',
+                    month: 'Month',
+                    agendaWeek: 'Week',
+                    agendaDay: 'Day',
+                    list: 'List',
+                },
+                eventSources: [{
+                    url: '/superadmin/calendar/holidays',
+                    method: 'GET',
+                    textColor: 'white',
+                }, ],
 
-                        // Compare the cell date with the current date
-                        if (cellDate.isBefore(currentDate, 'day')) {
-                            // Past days: Set a different background color
-                            cell.css("background", "lightgray");
-                        }
-                        if (cellDate.isSame(currentDate, 'day')) {
-                            // Current day: Set a different background color
-                            cell.css("background", "yellow");
-                        } else if (cellDate.day() === 0 || cellDate.day() === 6) {
-                            // Weekend days: Set a different background color
-                            cell.css("background", "lightpink");
-                        }
-                    },
+                dayRender: function(date, cell) {
+                    var currentDate = moment(); // Get the current date
+                    var cellDate = moment(date);
 
-                    eventRender: function(event, element) {
-                        var eventColor = 'red';
+                    // Compare the cell date with the current date
+                    if (cellDate.isBefore(currentDate, 'day')) {
+                        // Past days: Set a different background color
+                        cell.css("background", "lightgray");
+                    }
+                    if (cellDate.isSame(currentDate, 'day')) {
+                        // Current day: Set a different background color
+                        cell.css("background", "yellow");
+                    } else if (cellDate.day() === 0 || cellDate.day() === 6) {
+                        // Weekend days: Set a different background color
+                        cell.css("background", "lightpink");
+                    }
+                },
 
-                        element.css('background-color', eventColor);
+                eventRender: function(event, element) {
+                    var eventColor = 'red';
 
-                    },
+                    element.css('background-color', eventColor);
 
-                    selectAllow: function(selectInfo) {
-                        var selectedStartDate = moment(selectInfo.start);
-                    },
-                    eventClick: function(info) {
-                        alert(info.type);
-                        if(info.type === 'Default Holiday'){
-                            displayHolidayDetails(info);
-                        } else if (info.type === 'Holiday'){
-                            updateHolidayDetails(info);
-                        }
+                },
 
-                    },
-                });
+                selectAllow: function(selectInfo) {
+                    var selectedStartDate = moment(selectInfo.start);
+                },
+                eventClick: function(info) {
+                    displayHolidayDetails(info);
 
-                function openEventModal(date) {
-                    const dateObj = new Date(date);
-                    const options = {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    };
-                    const formattedDate = dateObj.toLocaleDateString('en-US', options);
-
-                    $('#availabilityModal').modal('show');
-                    $('#date').text(formattedDate);
-                    $('#availabilityDate').val(date);
-                }
-
-                function displayHolidayDetails(event) {
-                    // Example: Display event details in a modal
-                    $('#holidayModal').modal('show');
-                    displayHolidayInfo(event);
-                }
-
-                function displayAvailabilityDetails(event) {
-                    // Example: Display event details in a modal
-                    $('#updateAvailabilityModal').modal('show');
-                    displayAvailabilityInfo(event);
-                }
-
-                function displayHolidayInfo(event) {
-                    // Example: Populate and display event details
-                    $('#holidayName').text(event.title);
-                    $('#holidayDate').text(moment(event.start).format('LLLL'));
-                }
+                },
             });
-        </script>
-    @endsection
+
+            function openEventModal(date) {
+                const dateObj = new Date(date);
+                const options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+                const formattedDate = dateObj.toLocaleDateString('en-US', options);
+
+                $('#createHolidayModal').modal('show');
+                $('#createHolidayDate').text(formattedDate);
+                $('#holidayCreateDate').val(date);
+            }
+
+            function displayHolidayDetails(event) {
+                // Example: Display event details in a modal
+                $('#holidayModal').modal('show');
+                displayHolidayInfo(event);
+            }
+
+            function updateHolidayDetails(event) {
+                // Example: Display event details in a modal
+                $('#holidayModal').modal('show');
+                displayHolidayInfo(event);
+            }
+
+
+            function displayAvailabilityDetails(event) {
+                // Example: Display event details in a modal
+                $('#updateAvailabilityModal').modal('show');
+                displayAvailabilityInfo(event);
+            }
+
+            function displayHolidayInfo(event) {
+                var currentDate = moment(event.start).format('YYYY-MM-DD');
+
+                $('#holidayName').val(event.title);
+                $('#holidayDate').val(moment(event.start).format('YYYY/MM/DD'));
+                $('#holidayDate').val(currentDate);
+                $('#holidayType').val(event.type);
+                $('#holidayId').val(event.holiday_id);
+                $('#deleteHolidayId').val(event.holiday_id);
+            }
+
+        });
+    </script>
+@endsection

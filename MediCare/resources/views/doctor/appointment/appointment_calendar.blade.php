@@ -48,16 +48,6 @@
                         <div class="card-body">
                             <div class="container">
 
-                                <div class="d-flex justify-content-end">
-                                    <div class="m-1">
-                                        <form action="{{ route('superadmin.notification.delete.all') }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary">Add Default Holiday</button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <hr>
-
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Whoops!</strong> There were some problems with your input. Please fix the
@@ -81,45 +71,6 @@
                                         {{ session('info') }}
                                     </div>
                                 @endif
-
-                                {{-- <div class="container my-3">
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-6 text-center">
-                                            <h3>Event Color Legend</h3>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Event Type</th>
-                                                        <th>Color</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Holiday</td>
-                                                        <td style="background-color: red;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Availability</td>
-                                                        <td style="background-color: maroon;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Appointment (Pending)</td>
-                                                        <td style="background-color: #FFD700 ;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Appointment (Confirmed)</td>
-                                                        <td style="background-color: #008000 ;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Appointment (Done)</td>
-                                                        <td style="background-color: #192655;"></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr> --}}
 
                                 <div class="m-3 p-3">
                                     <div id="calendar"></div>

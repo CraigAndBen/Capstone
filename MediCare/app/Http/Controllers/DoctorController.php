@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use TCPDF;
 use DateTime;
 use DateInterval;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Report;
+use App\Models\Holiday;
 use App\Models\Patient;
 use App\Models\Diagnose;
 use Illuminate\View\View;
@@ -20,7 +22,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Doctor_availabilities;
 use Illuminate\Http\RedirectResponse;
-use TCPDF;
 
 
 class DoctorController extends Controller
@@ -680,79 +681,23 @@ class DoctorController extends Controller
 
     public function holidayEvents()
     {
-        $currentYear = date('Y'); // Get the current year
-        $staticHolidays = [
-            // Static holidays for the current year with date information
-            [
-                'title' => 'New Year',
-                'start' => $currentYear . '-01-01',
-                'end' => $currentYear . '-01-01',
-                'type' => 'holiday',
-            ],
-            [
-                'title' => 'Independence Day',
-                'start' => $currentYear . '-07-04',
-                'end' => $currentYear . '-07-04',
-                'type' => 'holiday',
-            ],
-            [
-                'title' => 'Christmas Day',
-                'start' => $currentYear . '-12-25',
-                'end' => $currentYear . '-12-25',
-                'type' => 'holiday',
-            ],
-            [
-                'title' => 'All Saints Day',
-                'start' => $currentYear . '-11-01',
-                'end' => $currentYear . '-11-01',
-                'type' => 'holiday',
-            ],
-            [
-                'title' => 'Bonifacio Day',
-                'start' => $currentYear . '-11-30',
-                'end' => $currentYear . '-11-30',
-                'type' => 'holiday',
-            ],
-            [
-                'title' => 'Rizal Day',
-                'start' => $currentYear . '-12-30',
-                'end' => $currentYear . '-12-30',
-                'type' => 'holiday',
-            ],
-            [
-                'title' => 'Ninoy Aquino Day',
-                'start' => $currentYear . '-08-21',
-                'end' => $currentYear . '-08-21',
-                'type' => 'holiday',
-            ],
+        $holidays = Holiday::all();
 
-        ];
+        $events = [];
+        foreach ($holidays as $holiday) {
+            $start = Carbon::parse($holiday->date)->format('Y-m-d H:i:s');
+            $end = Carbon::parse($holiday->date)->endOfDay()->format('Y-m-d H:i:s');
 
-        // Initialize an array to store all holidays
-        $allHolidays = [];
-
-        // Define the number of years to generate holidays for (e.g., 1 year before, current year, and 1 year after)
-        $yearsToGenerate = 3; // You can adjust this as needed
-
-        // Loop through the past year, current year, and next year
-        for ($i = -$yearsToGenerate + 1; $i <= $yearsToGenerate; $i++) {
-            $year = $currentYear + $i;
-
-            // Loop through the static holidays and add them to the allHolidays array
-            foreach ($staticHolidays as $staticHoliday) {
-                // Clone the static holiday array
-                $holiday = $staticHoliday;
-
-                // Update the 'start' and 'end' dates with the current year
-                $holiday['start'] = $year . substr($holiday['start'], 4); // Replace the year portion
-                $holiday['end'] = $year . substr($holiday['end'], 4); // Replace the year portion
-
-                // Append the holiday to the allHolidays array
-                $allHolidays[] = $holiday;
-            }
+            $events[] = [
+                'holiday_id' => $holiday->id,
+                'title' => ucwords($holiday->name),
+                'start' => $start,
+                'end' => $end,
+                'type' => 'holiday',
+            ];
         }
 
-        return response()->json($allHolidays);
+        return response()->json($events);
 
     }
 
