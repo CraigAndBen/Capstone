@@ -247,6 +247,11 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     // Appointment
     Route::get('/superadmin/appointment', [SuperAdminController::class, 'appointment'])->name('superadmin.appointment');
 
+    // Calendar
+    Route::get('/superadmin/calendar', [SuperAdminController::class, 'calendar'])->name('superadmin.calendar');
+    Route::post('/superadmin/calendar/default/create', [SuperAdminController::class, 'createDefaultHoliday'])->name('superadmin.default.create.holiday');
+    Route::get('/superadmin/calendar/holidays', [SuperAdminController::class, 'holidayEvents'])->name('superadmin.holiday');
+
     // Doctor
     Route::get('/super_admin/doctor', [SuperAdminController::class, 'doctor'])->name('superadmin.doctor');
     Route::post('/super_admin/doctor/create', [SuperAdminController::class, 'createDoctor'])->name('superadmin.store.doctor');

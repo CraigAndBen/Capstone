@@ -246,6 +246,18 @@
                         </ul>
                     </li>
                     <li class="pc-item pc-caption">
+                        <label>Calendar</label>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link"><span class="pc-micon"></span><span
+                                class="pc-mtext">Calendar Holiday</span><span class="pc-arrow"><i
+                                    class="ti ti-chevron-right"></i></span></a>
+                        <ul class="pc-submenu">
+                            <li class="pc-item"><a class="pc-link"
+                                    href="{{ route('superadmin.calendar') }}">Calendar</a></li>
+                        </ul>
+                    </li>
+                    <li class="pc-item pc-caption">
                         <label>System Account</label>
                         <i class="ti ti-apps"></i>
                     </li>

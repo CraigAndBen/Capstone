@@ -23,6 +23,7 @@ use App\Models\Request_Form;
 use Illuminate\Http\Request;
 use App\Models\Product_price;
 use App\Models\Medication;
+use App\Models\Holiday;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -221,9 +222,6 @@ class SuperAdminController extends Controller
         return view('superadmin.profile.profile_password', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function profileUpdate(Request $request)
     {
         $request->validate([
@@ -278,9 +276,6 @@ class SuperAdminController extends Controller
 
     }
 
-    /**
-     * Delete the user's account.
-     */
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -318,7 +313,6 @@ class SuperAdminController extends Controller
 
         return redirect('/');
     }
-    // End SUper Admin
 
     // Doctor 
     public function doctor()
@@ -4386,39 +4380,39 @@ class SuperAdminController extends Controller
     {
         $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
         $currentDate = $currentDateTime->format('Y-m-d');
-        
-        
+
+
         // Calculate the date three months from the current date
         $threeMonthsFromNow = $currentDateTime->copy()->addMonths(3)->format('Y-m-d');
-        
+
         // Calculate the date six months from the current date
         $sixMonthsFromNow = $currentDateTime->copy()->addMonths(6)->format('Y-m-d');
-        
+
         // Retrieve the pharmaceutical category ID
         $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
-        
+
         // Retrieve products with expiration dates within three months for non-pharmaceutical category
         $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
-        ->where('category_id', '!=', $pharmaceuticalCategoryId)
-        ->orderBy('created_at', 'asc')
-        ->get();
+            ->where('category_id', '!=', $pharmaceuticalCategoryId)
+            ->orderBy('created_at', 'asc')
+            ->get();
 
         // Retrieve products with expiration dates within six months for pharmaceutical category
         $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
-        ->where('category_id', '=', $pharmaceuticalCategoryId)
-        ->orderBy('created_at', 'asc')
-        ->get();
+            ->where('category_id', '=', $pharmaceuticalCategoryId)
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-    
+
         // Combine the collections or pass them separately to your view as needed
         $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
-    
+
         foreach ($products as $product) {
             $existingExpiry = Expiries::where([
                 'item_name' => $product->p_name,
                 'exp_date' => $product->expiration,
             ])->first();
-        
+
             if (!$existingExpiry) {
                 Expiries::create([
                     'item_name' => $product->p_name,
@@ -4429,14 +4423,14 @@ class SuperAdminController extends Controller
                 ]);
             }
         }
-        
-    
+
+
         $profile = Auth::user();
         $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
         $limitNotifications = $notifications->take(5);
         $count = $notifications->count();
         $currentTime = $currentDateTime->format('h:i A');
-    
+
         // Display the list of products
         return view('superadmin.inventory.expiring_soon', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
     }
@@ -4450,7 +4444,7 @@ class SuperAdminController extends Controller
         $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
         $currentDate = $currentDateTime->format('Y-m-d');
         $currentTime = $currentDateTime->format('h:i A');
-        
+
         $startDate = $request->input('startDate');
         $formattedFromDate = date("M j, Y", strtotime($startDate));
         $endDate = $request->input('endDate');
@@ -4463,7 +4457,7 @@ class SuperAdminController extends Controller
 
         return view('superadmin.inventory.expiring_soon_search', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'products'));
     }
-     
+
     public function viewExpiryReport()
     {
         $currentDate = date('Y-m-d');
@@ -4475,27 +4469,27 @@ class SuperAdminController extends Controller
         $reference = 'EXPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
         $currentDate = Carbon::now();
         $categories = Product::get();
-        
+
         // Calculate the date three months from the current date
         $threeMonthsFromNow = Carbon::now()->addMonths(3)->format('Y-m-d');
-    
+
         // Calculate the date six months from the current date
         $sixMonthsFromNow = Carbon::now()->addMonths(6)->format('Y-m-d');
-    
+
         // Retrieve the pharmaceutical category ID
         $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
-    
+
         // Retrieve products with expiration dates within three months for non-pharmaceutical category
         $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
             ->where('category_id', '!=', $pharmaceuticalCategoryId)
             ->get();
-       
-            // Retrieve products with expiration dates within six months for pharmaceutical category
-       $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+
+        // Retrieve products with expiration dates within six months for pharmaceutical category
+        $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
             ->where('category_id', '=', $pharmaceuticalCategoryId)
             ->get();
 
-            // Combine the collections or pass them separately to your view as needed
+        // Combine the collections or pass them separately to your view as needed
         $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
 
         // Display the list of products
@@ -4505,28 +4499,28 @@ class SuperAdminController extends Controller
             'products' => $products,
             'currentTime' => $currentTime,
             'currentDate' => $currentDate,
-            'reference' =>$reference,
+            'reference' => $reference,
 
         ];
 
         // Create new PDF document
-       $pdf = new TCPDF();
-       // Add a page
-       $pdf->AddPage();
-       // Read HTML content from a file
-       $htmlFilePath = resource_path('views/superadmin/report/expiry_report.blade.php');
-       $htmlContent = view()->file($htmlFilePath, $data)->render();
-     
-       $pdf->writeHTML($htmlContent);
-       // Output PDF to browser
-       $pdf->Output($reference . '.pdf', 'I');
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/superadmin/report/expiry_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'I');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
 
     public function downloadExpiryReport()
     {
         $profile = auth()->user();
-    
+
         $currentDateTime = Carbon::now()->setTimezone('Asia/Manila');
         $currentTime = $currentDateTime->format('h:i A');
         $currentDate = $currentDateTime->toDateString();
@@ -4534,32 +4528,32 @@ class SuperAdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $randomNumber = mt_rand(100, 999);
         $reference = 'EXPR-' . $currentDateWithoutHyphens . '-' . $randomNumber;
-    
+
         $categories = Product::get();
-    
+
         // Calculate the date three months from the current date
         $threeMonthsFromNow = Carbon::now()->addMonths(3)->format('Y-m-d');
-    
+
         // Calculate the date six months from the current date
         $sixMonthsFromNow = Carbon::now()->addMonths(6)->format('Y-m-d');
-    
+
         // Retrieve the pharmaceutical category ID
         $pharmaceuticalCategoryId = Category::where('category_name', 'pharmaceutical')->value('id');
-    
+
         // Retrieve products with expiration dates within three months for non-pharmaceutical category
         $nonPharmaceuticalProductsToExpire = Product::where('expiration', '<=', $threeMonthsFromNow)
             ->where('category_id', '!=', $pharmaceuticalCategoryId)
             ->get();
-       
-            // Retrieve products with expiration dates within six months for pharmaceutical category
-       $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
-       ->where('category_id', '=', $pharmaceuticalCategoryId)
-       ->get();
 
-            // Combine the collections or pass them separately to your view as needed
+        // Retrieve products with expiration dates within six months for pharmaceutical category
+        $pharmaceuticalProductsToExpire = Product::where('expiration', '<=', $sixMonthsFromNow)
+            ->where('category_id', '=', $pharmaceuticalCategoryId)
+            ->get();
+
+        // Combine the collections or pass them separately to your view as needed
         $products = $nonPharmaceuticalProductsToExpire->merge($pharmaceuticalProductsToExpire);
-    
-            $content =
+
+        $content =
             '              Expiry Item Report 
                 ------------------------
     
@@ -4567,7 +4561,7 @@ class SuperAdminController extends Controller
                 Report Date and Time: ' . $readableDate . ' ' . $currentTime . '
     
                 Report Status: Finalized';
-                    
+
         Report::create([
             'reference_number' => $reference,
             'report_type' => 'Expiry Item report',
@@ -4577,7 +4571,7 @@ class SuperAdminController extends Controller
             'author_type' => $profile->role,
             'content' => $content,
         ]);
-    
+
         $data = [
             'categories' => $categories,
             'products' => $products,
@@ -4586,18 +4580,18 @@ class SuperAdminController extends Controller
             'reference' => $reference
         ];
 
-         // Create new PDF document
-         $pdf = new TCPDF();
-         // Add a page
-         $pdf->AddPage();
-         $pdf->SetPrintHeader(false);
-         // Read HTML content from a file
-         $htmlFilePath = resource_path('views/superadmin/report/expiry_report.blade.php');
-         $htmlContent = view()->file($htmlFilePath, $data)->render();
-       
-         $pdf->writeHTML($htmlContent);
-         // Output PDF to browser
-         $pdf->Output($reference . '.pdf', 'D');
+        // Create new PDF document
+        $pdf = new TCPDF();
+        // Add a page
+        $pdf->AddPage();
+        $pdf->SetPrintHeader(false);
+        // Read HTML content from a file
+        $htmlFilePath = resource_path('views/superadmin/report/expiry_report.blade.php');
+        $htmlContent = view()->file($htmlFilePath, $data)->render();
+
+        $pdf->writeHTML($htmlContent);
+        // Output PDF to browser
+        $pdf->Output($reference . '.pdf', 'D');
         //return view('supply_officer.report.expiry_report', compact('currentTime', 'currentDate', 'products'));
     }
     public function inventoryDemo()
@@ -5993,7 +5987,7 @@ class SuperAdminController extends Controller
         $currentDateWithoutHyphens = str_replace('-', '', $currentDate);
         $currentTime = $currentDateTime->format('h:i A');
         $randomNumber = mt_rand(100, 999);
-        
+
         $specificMedication = $request->input('medication');
         $selectedYear = $request->input('year');
         $title = "Medication Analytics Report";
@@ -6105,6 +6099,109 @@ class SuperAdminController extends Controller
 
     }
 
+    public function calendar()
+    {
+        $profile = Auth::user();
+        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+        $limitNotifications = $notifications->take(5);
+        $count = $notifications->count();
+        $currentDate = date('Y-m-d');
+        $currentDateTime = Carbon::now();
+        $currentDateTime->setTimezone('Asia/Manila');
+        $currentYear = $currentDateTime->year;
+        $currentTime = $currentDateTime->format('h:i A');
+
+        return view('superadmin.calendar.calendar', compact('profile', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'currentYear'));
+    }
+
+    public function createDefaultHoliday(Request $request)
+    {
+        $year = $request->input('year');
+
+        $holidays = [
+
+            [
+                'name' => 'New Year',
+                'date' => $year . '-01-01',
+                'type' => 'Default Holiday',
+            ],
+            [
+                'name' => 'Araw ng Kagitingan',
+                'date' => $year . '-04-09',
+                'type' => 'Default Holiday',
+            ],
+            [
+                'name' => 'Labor Day',
+                'date' => $year . '-05-01',
+                'type' => 'Default Holiday',
+            ],
+            [
+                'name' => 'Independence Day',
+                'date' => $year . '-06-12',
+                'type' => 'Default Holida',
+            ],
+            [
+                'name' => 'Ninoy Aquino Day',
+                'date' => $year . '-08-21',
+                'type' => 'Default Holiday',
+            ],
+            [
+                'name' => "All Saint's Day",
+                'date' => $year . '-11-01',
+                'type' => 'Default Holiday',
+            ],
+            [
+                'name' => 'Bonifacio Day',
+                'date' => $year . '-11-30',
+                'type' => 'Default Holiday',
+            ],
+            [
+                'name' => 'Christmas Day',
+                'date' => $year . '-12-25',
+                'type' => 'Default Holiday',
+            ],
+            [
+                'name' => 'Rizal Day',
+                'date' => $year . '-12-30',
+                'type' => 'Default Holiday',
+            ],
+        ];
+
+        foreach ($holidays as $holidayData) {
+            $holiday = new Holiday();
+            $holiday->name = $holidayData['name'];
+            $holiday->date = $holidayData['date'];
+            $holiday->type = $holidayData['type'];
+            $holiday->save();
+        }
+
+        return redirect()->back()->with('success', 'Default holidays for this year have been created successfully.');
+
+    }
+
+    public function holidayEvents()
+    {
+        $user = Auth::user();
+        $info = Doctor::where('account_id', $user->id)->first();
+        $holidays = Holiday::all();
+
+        $events = [];
+        foreach ($holidays as $holiday) {
+            $start = Carbon::parse($holiday->date)->format('Y-m-d H:i:s');
+            $end = Carbon::parse($holiday->date)->endOfDay()->format('Y-m-d H:i:s');
+            
+            $events[] = [
+                'holiday_id' => $holiday->id,
+                'title' => ucwords($holiday->name),
+                'start' => $start,
+                'end' => $end,
+                'type' => $holiday->type,
+            ];
+        }
+
+        return response()->json($events);
+    }
+
     private function hasChanges($info, $updatedData)
     {
         foreach ($updatedData as $key => $value) {
@@ -6118,4 +6215,5 @@ class SuperAdminController extends Controller
         return false;
 
     }
+
 }
