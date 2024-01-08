@@ -76,6 +76,7 @@ class SuperAdminController extends Controller
             ->whereNotNull('diagnose')
             ->groupBy('diagnose', 'month')
             ->orderByDesc('total_occurrences')
+            ->take(5)
             ->get();
 
         $diagnosesWithOccurrences = Diagnose::select('diagnose')

@@ -470,13 +470,7 @@
                 <div class="col my-1">
                     <p class="m-0">Copyright &copy; <a>MediCare</a></p>
                 </div>
-                <div class="col-auto my-1">
-                    <ul class="list-inline footer-link mb-0">
-                        <li class="list-inline-item">Home</li>
-                        <li class="list-inline-item">Privacy Policy</li>
-                        <li class="list-inline-item">Contact us</li>
-                    </ul>
-                </div>
+            
             </div>
         </div>
     </footer>
@@ -513,7 +507,7 @@
     // Extract unique diagnoses from the data
     const uniqueDiagnoses = [...new Set(diagnosisData.map(item => item.diagnose))];
 
-    const predefinedColors = ['#f7aef8', '#b388eb', '#8093f1', '#72ddf7', '#b8e1ff'];
+    const predefinedColors = ['red', 'blue', 'orange', 'green', 'violet'];
     
     let colorIndex = 0;
 
@@ -528,8 +522,6 @@
                 data.push(0);
             }
         }
-        
-        const predefinedColors = ['#f7aef8', '#b388eb', '#8093f1', '#72ddf7', '#b8e1ff'];
 
         datasets.push({
             label: diagnose.charAt(0).toUpperCase() + diagnose.slice(1),
