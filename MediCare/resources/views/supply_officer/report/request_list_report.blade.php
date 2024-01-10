@@ -72,6 +72,7 @@
 
 <body>
     <div class="container">
+        <img src="logo.jpg" style="height: 90px;">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
@@ -85,7 +86,7 @@
 
         <div class="purchase-detail">
             <h3>Request List Report</h3>
-            <table>
+            <table style="width: 100%; text-align: center; border-collapse: collapse;">
                 <tr>
                     <th><strong>Requester Name</strong></th>
                     <th><strong>Department</strong></th>
@@ -106,29 +107,29 @@
             
                     @if ($rowIdentifier !== $previousIdentifier)
                         <tr>
-                            <td>{{ $request->name_requester }}</td>
-                            <td>{{ $request->department }}</td>
-                            <td>{{ date('M j, Y', strtotime($request->date)) }}</td>
-                            <td>{{ date('g:i A', strtotime($request->created_at)) }}</td>
-                                {{-- Display the time --}}
+                            <td rowspan="{{ $requests->where('name_requester', $request->name_requester)->where('department', $request->department)->where('date', $request->date)->count() }}">{{ $request->name_requester }}</td>
+                            <td rowspan="{{ $requests->where('name_requester', $request->name_requester)->where('department', $request->department)->where('date', $request->date)->count() }}">{{ $request->department }}</td>
+                            <td rowspan="{{ $requests->where('name_requester', $request->name_requester)->where('department', $request->department)->where('date', $request->date)->count() }}">{{ date('M j, Y', strtotime($request->date)) }}</td>
+                            <td rowspan="{{ $requests->where('name_requester', $request->name_requester)->where('department', $request->department)->where('date', $request->date)->count() }}">{{ date('g:i A', strtotime($request->created_at)) }}</td>
+                            {{-- Display the time --}}
                             @foreach ($products as $product)
                                 @if ($product->id === $request->product_id)
                                     <td>{{ $product->p_name }}</td>
+                                    <td>{{ $request->brand }}</td>
+                                    <td>{{ $request->quantity }}</td>
                                 @endif
                             @endforeach
-                            <td>{{ $request->brand }}</td>
-                            <td>{{ $request->quantity }}</td>
                         </tr>
                     @else
                         <tr>
-                            <td colspan="4"></td> {{-- Leave empty cells for name, department, date, and time --}}
+                             {{-- Leave empty cells for name, department, date, and time --}}
                             @foreach ($products as $product)
                                 @if ($product->id === $request->product_id)
                                     <td>{{ $product->p_name }}</td>
+                                    <td>{{ $request->brand }}</td>
+                                    <td>{{ $request->quantity }}</td>
                                 @endif
                             @endforeach
-                            <td>{{ $request->brand }}</td>
-                            <td>{{ $request->quantity }}</td>
                         </tr>
                     @endif
             
@@ -137,6 +138,7 @@
                     @endphp
                 @endforeach
             </table>
+            
         </div>
     </div>
     <div class="footer">

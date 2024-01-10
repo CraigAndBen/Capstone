@@ -171,7 +171,7 @@
                 var randomColor = 'rgba(' +
                     Math.floor(Math.random() * 256) + ',' +
                     Math.floor(Math.random() * 256) + ',' +
-                    Math.floor(Math.random() * 256) + ', 0.2)';
+                    Math.floor(Math.random() * 256) + ')';
                 colorsArray.push(randomColor);
             }
             return colorsArray;

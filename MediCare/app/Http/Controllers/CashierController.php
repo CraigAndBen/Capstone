@@ -370,49 +370,62 @@ class CashierController extends Controller
     }
 
     public function receiptPreview(Request $request)
-    {
-        $profile = Auth::user();
-        $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
-        $limitNotifications = $notifications->take(5);
-        $count = $notifications->count();
-        $currentDate = date('M j, Y');
-        $currentDateTime = Carbon::now();
-        $currentDateTime->setTimezone('Asia/Manila');
-        $currentTime = $currentDateTime->format('h:i A');
-        // Retrieve the cart data from the session
-        $cart = session('cart', []);
-        // Initialize a variable to store the total price
-        $totalPrice = 0;
-        $amount = $request->input('amount');
+{
+    $profile = Auth::user();
+    $notifications = Notification::where('type', $profile->role)->orderBy('date', 'desc')->paginate(5);
+    $limitNotifications = $notifications->take(5);
+    $count = $notifications->count();
+    $currentDate = date('M j, Y');
+    $currentDateTime = Carbon::now();
+    $currentDateTime->setTimezone('Asia/Manila');
+    $currentTime = $currentDateTime->format('h:i A');
 
-        // Loop through the cart items and calculate the total price
-        foreach ($cart as $item) {
-            $quantity = $item['quantity'];
-            $price = $item['price'];
+    // Retrieve the cart data from the session
+    $cart = session('cart', []);
 
-            // Calculate the total price for the current item
-            $itemTotalPrice = $quantity * $price;
+    // Initialize a variable to store the total price
+    $totalPrice = 0;
+    $amount = $request->input('amount');
 
-            // Add the item's total price to the overall total price
-            $totalPrice += $itemTotalPrice;
-        }
+    // Loop through the cart items and calculate the total price
+    foreach ($cart as $item) {
+        $quantity = $item['quantity'];
+        $price = $item['price'];
 
-        $min = 10000000; // Smallest 8-digit number
-        $max = 99999999; // Largest 8-digit number
-        $reference = mt_rand($min, $max);
-        $change = $amount - $totalPrice;
+        // Calculate the total price for the current item
+        $itemTotalPrice = $quantity * $price;
 
-        // Increment the reference number by 1
-        $reference += 1;
-
-        if ($change < 0) {
-            return redirect()->route('cashier.product.purchase')->with('info', 'Insufficient Amount');
-        }
-
-        session(['pdf_reference' => $reference]);
-
-        return view('cashier.product.receipt_preview', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'cart', 'reference', 'totalPrice', 'amount', 'change'));
+        // Add the item's total price to the overall total price
+        $totalPrice += $itemTotalPrice;
     }
+
+    $min = 165798;
+    $max = $min + 49; // 165798 + 49 (to reach 50 references)
+
+    $reference = $min;
+
+    // Find 50 unique references starting from 165798
+    while ($reference <= $max) {
+        $referenceExists = Purchase_detail::where('reference', $reference)->exists();
+
+        if (!$referenceExists) {
+            break;
+        }
+
+        $reference++;
+    }
+
+    $change = $amount - $totalPrice;
+
+    if ($change < 0) {
+        return redirect()->route('cashier.product.purchase')->with('info', 'Insufficient Amount');
+    }
+
+    session(['pdf_reference' => $reference]);
+
+    return view('cashier.product.receipt_preview', compact('profile', 'notifications', 'limitNotifications', 'count', 'currentTime', 'currentDate', 'cart', 'reference', 'totalPrice', 'amount', 'change'));
+}
+
 
     public function receipt(Request $request)
     {
@@ -442,8 +455,8 @@ class CashierController extends Controller
             $totalPrice += $itemTotalPrice;
         }
 
-        $min = 10000000; // Smallest 8-digit number
-        $max = 99999999; // Largest 8-digit number
+        $min = 165798; 
+        $max = 165847; // 165798 + 49 (to reach 50 references)
         $reference = mt_rand($min, $max);
         $change = $amount - $totalPrice;
 
@@ -470,13 +483,19 @@ class CashierController extends Controller
             
         $pdf = new TCPDF();
         // Add a page
+        
      
-        $pdf->AddPage('L', 'A6');
+        $pdf->AddPage('P', array(3.81 * 25.4, 7 * 25.4));
+        // Set narrower margins
+        $pdf->SetMargins(5, 0, 5, 0); // Set all margins to 0
+        
+        
         // Read HTML content from a file
         $htmlFilePath = resource_path('views/cashier/product/receipt.blade.php');
         $htmlContent = view()->file($htmlFilePath, $data)->render();
       
         $pdf->writeHTML($htmlContent);
+        
         // Output PDF to browser
         $pdf->Output($reference . '.pdf', 'I');
     }

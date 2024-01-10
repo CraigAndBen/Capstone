@@ -141,8 +141,9 @@
                     datasets: [{
                         label: @json($range),
                         data: @json($chartData['data']),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgb(135, 206, 250)', // Summer sky blue
+                        borderColor: 'rgb(70, 130, 180)', // Slightly darker shade
+
                         borderWidth: 1
                     }]
                 },

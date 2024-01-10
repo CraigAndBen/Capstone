@@ -71,6 +71,7 @@
 </head>
 <body>
     <div class="container">
+        <img src="logo.jpg" style="height: 90px;">
         <p><b>Medical Mission Group Hospital and Health Services Cooperative of Camarines Sur</b>
             <br>
             Sta Elena Baras, Nabua, 4434 Camarines Sur, Philippines
