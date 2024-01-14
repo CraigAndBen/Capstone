@@ -254,7 +254,7 @@
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="#!" class="pc-link"><span class="pc-micon"></span><span
-                                class="pc-mtext">Analytics</span><span class="pc-arrow"><i
+                                class="pc-mtext">Overview</span><span class="pc-arrow"><i
                                     class="ti ti-chevron-right"></i></span></a>
                         <ul class="pc-submenu">
                             <li class="pc-item"><a class="pc-link" href="{{ route('supply_officer.inventory.demo') }}">Inventory</a></li>

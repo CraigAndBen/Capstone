@@ -5,7 +5,7 @@
         <div class="pc-content">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="card mx-auto my-auto" style="width: 4.36in; height: 8in;">
+                    <div class="card mx-auto my-auto" style="width: 4.36in; height: 9in;">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h1>Purchase</h1>
@@ -250,6 +250,18 @@
                                         <br>
                                     </span>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row ml-6">
+                            <div class="col-md-6 mb-2">
+                                <form method="POST" action="{{ route('cashier.product.purchase.confirm') }}">
+                                    @csrf
+                                    <input type="hidden" name="reference" value="{{ $reference }}">
+                                    <input type="hidden" name="amount" value="{{ $amount }}">
+                                    <input type="hidden" name="change" value="{{ $change }}">
+                                    <button type="submit" class="btn btn-info btn-bold px-4" style="font-size: 10px;">Pay Now</button>
+                                    <a id="back" href="{{ route('cashier.product.purchase') }}" class="btn btn-danger" style="font-size: 10px;">Back</a>
+                                </form>
                             </div>
                         </div>
                     </div>
