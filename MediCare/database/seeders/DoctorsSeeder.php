@@ -42,7 +42,7 @@ class DoctorsSeeder extends Seeder
                 'last_name' => $lastName,
                 'email' => $firstName . '.'. $lastName . '@gmail.com',
                 'role' => 'doctor',
-                'password' => Hash::make('111'), 
+                'password' => Hash::make('12341234'), 
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

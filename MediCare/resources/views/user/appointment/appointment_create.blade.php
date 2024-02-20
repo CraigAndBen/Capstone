@@ -125,11 +125,16 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <div class=" form-floating mb-3">
-                                                                <input type="text" class="form-control"
-                                                                    id="floatingInput street" name="street"
-                                                                    placeholder="Street" />
-                                                                <label for="floatingInput">Street <span
-                                                                        style="color: red;">*</span></label>
+                                                                <select class="form-control  p-3" id="province"
+                                                                name="province"  onchange="loadCities()">
+                                                                {{-- <option value="">Select Province *</option>
+                                                                <option value="Albay">Albay</option>
+                                                                <option value="Camarines Norte">Camarines Norte</option>
+                                                                <option value="Camarines Sur">Camarines Sur</option>
+                                                                <option value="Catanduanes">Catanduanes</option>
+                                                                <option value="Masbate">Masbate</option>
+                                                                <option value="Sorsogon">Sorsogon</option> --}}
+                                                            </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
@@ -153,13 +158,16 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <div class=" form-floating mb-3">
-                                                                <input type="text" class="form-control"
-                                                                    id="floatingInput province" name="province"
-                                                                    placeholder="Province" />
-                                                                <label for="floatingInput">Province <span
-                                                                        style="color: red;">*</span></label>
-                                                            </div>
+                                                            <select class="form-control  p-3" id="gender"
+                                                                name="gender">
+                                                                <option value="">Select Province *</option>
+                                                                <option value="Albay">Albay</option>
+                                                                <option value="Camarines Norte">Camarines Norte</option>
+                                                                <option value="Camarines Sur">Camarines Sur</option>
+                                                                <option value="Catanduanes">Catanduanes</option>
+                                                                <option value="Masbate">Masbate</option>
+                                                                <option value="Sorsogon">Sorsogon</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -415,33 +423,49 @@
                                                 <p>5. <i>Privacy and Data Security</i></p>
 
                                                 <p>&nbsp;&nbsp;• Data Collection:
-                                                    During the appointment booking process, our service collects and stores the following personal data:
+                                                    During the appointment booking process, our service collects and stores
+                                                    the following personal data:
                                                     <br>&nbsp;&nbsp;- Full Name
-                                                    <br>&nbsp;&nbsp;- Contact Information (email address, phone number, etc.)
+                                                    <br>&nbsp;&nbsp;- Contact Information (email address, phone number,
+                                                    etc.)
                                                     <br>&nbsp;&nbsp;- Appointment Preferences
                                                     <br>&nbsp;&nbsp;- Other Information voluntarily provided by the user
-                                                 <br>
-                                                 <br>
+                                                    <br>
+                                                    <br>
                                                     &nbsp;&nbsp;• Use of Gathered Data:
-                                                    The collected data is used solely for the purpose of facilitating and managing appointment bookings. This includes, but is not limited to, sending confirmation details, reminders, and updates related to your appointments.
-                                                 <br>
-                                                 <br>
+                                                    The collected data is used solely for the purpose of facilitating and
+                                                    managing appointment bookings. This includes, but is not limited to,
+                                                    sending confirmation details, reminders, and updates related to your
+                                                    appointments.
+                                                    <br>
+                                                    <br>
                                                     &nbsp;&nbsp;• Data Protection:
-                                                    We are committed to safeguarding your data and have implemented security measures to prevent unauthorized access, disclosure, alteration, and destruction of your personal information.
-                                                 <br>
-                                                 <br>
+                                                    We are committed to safeguarding your data and have implemented security
+                                                    measures to prevent unauthorized access, disclosure, alteration, and
+                                                    destruction of your personal information.
+                                                    <br>
+                                                    <br>
                                                     &nbsp;&nbsp;• Third-Party Sharing:
-                                                    We do not sell, trade, or otherwise transfer your personal information to third parties. Your data is used exclusively for the stated purposes within our service.
-                                                 <br>
-                                                 <br>
+                                                    We do not sell, trade, or otherwise transfer your personal information
+                                                    to third parties. Your data is used exclusively for the stated purposes
+                                                    within our service.
+                                                    <br>
+                                                    <br>
                                                     &nbsp;&nbsp;• Your Consent:
-                                                    By using our service and providing your personal information, you consent to the collection and use of this information as outlined in our Privacy Policy.
-                                                 <br>
-                                                 <br>
+                                                    By using our service and providing your personal information, you
+                                                    consent to the collection and use of this information as outlined in our
+                                                    Privacy Policy.
+                                                    <br>
+                                                    <br>
                                                     • Privacy Policy:
-                                                    For more details on how your personal information is handled, please refer to our Privacy Policy, which provides a comprehensive overview of our data protection practices.
-                                                 
-                                                 Please take the time to read our Privacy Policy carefully. If you have any questions or concerns regarding the handling of your data, feel free to contact us at medicare@gmail.com.</p>
+                                                    For more details on how your personal information is handled, please
+                                                    refer to our Privacy Policy, which provides a comprehensive overview of
+                                                    our data protection practices.
+
+                                                    Please take the time to read our Privacy Policy carefully. If you have
+                                                    any questions or concerns regarding the handling of your data, feel free
+                                                    to contact us at medicare@gmail.com.
+                                                </p>
 
                                                 <p>6. <i>Liability</i></p>
 
@@ -470,12 +494,25 @@
 
                                                 <p>9. <i>Governing Law</i></p>
 
-                                                <p>&nbsp;&nbsp; These terms and conditions are governed by the laws of the Republic of the Philippines. Any disputes or legal matters arising from the use of our service, including matters related to data privacy, shall be subject to the jurisdiction of the appropriate courts in the Philippines.
+                                                <p>&nbsp;&nbsp; These terms and conditions are governed by the laws of the
+                                                    Republic of the Philippines. Any disputes or legal matters arising from
+                                                    the use of our service, including matters related to data privacy, shall
+                                                    be subject to the jurisdiction of the appropriate courts in the
+                                                    Philippines.
                                                     <br><br>
 
-                                                    &nbsp;&nbsp;In particular, the processing of personal data collected through our service is subject to the provisions of the Data Privacy Act of the Philippines (Republic Act No. 10173). We are committed to complying with the principles and requirements of this act, ensuring the protection and privacy of your personal information.
-                                                 <br><br>
-                                                 &nbsp;&nbsp;If you have any concerns or questions regarding the processing of your personal data, please refer to our Privacy Policy or contact us at medicare@gmail.com. We are dedicated to addressing your inquiries and maintaining transparency in our data processing practices..</p>
+                                                    &nbsp;&nbsp;In particular, the processing of personal data collected
+                                                    through our service is subject to the provisions of the Data Privacy Act
+                                                    of the Philippines (Republic Act No. 10173). We are committed to
+                                                    complying with the principles and requirements of this act, ensuring the
+                                                    protection and privacy of your personal information.
+                                                    <br><br>
+                                                    &nbsp;&nbsp;If you have any concerns or questions regarding the
+                                                    processing of your personal data, please refer to our Privacy Policy or
+                                                    contact us at medicare@gmail.com. We are dedicated to addressing your
+                                                    inquiries and maintaining transparency in our data processing
+                                                    practices..
+                                                </p>
 
                                                 <p>10. <i>Contact Information</i></p>
 
@@ -514,7 +551,7 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-
+            loadProvinces();
             var availabilityDates = [];
             var holidayDates = [];
 
@@ -548,7 +585,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         }
                     });
-                    
+
                     $.ajax({
                         type: "POST",
                         url: '/user/appointment/doctor/specialties', // Route to the Laravel controller method
@@ -568,7 +605,9 @@
                                 $.each(data, function(index, doctor) {
                                     dropdown.append($('<option></option>').attr(
                                         'value', doctor.id).text('Dr. ' +
-                                        doctor.firstName + ' ' + doctor.lastName + ' - ' + doctor.specialty));
+                                        doctor.firstName + ' ' + doctor
+                                        .lastName + ' - ' + doctor.specialty
+                                        ));
                                 });
                             } else {
                                 // Handle case where no doctors are available for the selected date
@@ -746,7 +785,8 @@
                 $('#holidayDate').text(moment(event.start).format('LLLL'));
             }
         });
-                function formatPhoneNumber(input) {
+
+        function formatPhoneNumber(input) {
             // Remove any non-numeric characters
             input.value = input.value.replace(/[^0-9+]/g, '');
 
@@ -755,6 +795,32 @@
                 input.value = '+639' + input.value.substring(2);
             }
         }
+
+        function loadProvinces() {
+            $.ajax({
+                type: "POST",
+                url: '/user/appointment/province',
+                data: {
+                    selectedSpecialty: selectedSpecialty,
+                },
+                success: function(data) {
+                    var dropdown = $('#province');
+                    dropdown.empty();
+
+                    // Add a default option as the first option in the select
+                    dropdown.append($('<option></option>').attr('value', '').text(
+                        'Select Available Time'));
+
+                    $.each(data, function(index, time) {
+                        dropdown.append($('<option></option>').attr('value', time).text(time));
+                    });
+                },
+                error: function() {
+                    console.log('Failed to fetch available time data.');
+                }
+            });
+        }
+
 
         $('#specialties, #appointment_date').change(function() {
             var selectedSpecialty = $('#specialties').val();

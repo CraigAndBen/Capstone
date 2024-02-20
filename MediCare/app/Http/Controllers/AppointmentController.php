@@ -113,6 +113,11 @@ class AppointmentController extends Controller
 
     }
 
+    public function getAddress()
+    {
+        
+    }
+
     public function doctorSpecialties(Request $request)
     {
         $selectedDate = $request->input('date');

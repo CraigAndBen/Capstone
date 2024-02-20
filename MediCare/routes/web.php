@@ -35,6 +35,7 @@ Route::get('/user/logout', [UsersController::class, 'userLogout'])->name('user.l
 Route::get('/user/show/appointment', [AppointmentController::class, 'showAppointment'])->name('user.show.appointment');
 Route::get('/user/appointment/event', [AppointmentController::class, 'appointmentEvents'])->name('user.appointment.event');
 Route::get('/user/appointment/holiday', [AppointmentController::class, 'holidayEvents'])->name('user.appointment.holiday');
+Route::get('/user/appointment/province', [AppointmentController::class, 'getAddress'])->name('user.appointment.province');
 Route::post('/user/appointment/doctor/specialties', [AppointmentController::class, 'doctorSpecialties'])->name('user.appointment.doctor.specialties');
 Route::post('/user/appointment/doctor/specialties/time', [AppointmentController::class, 'getAvailableTime'])->name('user.appointment.doctor.specialties.time');
 Route::get('/user/appointment', [AppointmentController::class, 'appointment'])->name('user.appointment');
