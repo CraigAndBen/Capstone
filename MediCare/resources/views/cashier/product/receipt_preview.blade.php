@@ -81,7 +81,7 @@
                                                 style="border-bottom: 0.5px 
                                         width: 50%;
                                         display: inline-block;">{{ date('M j, Y', strtotime($currentDate)) }}</u></span>
-                                        Received from :
+                                        Received from : 
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                         with TIN :
@@ -123,7 +123,7 @@
                                                     colspan="2">AMOUNT</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody> 
                                             @foreach ($cart as $key => $item)
                                                     <tr>
                                                         <td
@@ -137,7 +137,8 @@
                                                             ₱{{ number_format($item['price'] * $item['quantity'], 2) }}
                                                         </td>
                                                         <td
-                                                            style="width: 15%; text-align:center; font-size: 10px; border: .5px solid black;">
+                                                            style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; width: 15%; border: .5px solid black;">
+                                                            ₱{{ number_format($item['price'] * $item['quantity'], 2) }}
                                                         </td>
                                                     </tr>
                                           
@@ -172,9 +173,8 @@
                                                     TOTAL AMOUNT - ₱</td>
                                                 <td style="border: .5px solid black;"></td>
                                                 <td
-                                                    style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">
-                                                    ₱{{ number_format(array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart),), 2, ) }}</td>
-                                                <td style="border: .5px solid black;"></td>
+                                                    style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;"></td>
+                                                <td style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">₱{{ number_format(array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart),), 2, ) }}</td>
 
                                             </tr>
                                             <tr>
@@ -191,8 +191,8 @@
                                                 <td style="border: .5px solid black;"></td>
                                                 <td
                                                     style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">
-                                                    ₱{{ number_format($amount, 2) }}</td>
-                                                <td style="border: .5px solid black;"></td>
+                                                   </td>
+                                                <td style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;"> ₱{{ number_format($amount, 2) }}</td>
                                             </tr>
                                             <tr>
                                                 <td
@@ -201,8 +201,8 @@
                                                 <td style="border: .5px solid black;"></td>
                                                 <td
                                                     style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">
-                                                    ₱{{ number_format($change, 2) }}</td>
-                                                <td style="border: .5px solid black;"></td>
+                                                    </td>
+                                                <td style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">₱{{ number_format($change, 2) }}</td>
                                             </tr>
 
                                         </tbody>

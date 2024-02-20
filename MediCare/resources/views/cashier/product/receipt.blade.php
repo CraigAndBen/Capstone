@@ -95,7 +95,7 @@
                     <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif; width: 15%;">
                         ₱{{ number_format($item['price'], 2) }}
                     </td>
-                    <td style="width: 15%; text-align:center; font-size: 7px;"></td>
+                    <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif; width: 15%;">₱{{ number_format($item['price'] * $item['quantity'], 2) }}</td>
                 </tr>
                 @endforeach
                 <tr>
@@ -112,8 +112,8 @@
                 <tr>
                     <td style="text-align:right; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;">TOTAL AMOUNT - ₱</td>
                     <td></td>
+                    <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;"></td>
                     <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;">₱{{ number_format(array_sum(array_map(function ($item) {return $item['price'] * $item['quantity'];}, $cart)),2) }}</td>
-                    <td></td>
                     
                 </tr>
                 <tr>
@@ -125,14 +125,14 @@
                 <tr>
                     <td style="text-align:right; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;">AMOUNT PAID - ₱</td>
                     <td></td>
+                    <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;"></td>
                     <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;">₱{{ number_format($amount, 2) }}</td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td style="text-align:right; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;">CHANGE - ₱</td>
                     <td></td>
+                    <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;"></td>
                     <td style="text-align:center; font-size: 7px; font-family: 'DejaVu Sans', sans-serif;">₱{{ number_format($change, 2) }}</td>
-                    <td></td>
                 </tr>
                 
             </tbody>

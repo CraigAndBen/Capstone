@@ -203,6 +203,7 @@
                                                                 </td>
                                                                 <td
                                                                     style="width: 15%; text-align:center; font-size: 10px; border: .5px solid black;">
+                                                                    ₱{{ number_format($purchaseDetail['price'] * $purchaseDetail['quantity'], 2) }}
                                                                 </td>
                                                             </tr>
                                                         @endif
@@ -238,8 +239,8 @@
                                                         <td style="border: .5px solid black;"></td>
                                                         <td
                                                             style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">
-                                                            ₱{{ number_format($purchase->total_price, 2) }}</td>
-                                                        <td style="border: .5px solid black;"></td>
+                                                            </td>
+                                                        <td style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">₱{{ number_format($purchase->total_price, 2) }}</td>
 
                                                     </tr>
                                                     <tr>
@@ -256,8 +257,8 @@
                                                         <td style="border: .5px solid black;"></td>
                                                         <td
                                                             style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">
-                                                            ₱{{ number_format($purchase->amount, 2) }}</td>
-                                                        <td style="border: .5px solid black;"></td>
+                                                            </td>
+                                                        <td style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">₱{{ number_format($purchase->amount, 2) }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td
@@ -266,8 +267,8 @@
                                                         <td style="border: .5px solid black;"></td>
                                                         <td
                                                             style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">
-                                                            ₱{{ number_format($purchase->change, 2) }}</td>
-                                                        <td style="border: .5px solid black;"></td>
+                                                            </td>
+                                                        <td style="text-align:center; font-size: 10px; font-family: 'DejaVu Sans', sans-serif; border: .5px solid black;">₱{{ number_format($purchase->change, 2) }}</td>
                                                     </tr>
 
                                                 </tbody>
